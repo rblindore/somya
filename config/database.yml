@@ -1,10 +1,11 @@
 development:
-      host: localhost
+      host: 127.0.0.1
       adapter: mysql
-      database: fedena_ultimate
+      database: c1
       port: 3306
-      username: root
-      password: foradian
+      username: rblindore
+#      password: foradian
+      charset: unicode
 
 test: &test
       host: localhost
