@@ -16,24 +16,25 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-class Configuration < ActiveRecord::Base
+class Configur< ActiveRecord::Base
+  self.table_name = 'configurations'
 
-  STUDENT_ATTENDANCE_TYPE_OPTIONS = [["#{t('daily_text')}", "Daily"], ["#{t('subject_wise_text')}", "SubjectWise"]]
+  STUDENT_ATTENDANCE_TYPE_OPTIONS = [["#{I18n.t('daily_text')}", "Daily"], ["#{I18n.t('subject_wise_text')}", "SubjectWise"]]
 
-  NETWORK_STATES                   = [["#{t('online')}",'Online'],["#{t('offline')}",'Offline']]
+  NETWORK_STATES                   = [["#{I18n.t('online')}",'Online'],["#{I18n.t('offline')}",'Offline']]
   LOCALES = []
-  Dir.glob("#{RAILS_ROOT}/config/locales/*.yml").each do |file|
-    file.gsub!("#{RAILS_ROOT}/config/locales/", '')
+  Dir.glob("#{Rails.root}/config/locales/*.yml").each do |file|
+    file.gsub!("#{Rails.root}/config/locales/", '')
     file.gsub!(".yml", '')
     LOCALES << file
   end
 
   def validate
     if self.config_key == "StudentAttendanceType"
-      errors.add_to_base("#{t('student_attendance_type_should_be_one')} #{STUDENT_ATTENDANCE_TYPE_OPTIONS}") unless Configuration::STUDENT_ATTENDANCE_TYPE_OPTIONS.collect{|d| d[1] == self.config_value}.include?(true)
+      errors.add_to_base("#{I18n.t('student_attendance_type_should_be_one')} #{STUDENT_ATTENDANCE_TYPE_OPTIONS}") unless Configuration::STUDENT_ATTENDANCE_TYPE_OPTIONS.collect{|d| d[1] == self.config_value}.include?(true)
     end
     if self.config_key == "NetworkState"
-      errors.add_to_base("#{t('network_state_should_be_one')} #{NETWORK_STATES}") unless NETWORK_STATES.collect{|d| d[1] == self.config_value}.include?(true)
+      errors.add_to_base("#{I18n.t('network_state_should_be_one')} #{NETWORK_STATES}") unless NETWORK_STATES.collect{|d| d[1] == self.config_value}.include?(true)
     end
   end
 
@@ -49,7 +50,7 @@ class Configuration < ActiveRecord::Base
     end
   
     def save_institution_logo(upload)
-      directory, filename = "#{RAILS_ROOT}/public/uploads/image", 'institute_logo.jpg'
+      directory, filename = "#{Rails.root}/public/uploads/image", 'institute_logo.jpg'
       path = File.join(directory, filename) # create the file path
       File.open(path, "wb") { |f| f.write(upload['datafile'].read) } # write the file
     end
