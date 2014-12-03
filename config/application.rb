@@ -1,7 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -23,5 +22,8 @@ module Fedena
       :key => '_fedena_session',
       :secret => '93bd9933128611446605e1d410d003a6643d59c4494a56e538f4bb154284c14f5a56c8ed9e7b1b38593e6f557b1f28d763f0b0093e12ff515dea1107d2e1306b'
     })
+
+    config.autoload_paths << Rails.root.join('lib')
+
   end
 end

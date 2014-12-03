@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   helper_method :can_access_request?
   protect_from_forgery # :secret => '434571160a81b5595319c859d32060c1'
   ##filter_parameter_logging :password
-  
+
   before_filter { |c| Authorization.current_user = c.current_user }
   before_filter :message_user
   before_filter :set_user_language
@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
- 
+
   def only_assigned_employee_allowed
     @privilege = @current_user.privileges.map{|p| p.name}
     if @current_user.employee?
@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+
   def initialize
     @title = FedenaSetting.company_details[:company_name]
   end
@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
     User.active.find(session[:user_id]) unless session[:user_id].nil?
   end
 
-  
+
   def find_finance_managers
     Privilege.find_by_name('FinanceControl').users
   end
@@ -156,7 +156,7 @@ class ApplicationController < ActionController::Base
     flash[:notice] = "#{t('flash_msg4')}"
     redirect_to :controller => 'user', :action => 'dashboard'
   end
-  
+
   protected
   def login_required
     unless session[:user_id]
@@ -179,7 +179,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  
+
 
   def configuration_settings_for_finance
     finance = Configuration.find_by_config_value("Finance")
@@ -213,7 +213,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+
   def limit_employee_profile_access
     unless @current_user.employee
       unless params[:id] == @current_user.employee_record.id
@@ -344,14 +344,15 @@ class ApplicationController < ActionController::Base
 
   private
   def set_user_language
-    lan = Configuration.find_by_config_key("Locale")
+    lan =  {} #Configuration.find_by_config_key("Locale")
     I18n.default_locale = :en
-    Translator.fallback(true)
+    #Translator.fallback(true)
     if session[:language].nil?
-      I18n.locale = lan.config_value
+      I18n.locale = lan.config_value rescue 'en'
     else
       I18n.locale = session[:language]
     end
+    I18n.locale = 'en'
     News.new.reload_news_bar
   end
 end
