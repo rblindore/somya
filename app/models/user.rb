@@ -18,7 +18,7 @@
 
 class User < ActiveRecord::Base
   attr_accessor :password, :role, :old_password, :new_password, :confirm_password
-  attr_accessible :username, :password, :confirm_password, :role, :new_password, :old_password
+  # attr_accessible :username, :password, :confirm_password, :role, :new_password, :old_password
 
   validates_uniqueness_of :username, :scope=> [:is_deleted],:if=> 'is_deleted == false' #, :email
   validates_length_of     :username, :within => 1..20

@@ -64,8 +64,14 @@ Fedena::Application.routes.draw do
   resources :news, only: :index
   resources :reminder, only: :index
   resources :student, only: :index do
-    get :admission1
+    collection do
+      get :admission1
+    end
   end
+  resources :exam, only: :index
+  resources :timetable, only: :index
+  resources :student_attendance, only: :index
+  resources :configuration, only: :index
   
   root 'user#login' # :controller => 'user', :action => 'login'
 

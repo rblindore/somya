@@ -97,7 +97,7 @@ end
 
 
 Privilege.all.each do |p|
-  p.update_attributes(:description=> p.name.underscore+"_privilege")
+  p.update_attributes(:description=> p.name.to_s.underscore+"_privilege")
 end
 
 Event.all.each do |e|
