@@ -44,7 +44,7 @@ if GradingLevel.count == 0
 end
 
 
-if User.first( :conditions=>{:admin=>true}).blank?
+if User.where(admin: true).blank?
 
   employee_category = EmployeeCategory.find_or_create_by(:name => 'System Admin',:prefix => 'Admin',:status => true)
 

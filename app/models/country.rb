@@ -17,5 +17,5 @@
 #limitations under the License.
 
 class Country < ActiveRecord::Base
-  default_scope :order=>'name ASC'
+  default_scope { order('name ASC')}
 end

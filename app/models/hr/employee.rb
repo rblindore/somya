@@ -36,8 +36,8 @@ class Employee < ActiveRecord::Base
   has_many    :finance_transactions, :as => :payee
   has_many    :employee_attendances
 
-  validates_format_of     :email, :with => /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,   :allow_blank=>true,
-    :message => "#{t('must_be_a_valid_email_address')}"
+  validates_format_of  :email, with: /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i, allow_blank: true,
+    message: "#{I18n.t('must_be_a_valid_email_address')}", multiline: true
 
   validates_presence_of :employee_category_id, :employee_number, :first_name, :employee_position_id,
     :employee_department_id,  :date_of_birth,:joining_date,:nationality_id

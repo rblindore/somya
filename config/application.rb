@@ -24,6 +24,8 @@ module Fedena
     })
 
     config.autoload_paths << Rails.root.join('lib')
+    config.autoload_paths << Rails.root.join('app', 'models', 'hr')
+    config.autoload_paths << Rails.root.join('app', 'models', 'finance')
 
   end
 end

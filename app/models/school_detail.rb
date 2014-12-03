@@ -16,6 +16,7 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 class SchoolDetail < ActiveRecord::Base
+
   has_attached_file :logo,
   :styles => { :original=> "150x110#"},
   :url => "/system/:class/:attachment/:id_partition/:style/:basename.:extension",

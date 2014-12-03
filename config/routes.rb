@@ -63,6 +63,9 @@ Fedena::Application.routes.draw do
 
   resources :news, only: :index
   resources :reminder, only: :index
+  resources :student, only: :index do
+    get :admission1
+  end
   
   root 'user#login' # :controller => 'user', :action => 'login'
 

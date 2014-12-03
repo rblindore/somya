@@ -24,15 +24,12 @@
 <% unless flash[:notice].nil? %> <p class="flash-msg"> <%= flash[:notice] %> </p> <% end %>
 
 <div id="user_options">
-
   <% if @user.admin? %>
     <div class="button-box">
-      <%= link_to "<div class ='button-label'><p>#{t('admission')}</p></div>", {:controller => "student", :action => "admission1"},
-        :class => "option_buttons", :id => "admission_button", :title => "#{t('admission_link_title')}"%>
+      <%= link_to "<div class ='button-label'><p>#{t('admission')}</p></div>", {:controller => "student", :action => "admission1"}, :class => "option_buttons", :id => "admission_button", :title => "#{t('admission_link_title')}"%>
     </div>
     <div class="button-box">
-      <%= link_to "<div class ='button-label'><p>#{t('student_details')}</p></div>", {:controller => "student", :action => "index"},
-        :class => "option_buttons", :id => "student_details_button", :title => "#{t('student_link_title')}"%>
+      <%= link_to "<div class ='button-label'><p>#{t('student_details')}</p></div>", {:controller => "student", :action => "index"}, :class => "option_buttons", :id => "student_details_button", :title => "#{t('student_link_title')}"%>
     </div>
     <div class="button-box">
       <%= link_to "<div class ='button-label'><p> #{t('manage_users')} </p></div>", {:controller => "user", :action => "index"},
