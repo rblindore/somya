@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
     if session[:user_id].present?
       unless (controller_name == "user") and ["first_login_change_password","login","logout","forgot_password"].include? action_name
         user = User.active.find(session[:user_id])
-        setting = Configuration.get_config_value('FirstTimeLoginEnable')
+        setting = Configur.get_config_value('FirstTimeLoginEnable')
         if setting == "1" and user.is_first_login != false
           flash[:notice] = "#{t('first_login_attempt')}"
           redirect_to :controller => "user",:action => "first_login_change_password",:id => user.username
@@ -53,8 +53,8 @@ class ApplicationController < ActionController::Base
 
   def set_variables
     unless @current_user.nil?
-      @attendance_type = Configuration.get_config_value('StudentAttendanceType') unless @current_user.student?
-      @modules = Configuration.available_modules
+      @attendance_type = Configur.get_config_value('StudentAttendanceType') unless @current_user.student?
+      @modules = Configur.available_modules
     end
   end
 

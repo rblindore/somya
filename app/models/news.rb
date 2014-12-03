@@ -32,7 +32,7 @@ class News < ActiveRecord::Base
   @@per_page = 12
 
   def self.get_latest
-      News.find(:all, :limit => 3)
+      News.limit(3)
   end
 
   def reload_news_bar

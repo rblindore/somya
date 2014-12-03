@@ -52,7 +52,18 @@ Fedena::Application.routes.draw do
   resources :timetables do
     resources :timetable_entries
   end
-  get 'forgot_password' => 'user#forgot_password'
+
+  resources :user do
+    collection do
+      post :login
+      get :forgot_password
+      get :dashboard
+    end
+  end
+
+  resources :news, only: :index
+  resources :reminder, only: :index
+  
   root 'user#login' # :controller => 'user', :action => 'login'
 
   ## map.fa_scores 'assessment_scores/exam/:exam_id/fa_group/:fa_group_id', :controller=>'assessment_scores',:action=>'fa_scores'

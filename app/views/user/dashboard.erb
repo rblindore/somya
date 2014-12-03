@@ -83,12 +83,12 @@
 
     </div>
     <div class="button-box">
-      <%= link_to "<div class ='button-label'><p>#{t('campus_news')}</p></div>", {:controller => "news", :action => "index"},
+      <%= link_to campus_news_btn.html_safe, {:controller => "news", :action => "index"},
         :class => "option_buttons", :id => "campus_news_button",:title => t('news_link_title')%>
 
     </div>
     <div class="button-box">
-      <%= link_to "<div class ='button-label'><p>#{t('timetable_text')}</p></div>", {:controller => "timetable", :action => "student_view",:id=>@student.id},
+      <%= link_to "<div class ='button-label'><p>#{t('timetable_text')}</p></div>".html_safe, {:controller => "timetable", :action => "student_view",:id=>@student.id},
         :class => "option_buttons", :id => "timetable_button",:title => t('timetable_link_title') %>
     </div>
     <div class="button-box">
@@ -200,7 +200,7 @@
           </div>
         <% end %>
       <% else %>
-        <% @attendance_type = Configuration.find_by_config_key('StudentAttendanceType') %>
+        <% @attendance_type = Configur.find_by_config_key('StudentAttendanceType') %>
         <% unless @attendance_type.config_value == 'Daily' %>
           <div class="button-box">
             <%= link_to "<div class ='button-label'><p>#{t('attendance')}</p></div>", {:controller => "student_attendance", :action => "index"},

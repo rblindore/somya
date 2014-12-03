@@ -56,8 +56,7 @@ class Configur< ActiveRecord::Base
     end
 
     def available_modules
-      modules = find_all_by_config_key('AvailableModules')
-      modules.map(&:config_value)
+      where(config_key: 'AvailableModules').map(&:config_value)
     end
 
     def set_config_values(values_hash)
