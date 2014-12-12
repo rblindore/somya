@@ -20,14 +20,14 @@
   {"config_key" => "DefaultCountry"                  ,"config_value" => "76"},
   {"config_key" => "FirstTimeLoginEnable"            ,"config_value" => "0"}
 ].each do |param|
-  Configur.find_or_create_by_config_key(param)
+  Configur.find_or_create_by(param)
 end
 
 [
   {"config_key" => "AvailableModules"                ,"config_value" => "HR"},
   {"config_key" => "AvailableModules"                ,"config_value" => "Finance"}
 ].each do |param|
-  Configur.find_or_create_by_config_key_and_config_value(param)
+  Configur.find_or_create_by(param)
 end
 
 if GradingLevel.count == 0
@@ -46,15 +46,15 @@ end
 
 if User.first( :conditions=>{:admin=>true}).blank?
 
-  employee_category = EmployeeCategory.find_or_create_by_prefix(:name => 'System Admin',:prefix => 'Admin',:status => true)
+  employee_category = EmployeeCategory.find_or_create_by(:name => 'System Admin',:prefix => 'Admin',:status => true)
 
-  employee_position = EmployeePosition.find_or_create_by_name(:name => 'System Admin',:employee_category_id => employee_category.id,:status => true)
+  employee_position = EmployeePosition.find_or_create_by(:name => 'System Admin',:employee_category_id => employee_category.id,:status => true)
 
-  employee_department = EmployeeDepartment.find_or_create_by_code(:code => 'Admin',:name => 'System Admin',:status => true)
+  employee_department = EmployeeDepartment.find_or_create_by(:code => 'Admin',:name => 'System Admin',:status => true)
 
-  employee_grade = EmployeeGrade.find_or_create_by_name(:name => 'System Admin',:priority => 0 ,:status => true,:max_hours_day=>nil,:max_hours_week=>nil)
+  employee_grade = EmployeeGrade.find_or_create_by(:name => 'System Admin',:priority => 0 ,:status => true,:max_hours_day=>nil,:max_hours_week=>nil)
 
-  employee = Employee.find_or_create_by_employee_number(:employee_number => 'admin',:joining_date => Date.today,:first_name => 'Admin',:last_name => 'User',
+  employee = Employee.find_or_create_by(:employee_number => 'admin',:joining_date => Date.today,:first_name => 'Admin',:last_name => 'User',
     :employee_department_id => employee_department.id,:employee_grade_id => employee_grade.id,:employee_position_id => employee_position.id,:employee_category_id => employee_category.id,:status => true,:nationality_id =>'76', :date_of_birth => Date.today-365, :email => 'noreply@fedena.com')
 
   employee.user.update_attributes(:admin=>true,:employee=>false)
@@ -66,7 +66,7 @@ end
   {"name" => 'Donation'       ,"description" => ' ',"is_income" => true},
   {"name" => 'Fee'            ,"description" => ' ',"is_income" => true}
 ].each do |param|
-  FinanceTransactionCategory.find_or_create_by_name(param)
+  FinanceTransactionCategory.find_or_create_by(param)
 end
 
 if Weekday.count == 0
@@ -92,7 +92,7 @@ end
   {"settings_key" => "AttendanceEnabled"                  ,"is_enabled" => false},
   {"settings_key" => "NewsEventsEnabled"                  ,"is_enabled" => false}
 ].each do |param|
-  SmsSetting.find_or_create_by_settings_key(param)
+  SmsSetting.find_or_create_by(param)
 end
 
 
@@ -112,7 +112,7 @@ end
   {"name_tag" => "student_management", "priority"=>2},
   {"name_tag" => "social_other_activity", "priority"=>4},
 ].each do |param|
-  PrivilegeTag.find_or_create_by_name_tag(param)
+  PrivilegeTag.find_or_create_by(param)
 end
 
 #add priorities to student additional fields with nil priority, if any
@@ -394,6 +394,6 @@ end
   "Zambia",
   "Zimbabwe",
   "Palestine"].each do |param|
-  Country.find_or_create_by_name(param)
+  Country.find_or_create_by(name: param)
 end
 
