@@ -1,6 +1,6 @@
 class AddIsPaidToFinanceFees < ActiveRecord::Migration
   def self.up
-    add_column :finance_fees, :is_paid, :boolean, :default => 0
+    add_column :finance_fees, :is_paid, :boolean, :default => false
   end
 
   def self.down
