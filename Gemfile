@@ -37,7 +37,7 @@ gem 'rspec-rails'
 gem 'delayed_job'
 gem 'paperclip'
 gem 'thin'
-gem 'protected_attributes'
+# gem 'protected_attributes'
 gem 'pry', group: [:development]
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
