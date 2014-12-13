@@ -10,7 +10,6 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-/Gemfile.lock
 /db/schema.rb
 /config/database.yml
 /public/images/*
