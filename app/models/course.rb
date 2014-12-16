@@ -34,9 +34,9 @@ class Course < ActiveRecord::Base
   
   before_save :cce_weightage_valid
 
-  named_scope :active, :conditions => { :is_deleted => false }, :order => 'course_name asc'
-  named_scope :deleted, :conditions => { :is_deleted => true }, :order => 'course_name asc'
-  named_scope :cce, {:select => "courses.*",:conditions=>{:grading_type => GRADINGTYPES.invert["CCE"]}, :order => 'course_name asc'}
+  scope :active, -> { where(:is_deleted => false ).order('course_name asc')}
+  scope :deleted, -> {where( :is_deleted => true ).order('course_name asc'))
+  scope :cce, -> { select("courses.*").where(:grading_type => GRADINGTYPES.invert["CCE"]).order( 'course_name asc')}
 
   def presence_of_initial_batch
     errors.add_to_base "#{t('should_have_an_initial_batch')}" if batches.length == 0

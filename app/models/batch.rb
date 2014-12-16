@@ -53,10 +53,10 @@ class Batch < ActiveRecord::Base
 
   attr_accessor :job_type
 
-  named_scope :active,{ :conditions => { :is_deleted => false, :is_active => true },:joins=>:course,:select=>"`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name",:order=>"course_full_name"}
-  named_scope :inactive,{ :conditions => { :is_deleted => false, :is_active => false },:joins=>:course,:select=>"`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name",:order=>"course_full_name"}
-  named_scope :deleted,{:conditions => { :is_deleted => true },:joins=>:course,:select=>"`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name",:order=>"course_full_name"}
-  named_scope :cce, {:select => "batches.*",:joins => :course,:conditions=>["courses.grading_type = #{GRADINGTYPES.invert["CCE"]}"],:order=>:code}
+  scope :active, -> { where( :is_deleted => false, :is_active => true ).joins( :course).select( "`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
+  scope :inactive, -> { where(is_deleted: false, is_active: false).joins(:course).select("`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
+  scope :deleted, -> { where( :is_deleted => true).joins(:course).select("`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
+  scope :cce, -> { select("batches.*").joins(:course).where("courses.grading_type = #{GRADINGTYPES.invert["CCE"]}").order(:code)}
 
   def validate
     errors.add(:start_date, "#{t('should_be_before_end_date')}.") \

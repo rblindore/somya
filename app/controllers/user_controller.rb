@@ -236,7 +236,7 @@ class UserController < ApplicationController
       authenticated_user = selected_login_hook[:name].classify.constantize.send("login_hook",self)
     else
       if request.post? and params[:user]
-        @user = User.new(params[:user])
+        @user = User.new(user_params)
         user = User.active.find_by_username @user.username
         if user.present? and User.authenticate?(@user.username, @user.password)
           authenticated_user = user
@@ -395,6 +395,10 @@ class UserController < ApplicationController
     session[:user_id] = user.id
     flash[:notice] = "#{t('welcome')}, #{user.first_name} #{user.last_name}!"
     redirect_to session[:back_url] || {:controller => 'user', :action => 'dashboard'}
+  end
+
+  def user_params
+    params.require(:user).permit(:username, :password)
   end
 end
 

@@ -72,6 +72,13 @@ Fedena::Application.routes.draw do
   resources :timetable, only: :index
   resources :student_attendance, only: :index
   resources :configuration, only: :index
+  resources :employee, only: :index do
+    collection do
+      get :hr
+    end
+  end
+
+  resources :finance, only: :index
   
   root 'user#login' # :controller => 'user', :action => 'login'
 

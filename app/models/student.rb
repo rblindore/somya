@@ -46,19 +46,19 @@ class Student < ActiveRecord::Base
   has_many   :previous_exam_scores
   
 
-  named_scope :active, :conditions => { :is_active => true }
-  named_scope :with_full_name_only, :select=>"id, CONCAT_WS('',first_name,' ',last_name) AS name,first_name,last_name", :order=>:first_name
-  named_scope :with_name_admission_no_only, :select=>"id, CONCAT_WS('',first_name,' ',last_name,' - ',admission_no) AS name,first_name,last_name,admission_no", :order=>:first_name
+  scope :active, -> { where(:is_active => true )}
+  scope :with_full_name_only, -> { select("id, CONCAT_WS('',first_name,' ',last_name) AS name,first_name,last_name").order(:first_name)}
+  scope :with_name_admission_no_only, ->{ select(" id, CONCAT_WS('',first_name,' ',last_name,' - ',admission_no) AS name,first_name,last_name,admission_no").order(first_name)}
 
-  named_scope :by_first_name, :order=>'first_name',:conditions => { :is_active => true }
+  scope :by_first_name, :order=>'first_name',:conditions => { :is_active => true }
 
   validates_presence_of :admission_no, :admission_date, :first_name, :batch_id, :date_of_birth
   validates_uniqueness_of :admission_no
   validates_presence_of :gender
   validates_format_of     :email, :with => /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,   :allow_blank=>true,
-    :message => "#{t('must_be_a_valid_email_address')}"
-  validates_format_of     :admission_no, :with => /^[A-Z0-9_-]*$/i,
-    :message => "#{t('must_contain_only_letters')}"
+    :message => "#{I18n.t('must_be_a_valid_email_address')}", :multiline => true
+  validates_format_of     :admission_no, :with => /^[A-Z0-9_-]*$/i, :multiline => true,
+    :message => "#{I18n.t('must_contain_only_letters')}"
 
   validates_associated :user
   before_validation :create_user_and_validate
@@ -78,12 +78,12 @@ class Student < ActiveRecord::Base
     :message=>'must be less than 500 KB.',:if=> Proc.new { |p| p.photo_file_name_changed? }
   
   def validate
-    errors.add(:date_of_birth, "#{t('cant_be_a_future_date')}.") if self.date_of_birth >= Date.today \
+    errors.add(:date_of_birth, "#{I18n.t('cant_be_a_future_date')}.") if self.date_of_birth >= Date.today \
       unless self.date_of_birth.nil?
-    errors.add(:gender, "#{t('model_errors.student.error2')}.") unless ['m', 'f'].include? self.gender.downcase \
+    errors.add(:gender, "#{I18n.t('model_errors.student.error2')}.") unless ['m', 'f'].include? self.gender.downcase \
       unless self.gender.nil?
-    errors.add(:admission_no, "#{t('model_errors.student.error3')}.") if self.admission_no=='0'
-    errors.add(:admission_no, "#{t('should_not_be_admin')}") if self.admission_no.to_s.downcase== 'admin'
+    errors.add(:admission_no, "#{I18n.t('model_errors.student.error3')}.") if self.admission_no=='0'
+    errors.add(:admission_no, "#{I18n.t('should_not_be_admin')}") if self.admission_no.to_s.downcase== 'admin'
     
   end
 
