@@ -19,7 +19,7 @@
 class ArchivedStudent < ActiveRecord::Base
 
   include CceReportMod
-  
+
   belongs_to :country
   belongs_to :batch
   belongs_to :student_category
@@ -29,7 +29,7 @@ class ArchivedStudent < ActiveRecord::Base
 
   has_many   :students_subjects, :primary_key=>:former_id, :foreign_key=>'student_id'
   has_many   :subjects ,:through => :students_subjects
-  
+
   has_many   :cce_reports, :primary_key=>:former_id, :foreign_key=>'student_id'
   has_many   :assessment_scores, :primary_key=>:former_id, :foreign_key=>'student_id'
   has_many   :exam_scores, :primary_key=>:former_id, :foreign_key=>'student_id'

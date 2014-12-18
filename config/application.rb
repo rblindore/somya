@@ -24,8 +24,10 @@ module Fedena
     })
 
     config.autoload_paths << Rails.root.join('lib')
+    config.autoload_paths << Rails.root.join('lib', 'in_place_edit')
     config.autoload_paths << Rails.root.join('app', 'models', 'hr')
     config.autoload_paths << Rails.root.join('app', 'models', 'finance')
     config.filter_parameters += [:password]
+    # config.eager_load = true
   end
 end

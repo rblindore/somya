@@ -49,3 +49,5 @@ gem 'pry', group: [:development]
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+gem 'will_paginate'
+# gem 'has_and_belongs_to_many_with_deferred_save', '~> 0.2.0'
