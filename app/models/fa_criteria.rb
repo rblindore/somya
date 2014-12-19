@@ -22,7 +22,7 @@ class FaCriteria < ActiveRecord::Base
   has_many :cce_reports , :as=>:observable
   belongs_to :fa_group
 
-  default_scope :order=>'sort_order ASC'
+  default_scope {order('sort_order ASC')}
   scope :active, ->{ where(is_deleted: false) }
 
   validates_presence_of :fa_group_id

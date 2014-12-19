@@ -16,6 +16,8 @@ gem 'therubyracer', platforms: :ruby
 
 gem 'wicked_pdf'
 
+gem 'ruby_parser'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
