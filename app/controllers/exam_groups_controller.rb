@@ -17,6 +17,7 @@
 #limitations under the License.
 
 class ExamGroupsController < ApplicationController
+
   before_filter :login_required
   filter_access_to :all
   before_filter :initial_queries
@@ -102,7 +103,7 @@ class ExamGroupsController < ApplicationController
         flash[:notice] = "#{t('flash_msg4')}"
         redirect_to :controller => 'user', :action => 'dashboard'
       end
-    end 
+    end
     flash[:notice] = "#{t('flash3')}" if @exam_group.destroy
     redirect_to batch_exam_groups_path(@batch)
   end

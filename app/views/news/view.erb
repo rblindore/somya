@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/show_news/show_news_logo.png") %>
+<%= image_tag("show_news/show_news_logo.png") %>
   <h1><%= t('news_text') %></h1>
   <h3><%= t('read_news') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -41,24 +41,24 @@
     </div>
 
   <% if @is_moderator %>
-    
+
       <%= link_to "► #{t('edit_text')} #{t('news_text')}",
         {:controller => "news",  :action => "edit", :id => @news.id }, :class => "edit_button user_button"%>
-    
+
   <div id="">
       <%= link_to "► #{t('delete_text')} #{t('news_text')}",
         { :controller => "news", :action => "delete", :id => @news.id },
         :confirm => "#{t('delete_confirm_msg')}", :class => "delete_button user_button" %>
-     
+
     </div>
   <div class="extender"></div>
   <% end %>
 
   <h3 id="comments-heading"><%= t('comments') %></h3>
 
-  
+
       <span id="comments-count"><% if @comments.empty? %><%= t('no_comments') %><% end %></span>
-    
+
 
   <ul id="comments-list">
     <% @comments.each do |@cmnt| %>

@@ -158,7 +158,8 @@ module ApplicationHelper
         h[:description] = t(hook[:description])
         hooks << h
       end
-    end    
+    end
     return hooks.to_json
   end
+
 end

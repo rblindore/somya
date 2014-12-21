@@ -1,5 +1,5 @@
 Fedena::Application.routes.draw do
-  
+
   resources :grading_levels
   resources :ranking_levels, :collection => {:create_ranking_level=>[:get,:post], :edit_ranking_level=>[:get,:post], :update_ranking_level=>[:get,:post], :delete_ranking_level=>[:get,:post], :ranking_level_cancel=>[:get,:post], :change_priority=>[:get,:post]}
   resources :class_designations
@@ -58,14 +58,26 @@ Fedena::Application.routes.draw do
       post :login
       get :forgot_password
       get :dashboard
+      get :all
+      get :search_user_ajax
+      get :list_user
     end
   end
 
-  resources :news, only: :index
+  resources :news, only: :index do
+    collection do
+      get :all
+      get :add
+    end
+  end
   resources :reminder, only: :index
   resources :student, only: :index do
     collection do
       get :admission1
+      get :view_all
+      get :advanced_search
+      get :search_ajax
+      get :list_students_by_course
     end
   end
   resources :exam, only: :index
@@ -79,7 +91,7 @@ Fedena::Application.routes.draw do
   end
 
   resources :finance, only: :index
-  
+
   root 'user#login' # :controller => 'user', :action => 'login'
 
   ## map.fa_scores 'assessment_scores/exam/:exam_id/fa_group/:fa_group_id', :controller=>'assessment_scores',:action=>'fa_scores'
@@ -89,9 +101,9 @@ Fedena::Application.routes.draw do
 
 
   #map.connect 'parts/:number', :controller => 'inventory', :action => 'sho
-  
+
   ## map.connect ':controller/:action/:id'
-  ## map.connect ':controller/:action' 
+  ## map.connect ':controller/:action'
   ## map.connect ':controller/:action/:id/:id2'
   ## map.connect ':controller/:action/:id.:format'
 
