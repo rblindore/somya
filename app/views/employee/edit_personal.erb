@@ -21,11 +21,11 @@
 <script src="/javascripts/jquery-ui.min.js" type="text/javascript"></script>
 
 <div id="content-header">
-    <%= image_tag("/images/HR/show_hr.png") %>
+    <%= image_tag("  HR/show_hr.png") %>
   <h1><%= t('edit_employee_information') %></h1>
   <h3><%= t('personal') %></h3>
   <div id="app-back-button">
- <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+ <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -41,7 +41,7 @@
 
     <%= error_messages_for 'employee' %>
 
-      
+
           <span class="span-sub-heading"><%= t('personal_details') %></span>
           <hr class="sub-heading"></hr>
           <div class="label-field-pair">
@@ -50,7 +50,7 @@
             :year_range => 70.years.ago..4.years.ago %></div>
       </div>
             <div class="extender"></div>
-          
+
           <hr class="label-underline"></hr>
 
           <div class="label-field-pair">
@@ -118,8 +118,8 @@
       <div class="text_input_bg"><%= a.file_field :photo, :size=>12 %></div>
     </div>
 
-        
-      
+
+
 
     <div class="save-proceed-button">
       <%= submit_tag "► #{t('update')}" %>

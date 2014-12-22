@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/admission/admission_page_logo.jpg") %>
+<%= image_tag("  admission/admission_page_logo.jpg") %>
   <h1><%= t('academic_reports') %></h1>
   <h3> <%= @student.full_name %> </h3>
   <div id="app-back-button">
-    <%= link_to image_tag("/images/buttons/back.png", :border => 0), :back %>
+    <%= link_to image_tag("  buttons/back.png", :border => 0), :back %>
   </div>
 </div>
 
@@ -67,11 +67,11 @@
           <td><div><%= total %></div></td>
         </tr>
         <tr class="tr-even"><td class="td-name"><div style="width:150px;"><b><%= t('percentage') %>/<%= t('grade') %></b></div></td>
-          
+
           <% exam.each do |t| %>
             <% examres = ExaminationResult.find_by_examination_id_and_student_id(t.id, @student.id) %>
             <td><%= examres.percentage_marks %><small>(<%= examres.grading.name unless examres.grading.nil? %>)</small></td>
-            
+
           <% end %>
           <td><%=  percentage = ((total*100)/max_total).to_f %><small>(<%= Grading.find_from_percentage(percentage).name %>)</small></td>
         </tr>

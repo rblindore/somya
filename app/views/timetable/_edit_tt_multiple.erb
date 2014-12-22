@@ -62,7 +62,7 @@
             <div id="drop_<%= @tte.id %>" class="drop" onClick="update_selected_divs('<%= @tte.id %>');">
               <div class="tt-subject" id="subject_name_<%= @tte.id %>">
                 <div class="subject">
-                  <%= link_to_remote image_tag("/images/buttons/delete-new.png", :border => 0),
+                  <%= link_to_remote image_tag("  buttons/delete-new.png", :border => 0),
                     :url => {:action => "delete_subject", :id => @tte.id},
                     :complete => "clear_selected_divs();",
                     :before => "Element.show('loader')",
