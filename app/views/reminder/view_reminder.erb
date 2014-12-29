@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/reminder/reminder_small.png") %>
+  <%= image_tag("  reminder/reminder_small.png") %>
   <h1><%= t('reminder_text') %></h1>
   <h3><%= t('view') %></h3>
   <div id="app-back-button">
-  <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+  <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -50,7 +50,7 @@
       <%= link_to_function "►#{t('reply')}", :class=>'button user_button' do |page|
         page.visual_effect :toggle_blind, "reply-form"
       end  unless @sender.nil? %>
-      
+
     </div>
     <div id="reply-form" style="display:none;">
       <% form_for :reminder, :url=>{:id2 =>@new_reminder.id}  do |l| %>
@@ -69,7 +69,7 @@
           <%=submit_tag "► #{t('send')}", :class=> 'button' %>
         </div>
         </div>
-        
+
       <% end %>
     </div>
   </div>

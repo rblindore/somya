@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/admission/admission_page_logo.jpg") %>
+  <%= image_tag("  admission/admission_page_logo.jpg") %>
   <h1><%= t('admission') %></h1>
   <h3><%= t('previous_details') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -76,7 +76,7 @@
 
           <li><div class="name"><%= p.subject %></div>
             <div class="val"><span>:</span><%= p.mark %></div>
-            <div class="delete"><%= link_to_remote image_tag("/images/buttons/delete-new.png", :border => 0),
+            <div class="delete"><%= link_to_remote image_tag("  buttons/delete-new.png", :border => 0),
                 :url => {:action => "delete_previous_subject", :id => p.id},
 
                 :update => "added_subjects"%></div>

@@ -90,11 +90,11 @@
   }
 </script>
 <div id="content-header">
-  <%= image_tag("/images/examination/show_exam.png") %>
+  <%= image_tag("  examination/show_exam.png") %>
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('grouping') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -111,7 +111,7 @@
     <%= link_to t('exam_groups_text'), batch_exam_groups_path(@batch) %> &raquo;
     <%= t('connect_exams') %>
   </div>
-  <div id="application-list"> 
+  <div id="application-list">
 <%#*<div class="sel-list">%>
 <%#= t('select') %><%#: <%= link_to_function t('all'), "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>
 <%#= link_to_function t('none'), "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>

@@ -29,7 +29,7 @@ class FinanceFeeCategory < ActiveRecord::Base
   @@per_page = 10
 
   validates_presence_of :name
-  validates_presence_of :batch_id,:message=>"#{t('not_specified')}"
+  validates_presence_of :batch_id,:message=>"#{I18n.t('not_specified')}"
   validates_uniqueness_of :name, :scope=>[:batch_id, :is_deleted],:if=> 'is_deleted == false'
 
   def fees(student)
@@ -49,7 +49,7 @@ class FinanceFeeCategory < ActiveRecord::Base
       flag = 1 if fee.check_fee_category == true
     end
     flag == 1 ?  true : false
-    
+
   end
 
   def delete_particulars
@@ -80,7 +80,7 @@ class FinanceFeeCategory < ActiveRecord::Base
     unless particulars.nil?
       total_fees += particulars.collect{|x|x.amount.to_f}.sum
       total_fees = (total_fees - ((total_fees*total_discount)/100))
-      
+
       unless paid_fees.nil?
         paid = 0
         paid += paid_fees.collect{|x|x.amount.to_f}.sum
@@ -108,6 +108,6 @@ class FinanceFeeCategory < ActiveRecord::Base
   def have_common_particular?
      self.fee_particulars.find_all_by_student_category_id_and_admission_no(nil,nil).count > 0 ? true : false
   end
-  
-  
+
+
 end

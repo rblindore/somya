@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/show_finance.png") %>
+  <%= image_tag("  show_finance.png") %>
   <h1><%= t('transactions') %></h1>
   <h3><%= t('finance_transactions_view') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">
@@ -62,7 +62,7 @@
         <% end %>
         <td class="col-3" align="right"><%= @salary[:total_salary]%></td>
         <td> </td>
-       
+
       </tr>
 
     <% end %>
@@ -76,7 +76,7 @@
       <% end %>
       <td></td>
       <td class="col-3" align="right"><%=@donations_total%></td>
-      
+
     </tr>
 
 
@@ -89,7 +89,7 @@
       <% end %>
       <td></td>
       <td class="col-3" align="right"><%=@transactions_fees%></td>
-      
+
     </tr>
     <% FedenaPlugin::FINANCE_CATEGORY.each do |category| %>
       <tr class="tr-<%=cycle('even','odd')%>">
@@ -102,7 +102,7 @@
           <td class="col-3" align="right"><%=@category_transaction_totals["#{category[:category_name]}"][:amount]%></td>
           <td></td>
         <% end %>
-        
+
       </tr>
     <% end %>
 
@@ -114,7 +114,7 @@
         <td class="col-2"><%= link_to t.name,:controller => "finance",:action => "income_details",:start => @start_date,:end => @end_date,:id => t.id %> </td>
         <td class="col-3" align="right"><%= expense %></td>
         <td class="col-3" align="right"><%= income %></td>
-        
+
         <%income_total +=income %>
         <%expenses_total +=expense %>
       </tr>
@@ -132,7 +132,7 @@
         <td class="col-3" align="right"><%= sprintf("%.2f",@grand_total * -1) %></td>
         <td></td>
       <% end %>
-      
+
     </tr>
 
   </table>

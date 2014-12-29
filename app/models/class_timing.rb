@@ -24,7 +24,7 @@ class ClassTiming < ActiveRecord::Base
   validates_uniqueness_of :name,  :scope => [:batch_id , :is_deleted]
 
   scope :for_batch, -> (b) { where( :batch_id => b.to_i, :is_deleted=>false, :is_break => false).order( 'start_time ASC' ) }
-  scope :default, -> {where(:batch_id => nil, :is_break => false, :is_deleted=>false).order'start_time ASC')}
+  scope :default, -> { where(batch_id: nil, is_break: false, is_deleted: false).order('start_time ASC')}
   scope :active_for_batch, -> (b) { where( :batch_id => b.to_i, :is_deleted=>false).order( 'start_time ASC') }
   scope :active, -> { where(:batch_id => nil, :is_deleted=>false).order('start_time ASC')}
 
@@ -33,7 +33,7 @@ class ClassTiming < ActiveRecord::Base
       if self.start_time > self.end_time \
       unless self.start_time.nil? or self.end_time.nil?
     self_check= self.new_record? ? "" : "id != #{self.id} and "
-    start_overlap = !ClassTiming.find(:first, :conditions=>[self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}", self.start_time,self.start_time,false]).nil?
+    start_overlap = !ClassTiming.where(self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}", self.start_time,self.start_time,false).first.nil?
     end_overlap = !ClassTiming.find(:first, :conditions=>[self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}", self.end_time,self.end_time,false]).nil?
     between_overlap = !ClassTiming.find(:first, :conditions=>[self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}",self.end_time, self.start_time,false]).nil?
     errors.add(:start_time, "#{t('overlap_existing_class_timing')}.") if start_overlap

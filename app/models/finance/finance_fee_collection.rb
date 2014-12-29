@@ -50,11 +50,11 @@ class FinanceFeeCollection < ActiveRecord::Base
 
   def check_transaction(transactions)
     transactions.finance_fees_id.nil? ? false : true
-   
+
   end
 
   def fee_table
-    self.finance_fees.all(:conditions=>"is_paid = 0")
+    self.finance_fees.where(is_paid: false)
   end
 
   def self.shorten_string(string, count)
@@ -84,7 +84,7 @@ class FinanceFeeCollection < ActiveRecord::Base
   end
 
   def create_associates
-    
+
     batch_discounts = BatchFeeDiscount.find_all_by_finance_fee_category_id(self.fee_category_id)
     batch_discounts.each do |discount|
       discount_attributes = discount.attributes
@@ -109,7 +109,7 @@ class FinanceFeeCollection < ActiveRecord::Base
       discount_attributes["finance_fee_collection_id"]= self.id
       StudentFeeCollectionDiscount.create(discount_attributes)
     end
-    particlulars = FinanceFeeParticular.find_all_by_finance_fee_category_id(self.fee_category_id,:conditions=>"is_deleted=0")
+    particlulars = FinanceFeeParticular.where(finance_fee_category_id: self.fee_category_id, is_deleted: 0)
     particlulars.each do |p|
       particlulars_attributes = p.attributes
       particlulars_attributes.delete "finance_fee_category_id"
@@ -127,7 +127,7 @@ class FinanceFeeCollection < ActiveRecord::Base
     trans = self.finance_transactions.all(:conditions=>"transaction_date >= '#{start_date}' AND transaction_date <= '#{end_date}'")
     total = trans.map{|t|t.amount}.sum
   end
-  
+
   def student_fee_balance(student)
     particulars= self.fees_particulars(student)
     financefee = self.fee_transactions(student.id)

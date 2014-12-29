@@ -54,7 +54,7 @@
         render_generic_hook(<%= render_generic_hook %>)
       });
     </script>
-    
+
     <%= javascript_include_tag 'jquery/jquery.min.js' %>
     <%= javascript_include_tag 'jquery/jquery-ui.min.js'%>
     <%= javascript_include_tag 'jquery/jquery.hotkeys.js'%>
@@ -102,7 +102,7 @@
                 </div>
               <% end %>
               <div class="extender"> </div>
-              <%= link_to image_tag("/images/fedena_user/dashboard/news_feed_more_link.jpg", :border => 0), {:controller => "news", :action => "all"} %>
+              <%= link_to image_tag("  fedena_user/dashboard/news_feed_more_link.jpg", :border => 0), {:controller => "news", :action => "all"} %>
             </div>
           <% end %>
         </div>
@@ -118,6 +118,6 @@
           <%= t('powered_by') %> <a href=<%= "#{FedenaSetting.company_details[:company_url]}" %> target="_blank"><%= FedenaSetting.company_details[:company_name] %></a>
         </div>
       </div>
-    </div> 
+    </div>
   </body>
 </html>

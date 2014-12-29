@@ -23,6 +23,6 @@ class CceReport < ActiveRecord::Base
   belongs_to    :observable, :polymorphic=>true
   belongs_to    :exam
 
-  scope :scholastic,{ where(:observable_type=>"FaCriteria")}
+  scope :scholastic, ->{ where(:observable_type=>"FaCriteria")}
   scope :coscholastic, -> { where(:observable_type=>"Observation")}
 end

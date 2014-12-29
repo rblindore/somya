@@ -23,8 +23,8 @@ class FinanceTransaction < ActiveRecord::Base
   belongs_to :payee, :polymorphic => true
   cattr_reader :per_page
   validates_presence_of :title,:amount,:transaction_date
-  validates_presence_of :category,:message=>"#{t('not_specified')}."
-  validates_numericality_of :amount, :greater_than_or_equal_to => 0, :message => "#{t('must_be_positive')}"
+  validates_presence_of :category,:message=>"#{I18n.t('not_specified')}."
+  validates_numericality_of :amount, :greater_than_or_equal_to => 0, :message => "#{I18n.t('must_be_positive')}"
 
   after_create  :create_auto_transaction
   after_update  :update_auto_transaction
@@ -67,7 +67,7 @@ class FinanceTransaction < ActiveRecord::Base
     expenses_total = 0
     fees_total =0
     salary = 0
-     
+
     unless hr.nil?
       salary = MonthlyPayslip.total_employees_salary(start_date, end_date)
       expenses_total += salary[:total_salary].to_f
@@ -82,7 +82,7 @@ class FinanceTransaction < ActiveRecord::Base
       else
         expenses_total +=d.amount
       end
-      
+
     end
     transactions_fees.each do |fees|
       income_total +=fees.amount
@@ -104,7 +104,7 @@ class FinanceTransaction < ActiveRecord::Base
         end
       end
     end
-    
+
     other_transactions.each do |t|
       if t.category.is_income? and t.master_transaction_id == 0
         income_total +=t.amount
@@ -113,7 +113,7 @@ class FinanceTransaction < ActiveRecord::Base
       end
     end
     income_total-expenses_total
-    
+
   end
 
   def self.total_fees(start_date,end_date)
@@ -165,7 +165,7 @@ class FinanceTransaction < ActiveRecord::Base
       #end
     end
     donations_income-donations_expenses
-    
+
   end
 
 
@@ -228,7 +228,7 @@ class FinanceTransaction < ActiveRecord::Base
     transactions.each {|transaction| amount += transaction.amount}
     return {:amount=>amount,:category_type=>category_type}
   end
-  
+
   def add_voucher_or_receipt_number
     if self.category.is_income and self.master_transaction_id == 0
       last_transaction = FinanceTransaction.last(:conditions=>"receipt_no IS NOT NULL")

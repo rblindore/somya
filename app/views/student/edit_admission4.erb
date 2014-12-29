@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/admission/admission_page_logo.jpg") %>
+<%= image_tag("  admission/admission_page_logo.jpg") %>
   <h1><%= @student.full_name %></h1>
   <h3><%= t('edit_additional_details') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -34,11 +34,11 @@
 
 
   <% form_for( :student_additional_details, :url => {:action=> 'edit_admission4'}) do |a| %>
- 
+
 
       <div id="form-contents">
-    
-     
+
+
           <% @additional_fields.each do |additional| %>
 <% @student_additional_detail = StudentAdditionalDetail.find_by_student_id_and_additional_field_id(@student.id,additional.id) %>
           <div class="label-field-pair">

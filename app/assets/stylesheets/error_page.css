@@ -8,7 +8,7 @@ body{
     width: 582px;
     height: 104px;
     margin: 100px auto;
-    background: url(/images/application/error_page_bg.png) no-repeat;
+    background: url(/assets/application/error_page_bg.png) no-repeat;
     overflow: hidden;
 }
 #wrapper .top{
