@@ -52,7 +52,7 @@
     <%  end%>
     <%if permitted_to? :new_timetable,:timetable%>
       <div class="link-box">
-        <% @config = Configuration.available_modules %>
+        <% @config = Settings.available_modules %>
         <% if @config.include?('HR') %>
           <div class="link-heading"><%= link_to "#{t('create_timetable')}", :action => "new_timetable" %></div>
         <% else %>
@@ -64,7 +64,7 @@
     <%  end%>
     <%if permitted_to? :edit_master,:timetable%>
       <div class="link-box">
-        <% @config = Configuration.available_modules %>
+        <% @config = Settings.available_modules %>
         <% if @config.include?('HR') %>
           <div class="link-heading"><%= link_to "#{t('edit_timetable')}", :action => "edit_master" %></div>
         <% else %>
@@ -88,7 +88,7 @@
 
     <%  end%>
 <%#  if permitted_to? :edit,:timetable%>
-<%# @config = Configuration.get_config_value('StudentAttendanceType') %>
+<%# @config = Settings.get_config_value('StudentAttendanceType') %>
 <%# if @config == 'SubjectWise' %>
 <%#*<div class="link-box">%>
 <%#*<div class="link-heading">%>

@@ -195,7 +195,7 @@
           </div>
         <% end %>
       <% else %>
-        <% @attendance_type = Configur.find_by_config_key('StudentAttendanceType') %>
+        <% @attendance_type = Settings.find_by_config_key('StudentAttendanceType') %>
         <% unless @attendance_type.config_value == 'Daily' %>
           <div class="button-box">
             <%= link_to create_link(t('attendance')), {:controller => "student_attendance", :action => "index"},

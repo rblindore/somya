@@ -16,8 +16,8 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-class Configur< ActiveRecord::Base
-  self.table_name = 'configurations'
+class Settings < ActiveRecord::Base
+  self.table_name = :configurations
 
   STUDENT_ATTENDANCE_TYPE_OPTIONS = [["#{I18n.t('daily_text')}", "Daily"], ["#{I18n.t('subject_wise_text')}", "SubjectWise"]]
 
@@ -48,7 +48,7 @@ class Configur< ActiveRecord::Base
       c = find_by_config_key(key)
       c.nil? ? nil : c.config_value
     end
-  
+
     def save_institution_logo(upload)
       directory, filename = "#{Rails.root}/public/uploads/image", 'institute_logo.jpg'
       path = File.join(directory, filename) # create the file path
@@ -66,7 +66,7 @@ class Configur< ActiveRecord::Base
     def set_value(key, value)
       config = find_by_config_key(key)
       config.nil? ?
-        Configuration.create(:config_key => key, :config_value => value) :
+        Settings.create(:config_key => key, :config_value => value) :
         config.update_attribute(:config_value, value)
     end
 
@@ -79,14 +79,14 @@ class Configur< ActiveRecord::Base
     def get_grading_types
       grading_types = Course::GRADINGTYPES
       types= all(:conditions=>{:config_key=>grading_types.values, :config_value=>"1"},:group=>:config_key)
-      grading_types.keys.select{|k| types.collect(&:config_key).include? grading_types[k]}      
+      grading_types.keys.select{|k| types.collect(&:config_key).include? grading_types[k]}
     end
 
     def default_country
       default_country_value = self.find_by_config_key('DefaultCountry').config_value.to_i
       return default_country_value
     end
-    
+
     def set_grading_types(updates)
       #expects an array of integers types
       grading_types = Course::GRADINGTYPES
@@ -103,7 +103,7 @@ class Configur< ActiveRecord::Base
       server_time = Time.now
       server_time_to_gmt = server_time.getgm
       local_tzone_time = server_time
-      time_zone = Configuration.find_by_config_key("TimeZone")
+      time_zone = Settings.find_by_config_key("TimeZone")
       unless time_zone.nil?
         unless time_zone.config_value.nil?
           zone = TimeZone.find(time_zone.config_value)
@@ -116,7 +116,7 @@ class Configur< ActiveRecord::Base
       end
       return local_tzone_time
     end
-    
+
     def cce_enabled?
       get_config_value("CCE") == "1"
     end
@@ -133,7 +133,7 @@ class Configur< ActiveRecord::Base
 
 end
 
-#   Configuration table entries
+#   Settings table entries
 #
 #   StudentAttendanceType  => Daily | SubjectWise
 #   CurrencyType           => Rs, $, E, ...

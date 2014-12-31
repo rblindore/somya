@@ -62,7 +62,7 @@ class FinanceTransaction < ActiveRecord::Base
     #    donations = FinanceTransaction.find(:all,
     #      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id ='#{donation_id}'"])
     trigger = FinanceTransactionTrigger.find(:all)
-    hr = Configuration.find_by_config_value("HR")
+    hr = Settings.find_by_config_value("HR")
     income_total = 0
     expenses_total = 0
     fees_total =0
