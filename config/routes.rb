@@ -1,11 +1,10 @@
 Fedena::Application.routes.draw do
 
-  resources :grading_levels do
-    get :show
-  end
+  resources :grading_levels
 
   resources :ranking_levels do
     collection do
+      get :load_ranking_levels
       get :create_ranking_level
       post :create_ranking_level
       get :edit_ranking_level
@@ -21,9 +20,21 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :class_designations
-  #map.resources :exam_reports, :collection => {:course_reports_index=>[:get,:post], :batch_reports_index=>[:get,:post]}
+  resources :class_designations, only: :index do
+    get :load_class_designations, on: :collection
+  end
 
+  resources :exam_reports, only: :index do
+    collection do
+      get :archived_exam_wise_report
+      post :archived_exam_wise_report
+      get :batch_reports_index
+      post :batch_reports_index
+      get :list_inactivated_batches
+      post :final_archived_report_type
+      post :archived_batches_exam_report
+    end
+  end
   resources :class_timings
 
   resources :subjects
@@ -203,7 +214,9 @@ Fedena::Application.routes.draw do
       get :add
     end
   end
+
   resources :reminder, only: :index
+
   resources :student, only: :index do
     collection do
       get :admission1
@@ -213,22 +226,53 @@ Fedena::Application.routes.draw do
       get :list_students_by_course
     end
   end
+
   resources :exam, only: :index do
     collection do
       get :settings
       get :create_exam
       get :generate_reports
       get :report_center
+      get :previous_batch_exams
+      get :update_batch
+      get :list_inactive_batches
+      get :generate_previous_reports
+      get :list_batch_groups
+      get :select_inactive_batches
+      get :exam_wise_report
+      get :subject_wise_report
+      get :grouped_exam_report
+      get :subject_rank
+      get :batch_rank
+      get :course_rank
+      get :student_school_rank
+      get :attendance_rank
+      get :ranking_level_report
+      get :transcript
+      get :combined_report
+      get :list_exam_types
+      get :select_batch_group
+      post :generated_report
+      get :list_subjects
+      post :generated_report2
+      get :final_report_type
+      post :generated_report4
     end
   end
+
   resources :timetable, only: :index
+
   resources :student_attendance, only: :index
+
   resources :configuration, only: :index
+
   resources :employee, only: :index do
     collection do
       get :hr
     end
   end
+
+  get 'scheduled_jobs/:job_object/:job_type', to: "scheduled_jobs#index" , as: :scheduled_task
 
   resources :finance, only: :index
 

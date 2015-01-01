@@ -44,7 +44,7 @@ class StudentController < ApplicationController
     @selected_value = Settings.default_country
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
     @last_admitted_student = Student.order(:id).last
-    @config = Settings.where(config_key: 'AdmissionNumberAutoIncrement')
+    @config = Settings.where(config_key: 'AdmissionNumberAutoIncrement').first
     @categories = StudentCategory.active
     if request.post?
       if @config.config_value.to_i == 1

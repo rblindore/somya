@@ -23,11 +23,11 @@
 %>
 
 <div id="content-header">
-  <img src="  examination/show_exam.png" alt="Exam" />
+  <img src="examination/show_exam.png" alt="Exam" />
   <h1><%= t('exam_reports_text') %></h1>
   <h3><%= t('archived_grouped_exam_reports') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 <div id="page-yield">
@@ -36,12 +36,12 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
   <div class="bread_crumb">
-    <%= link_to t('exam_text'), :controller => "exam", :action=>"index" %> &raquo;
-    <%= link_to t('report_center'), :controller => "exam", :action => "report_center" %> &raquo;
+    <%= link_to t('exam_text'), exam_index_path %> &raquo;
+    <%= link_to t('report_center'), report_center_exam_index_path %> &raquo;
     <%= t('archived_grouped_exam_reports') %>
   </div>
   <div class="box">
-    <% form_for :exam_report, :url=>{:action=>'archived_batches_exam_report'} do |x| %>
+    <%= form_for :exam_report, url: archived_batches_exam_report_exam_reports_path do |x| %>
       <div class="label-field-pair">
         <label><%= t('select_a_course') %> :<%= image_tag("loader.gif",
             :align => "absmiddle",
@@ -51,11 +51,11 @@
         <div class="text-input-bg">
           <%= select :exam_report, :course_id,
             @courses.map {|c| [c.full_name, c.id]},
-            {:prompt => "#{t('select_a_course')}"},
-            {:onChange => "#{remote_function(:url => {:controller => "exam_reports",:action => "list_inactivated_batches"},
-            :with => "'course_id='+value",
-            :before => "Element.show('loader')",
-            :success => "Element.hide('loader')"
+            {prompt: t('select_a_course')},
+            {onChange: "#{remote_function(url: list_inactivated_batches_exam_reports_path(course_id: "value") ,
+            with: "'course_id='+value",
+            before: "Element.show('loader')",
+            success: "Element.hide('loader')"
             )}"} %>
         </div>
       </div>
