@@ -257,10 +257,32 @@ Fedena::Application.routes.draw do
       post :generated_report2
       get :final_report_type
       post :generated_report4
+      get :list_batch_subjects
+      post :student_subject_rank
+      post :student_batch_rank
+      get :batch_groups
+      post :student_course_rank
+      post :student_attendance_rank
+      get :select_mode
+      post :student_ranking_level_report
+      get :student_transcript
+      post :student_transcript_exam
+      get :load_levels
+      post :student_combined_report
     end
   end
 
-  resources :timetable, only: :index
+  resources :timetable, only: :index do
+    collection do
+      get :work_allotment
+      get :new_timetable
+      get :edit_master
+      get :view
+      get :teachers_timetable
+      get :timetable
+    end
+  end
+
 
   resources :student_attendance, only: :index
 
@@ -275,6 +297,7 @@ Fedena::Application.routes.draw do
   get 'scheduled_jobs/:job_object/:job_type', to: "scheduled_jobs#index" , as: :scheduled_task
 
   resources :finance, only: :index
+  resources :weekday, only: :index
 
   root 'user#login' # :controller => 'user', :action => 'login'
 

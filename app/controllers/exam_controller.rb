@@ -500,10 +500,10 @@ class ExamController < ApplicationController
   end
 
   def student_school_rank
-    @courses = Course.all(:conditions=>{:is_deleted=>false})
-    @batches = Batch.all(:conditions=>{:course_id=>@courses,:is_deleted=>false,:is_active=>true})
-    @students = Student.find_all_by_batch_id(@batches)
-    @grouped_exams = GroupedExam.find_all_by_batch_id(@batches)
+    @courses = Course.where(is_deleted: false)
+    @batches = Batch.where(course_id: @courses, is_deleted: false, is_active: true)
+    @students = Student.where(batch_id: @batches)
+    @grouped_exams = GroupedExam.where(batch_id: @batches)
     @sort_order=""
     unless !params[:sort_order].present?
       @sort_order=params[:sort_order]
@@ -516,10 +516,10 @@ class ExamController < ApplicationController
   end
 
   def student_school_rank_pdf
-    @courses = Course.all(:conditions=>{:is_deleted=>false})
-    @batches = Batch.all(:conditions=>{:course_id=>@courses,:is_deleted=>false,:is_active=>true})
-    @students = Student.find_all_by_batch_id(@batches)
-    @grouped_exams = GroupedExam.find_all_by_batch_id(@batches)
+    @courses = Course.where(is_deleted: false)
+    @batches = Batch.where(course_id: @courses, is_deleted: false, is_active: true)
+    @students = Student.where(batch_id: @batches)
+    @grouped_exams = GroupedExam.where(batch_id: @batches)
     @sort_order=""
     unless !params[:sort_order].present?
       @sort_order=params[:sort_order]
@@ -542,7 +542,7 @@ class ExamController < ApplicationController
         redirect_to :action=>'attendance_rank' and return
       else
         @batch = Batch.find(params[:attendance_rank][:batch_id])
-        @students = Student.find_all_by_batch_id(@batch.id)
+        @students = Student.where(batch_id: @batch.id)
         @start_date = params[:attendance_rank][:start_date].to_date
         @end_date = params[:attendance_rank][:end_date].to_date
         @ranked_students = @batch.find_attendance_rank(@start_date,@end_date)
@@ -552,7 +552,7 @@ class ExamController < ApplicationController
 
   def student_attendance_rank_pdf
     @batch = Batch.find(params[:batch_id])
-    @students = Student.find_all_by_batch_id(@batch.id)
+    @students = Student.where(batch_id: @batch.id)
     @start_date = params[:start_date].to_date
     @end_date = params[:end_date].to_date
     @ranked_students = @batch.find_attendance_rank(@start_date,@end_date)

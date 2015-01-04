@@ -1,4 +1,6 @@
-
+/*
+  *= require jquery-ui/datepicker
+*/
 body {
     font-family:Arial;
     margin:0;
@@ -13,7 +15,7 @@ body {
     background : #b00 url(../../images/application/bg_pattern.png) repeat;
 }
 #header {
-    width : 980px; 
+    width : 980px;
     height : 80px;
     margin:0 auto;
 }

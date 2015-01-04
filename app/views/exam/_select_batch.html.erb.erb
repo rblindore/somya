@@ -18,5 +18,7 @@
 #under the License. -%>
 
 <div class="label-field-pair">
-        <label for="student_course"><%= t('select_a_batch') %> :</label>
-        <div  class="text-input-bg"><%= select :report, :batch_id, @batches.map {|g| [g.name, g.id]}, {:prompt => "#{t('select_a_batch')}"}%></div></div>
+  <label for="student_course"><%= t('select_a_batch') %> :</label>
+  <div  class="text-input-bg"><%= select :report, :batch_id, @batches.map {|g| [g.name, g.id]}, {:prompt => t('select_a_batch')}%>
+  </div>
+</div>

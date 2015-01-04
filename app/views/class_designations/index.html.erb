@@ -32,7 +32,7 @@
       <div  class="text-input-bg">
         <%= select :class_designation, :course_id,
           Course.active.map {|b| [b.full_name, b.id]},
-          {prompt: t('select_a_course')},{onChange: "#{remote_function( url: load_class_designations_class_designations_path(course_id: "value"))}"}%>
+          {prompt: t('select_a_course')}, { onChange: "#{remote_function( url: load_class_designations_class_designations_path(course_id: "value"))}"}%>
       </div>
     </div>
   </div>
