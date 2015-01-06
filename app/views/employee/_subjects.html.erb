@@ -18,13 +18,14 @@
 #under the License. -%>
 
 
-   <div class="label-field-pair">
-      <label for="subject_name"><%= t('subject') %></label>
-        <div class="text-input-bg"><%= select :subject_assignment, :subject_id, @subjects.map { |s| [s.name, s.id] },
-          {:prompt =>"#{t('select_a_subject')}"},
-          {:onChange => "#{remote_function(:url => {:action => "select_department"}, :with => "'subject_id='+value")}"} %>
+<div class="label-field-pair">
+  <label for="subject_name"><%= t('subject') %></label>
+  <div class="text-input-bg">
+    <%= select :subject_assignment, :subject_id, @subjects.map { |s| [s.name, s.id] },
+      { prompt: t('select_a_subject')},
+      { onChange: "#{remote_function( url: { action: "select_department", subject_id: "value"}, :with => "'subject_id='+value")}"} %>
+  </div>
 </div>
-   </div>
 
 
 

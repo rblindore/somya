@@ -31,7 +31,7 @@
     <div class="show-msg"><div class="flash-msg"><%= flash[:notice] %></div> </div>
   <% end %>
   <div id="search-form">
-    <% form_for @search do |f| %>
+    <%= form_for @search do |f| %>
       <div class="label-field-pair">
         <label for="name"><%= t('name') %></label>
         <div class="text-input-bg">

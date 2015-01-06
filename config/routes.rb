@@ -35,7 +35,12 @@ Fedena::Application.routes.draw do
       post :archived_batches_exam_report
     end
   end
-  resources :class_timings
+
+  resources :class_timings, except: :show do
+    collection do
+      get :show
+    end
+  end
 
   resources :subjects
 
@@ -276,6 +281,7 @@ Fedena::Application.routes.draw do
     collection do
       get :work_allotment
       get :new_timetable
+      post :new_timetable
       get :edit_master
       get :view
       get :teachers_timetable
@@ -291,13 +297,20 @@ Fedena::Application.routes.draw do
   resources :employee, only: :index do
     collection do
       get :hr
+      get :subject_assignment
+      get :update_subjects
+      get :select_department
     end
   end
 
   get 'scheduled_jobs/:job_object/:job_type', to: "scheduled_jobs#index" , as: :scheduled_task
 
   resources :finance, only: :index
-  resources :weekday, only: :index
+  resources :weekday, only: [:index, :create] do
+    collection do
+      get :week
+    end
+  end
 
   root 'user#login' # :controller => 'user', :action => 'login'
 

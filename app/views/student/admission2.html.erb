@@ -54,7 +54,7 @@
 
   </div>
 
-  <% form_for :guardian do |f| %>
+  <%= form_for :guardian do |f| %>
 
     <%= f.error_messages :header_message => nil %>
     <% if f.error_messages.present?  %>

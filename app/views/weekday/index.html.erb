@@ -22,7 +22,7 @@
   <h1><%= t('timetable_text') %></h1>
   <h3><%= t('weekdays_text') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -37,12 +37,11 @@
       <label for="timetable_entry_course_id"><%= t('select_a_batch') %>:</label>
       <div class="text-input-bg"><%= select :batch, :id,
           @batches.map {|b| [b.full_name, b.id] },
-          {:prompt => "#{t('common')}"},
-          {:onchange => "#{remote_function(
-          :url => { :action => 'week' },
-          :with => "'batch_id='+value",
-          :before => "Element.show('loader')",
-          :success => "Element.hide('loader')"  )}"} %>
+          {prompt: t('common')},
+          {onchange: "#{remote_function(
+          url: week_weekday_index_path(batch_id: "value"),
+          before: "Element.show('loader')",
+          success: "Element.hide('loader')"  )}"} %>
 
         <%= image_tag("loader.gif", :align => "absmiddle", :border => 0, :id => "loader", :style =>"display: none;" ) %></div>
     </div>

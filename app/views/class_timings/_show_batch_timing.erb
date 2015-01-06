@@ -19,7 +19,7 @@
 
 
 <div class="linker">
-  <%= link_to_remote "#{t('add')}", :url => { :action => 'new', :id => @batch } %>
+  <%= link_to t('add'), { action: :new, id: @batch }, remote: true %>
 </div>
 
 <% unless @class_timings.empty? %>
@@ -31,7 +31,7 @@
     <td><%= t('operations') %></td>
   </tr>
   <% @class_timings.each do |class_timing| %>
-    
+
     <tr id="class-timing-<%= class_timing.id %>" class="tr-<%= cycle('odd','even')   %>">
       <td class="col-1"><%= class_timing.name %></td>
       <td class="col-3"><%= class_timing.start_time.strftime("%I:%M %p") unless class_timing.start_time.nil? %></td>
@@ -40,11 +40,11 @@
           :url => edit_class_timing_path(class_timing), :method => 'get' ) %> |
     <% @tt = PeriodEntry.find_all_by_class_timing_id(class_timing.id ) %>
   <% if @tt.empty? %>
-    <%= link_to_remote("#{t('delete_text')}",
-                :url => class_timing_path(class_timing),
-                :method => 'delete',
-                :confirm => "#{t('confirm_msg')}",
-                :update => "class-timing-#{class_timing.id}") %>
+    <%= link_to_remote(t('delete_text'),
+                url: class_timing_path(class_timing),
+                method: :delete,
+                confirm: t('confirm_msg'),
+                update: "class-timing-#{class_timing.id}") %>
               <% else %>
           <s><%= t('delete_text') %></s>
         <% end %></small></td>

@@ -33,7 +33,7 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
 
-  <% form_for :student, :url => {:action => 'edit'}, :html => {:multipart => true} do |s| %>
+  <%= form_for :student, :url => {:action => 'edit'}, :html => {:multipart => true} do |s| %>
     <%= error_messages_for 'student' %>
     <div id="admission1-form">
       <div id="necessary-field-notification"><%= t('legend1') %><span class="necessary-field">*</span> <%= t('legend2') %></div>

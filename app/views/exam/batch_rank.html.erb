@@ -22,7 +22,7 @@
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('student_ranking_per_batch') %></h3>
   <div id="app-back-button">
-    <%= link_to image_tag("buttons/back.png",:border => 0), :back %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 <div id="page-yield">

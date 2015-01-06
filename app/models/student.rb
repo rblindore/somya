@@ -56,9 +56,9 @@ class Student < ActiveRecord::Base
   validates_uniqueness_of :admission_no
   validates_presence_of :gender
   validates_format_of     :email, :with => /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,   :allow_blank=>true,
-    :message => "#{I18n.t('must_be_a_valid_email_address')}", :multiline => true
+    :message => I18n.t('must_be_a_valid_email_address'), :multiline => true
   validates_format_of     :admission_no, :with => /^[A-Z0-9_-]*$/i, :multiline => true,
-    :message => "#{I18n.t('must_contain_only_letters')}"
+    :message => I18n.t('must_contain_only_letters')
 
   validates_associated :user
   before_validation :create_user_and_validate
@@ -91,6 +91,9 @@ class Student < ActiveRecord::Base
     unless self.is_active==1
       self.is_active=1
     end
+  end
+
+  def self.search(params)
   end
 
   def create_user_and_validate

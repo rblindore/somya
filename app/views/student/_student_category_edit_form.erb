@@ -18,7 +18,7 @@
 #under the License. -%>
 
 <div class="box">
-<% form_remote_tag :url => {:action => 'category_update'}  do |f| %>
+<%= form_remote_tag :url => {:action => 'category_update'}  do |f| %>
   <%= error_messages_for 'student_category', :header_message => nil %>
 <div class="label-field-pair">
   <label><%= t('edit_category') %>: <%= @student_category_name%> </label>

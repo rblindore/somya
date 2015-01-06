@@ -19,11 +19,11 @@
 
 
 <div id="content-header">
-  <%= image_tag("  admission/admission_page_logo.jpg") %>
+  <%= image_tag("admission/admission_page_logo.jpg") %>
   <h1><%= t('admission') %></h1>
   <h3><%=  t('student_detail_step1') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -40,7 +40,7 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
 
-  <% form_for(@student, :url => {:action=> 'admission1'}, :html=> {:multipart=>true}) do |s| %>
+  <%= form_for(@student, :url => {:action=> 'admission1'}, :html=> {:multipart=>true}) do |s| %>
     <%= error_messages_for 'student', :header_message => nil %>
 
     <div id="admission1_form">
@@ -63,7 +63,7 @@
         <div class="student_admission_date">
           <label for="student_admission_date"><%= t('admission_date') %> <span class="necessary-field">*</span> </label>
           <div class="text-input-bg-admission">
-            <%= calendar_date_select_tag 'student[admission_date]', I18n.l(Date.today,:format=>:default),
+            <%= date_select 'student[admission_date]', I18n.l(Date.today,:format=>:default),
               :year_range => 15.years.ago..5.years.from_now, :readonly=>true, :popup=>"force" %>
           </div>
         </div>
@@ -106,7 +106,7 @@
         <div class="label-field-pair">
           <label for="student_date_of_birth"><%= t('date_of_birth') %> <span class="necessary-field">*</span> </label>
           <div class="text-input-bg">
-            <%= calendar_date_select_tag 'student[date_of_birth]',
+            <%= date_select 'student[date_of_birth]',
               I18n.l(Date.today-5.years,:format=>:default) , :year_range => 72.years.ago..0.years.ago,:popup=>"force" %>
           </div>
         </div>
@@ -127,7 +127,7 @@
 
         <div class="label-field-pair">
           <label for="student_blood_group"><%= t('blood_group') %></label>
-          <div class="text-input-bg"><%= select :student, :blood_group, ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{:prompt=> "#{t('unknown')}"} %></div>
+          <div class="text-input-bg"><%= select :student, :blood_group, ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{:prompt=> t('unknown')} %></div>
         </div>
 
         <hr class="label-underline"></hr>
