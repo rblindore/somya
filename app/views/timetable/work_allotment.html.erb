@@ -22,7 +22,7 @@
   <h1><%= t('timetable_text') %></h1>
   <h3><%= t('work_allotment') %></h3>
   <div id="app-back-button">
-    <%= link_to image_tag("buttons/back.png",:border => 0), 'javascript: void(0)', "histroy.back()" %>
+    <%= link_to image_tag("buttons/back.png",:border => 0), 'javascript: void(0)', onclick: "histroy.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">

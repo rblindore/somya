@@ -281,7 +281,7 @@ class TimetableController < ApplicationController
     if @day.empty?
       @day = Weekday.default
     end
-    @timetable_entries = TimetableEntry.includes([:subject,:employee])where(batch_id: @batch.id, timetable_id: @tt.id)
+    @timetable_entries = TimetableEntry.includes([:subject,:employee]).where(batch_id: @batch.id, timetable_id: @tt.id)
     @timetable= Hash.new { |h, k| h[k] = Hash.new(&h.default_proc)}
     @timetable_entries.each do |tte|
       @timetable[tte.weekday_id][tte.class_timing_id] = tte

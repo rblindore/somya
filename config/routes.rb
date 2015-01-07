@@ -286,6 +286,8 @@ Fedena::Application.routes.draw do
       get :view
       get :teachers_timetable
       get :timetable
+      get :update_timetable_view
+      get :update_teacher_tt
     end
   end
 
