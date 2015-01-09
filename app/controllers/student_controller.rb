@@ -183,14 +183,14 @@ class StudentController < ApplicationController
   def admission4
     @student = Student.find(params[:id])
     @student_additional_details = StudentAdditionalDetail.find_all_by_student_id(@student.id)
-    @additional_fields = StudentAdditionalField.find(:all, :conditions=> "status = true", :order=>"priority ASC")
+    @additional_fields = StudentAdditionalField.where(status: true).order("priority ASC")
     if @additional_fields.empty?
       flash[:notice] = "#{t('flash9')} #{@student.first_name} #{@student.last_name}."
       redirect_to :controller => "student", :action => "profile", :id => @student.id
     end
     if request.post?
       @error=false
-      mandatory_fields = StudentAdditionalField.find(:all, :conditions=>{:is_mandatory=>true, :status=>true})
+      mandatory_fields = StudentAdditionalField.where(is_mandatory: true, status: true)
       mandatory_fields.each do|m|
         unless params[:student_additional_details][m.id.to_s.to_sym].present?
           @student.errors.add_to_base("#{m.name} must contain atleast one selected option.")
@@ -226,7 +226,7 @@ class StudentController < ApplicationController
 
   def edit_admission4
     @student = Student.find(params[:id])
-    @additional_fields = StudentAdditionalField.find(:all, :conditions=> "status = true")
+    @additional_fields = StudentAdditionalField.where(status: true)
     @additional_details = StudentAdditionalDetail.find_all_by_student_id(@student)
 
     if @additional_details.empty?
@@ -248,8 +248,8 @@ class StudentController < ApplicationController
     end
   end
   def add_additional_details
-    @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-    @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
+    @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+    @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
     @additional_field = StudentAdditionalField.new
     @student_additional_field_option = @additional_field.student_additional_field_options.build
     if request.post?
@@ -269,7 +269,7 @@ class StudentController < ApplicationController
   def change_field_priority
     @additional_field = StudentAdditionalField.find(params[:id])
     priority = @additional_field.priority
-    @additional_fields = StudentAdditionalField.find(:all, :conditions=>{:status=>true}, :order=> "priority ASC").map{|b| b.priority.to_i}
+    @additional_fields = StudentAdditionalField.where(status: true).order("priority ASC").map{|b| b.priority.to_i}
     position = @additional_fields.index(priority)
     if params[:order]=="up"
       prev_field = StudentAdditionalField.find_by_priority(@additional_fields[position - 1])
@@ -279,16 +279,16 @@ class StudentController < ApplicationController
     @additional_field.update_attributes(:priority=>prev_field.priority)
     prev_field.update_attributes(:priority=>priority.to_i)
     @additional_field = StudentAdditionalField.new
-    @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-    @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
+    @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+    @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
     render(:update) do|page|
       page.replace_html "category-list", :partial=>"additional_fields"
     end
   end
 
   def edit_additional_details
-    @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-    @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
+    @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+    @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
     @additional_field = StudentAdditionalField.find(params[:id])
     @student_additional_field_option = @additional_field.student_additional_field_options
     if request.get?
@@ -304,11 +304,11 @@ class StudentController < ApplicationController
   end
 
   def delete_additional_details
-    students = StudentAdditionalDetail.find(:all ,:conditions=>"additional_field_id = #{params[:id]}")
+    students = StudentAdditionalDetail.where(additional_field_id: params[:id])
     if students.blank?
       StudentAdditionalField.find(params[:id]).destroy
-      @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-      @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
+      @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+      @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
       flash[:notice]="#{t('flash13')}"
       redirect_to :action => "add_additional_details"
     else
@@ -505,16 +505,13 @@ class StudentController < ApplicationController
   def search_ajax
     if params[:option] == "active"
       if params[:query].length>= 3
-        @students = Student.find(:all,
-          :conditions => ["first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
+        @students = Student.where("first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
                             OR admission_no = ? OR (concat(first_name, \" \", last_name) LIKE ? ) ",
             "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
-            "#{params[:query]}", "#{params[:query]}" ],
-          :order => "batch_id asc,first_name asc",:include =>  [{:batch=>:course}]) unless params[:query] == ''
+            "#{params[:query]}", "#{params[:query]}").order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
       else
-        @students = Student.find(:all,
-          :conditions => ["admission_no = ? " , params[:query]],
-          :order => "batch_id asc,first_name asc",:include =>  [{:batch=>:course}]) unless params[:query] == ''
+        @students = Student.where("admission_no = ? " , params[:query]).
+          order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
       end
       render :layout => false
     else
@@ -646,7 +643,7 @@ class StudentController < ApplicationController
     @student_categories = StudentCategory.active
     @student_category = StudentCategory.new(params[:student_category])
     if request.post? and @student_category.save
-      flash[:notice] = "#{t('flash7')}"
+      flash[:notice] = t('flash7')
       redirect_to :action => 'categories'
     end
   end

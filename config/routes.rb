@@ -42,7 +42,11 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :subjects
+  resources :subjects do
+    collection do
+      get :show
+    end
+  end
 
   resources :attendances do
     collection do
@@ -53,7 +57,12 @@ Fedena::Application.routes.draw do
 
   resources :employee_attendances
 
-  resources :attendance_reports
+  resources :attendance_reports do
+    collection do
+      get :advance_search
+      get :mode
+    end
+  end
 
   resources :cce_exam_categories
 
@@ -153,10 +162,16 @@ Fedena::Application.routes.draw do
     end
   end
 
+  resources :batch_transfers, only: :index do
+    collection do
+      get :update_batch
+    end
+  end
+
   ##feed 'courses/manage_course', :controller => 'courses' ,:action=>'manage_course'
   ##feed 'courses/manage_batches', :controller => 'courses' ,:action=>'manage_batches'
 
-  resources :courses, :has_many => :batches do
+  resources :courses do
     collection do
       get :grouped_batches
       post :grouped_batches
@@ -174,6 +189,9 @@ Fedena::Application.routes.draw do
       post :edit_subject_amount
       get :destroy_subject_amount
       post :destroy_subject_amount
+      get :manage_course
+      get :manage_batches
+      get :update_batch
     end
   end
 
@@ -229,6 +247,9 @@ Fedena::Application.routes.draw do
       get :advanced_search
       get :search_ajax
       get :list_students_by_course
+      get :categories
+      post :categories
+      get :add_additional_details
     end
   end
 
@@ -292,9 +313,17 @@ Fedena::Application.routes.draw do
   end
 
 
-  resources :student_attendance, only: :index
+  resources :student_attendance, only: :index do
+    collection do
+      get :advance_search
+    end
+  end
 
-  resources :configuration, only: :index
+  resources :configuration, only: :index do
+    collection do
+      get :settings
+    end
+  end
 
   resources :employee, only: :index do
     collection do
@@ -304,6 +333,7 @@ Fedena::Application.routes.draw do
       get :select_department
     end
   end
+  resources :sms, only: :index
 
   get 'scheduled_jobs/:job_object/:job_type', to: "scheduled_jobs#index" , as: :scheduled_task
 

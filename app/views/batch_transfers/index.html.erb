@@ -22,7 +22,7 @@
   <h1><%= t('batch_transfer') %></h1>
   <h3><%= t('home') %></h3>
   <div id="app-back-button">
-    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -39,7 +39,7 @@
   </div>
   <div class="label-field-pair">
     <label><%= t('select_a_course') %>:
-      <%= image_tag("loader.gif",:align => "absmiddle",:border => 0,:id => "loader", :style =>"display: none;" ) %>
+      <%= image_tag("loader.gif", :align => "absmiddle",:border => 0,:id => "loader", :style =>"display: none;" ) %>
     </label>
     <div class="text-input-bg">
       <%= select :courses, :name,
