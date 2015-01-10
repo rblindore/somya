@@ -29,6 +29,9 @@ GEM
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
+    ckeditor (4.1.1)
+      cocaine
+      orm_adapter (~> 0.5.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.5)
@@ -45,6 +48,9 @@ GEM
     declarative_authorization (0.5.7)
     delayed_job (4.0.4)
       activesupport (>= 3.0, < 4.2)
+    delayed_job_active_record (4.0.3)
+      activerecord (>= 3.0, < 5.0)
+      delayed_job (>= 3.0, < 4.1)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -60,6 +66,8 @@ GEM
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-ui-rails (5.0.3)
+      railties (>= 3.2.16)
     json (1.8.1)
     libv8 (3.16.14.7)
     mail (2.5.4)
@@ -69,6 +77,7 @@ GEM
     mime-types (1.25.1)
     minitest (5.5.0)
     multi_json (1.10.1)
+    orm_adapter (0.5.0)
     paperclip (4.2.1)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -172,12 +181,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ckeditor
   coffee-rails (~> 4.0.0)
   declarative_authorization
   delayed_job
+  delayed_job_active_record
   iconv (~> 1.0.3)
   jbuilder (~> 2.0)
   jquery-rails
+  jquery-ui-rails
   paperclip
   pg
   prototype-rails
