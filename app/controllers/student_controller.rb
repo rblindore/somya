@@ -20,39 +20,39 @@ class StudentController < ApplicationController
   filter_access_to :all
   before_filter :login_required
   before_filter :protect_other_student_data, :except =>[:show]
-    
+
   before_filter :find_student, :only => [
     :academic_report, :academic_report_all, :admission3, :change_to_former,
     :delete, :edit, :add_guardian, :email, :remove, :reports, :profile,
     :guardians, :academic_pdf,:show_previous_details,:fees,:fee_details
   ]
 
-  
+
   def academic_report_all
     @user = current_user
     @prev_student = @student.previous_student
     @next_student = @student.next_student
     @course = @student.course
     @examtypes = ExaminationType.find( ( @course.examinations.collect { |x| x.examination_type_id } ).uniq )
-    
+
     @graph = open_flash_chart_object(965, 350, "/student/graph_for_academic_report?course=#{@course.id}&student=#{@student.id}")
     @graph2 = open_flash_chart_object(965, 350, "/student/graph_for_annual_academic_report?course=#{@course.id}&student=#{@student.id}")
   end
 
   def admission1
     @student = Student.new(params[:student])
-    @selected_value = Configuration.default_country 
+    @selected_value = Settings.default_country
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
-    @last_admitted_student = Student.find(:last)
-    @config = Configuration.find_by_config_key('AdmissionNumberAutoIncrement')
+    @last_admitted_student = Student.order(:id).last
+    @config = Settings.where(config_key: 'AdmissionNumberAutoIncrement').first
     @categories = StudentCategory.active
     if request.post?
       if @config.config_value.to_i == 1
-        @exist = Student.find_by_admission_no(params[:student][:admission_no])
+        @exist = Student.where(admission_no: params[:student][:admission_no])
         if @exist.nil?
           @status = @student.save
         else
-          @last_admitted_student = Student.find(:last)
+          @last_admitted_student = Student.order(:id).last
           @student.admission_no = @last_admitted_student.admission_no.next
           @status = @student.save
         end
@@ -72,7 +72,7 @@ class StudentController < ApplicationController
           end
         end
         flash[:notice] = "#{t('flash8')}"
-        redirect_to :controller => "student", :action => "admission2", :id => @student.id
+        redirect_to controller: :student, action: :admission2, id: @student.id
       end
     end
   end
@@ -183,14 +183,14 @@ class StudentController < ApplicationController
   def admission4
     @student = Student.find(params[:id])
     @student_additional_details = StudentAdditionalDetail.find_all_by_student_id(@student.id)
-    @additional_fields = StudentAdditionalField.find(:all, :conditions=> "status = true", :order=>"priority ASC")
+    @additional_fields = StudentAdditionalField.where(status: true).order("priority ASC")
     if @additional_fields.empty?
       flash[:notice] = "#{t('flash9')} #{@student.first_name} #{@student.last_name}."
       redirect_to :controller => "student", :action => "profile", :id => @student.id
     end
     if request.post?
       @error=false
-      mandatory_fields = StudentAdditionalField.find(:all, :conditions=>{:is_mandatory=>true, :status=>true})
+      mandatory_fields = StudentAdditionalField.where(is_mandatory: true, status: true)
       mandatory_fields.each do|m|
         unless params[:student_additional_details][m.id.to_s.to_sym].present?
           @student.errors.add_to_base("#{m.name} must contain atleast one selected option.")
@@ -226,14 +226,14 @@ class StudentController < ApplicationController
 
   def edit_admission4
     @student = Student.find(params[:id])
-    @additional_fields = StudentAdditionalField.find(:all, :conditions=> "status = true")
+    @additional_fields = StudentAdditionalField.where(status: true)
     @additional_details = StudentAdditionalDetail.find_all_by_student_id(@student)
-    
+
     if @additional_details.empty?
       redirect_to :controller => "student",:action => "admission4" , :id => @student.id
     end
     if request.post?
-   
+
       params[:student_additional_details].each_pair do |k, v|
         row_id=StudentAdditionalDetail.find_by_student_id_and_additional_field_id(@student.id,k)
         unless row_id.nil?
@@ -248,9 +248,9 @@ class StudentController < ApplicationController
     end
   end
   def add_additional_details
-    @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-    @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
-    @additional_field = StudentAdditionalField.new    
+    @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+    @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
+    @additional_field = StudentAdditionalField.new
     @student_additional_field_option = @additional_field.student_additional_field_options.build
     if request.post?
       priority = 1
@@ -269,7 +269,7 @@ class StudentController < ApplicationController
   def change_field_priority
     @additional_field = StudentAdditionalField.find(params[:id])
     priority = @additional_field.priority
-    @additional_fields = StudentAdditionalField.find(:all, :conditions=>{:status=>true}, :order=> "priority ASC").map{|b| b.priority.to_i}
+    @additional_fields = StudentAdditionalField.where(status: true).order("priority ASC").map{|b| b.priority.to_i}
     position = @additional_fields.index(priority)
     if params[:order]=="up"
       prev_field = StudentAdditionalField.find_by_priority(@additional_fields[position - 1])
@@ -279,16 +279,16 @@ class StudentController < ApplicationController
     @additional_field.update_attributes(:priority=>prev_field.priority)
     prev_field.update_attributes(:priority=>priority.to_i)
     @additional_field = StudentAdditionalField.new
-    @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-    @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
+    @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+    @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
     render(:update) do|page|
       page.replace_html "category-list", :partial=>"additional_fields"
     end
   end
 
   def edit_additional_details
-    @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-    @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
+    @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+    @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
     @additional_field = StudentAdditionalField.find(params[:id])
     @student_additional_field_option = @additional_field.student_additional_field_options
     if request.get?
@@ -304,11 +304,11 @@ class StudentController < ApplicationController
   end
 
   def delete_additional_details
-    students = StudentAdditionalDetail.find(:all ,:conditions=>"additional_field_id = #{params[:id]}")
+    students = StudentAdditionalDetail.where(additional_field_id: params[:id])
     if students.blank?
       StudentAdditionalField.find(params[:id]).destroy
-      @additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>true},:order=>"priority ASC")
-      @inactive_additional_details = StudentAdditionalField.find(:all, :conditions=>{:status=>false},:order=>"priority ASC")
+      @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
+      @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
       flash[:notice]="#{t('flash13')}"
       redirect_to :action => "add_additional_details"
     else
@@ -342,7 +342,7 @@ class StudentController < ApplicationController
   def generate_all_tc_pdf
     @ids = params[:stud]
     @students = @ids.map { |st_id| ArchivedStudent.find(st_id) }
-    
+
     render :pdf=>'generate_all_tc_pdf'
   end
 
@@ -505,16 +505,13 @@ class StudentController < ApplicationController
   def search_ajax
     if params[:option] == "active"
       if params[:query].length>= 3
-        @students = Student.find(:all,
-          :conditions => ["first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
+        @students = Student.where("first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
                             OR admission_no = ? OR (concat(first_name, \" \", last_name) LIKE ? ) ",
             "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
-            "#{params[:query]}", "#{params[:query]}" ],
-          :order => "batch_id asc,first_name asc",:include =>  [{:batch=>:course}]) unless params[:query] == ''
+            "#{params[:query]}", "#{params[:query]}").order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
       else
-        @students = Student.find(:all,
-          :conditions => ["admission_no = ? " , params[:query]],
-          :order => "batch_id asc,first_name asc",:include =>  [{:batch=>:course}]) unless params[:query] == ''
+        @students = Student.where("admission_no = ? " , params[:query]).
+          order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
       end
       render :layout => false
     else
@@ -563,24 +560,24 @@ class StudentController < ApplicationController
     @current_user = current_user
     @address = @student.address_line1.to_s + ' ' + @student.address_line2.to_s
     @additional_fields = StudentAdditionalField.all(:conditions=>"status = true")
-    @sms_module = Configuration.available_modules
+    @sms_module = Settings.available_modules
     @sms_setting = SmsSetting.new
     @previous_data = StudentPreviousData.find_by_student_id(@student.id)
     @immediate_contact = Guardian.find(@student.immediate_contact_id) \
       unless @student.immediate_contact_id.nil? or @student.immediate_contact_id == ''
   end
-  
+
   def profile_pdf
     @current_user = current_user
     @student = Student.find(params[:id])
     @address = @student.address_line1.to_s + ' ' + @student.address_line2.to_s
     @additional_fields = StudentAdditionalField.all(:conditions=>"status = true")
-    @sms_module = Configuration.available_modules
+    @sms_module = Settings.available_modules
     @sms_setting = SmsSetting.new
     @previous_data = StudentPreviousData.find_by_student_id(@student.id)
     @immediate_contact = Guardian.find(@student.immediate_contact_id) \
       unless @student.immediate_contact_id.nil? or @student.immediate_contact_id == ''
-        
+
     render :pdf=>'profile_pdf'
   end
 
@@ -588,7 +585,7 @@ class StudentController < ApplicationController
     @previous_data = StudentPreviousData.find_by_student_id(@student.id)
     @previous_subjects = StudentPreviousSubjectMark.find_all_by_student_id(@student.id)
   end
-  
+
   def show
     @student = Student.find_by_admission_no(params[:id])
     send_data(@student.photo_data,
@@ -646,7 +643,7 @@ class StudentController < ApplicationController
     @student_categories = StudentCategory.active
     @student_category = StudentCategory.new(params[:student_category])
     if request.post? and @student_category.save
-      flash[:notice] = "#{t('flash7')}"
+      flash[:notice] = t('flash7')
       redirect_to :action => 'categories'
     end
   end
@@ -749,7 +746,7 @@ class StudentController < ApplicationController
     end
   end
 
-   
+
 
   #  def adv_search
   #    @batches = []
@@ -936,7 +933,7 @@ class StudentController < ApplicationController
       end
     end
     render :pdf=>'generate_tc_pdf'
-         
+
   end
 
   #  def new_adv
@@ -1021,7 +1018,7 @@ class StudentController < ApplicationController
 
     @fee_category = FinanceFeeCategory.find(@fee_collection.fee_category_id,:conditions => ["is_deleted = false"])
     @fee_particulars = @fee_collection.fees_particulars(@student)
-    @currency_type = Configuration.find_by_config_key("CurrencyType").config_value
+    @currency_type = Settings.find_by_config_key("CurrencyType").config_value
 
     @batch_discounts = BatchFeeCollectionDiscount.find_all_by_finance_fee_collection_id(@fee_collection.id)
     @student_discounts = StudentFeeCollectionDiscount.find_all_by_finance_fee_collection_id_and_receiver_id(@fee_collection.id,@student.id)
@@ -1036,7 +1033,7 @@ class StudentController < ApplicationController
   end
 
 
-  
+
   #  # Graphs
   #
   #  def graph_for_previous_years_marks_overview

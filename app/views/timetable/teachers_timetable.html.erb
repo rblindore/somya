@@ -18,12 +18,12 @@
 #under the License. -%>
 <div id="content-header">
 <%#*<img src="  show_timetable.png" />%>
-  <%= link_to  image_tag("  show_timetable.png"),:controller=>:timetable %>
+  <%= link_to  image_tag("show_timetable.png"),:controller=>:timetable %>
   <h1><%= t('timetable_text') %></h1>
   <h3><%= t('teacher_timetable') %></h3>
 
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" -%>
+    <%= link_to image_tag("buttons/back.png",:border => 0), 'javascript: void(0)', onclick: "history.back()" -%>
   </div>
 
 </div>
@@ -31,7 +31,7 @@
 <div id="page-yield">
 
 
-  <% form_for :timetable_entry do |s| %>
+  <%= form_for :timetable_entry do |s| %>
     <div class="label-field-pair">
       <label for="timetable_entry_course_id"><%= t('select_a_tte') %></label>
       <%= image_tag("loader.gif",

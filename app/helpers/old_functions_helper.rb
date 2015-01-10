@@ -59,4 +59,9 @@ module OldFunctionsHelper
       ''
     end
   end
+
+  # File actionpack/lib/action_view/helpers/prototype_helper.rb, line 255
+  def link_to_remote(name, options = {}, html_options = {})
+    link_to_function(name, remote_function(options), html_options || options.delete(:html))
+  end
 end

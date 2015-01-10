@@ -54,4 +54,7 @@ gem 'pry', group: [:development]
 # gem 'debugger', group: [:development, :test]
 gem 'will_paginate'
 gem 'prototype-rails'
+gem 'delayed_job_active_record'
+gem 'jquery-ui-rails'
+gem 'ckeditor'
 # gem 'has_and_belongs_to_many_with_deferred_save', '~> 0.2.0'

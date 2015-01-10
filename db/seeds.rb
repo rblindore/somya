@@ -20,14 +20,14 @@
   {"config_key" => "DefaultCountry"                  ,"config_value" => "76"},
   {"config_key" => "FirstTimeLoginEnable"            ,"config_value" => "0"}
 ].each do |param|
-  Configur.find_or_create_by(param)
+  Settings.find_or_create_by(param)
 end
 
 [
   {"config_key" => "AvailableModules"                ,"config_value" => "HR"},
   {"config_key" => "AvailableModules"                ,"config_value" => "Finance"}
 ].each do |param|
-  Configur.find_or_create_by(param)
+  Settings.find_or_create_by(param)
 end
 
 if GradingLevel.count == 0
@@ -103,7 +103,7 @@ end
 Event.all.each do |e|
   e.destroy if e.origin_type=="AdditionalExam"
 end
- 
+
 #insert record in privilege_tags table
 [
   {"name_tag" => "system_settings", "priority"=>5},

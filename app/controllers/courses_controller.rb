@@ -20,7 +20,7 @@ class CoursesController < ApplicationController
   before_filter :login_required
   before_filter :find_course, :only => [:show, :edit, :update, :destroy]
   filter_access_to :all
-  
+
   def index
     @courses = Course.active
   end
@@ -28,11 +28,11 @@ class CoursesController < ApplicationController
   def new
     @course = Course.new
     @grade_types=Course.grading_types_as_options
-    #    gpa = Configuration.find_by_config_key("GPA").config_value
+    #    gpa = Settings.find_by_config_key("GPA").config_value
     #    if gpa == "1"
     #      @grade_types << "GPA"
     #    end
-    #    cwa = Configuration.find_by_config_key("CWA").config_value
+    #    cwa = Settings.find_by_config_key("CWA").config_value
     #    if cwa == "1"
     #      @grade_types << "CWA"
     #    end
@@ -205,11 +205,11 @@ class CoursesController < ApplicationController
       redirect_to :action=>'manage_course'
     else
       @grade_types=Course.grading_types_as_options
-      #      gpa = Configuration.find_by_config_key("GPA").config_value
+      #      gpa = Settings.find_by_config_key("GPA").config_value
       #      if gpa == "1"
       #        @grade_types << "GPA"
       #      end
-      #      cwa = Configuration.find_by_config_key("CWA").config_value
+      #      cwa = Settings.find_by_config_key("CWA").config_value
       #      if cwa == "1"
       #        @grade_types << "CWA"
       #      end
@@ -220,11 +220,11 @@ class CoursesController < ApplicationController
   def edit
     @grade_types=Course.grading_types_as_options
     #    @grade_types=[]
-    #    gpa = Configuration.find_by_config_key("GPA").config_value
+    #    gpa = Settings.find_by_config_key("GPA").config_value
     #    if gpa == "1"
     #      @grade_types << "GPA"
     #    end
-    #    cwa = Configuration.find_by_config_key("CWA").config_value
+    #    cwa = Settings.find_by_config_key("CWA").config_value
     #    if cwa == "1"
     #      @grade_types << "CWA"
     #    end
@@ -252,7 +252,7 @@ class CoursesController < ApplicationController
       flash[:warn_notice]="<p>#{t('courses.flash4')}</p>"
       redirect_to :action=>'manage_course'
     end
-  
+
   end
 
   def show

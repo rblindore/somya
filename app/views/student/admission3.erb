@@ -30,7 +30,7 @@
 
   <p class="flash-msg"><%= t('select_one_of_the_guardians') %></p>
 
-  <% form_for :immediate_contact do |f| %>
+  <%= form_for :immediate_contact do |f| %>
     <ul id="parents-list">
       <%- @parents.each do |p| -%>
         <li class="list<%=cycle('odd', 'even')%>">

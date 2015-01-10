@@ -32,7 +32,7 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
 
-    <%- form_for :additional_details do |c| -%>
+    <%= form_for :additional_details do |c| -%>
 
       <%= error_messages_for 'additional_details' %>
       <div id="form-content">

@@ -18,7 +18,7 @@
 #under the License. -%>
 
 <div class="box">
-  <% form_for :student_category, :url => {:action => 'categories'} do |f| %>
+  <%= form_for :student_category, :url => {:action => 'categories'} do |f| %>
     <%= error_messages_for 'student_category', :header_message => nil %>
     <div class="label-field-pair">
       <label><%= t('enter_new_category') %> : </label>

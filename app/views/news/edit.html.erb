@@ -22,7 +22,7 @@
   <h1><%= t('news_text') %></h1>
   <h3><%= t('read_news') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -30,7 +30,7 @@
 
   <% unless flash[:notice].nil? %><p class="flash-msg"> <%= flash[:notice] %> </p><% end %>
 
-  <% form_for :news do |f| %>
+  <%= form_for :news do |f| %>
 
     <%= error_messages_for :news %>
 
@@ -42,7 +42,7 @@
 
       <div class="news_label_field">
         <label for="news_content"><%= t('content') %></label>
-        <div id="news_content_text_field_bg"><%= fckeditor_textarea :news, :content, :value => @news.content %></div>
+        <div id="news_content_text_field_bg"><%= cktext_area :news, :content, :value => @news.content %></div>
       </div>
     </div>
 

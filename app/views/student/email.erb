@@ -44,7 +44,7 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
 
-  <% form_for :email do |f| %>
+  <%= form_for :email do |f| %>
     <%= error_messages_for 'student', :header_message => nil %>
 
     <div class="label-field-pair">

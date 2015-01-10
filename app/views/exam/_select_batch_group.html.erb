@@ -19,5 +19,6 @@
 
 <div class="label-field-pair">
   <label for="student_course"><%= t('select_a_batch_group') %> :</label>
-  <div  class="text-input-bg"><%= select :report, :batch_group_id, @batch_groups.map {|g| [g.name, g.id]}, {:prompt => "#{t('select_a_batch_group')}"}%></div>
+  <div  class="text-input-bg"><%= select :report, :batch_group_id, @batch_groups.map {|g| [g.name, g.id]}, {:prompt => t('select_a_batch_group')}%>
+  </div>
 </div>

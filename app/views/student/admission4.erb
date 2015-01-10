@@ -28,7 +28,7 @@
   <% unless flash[:notice].nil? %>
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
-  <% form_for :student_additional_details do |a| %>
+  <%= form_for :student_additional_details do |a| %>
     <%= error_messages_for 'student' %>
   <%#= error_messages_for 'employee_bank_details' %>
     <% i=0 %>

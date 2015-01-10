@@ -23,7 +23,7 @@
   <h1><%= t('configuration_text') %></h1>
   <h3><%= t('general_settings') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -148,7 +148,7 @@
         <%= check_box :configuration, :admission_number_auto_increment, :checked => false %><%= t('student_admission_auto') %>
       <% end %>
       <br/>
-      <% if Configuration.available_modules.include?('HR') %>
+      <% if Settings.available_modules.include?('HR') %>
         <% if @config[:employee_number_auto_increment] == '1' %>
           <%= check_box :configuration, :employee_number_auto_increment, :checked => true %> <%= t('employee_admission_auto') %>
         <% else %>

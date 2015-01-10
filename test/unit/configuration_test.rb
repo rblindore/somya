@@ -26,29 +26,29 @@ class ConfigurationTest <  ActiveSupport::TestCase
 
     setup do
       CONFIG_HASH.each do |key,value|
-        Configuration.create(:config_key=>key,:config_value=>value)
+        Settings.create(:config_key=>key,:config_value=>value)
       end
     end
     CONFIG_HASH.each do |key,value|
       should "be able to get config value for #{key}" do
-        config_value = Configuration.get_config_value(key)
+        config_value = Settings.get_config_value(key)
         assert_equal config_value,value
       end
     end
 
     should "not be able to set config value for StudentAttendanceType other than Daily,Subjectwise" do
-      config = Configuration.find_by_config_key("StudentAttendanceType")
+      config = Settings.find_by_config_key("StudentAttendanceType")
       config.config_value = "Test"
       assert !config.valid?
     end
 
     should "not be able to set config value for NetworkType than Online,Offline" do
-      config = Configuration.find_by_config_key("NetworkState")
+      config = Settings.find_by_config_key("NetworkState")
       config.config_value = "Test"
       assert !config.valid?
     end
-    
+
 
   end
-  
+
 end

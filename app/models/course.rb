@@ -107,15 +107,15 @@ class Course < ActiveRecord::Base
   end
 
   def cce_enabled?
-    Configuration.cce_enabled? and grading_type == "3"
+    Settings.cce_enabled? and grading_type == "3"
   end
 
   def gpa_enabled?
-    Configuration.has_gpa? and self.grading_type=="1"
+    Settings.has_gpa? and self.grading_type=="1"
   end
 
   def cwa_enabled?
-    Configuration.has_cwa? and self.grading_type=="2"
+    Settings.has_cwa? and self.grading_type=="2"
   end
 
   def normal_enabled?
@@ -142,7 +142,7 @@ class Course < ActiveRecord::Base
     def grading_types
       hsh =  ActiveSupport::OrderedHash.new
       hsh["0"]="Normal"
-      types = Configuration.get_grading_types
+      types = Settings.get_grading_types
       types.each{|t| hsh[t] = GRADINGTYPES[t]}
       hsh
     end

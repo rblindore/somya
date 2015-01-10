@@ -23,7 +23,7 @@
   <h1><%= t('configuration_text') %></h1>
   <h3><%= t('configuration_text') %> <%= t('home') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -37,41 +37,41 @@
 
     <% if permitted_to? :create, :courses %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('manage_course_batch')}", courses_path %></div>
+        <div class="link-heading"><%= link_to t('manage_course_batch'), courses_path %></div>
         <div class="link-descr"><%= t('add_a_new_course_or_batch') %></div>
       </div>
     <% end %>
 
     <% if permitted_to? :settings, :configuration %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('manage_student_category')}", :controller => "student", :action => "categories" %></div>
+        <div class="link-heading"><%= link_to t('manage_student_category'), categories_student_index_path %></div>
         <div class="link-descr"><%= t('add_student_category') %></div>
       </div>
     <% end %>
     <% if permitted_to? :index, :subjects %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('manage_subject')}", subjects_path %></div>
+        <div class="link-heading"><%= link_to t('manage_subject'), subjects_path %></div>
         <div class="link-descr"><%= t('manage_subjects_corresponding') %></div>
       </div>
     <% end %>
 
     <% if permitted_to? :settings, :configuration %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('general_settings')}", :action => "settings" %></div>
+        <div class="link-heading"><%= link_to t('general_settings'), settings_configuration_index_path %></div>
         <div class="link-descr"><%= t('set_some_general_configuration') %></div>
       </div>
     <% end %>
 
     <% if permitted_to? :settings, :configuration %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('add_admission_additional_detail')}", :controller=>"student", :action => "add_additional_details" %></div>
+        <div class="link-heading"><%= link_to t('add_admission_additional_detail'), add_additional_details_student_index_path %></div>
         <div class="link-descr"><%= t('set_some_additional_details') %></div>
       </div>
     <% end %>
 
     <% if permitted_to? :index, :sms %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('sms_module')}", :controller=>"sms", :action => "index" %></div>
+        <div class="link-heading"><%= link_to t('sms_module'), sms_path %></div>
         <div class="link-descr"><%= t('enable_or_disable_sms_settings') %></div>
       </div>
     <% end %>

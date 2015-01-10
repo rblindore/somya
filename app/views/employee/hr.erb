@@ -22,7 +22,7 @@
   <h1><%= "#{t('hr_management')}" %></h1>
   <h3><%= t('human_resource') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -72,7 +72,7 @@
       <div class="link-descr"><%= "#{t('view_department_wise_payslip')}" %></div>
     </div>
     <% end %>
-    <% finance = Configuration.available_modules %>
+    <% finance = Settings.available_modules %>
     <% unless finance.include?("Finance") %>
       <% if permitted_to? :payslip_approve, :employee %>
         <div class="link-box">

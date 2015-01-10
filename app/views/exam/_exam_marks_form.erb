@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% form_for [@batch, @exam_group] do |f| %>
+<%= form_for [@batch, @exam_group] do |f| %>
 
   <%= f.error_messages %>
   <div class="exam-basic-details">
@@ -32,7 +32,7 @@
       <div class="label-field-pair">
         <%= f.label :exam_type, t('exam_type')%>
         <div class="text-input-bg"><%= f.text_field :exam_type, :value=>@type=='Marks' ? t('marks') : t('marks_and_grades'),:disabled=>true %>
-        </div><%= link_to "#{t('change_type')}", new_batch_exam_group_path(@batch,:ename=>@name),:class=>"type_link" %>
+        </div><%= link_to t('change_type'), new_batch_exam_group_path(@batch,:ename=>@name), class :type_link %>
       </div>
     <% else %>
       <div class="label-field-pair">

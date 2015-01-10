@@ -22,4 +22,6 @@
   <div  class="text-input-bg">
     <%= select :transcript, :student_id,
       @students.map{|s| [s.full_name, s.id]},
-      {:prompt => "select a student"}%></div></div>
+      {:prompt => "select a student"}%>
+  </div>
+</div>

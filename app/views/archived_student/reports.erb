@@ -22,7 +22,7 @@
   <h1><%= t('student_details') %></h1>
   <h3><%= t('report_center') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -59,7 +59,7 @@
         <% else %>
           <li><%= link_to "Transcript Report", { :controller=>'exam', :action => 'student_transcript',:transcript=>{:batch_id=>@student.batch_id},:student_id=>@student.former_id,:flag=>"1" } %></li>
         <% end %>
-        <% if Configuration.cce_enabled? %>
+        <% if Settings.cce_enabled? %>
           <li><%= link_to "CCE Transcript Report", { :controller => 'cce_reports', :action => 'student_transcript',:id=>@student.id, :type=>"former" }%></li>
         <% end %>
 

@@ -22,7 +22,7 @@
   <h1><%= t('class') %> : <%= @course.name%></h1>
   <h3><%= t('send_email') %></h3>
   <div id="app-back-button">
-    <%= link_to image_tag("buttons/back.png", :border => 0), :back %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -46,7 +46,7 @@
     </div>
 
     <div class="submit-area">
-      <%= image_submit_tag '  buttons/send.png' %>
+      <%= image_submit_tag 'buttons/send.png' %>
     </div>
 
   <% end %>

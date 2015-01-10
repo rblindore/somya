@@ -18,21 +18,21 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("  examination/show_exam.png") %>
+  <%= image_tag("examination/show_exam.png") %>
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('generated_report') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">
   <ul>
     <%  if permitted_to? :consolidated_exam_report,:exam %>
-      <li><%= link_to "#{t('consolidated_report')}", :action=>'consolidated_exam_report',:exam_group=>@exam_group.id %></li>
+      <li><%= link_to t('consolidated_report'), action: :consolidated_exam_report , exam_group: @exam_group.id %></li>
     <% end %>
     <%  if permitted_to? :generated_report_pdf,:exam %>
-      <li><%= link_to "#{t('pdf_report')}",
-          {:controller => "exam", :action => "generated_report_pdf", :exam_group => @exam_group.id, :batch => @batch.id},:target => '_blank' %></li>
+      <li><%= link_to t('pdf_report'),
+          { controller: :exam, action: :generated_report_pdf, exam_group: @exam_group.id, batch: @batch.id}, target: :blank %></li>
     <% end %>
   </ul>
 </div>
