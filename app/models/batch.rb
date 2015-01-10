@@ -46,7 +46,7 @@ class Batch < ActiveRecord::Base
   has_many :assessment_scores
 
 
-  has_and_belongs_to_many :graduated_students, class_name: :Student, join_table: :batch_students
+  has_and_belongs_to_many :graduated_students, class_name: "Student", join_table: :batch_students
 
   delegate :course_name,:section_name, :code, to: :course
   delegate :grading_type, :cce_enabled?, :observation_groups, :cce_weightages, to: :course
