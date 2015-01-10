@@ -37,7 +37,7 @@
     No timetables found
   <% else %>
     <% current=Timetable.where("timetables.start_date <= ? AND timetables.end_date >= ?",@local_tzone_time.to_date, @local_tzone_time.to_date).first %>
-    <% form_for :timetable_entry do |s| %>
+    <%= form_for :timetable_entry do |s| %>
       <div class="label-field-pair">
         <label for="timetable_entry_course_id"><%= t('select_tte') %></label>
         <div class="text-input-bg">

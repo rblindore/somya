@@ -327,6 +327,7 @@ Fedena::Application.routes.draw do
   resources :configuration, only: :index do
     collection do
       get :settings
+      post :settings
     end
   end
 

@@ -17,19 +17,19 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
- <% form_for :advance_search do |f| %>
-<%= f.text_field :student%>
-<%= f.text_field :student_id %>
-<%= f.select :mode, :id,
-  [["#{t('monthly')}","Monthly"], ["#{t('overall')}","Overall"]],
-  {:prompt => "#{t('select_mode')}"},
-  {:onchange => "#{remote_function(
-  :url => { :action => 'month' },
-  :with => "'mode='+value",
-  :before => "Element.show('loader')",
-  :success => "Element.hide('loader')"  )}"} %>
-<% unless @subject.nil? %>
-<%= f.hidden_field :subject , :value=> @subject.id %>
-<% end %>
-<%= f.submit "#{t('submit')}"  %>
+<%= form_for :advance_search do |f| %>
+  <%= f.text_field :student%>
+  <%= f.text_field :student_id %>
+  <%= f.select :mode, :id,
+    [[t('monthly'),"Monthly"], [t('overall'),"Overall"]],
+    {:prompt => "#{t('select_mode')}"},
+    {:onchange => "#{remote_function(
+    :url => { :action => 'month' },
+    :with => "'mode='+value",
+    :before => "Element.show('loader')",
+    :success => "Element.hide('loader')"  )}"} %>
+  <% unless @subject.nil? %>
+    <%= f.hidden_field :subject , :value=> @subject.id %>
+  <% end %>
+  <%= f.submit t('submit')  %>
 <% end %>

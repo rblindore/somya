@@ -34,7 +34,7 @@
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('result_entry') %></h3>
   <div id="app-back-button">
-    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>back()" %>
   </div>
 </div>
 <div id="page-yield">
@@ -52,7 +52,7 @@
     <%= @exam.subject.name %>
   </div>
   <div class="box">
-    <% form_for :exam_scores, :url => {:controller=>"exam", :action=>"update_previous_marks", :exam_id=>@exam.id} do |f| %>
+    <%= form_for :exam_scores, :url => {:controller=>"exam", :action=>"update_previous_marks", :exam_id=>@exam.id} do |f| %>
 
       <table id="listing" width="100%">
         <tr class="tr-head">

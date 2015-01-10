@@ -22,7 +22,7 @@
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('subject_wise_report') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %></div>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
 </div>
 <div id="page-yield">
   <% unless flash[:notice].nil? %>
@@ -35,7 +35,7 @@
   </div>
   <div class="box">
 
-    <% form_for :exam_report, url: generated_report2_exam_index_path do |x| %>
+    <%= form_for :exam_report, url: generated_report2_exam_index_path do |x| %>
 
       <div class="text-input-bg">
         <%= select :exam_report, :batch_id,

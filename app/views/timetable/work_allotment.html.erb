@@ -39,7 +39,7 @@
     </p>
   <% end %>
 
-  <% form_for :employee_subjects, html: { id: :work_allotment_form } do |f| %>
+  <%= form_for :employee_subjects, html: { id: :work_allotment_form } do |f| %>
     <% @batches.each do |batch| %>
       <ul class="category-list">
         <li class="heading">

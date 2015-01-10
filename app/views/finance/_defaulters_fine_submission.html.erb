@@ -19,7 +19,7 @@
 
 <div id="fee-defaulters">
   <h5><%= t('due_date_exceeded_collect_fine') %> : </h5>
-<% form_for :fine, :url => {:action => 'update_defaulters_fine_ajax' } do |form| %>
+<%= form_for :fine, :url => {:action => 'update_defaulters_fine_ajax' } do |form| %>
  <div class="label-field-pair">
    <div class="text-input-bg">
     <%= form.text_field :fee, :value=>'' %></div>

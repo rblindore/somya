@@ -46,7 +46,7 @@
       <p class="flash-msg"> <%= flash[:notice] %> </p>
     <% end %>
 
-    <%- form_for :bank_field do |c| -%>
+    <%= form_for :bank_field do |c| -%>
 
       <%= error_messages_for 'bank_field' %>
       <div id="form-content">

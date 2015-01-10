@@ -17,14 +17,14 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% form_for :holiday do |f| %>
-<%= select :holiday, :weekdays, [ "#{t('monday')}", "#{t('tuesday')}","#{t('thursday')}","#{t('wednesday')}","#{t('friday')}","#{t('saturday')}", "#{t('sunday')}" ]%>
+<%= form_for :holiday do |f| %>
+  <%= select :holiday, :weekdays, [ t('monday'), t('tuesday'), t('thursday'), t('wednesday'), t('friday'), t('saturday'), t('sunday') ]%>
 
   <%= submit_tag "#{t('submit')}" %>
 <% end %>
 <% unless @weekly_holidays.nil? %>
   <% @weekly_holidays.each do |d| %>
-    <%= d.config_value %><%= link_to "#{t('delete_text')}", :action=>"delete", :id=>d.id  %>
-    
+    <%= d.config_value %><%= link_to t('delete_text'), :action=>"delete", :id=>d.id  %>
+
   <% end %>
 <% end %>

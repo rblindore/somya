@@ -21,11 +21,11 @@
 <script src="/javascripts/jquery-ui.min.js" type="text/javascript"></script>
 
 <div id="content-header">
-    <%= image_tag("  HR/show_hr.png") %>
+    <%= image_tag("HR/show_hr.png") %>
   <h1><%= t('edit_employee_information') %></h1>
   <h3><%= t('personal') %></h3>
   <div id="app-back-button">
- <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
   </div>
 </div>
 
@@ -37,7 +37,7 @@
   <% end %>
 
 
-    <% form_for :employee, :url => {:action => 'edit_personal',:id => @employee.id}, :html => {:multipart => true} do |a| %>
+    <%= form_for :employee, :url => {:action => 'edit_personal',:id => @employee.id}, :html => {:multipart => true} do |a| %>
 
     <%= error_messages_for 'employee' %>
 

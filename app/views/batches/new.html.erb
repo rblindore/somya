@@ -40,7 +40,7 @@
       <%= t('new_batch') %>
     </div>
 
-    <% form_for [@course, @batch] do |f| %>
+    <%= form_for [@course, @batch] do |f| %>
       <%= f.error_messages  %>
       <div class="label-field-pair">
         <div class="label-container"><%= t('name') %></div>

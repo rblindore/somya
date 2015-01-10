@@ -20,19 +20,19 @@
 
 
 <div id="content-header">
-  <%= image_tag("  HR/leave-new.png") %>
+  <%= image_tag("HR/leave-new.png") %>
   <h1><%= t('leave_management') %></h1>
   <h3><%= t('apply_or_check_status') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
   </div>
 </div>
 
 <div id="inner-tab-menu">
   <ul>
-    <li><%= link_to "#{t('apply')}", :controller=>"employee_attendance", :action=>"leaves", :id=> @employee.id %></li>
-    <li><%= link_to "#{t('leave_history')}", :controller=>"employee_attendance", :action=>"leave_history", :id=> @employee.id %></li>
-    <li><%= link_to_remote "#{t('my_leaves')}",
+    <li><%= link_to t('apply'), :controller=>"employee_attendance", :action=>"leaves", :id=> @employee.id %></li>
+    <li><%= link_to t('leave_history'), :controller=>"employee_attendance", :action=>"leave_history", :id=> @employee.id %></li>
+    <li><%= link_to_remote t('my_leaves'),
         :update => "application-list",
         :url => {:action => "individual_leave_applications", :id=>@employee.id} %></li>
     <% unless @reporting_employees == [] %>
@@ -71,7 +71,7 @@
   <% unless reporting_manager.nil? and not @current_user.admin? %>
     <div id="application-list">
       <div class="heading themed_text"><%= t('apply_for_a_leave') %></div>
-      <% form_for :leave_apply do |l| %>
+      <%= form_for :leave_apply do |l| %>
         <%= error_messages_for :leave_apply %>
         <%= l.hidden_field :employee_id, :value=>@employee.id %>
         <div class="label-field-pair">

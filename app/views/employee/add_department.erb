@@ -34,7 +34,7 @@
       <%= t('add_department') %>
     </div>
 
-    <%- form_for :department do |c| -%>
+    <%= form_for :department do |c| -%>
 
       <% unless flash[:notice].nil? %>
         <p class="flash-msg"> <%= flash[:notice] %> </p>

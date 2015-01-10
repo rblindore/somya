@@ -22,7 +22,7 @@
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('generate_reports') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">
@@ -37,7 +37,7 @@
   <% end %>
   <div class="box">
 
-    <% form_for :report  do |x| %>
+    <%= form_for :report  do |x| %>
       <div class="label-field-pair">
         <label for="student_course"><%= t('select_a_course') %> :</label>
         <div  class="text-input-bg">

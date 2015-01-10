@@ -46,7 +46,7 @@
       <p class="flash-msg"> <%= flash[:notice] %> </p>
     <% end %>
 
-    <%- form_for @additional_field, :url=>{:action=>(@additional_field.new_record? ? "add_additional_details" : "edit_additional_details")} do |c| -%>
+    <%= form_for @additional_field, :url=>{:action=>(@additional_field.new_record? ? "add_additional_details" : "edit_additional_details")} do |c| -%>
 
       <%= error_messages_for 'additional_field' %>
       <div id="form-content">

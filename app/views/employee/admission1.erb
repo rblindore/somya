@@ -33,7 +33,7 @@
     <p class="flash-msg"><%="#{t('last_employee_number')} #{@last_admitted_employee.employee_number}"%></p>
   <% end %>
 
-  <% form_for(:employee, @employee, :url => {:action=> 'admission1'},
+  <%= form_for(:employee, @employee, :url => {:action=> 'admission1'},
     :html=> {:multipart=>true}) do |a| %>
     <%= error_messages_for  :employee %>
     <div id="admission1_form">

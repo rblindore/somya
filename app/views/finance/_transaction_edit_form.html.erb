@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-  <% form_for :transaction, :url => { :id => @transaction.id } do |form| %>
+<%= form_for :transaction, :url => { :id => @transaction.id } do |form| %>
   <div id="create_user_form">
 
     <div class="label-field-pair">
@@ -36,7 +36,7 @@
     </div>
     <div class="label-field-pair">
       <label for="amount"><%= t('date_text') %></label>
-      <div class="text-field-bg"><%= calendar_date_select_tag 'transaction[transaction_date]', I18n.localize(Date.today, :format=>:default), :year_range => 5.years.ago..0.years.ago,:popup=>"force" %></div>
+      <div class="text-field-bg"><%= date_select_tag 'transaction[transaction_date]', I18n.localize(Date.today, :format=>:default), :year_range => 5.years.ago..0.years.ago,:popup=>"force" %></div>
     </div>
     <div class="label-field-pair">
       <label for="category"><%= t('category') %></label>

@@ -20,12 +20,9 @@
  <div class="approval-form">
 
 
-  <% form_for :approve_leave,  :url => {:action => 'approve_leave'} do %>
+  <%= form_for :approve_leave,  :url => {:action => 'approve_leave'} do %>
 
-
-                   
-
-      <div class="label-field-pair">
+    <div class="label-field-pair">
         <label for="course_grade"><%= t('approval_remark') %></label>
         <div class="text-input-bg"> <%= text_field_tag :manager_remark %> </div>
         <%= hidden_field_tag :applied_leave, @applied_leave.id %>
@@ -35,7 +32,7 @@
 
       <div class="submit-button">
         <%=submit_tag "►#{t('ok')}",:class=>'submit_button' %>
-      
+
    </div>
 
 

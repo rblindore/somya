@@ -38,7 +38,7 @@
     <br />
   <% end %>
   <h4><%= t('garduating_batch') %>: <%= @batch.full_name %></h4>
-  <% form_for :graduate do |f| %>
+  <%= form_for :graduate do |f| %>
     <%= t('graduation_message') %>
     <div class="label-field-pair">
       <label for="subject_id"><%= t('status_description') %> : </label>
@@ -52,8 +52,8 @@
         <div class="heading-no"><%= t('adm_no') %></div>
         <div class="category-name"><%= t('name') %></div>
         <div class="sel-list">
-          <%= link_to_function t('all'), "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
-          <%= link_to_function t('none'), "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
+          <%= link_to t('all'), 'javascript: void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
+          <%= link_to t('none'), 'javascript:void(0)', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
         </div>
       </li>
       <% @batch.students.each do |student| %>

@@ -39,26 +39,25 @@
 
   <div class="box">
     <div class="bread_crumb">
-      <%= link_to "#{t('course_text')}", courses_path %> &raquo;
+      <%= link_to t('course_text'), courses_path %> &raquo;
       <%= t('new_text') %>
     </div>
-
-    <% form_for setup_course(@course) do |f| %>
+    <%= form_for setup_course(@course) do |f| %>
 
       <%= error_messages_for :course %>
 
       <div class="label-field-pair">
-        <div class="label-container1"><%= "#{t('course_name')}" %></div>
+        <div class="label-container1"><%= t('course_name') %></div>
         <div class="input-container"><%= f.text_field :course_name %></div>
       </div>
 
       <div class="label-field-pair">
-        <div class="label-container1"><%= "#{t('section_name')}" %></div>
+        <div class="label-container1"><%= t('section_name') %></div>
         <div class="input-container"><%= f.text_field :section_name %></div>
       </div>
 
       <div class="label-field-pair">
-        <div class="label-container1"><%= "#{t('code')}" %></div>
+        <div class="label-container1"><%= t('code') %></div>
         <div class="input-container"><%= f.text_field :code %></div>
       </div>
 
