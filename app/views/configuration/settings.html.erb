@@ -34,7 +34,7 @@
   <% end %>
   <%= error_messages_for :school_detail %>
 
-  <% form_for(:configuration,:html=> {:multipart=>true}) do |c| %>
+  <%= form_for(:configuration,:html=> {:multipart=>true}) do |c| %>
     <div class="box">
       <div class="label-field-pair">
         <label for="configuration_currency_type"><%= t('school_college_name') %></label>
@@ -64,7 +64,7 @@
       <div class="label-field-pair">
         <label for="configuration_currency_type"><%= t('finance_year_start_date') %></label>
         <div class="text-input-bg">
-          <%= calendar_date_select_tag 'configuration[financial_year_start_date]', I18n.l(@config[:financial_year_start_date].to_date,:format=>:default),
+          <%= date_select 'configuration[financial_year_start_date]', I18n.l(@config[:financial_year_start_date].to_date,:format=>:default),
             :year_range => 15.years.ago..5.years.from_now, :readonly=>true, :popup=>"force" %>
         </div>
       </div>
@@ -72,7 +72,7 @@
       <div class="label-field-pair">
         <label for="configuration_currency_type"><%= t('finance_year_end_date') %></label>
         <div class="text-input-bg">
-          <%= calendar_date_select_tag 'configuration[financial_year_end_date]',  I18n.l(@config[:financial_year_end_date].to_date,:format=>:default),
+          <%= date_select 'configuration[financial_year_end_date]',  I18n.l(@config[:financial_year_end_date].to_date,:format=>:default),
             :year_range => 15.years.ago..5.years.from_now, :readonly=>true, :popup=>"force" %>
         </div>
       </div>
@@ -122,8 +122,9 @@
         </div>
         <div class="fee_category_scroll">
           <div class="sel-list">
-            <%= t('select') %>: <%= link_to_function t('all'), "$$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });" %>,
-            <%= link_to_function t('none'), "$$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });" %>
+            <%= t('select') %>: <%= link_to t('all'), 'javascript: void
+            (0)', onclick: "$$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });" %>,
+            <%= link_to t('none'), 'javascript: void(0)', onclick: "$$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });" %>
           </div>
           <% @grading_types.each do |key,val| %>
             <div class="each_batch">

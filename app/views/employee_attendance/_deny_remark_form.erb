@@ -19,8 +19,7 @@
 
 <div class="approval-form">
 
-<% form_for :deny_leave,  :url => {:action => 'deny_leave'} do %>
-
+  <%= form_for :deny_leave,  :url => {:action => 'deny_leave'} do %>
 
     <div class="label-field-pair">
       <label for="course_grade"><%= t('deny_remark') %></label>
@@ -31,8 +30,8 @@
 
 
     <div class="submit-button">
-    <%=submit_tag "#{t('ok')}",:class=>'submit_button' %>
-      
+    <%=submit_tag t('ok'),:class=>'submit_button' %>
+
     </div>
 
       <div class="extender"></div>

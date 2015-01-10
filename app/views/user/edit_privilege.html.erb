@@ -58,7 +58,7 @@
   <h1><%= t('user_privilege') %></h1>
   <h3><%= t('edit_privilege_text') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0)', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -67,7 +67,7 @@
 <div id="page-yield">
 
   <div class="privileges">
-    <% form_for :user do |form| %>
+    <%= form_for :user do |form| %>
       <div class="privilege_heading" id="application-list">
         <div class="label_field_pair"><label><%= t('set_privilege_for') %> <%= @user.full_name.capitalize %></label></div>
         <div class="user_submit_button1">
@@ -133,4 +133,3 @@
     <% end %>
   </div>
 </div>
-

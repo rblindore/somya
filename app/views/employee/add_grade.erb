@@ -42,7 +42,7 @@
         </ul>
       </div>
     <% end %>
-    <%- form_for :grade do |c| -%>
+    <%= form_for :grade do |c| -%>
 
       <% unless flash[:notice].nil? %>
         <p class="flash-msg"> <%= flash[:notice] %> </p>

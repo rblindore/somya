@@ -35,7 +35,7 @@
   <div class="transfer_batch_details">
     <div class="label-field-pair"><label><%= t('transferring_batch') %>:</label> <div class="text-input-bg themed_text"><%= @batch.full_name %></div></div></div>
 
-  <% form_for :transfer,@batch, :url => { :controller => 'batch_transfers', :action => 'transfer', :id => @batch.id } do |f| %>
+  <%= form_for :transfer,@batch, :url => { :controller => 'batch_transfers', :action => 'transfer', :id => @batch.id } do |f| %>
     <%= error_messages_for 'batch', :header_message => nil %>
     <div class="label-field-pair">
       <label for="subject_id"><%= t('transfer_to') %> </label>
@@ -49,8 +49,8 @@
         <div class="heading-no"><%= t('adm_no') %></div>
         <div class="category-name"><%= t('name') %></div>
         <div class="sel-list">
-          <%= link_to_function t('all'), "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
-          <%= link_to_function t('none'), "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
+          <%= link_to t('all'), 'javascript: void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
+          <%= link_to t('none'), 'javascript: void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
         </div>
       </li>
       <% @batch.students.each do |student| %>

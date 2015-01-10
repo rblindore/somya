@@ -18,11 +18,11 @@
 #under the License. -%>
 
  <div id="content-header">
-<%= image_tag("  HR/show_hr.png") %>
+<%= image_tag("HR/show_hr.png") %>
   <h1><%= t('manage_payroll') %></h1>
   <h3> <%= t('enter_payroll_detail') %></h3>
     <div id="app-back-button">
-     <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+     <%= link_to image_tag("buttons/back.png",:border => 0), 'javascript:void(0);', onclick: "history.back()" %>
     </div>
   </div>
 
@@ -33,7 +33,7 @@
   <% end %>
 
 <div id="form-content">
-  <% form_for :manage_payroll do |s| %>
+  <%= form_for :manage_payroll do |s| %>
     <% @independent_categories.each do |c| %>
      <div class="payroll-field-pair">
      <label for="payroll_category_name"><%= c.name %></label>

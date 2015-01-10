@@ -52,15 +52,15 @@
     </div>
   <% end %>
   <div class="box">
-    <% form_for :course, :url=>{:action=>:create_reports} do |f|  %>
+    <%= form_for :course, :url=>{:action=>:create_reports} do |f|  %>
       <div class="label-field-pair">
-        <label for="student_course"><%= "#{t('select_a_course')}" %>:
+        <label for="student_course"><%= t('select_a_course') %>:
           <%= image_tag("loader.gif",:align => "absmiddle",:border => 0,:id => "loader", :style =>"display: none;" ) %>
         </label>
         <div class="text-input-bg">
           <%= select :course, :id,
             @courses.map {|b| [b.course_name + " " + b.section_name, b.id]},
-            {:prompt => "#{t('select_a_course')}"},
+            {:prompt => t('select_a_course')},
             {:onChange => "#{remote_function(:url => {:controller=>"batches",:action=>"batches_ajax"},:method=>:get,
             :with => "'course_id='+ value +'&type=list'",
             :before => "Element.show('loader')",

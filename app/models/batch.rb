@@ -37,8 +37,8 @@ class Batch < ActiveRecord::Base
   has_many :finance_transactions, through: :students
   has_many :batch_events
   has_many :events , through: :batch_events
-  has_many :batch_fee_discounts , foreign_key: :receiver_id
-  has_many :student_category_fee_discounts , foreign_key: :receiver_id
+  has_many :batch_fee_discounts , foreign_key: 'receiver_id'
+  has_many :student_category_fee_discounts , foreign_key: 'receiver_id'
   has_many :attendances
   has_many :subject_leaves
   has_many :timetable_entries
@@ -46,9 +46,9 @@ class Batch < ActiveRecord::Base
   has_many :assessment_scores
 
 
-  has_and_belongs_to_many :graduated_students, class_name: :Student, join_table: :batch_students
+  has_and_belongs_to_many :graduated_students, class_name: 'Student', join_table: 'batch_students'
 
-  delegate :course_name,:section_name, :code, to: :course
+  delegate :course_name, :section_name, :code, to: :course, allow_nil: true
   delegate :grading_type, :cce_enabled?, :observation_groups, :cce_weightages, to: :course
 
   validates_presence_of :name, :start_date, :end_date

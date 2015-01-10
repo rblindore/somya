@@ -43,7 +43,7 @@
         </ul>
       </div>
     <% end %>
-    <%- form_for :position do |c| -%>
+    <%= form_for :position do |c| -%>
 
       <% unless flash[:notice].nil? %>
         <p class="flash-msg"> <%= flash[:notice] %> </p>

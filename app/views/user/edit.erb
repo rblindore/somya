@@ -18,16 +18,16 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("  edit_users/edit_users_logo.jpg") %>
+  <%= image_tag("edit_users/edit_users_logo.jpg") %>
   <h1><%= t('edit_user') %></h1>
   <h3><%= t('update_user_information') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', onclick: "history.back()" %>
   </div>
 </div>
 <% if @current_user.admin? and @current_user.id != @user.id %>
   <div id="inner-tab-menu">
-    <ul><li><%= link_to "#{t('change_password')}", :controller => "user", :action => "user_change_password", :id =>@user.username %></li></ul>
+    <ul><li><%= link_to t('change_password'), :controller => "user", :action => "user_change_password", :id =>@user.username %></li></ul>
   </div>
 <% end %>
 
@@ -37,7 +37,7 @@
 
   <%= error_messages_for 'user' %>
 
-  <% form_for :user do |u| %>
+  <%= form_for :user do |u| %>
 
     <div id="edit_user_form">
 

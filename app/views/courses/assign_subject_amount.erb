@@ -23,7 +23,7 @@
       <%= link_to t('courses_text'),courses_path %> &raquo;
       <%= t('assign_subject_amount') %>
     </div>
-    <% form_for @subject_amount,:url => assign_subject_amount_courses_url(:id => @course.id) do |f| %>
+    <%= form_for @subject_amount,:url => assign_subject_amount_courses_url(:id => @course.id) do |f| %>
       <%= f.error_messages %>
       <div class="label-field-pair">
         <label for="subjects"><%= t('subjects_text') %></label>
@@ -73,12 +73,3 @@
   </div>
   <div class="extender"></div>
 </div>
-
-
-
-
-
-
-
-
-

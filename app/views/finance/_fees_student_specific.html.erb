@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% form_for :element , :url => {:action => 'fees_student_specific', :id => @student.id,:date =>@date.id } do |f| %>
+<%= form_for :element , :url => {:action => 'fees_student_specific', :id => @student.id,:date =>@date.id } do |f| %>
   <div id="create_user_form">
     <div class="label_field">
       <label for="label"><%= t('label') %></label>
