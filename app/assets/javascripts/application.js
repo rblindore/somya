@@ -15,3 +15,9 @@ document.observe("dom:loaded", function() {
 
     load_menu_from_plugins();
 });
+
+function onChangeRequest(obj, url){
+  // var reg = /params/ng;
+  // var new_url = url.replace(reg, obj.val);
+  // console.log(new_url)
+}

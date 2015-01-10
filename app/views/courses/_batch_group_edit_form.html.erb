@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% remote_form_for :batch_group,:url=>{:action=>"update_batch_group", :id=>@batch_group.id} do |c| %>
+<%= form_for :batch_group, url: { action: :update_batch_group, id: @batch_group.id }, remote: true do |c| %>
 
   <div id="form-content">
     <div class="label-field-pair">
