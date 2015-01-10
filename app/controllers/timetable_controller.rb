@@ -25,7 +25,7 @@ class TimetableController < ApplicationController
   def new_timetable
 
     if request.post?
-      @timetable = Timetable.new(params[:timetable])
+      @timetable = Timetable.new(timetable_params)
       @error = false
       previous = Timetable.where("end_date >= ? AND start_date <= ?",@timetable.start_date,@timetable.start_date)
       unless previous.empty?
@@ -483,6 +483,12 @@ class TimetableController < ApplicationController
     else
       @today = @local_tzone_time.to_date
     end
+  end
+
+  private
+
+  def timetable_params
+    params.require(:timetable).permit("start_date(3i)", "start_date(2i)", "start_date(1i)", "end_date(3i)", "end_date(2i)", "end_date(1i)")
   end
 
 end

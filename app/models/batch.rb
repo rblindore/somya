@@ -22,21 +22,23 @@ class Batch < ActiveRecord::Base
   belongs_to :course
 
   has_many :students
+  has_many :all_students, class_name: :Student
   has_many :grouped_exam_reports
   has_many :grouped_batches
   has_many :archived_students
-  has_many :grading_levels, -> { where(:is_deleted => false) }
-  has_many :subjects, -> { where(:is_deleted => false) }
-  has_many :employees_subjects, :through =>:subjects
+  has_many :grading_levels, -> { where( is_deleted: false) }
+  has_many :subjects, -> { where( is_deleted: false) }
+  has_many :normal_batch_subject, -> { where(elective_group_id: nil) }, class_name: :Subject
+  has_many :employees_subjects, through: :subjects
   has_many :exam_groups
-  has_many :fee_category , :class_name => "FinanceFeeCategory"
+  has_many :fee_category , class_name: :FinanceFeeCategory
   has_many :elective_groups
   has_many :finance_fee_collections
-  has_many :finance_transactions, :through => :students
+  has_many :finance_transactions, through: :students
   has_many :batch_events
-  has_many :events , :through =>:batch_events
-  has_many :batch_fee_discounts , :foreign_key => 'receiver_id'
-  has_many :student_category_fee_discounts , :foreign_key => 'receiver_id'
+  has_many :events , through: :batch_events
+  has_many :batch_fee_discounts , foreign_key: :receiver_id
+  has_many :student_category_fee_discounts , foreign_key: :receiver_id
   has_many :attendances
   has_many :subject_leaves
   has_many :timetable_entries
@@ -44,18 +46,18 @@ class Batch < ActiveRecord::Base
   has_many :assessment_scores
 
 
-  has_and_belongs_to_many :graduated_students, :class_name => 'Student', :join_table => 'batch_students'
+  has_and_belongs_to_many :graduated_students, class_name: :Student, join_table: :batch_students
 
-  delegate :course_name,:section_name, :code, :to => :course
-  delegate :grading_type, :cce_enabled?, :observation_groups, :cce_weightages, :to=>:course
+  delegate :course_name,:section_name, :code, to: :course
+  delegate :grading_type, :cce_enabled?, :observation_groups, :cce_weightages, to: :course
 
   validates_presence_of :name, :start_date, :end_date
 
   attr_accessor :job_type
 
-  scope :active, -> { where( :is_deleted => false, :is_active => true ).joins( :course).select( "`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
+  scope :active, -> { where( is_deleted: false, is_active: true ).joins(:course).select( "`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
   scope :inactive, -> { where(is_deleted: false, is_active: false).joins(:course).select("`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
-  scope :deleted, -> { where( :is_deleted => true).joins(:course).select("`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
+  scope :deleted, -> { where( is_deleted: true).joins(:course).select("`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
   scope :cce, -> { select("batches.*").joins(:course).where("courses.grading_type = #{GRADINGTYPES.invert["CCE"]}").order(:code)}
 
   def validate
@@ -83,19 +85,11 @@ class Batch < ActiveRecord::Base
   end
 
   def fee_collection_dates
-    FinanceFeeCollection.find_all_by_batch_id(self.id,:conditions => "is_deleted = false")
-  end
-
-  def all_students
-    Student.find_all_by_batch_id(self.id)
-  end
-
-  def normal_batch_subject
-    Subject.find_all_by_batch_id(self.id,:conditions=>["elective_group_id IS NULL AND is_deleted = false"])
+    FinanceFeeCollection.where(batch_id: self.id, is_deleted: false)
   end
 
   def elective_batch_subject(elect_group)
-    Subject.find_all_by_batch_id_and_elective_group_id(self.id,elect_group,:conditions=>["elective_group_id IS NOT NULL AND is_deleted = false"])
+    Subject.where(batch_id: self.id, elective_group_id: elect_group, is_deleted: false).where.not(elective_group_id: nil)
   end
 
   def all_elective_subjects

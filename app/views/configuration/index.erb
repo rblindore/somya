@@ -64,7 +64,7 @@
 
     <% if permitted_to? :settings, :configuration %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to t('add_admission_additional_detail'), add_additional_details_student_index %></div>
+        <div class="link-heading"><%= link_to t('add_admission_additional_detail'), add_additional_details_student_index_path %></div>
         <div class="link-descr"><%= t('set_some_additional_details') %></div>
       </div>
     <% end %>

@@ -19,9 +19,10 @@
 class Settings < ActiveRecord::Base
   self.table_name = :configurations
 
-  STUDENT_ATTENDANCE_TYPE_OPTIONS = [["#{I18n.t('daily_text')}", "Daily"], ["#{I18n.t('subject_wise_text')}", "SubjectWise"]]
+  STUDENT_ATTENDANCE_TYPE_OPTIONS = [[I18n.t('daily_text'), "Daily"], [I18n.t('subject_wise_text'), "SubjectWise"]]
 
-  NETWORK_STATES                   = [["#{I18n.t('online')}",'Online'],["#{I18n.t('offline')}",'Offline']]
+  NETWORK_STATES = [[I18n.t('online'),'Online'],[I18n.t('offline'),'Offline']]
+
   LOCALES = []
   Dir.glob("#{Rails.root}/config/locales/*.yml").each do |file|
     file.gsub!("#{Rails.root}/config/locales/", '')
@@ -31,7 +32,7 @@ class Settings < ActiveRecord::Base
 
   def validate
     if self.config_key == "StudentAttendanceType"
-      errors.add_to_base("#{I18n.t('student_attendance_type_should_be_one')} #{STUDENT_ATTENDANCE_TYPE_OPTIONS}") unless Configuration::STUDENT_ATTENDANCE_TYPE_OPTIONS.collect{|d| d[1] == self.config_value}.include?(true)
+      errors.add_to_base("#{I18n.t('student_attendance_type_should_be_one')} #{STUDENT_ATTENDANCE_TYPE_OPTIONS}") unless Settings::STUDENT_ATTENDANCE_TYPE_OPTIONS.collect{|d| d[1] == self.config_value}.include?(true)
     end
     if self.config_key == "NetworkState"
       errors.add_to_base("#{I18n.t('network_state_should_be_one')} #{NETWORK_STATES}") unless NETWORK_STATES.collect{|d| d[1] == self.config_value}.include?(true)
@@ -66,7 +67,7 @@ class Settings < ActiveRecord::Base
     def set_value(key, value)
       config = find_by_config_key(key)
       config.nil? ?
-        Settings.create(:config_key => key, :config_value => value) :
+        Settings.create(config_key: key, config_value: value) :
         config.update_attribute(:config_value, value)
     end
 
@@ -78,7 +79,7 @@ class Settings < ActiveRecord::Base
 
     def get_grading_types
       grading_types = Course::GRADINGTYPES
-      types= all(:conditions=>{:config_key=>grading_types.values, :config_value=>"1"},:group=>:config_key)
+      types= where(config_key: grading_types.values, config_value: "1").group(:config_key)
       grading_types.keys.select{|k| types.collect(&:config_key).include? grading_types[k]}
     end
 

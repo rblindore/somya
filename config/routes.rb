@@ -217,7 +217,12 @@ Fedena::Application.routes.draw do
   #  end
 
   resources :timetables do
-    resources :timetable_entries
+    resources :timetable_entries do
+      collection do
+        get :update_multiple_timetable_entries2
+        get :new_entry
+      end
+    end
   end
 
   resources :user do

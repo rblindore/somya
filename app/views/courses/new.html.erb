@@ -22,15 +22,15 @@
   <h1><%= t('courses_text') %></h1>
   <h3><%= t('new_text') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
 <div id="page-yield">
   <div class="bread_crumb">
     <%= link_to t('configuration_text'), :controller => "configuration", :action=>"index" %> &raquo;
-    <%= link_to "#{t('courses_text')}", :controller => "courses", :action => "index" %> &raquo;
-    <%= link_to "#{t('manage_course')}", :controller => "courses", :action => "manage_course" %> &raquo;
+    <%= link_to t('courses_text'), :controller => "courses", :action => "index" %> &raquo;
+    <%= link_to t('manage_course'), :controller => "courses", :action => "manage_course" %> &raquo;
     <%= t('new_text') %>
   </div>
   <% unless flash[:notice].nil? %>
