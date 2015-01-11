@@ -63,7 +63,7 @@ body {
 #email_textbox_bg {
     width:507px;height:58px;
     margin:0px auto;
-    background:#fff url(../../images/login/text_box.jpg) no-repeat;
+    background:#fff url(login/text_box.jpg) no-repeat;
 }
 #email_textbox_bg input {
     width:490px;height:54px;
@@ -111,7 +111,7 @@ input[type="text"], input[type="password"], textarea, select {outline: none;}*/
     margin-top : -33px; */
     height : 66px;
     clear : both;
-    background: url(/images/foot.png) repeat-x;
+    background: url(foot.png) repeat-x;
     width:100%;
 }
 #footer_logo {

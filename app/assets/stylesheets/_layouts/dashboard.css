@@ -535,7 +535,7 @@ body > #content_wrapper {
     margin-top :15px;
     height : 66px;
     clear : both;
-    background: url(/images/foot.png) repeat-x;
+    background: url(foot.png) repeat-x;
     width:100%;
 }
 #footer_logo {
