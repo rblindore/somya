@@ -19,7 +19,7 @@
 
 
 <span class="span-sub-heading"><%= t('subject_details') %></span>
-<%= remote_form_for :student_previous_subject_details, :url =>{:action =>'save_previous_subject'} do |s| %>
+<%= form_for :student_previous_subject_details, url: { action: :save_previous_subject}, remote: true do |s| %>
   <%= s.hidden_field :student_id, :value => @student.id %>
   <%= error_messages_for 'student_previous_subject_details', :header_message => nil %>
   <div class="label-field-pair">

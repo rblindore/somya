@@ -255,6 +255,7 @@ Fedena::Application.routes.draw do
       get :categories
       post :categories
       get :add_additional_details
+      post :add_additional_details
     end
   end
 
@@ -339,7 +340,23 @@ Fedena::Application.routes.draw do
       get :select_department
     end
   end
-  resources :sms, only: :index
+  resources :sms, only: :index do
+    collection do
+      get :settings
+      post :settings
+      get :update_general_sms_settings
+      post :update_general_sms_settings
+      get :students
+      get :batches
+      get :employees
+      get :departments
+      get :all
+      get :show_sms_messages
+      get :list_students
+      post :batches
+      get :list_employees
+    end
+  end
 
   get 'scheduled_jobs/:job_object/:job_type', to: "scheduled_jobs#index" , as: :scheduled_task
 

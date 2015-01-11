@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% remote_form_for :payslip_accept, :url=>{:controller=>'finance', :action=>'employee_payslip_approve', :id=>@id1, :id2=>@id2} do |f| %>
+<%= form_for :payslip_accept, :url=>{:controller=>'finance', :action=>'employee_payslip_approve', :id=>@id1, :id2=>@id2}, remote: true do |f| %>
   <div class="label-field-pair">
     <label for="employee_name" class="reason"><%= t('remark') %></label>
     <div class="text-input-bg"><%= f.text_field :remark %></div>

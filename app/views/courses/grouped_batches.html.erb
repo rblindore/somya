@@ -39,7 +39,7 @@
     <%= error_messages_for 'batch_group' %>
   </div>
   <div id="class_form">
-    <% remote_form_for :batch_group,:url=>{:action=>"create_batch_group", :course_id=>@course.id} do |c| %>
+    <%= form_for :batch_group, url: {action: :create_batch_group, course_id: @course.id}, remote: true do |c| %>
 
       <div id="form-content">
         <div class="label-field-pair">

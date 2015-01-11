@@ -258,14 +258,15 @@ class StudentController < ApplicationController
         last_priority = @additional_details.map{|r| r.priority}.compact.sort.last
         priority = last_priority + 1
       end
-      @additional_field = StudentAdditionalField.new(params[:student_additional_field])
+      @additional_field = StudentAdditionalField.new(student_additional_field_params)
       @additional_field.priority = priority
       if @additional_field.save
-        flash[:notice] = "#{t('flash1')}"
-        redirect_to :controller => "student", :action => "add_additional_details"
+        flash[:notice] = t('flash1')
+        redirect_to controller: :student, action: :add_additional_details
       end
     end
   end
+
   def change_field_priority
     @additional_field = StudentAdditionalField.find(params[:id])
     priority = @additional_field.priority
@@ -1368,7 +1369,13 @@ class StudentController < ApplicationController
 
 
   private
-  def find_student
-    @student = Student.find params[:id]
-  end
+
+    def find_student
+      @student = Student.find params[:id]
+    end
+
+    # This method set permit the user params
+    def student_additional_field_params
+      params.require(:student_additional_field).permit(:name, :status, :is_mandatory, :input_type)
+    end
 end

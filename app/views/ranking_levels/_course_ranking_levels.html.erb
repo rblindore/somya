@@ -18,7 +18,7 @@
 #under the License. -%>
 
 <div id="rank_form">
-  <% remote_form_for :ranking_level,:url=>{:action=>"create_ranking_level", :course_id=>@course.id} do |c| %>
+  <%= form_for :ranking_level,:url=>{:action=>"create_ranking_level", :course_id=>@course.id}, remote: true do |c| %>
 
     <div id="form-content">
       <div class="label-field-pair">
