@@ -59,7 +59,7 @@ body #content_wrapper{
     float: none;
 }
 #footer {
-background:url("/images/foot.png") repeat-x scroll 0 0 transparent;
+background:url("foot.png") repeat-x scroll 0 0 transparent;
 height:66px;
 width:100%;
 }

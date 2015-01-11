@@ -17,18 +17,11 @@
 #limitations under the License.
 
 class UserController < ApplicationController
-  layout :choose_layout
   before_filter :login_required, :except => [:forgot_password, :login, :set_new_password, :reset_password,:first_login_change_password]
   before_filter :only_admin_allowed, :only => [:edit, :create, :index, :edit_privilege, :user_change_password,:delete,:list_user,:all]
   before_filter :protect_user_data, :only => [:profile, :user_change_password]
   before_filter :check_if_loggedin, :only => [:login]
   #  filter_access_to :edit_privilege
-  def choose_layout
-    return 'login' if action_name == 'login' or action_name == 'set_new_password'
-    return 'forgotpw' if action_name == 'forgot_password'
-    return 'dashboard' if action_name == 'dashboard'
-    'application'
-  end
 
   def all
     @users = User.active.all
@@ -190,6 +183,7 @@ class UserController < ApplicationController
       flash[:notice] = "#{t('first_login_attempt')}"
       redirect_to :controller => "user",:action => "first_login_change_password",:id => @user.username
     end
+    render layout: 'dashboard'
   end
 
 
@@ -225,6 +219,7 @@ class UserController < ApplicationController
         flash[:notice] = "#{t('flash19')} #{params[:reset_password][:username]}"
       end
     end
+    render layout: 'forgotpw'
   end
 
 
@@ -248,6 +243,7 @@ class UserController < ApplicationController
     elsif authenticated_user.blank? and request.post?
       flash[:notice] = "#{t('login_error_message')}"
     end
+    render layout: 'login'
   end
 
   def first_login_change_password
@@ -341,7 +337,7 @@ class UserController < ApplicationController
 
   def set_new_password
     if request.post?
-      user = User.active.find_by_reset_password_code(params[:id],:conditions=>"reset_password_code IS NOT NULL")
+      user = User.active.where(reset_password_code: params[:id]).where.not(reset_password_code: nil).first
       if user
         if params[:set_new_password][:new_password] === params[:set_new_password][:confirm_password]
           user.password = params[:set_new_password][:new_password]
@@ -349,17 +345,18 @@ class UserController < ApplicationController
           user.clear_menu_cache
           #User.update(user.id, :password => params[:set_new_password][:new_password],
           # :reset_password_code => nil, :reset_password_code_until => nil)
-          flash[:notice] = "#{t('flash3')}"
-          redirect_to :action => 'index'
+          flash[:notice] = t('flash3')
+          redirect_to action: :index
         else
-          flash[:notice] = "#{t('user.flash4')}"
-          redirect_to :action => 'set_new_password', :id => user.reset_password_code
+          flash[:notice] = t('user.flash4')
+          redirect_to action: :set_new_password, id: user.reset_password_code
         end
       else
-        flash[:notice] = "#{t('flash5')}"
-        redirect_to :action => 'index'
+        flash[:notice] = t('flash5')
+        redirect_to action: :index
       end
     end
+    render layout: 'login'
   end
 
   def edit_privilege
