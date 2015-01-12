@@ -57,6 +57,14 @@ Fedena::Application.routes.draw do
 
   resources :employee_attendances
 
+  resources :employee_attendance do
+    collection do
+      get :add_leave_types
+      get :report
+      get :manual_reset
+    end
+  end
+
   resources :attendance_reports do
     collection do
       get :advance_search
@@ -233,6 +241,10 @@ Fedena::Application.routes.draw do
       get :all
       get :search_user_ajax
       get :list_user
+      get :logout
+    end
+    member do
+      get :profile
     end
   end
 
@@ -258,6 +270,9 @@ Fedena::Application.routes.draw do
       post :add_additional_details
     end
   end
+
+  resources :calendar, only: :index
+  resources :event, only: :index
 
   resources :exam, only: :index do
     collection do
@@ -338,6 +353,15 @@ Fedena::Application.routes.draw do
       get :subject_assignment
       get :update_subjects
       get :select_department
+      get :settings
+      get :employee_management
+      get :employee_attendance
+      get :payslip
+      get :search
+      get :department_payslip
+      get :admission1
+      get :advanced_search
+      get :view_all
     end
   end
   resources :sms, only: :index do
@@ -360,7 +384,35 @@ Fedena::Application.routes.draw do
 
   get 'scheduled_jobs/:job_object/:job_type', to: "scheduled_jobs#index" , as: :scheduled_task
 
-  resources :finance, only: :index
+  resources :finance, only: :index do
+    collection do
+      get :fees_index
+      get :categories
+      get :transactions
+      get :donation
+      get :automatic_transactions
+      get :payslip_index
+      get :asset_liability
+      get :fee_collection
+      get :fees_submission_batch
+      get :fees_student_search
+      get :expense_create
+      get :expense_list
+      get :income_create
+      get :income_list
+      get :monthly_report
+      get :compare_report
+      get :donors
+      get :view_monthly_payslip
+      get :asset
+      get :view_asset
+      get :liability
+      get :view_liability
+      get :master_fees
+      get :fees_defaulters
+      get :fees_student_structure_search
+    end
+  end
   resources :weekday, only: [:index, :create] do
     collection do
       get :week
