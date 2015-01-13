@@ -10,7 +10,7 @@ body {
 }
 #header_bg {
     height : 80px;
-    background : #b00 url(/images/application/bg_pattern.png) repeat;
+    background : #b00 url(/assets/application/bg_pattern.png) repeat;
 }
 #header {
     width : 980px;
@@ -102,7 +102,7 @@ body {
     border-bottom-width : 0;
     font: normal 0.9em Arial;
     line-height: 18px;
-    background: #b00 url(../../images/application/bg_pattern.png) repeat;
+    background: #b00 url(/assets/application/bg_pattern.png) repeat;
 }
 #main-menu li:hover ul.level-1{
     visibility: visible;
@@ -992,10 +992,10 @@ height: 14px;
     text-decoration: none;
 }
 #profile-link a{
-    background: url(/images/application/profile.png) no-repeat right center;
+    background: url(/assets/application/profile.png) no-repeat right center;
 }
 #messages-link a{
-    background: url(/images/application/msg.png) no-repeat right center;
+    background: url(/assets/application/msg.png) no-repeat right center;
     float: right;
 }
 #messages-link span {
@@ -1004,13 +1004,13 @@ height: 14px;
     float: right;
 }
 #logout-link a{
-    background: url(/images/application/logout.png) no-repeat right center;
+    background: url(/assets/application/logout.png) no-repeat right center;
 }
 #logout-link{
     margin-left: 0 !important;
 }
 #profile-link:hover, #messages-link:hover, #logout-link:hover{
-    background: url(/images/application/top-link-bg.png) repeat;
+    background: url(/assets/application/top-link-bg.png) repeat;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;

@@ -13,7 +13,7 @@ body {
     background : #b00 url(../../images/application/bg_pattern.png) repeat;
 }
 #header {
-    width : 980px; 
+    width : 980px;
     height : 80px;
     margin:0 auto;
 }
@@ -653,10 +653,10 @@ body > #content_wrapper {
     text-decoration: none;
 }
 #profile-link a{
-    background: url(/images/application/profile.png) no-repeat left center;
+    background: url(/assets/application/profile.png) no-repeat left center;
 }
 #messages-link a{
-    background: url(/images/application/msg.png) no-repeat left center;
+    background: url(/assets/application/msg.png) no-repeat left center;
     float: left;
 }
 #messages-link span {
@@ -665,13 +665,13 @@ body > #content_wrapper {
     float: left;
 }
 #logout-link a{
-    background: url(/images/application/logout.png) no-repeat left center;
+    background: url(/assets/application/logout.png) no-repeat left center;
 }
 #logout-link{
     margin-right: 0 !important;
 }
 #profile-link:hover, #messages-link:hover, #logout-link:hover{
-    background: url(/images/application/top-link-bg.png) repeat;
+    background: url(/assets/application/top-link-bg.png) repeat;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;

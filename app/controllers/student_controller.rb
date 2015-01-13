@@ -40,7 +40,7 @@ class StudentController < ApplicationController
   end
 
   def admission1
-    @student = Student.new(params[:student])
+    @student = Student.new(student_params rescue {})
     @selected_value = Settings.default_country
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
     @last_admitted_student = Student.order(:id).last
@@ -48,7 +48,7 @@ class StudentController < ApplicationController
     @categories = StudentCategory.active
     if request.post?
       if @config.config_value.to_i == 1
-        @exist = Student.where(admission_no: params[:student][:admission_no])
+        @exist = Student.where(admission_no: student_params[:admission_no])
         if @exist.nil?
           @status = @student.save
         else
@@ -373,9 +373,9 @@ class StudentController < ApplicationController
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
 
     if request.post?
-      unless params[:student][:image_file].blank?
-        unless params[:student][:image_file].size.to_f > 280000
-          if @student.update_attributes(params[:student])
+      unless student_params[:image_file].blank?
+        unless student_params[:image_file].size.to_f > 280000
+          if @student.update_attributes(student_params)
             unless @student.changed.include?('admission_no')
               @student_user.update_attributes(:username=> @student.admission_no,:password => "#{@student.admission_no.to_s}123",:first_name=> @student.first_name , :last_name=> @student.last_name, :email=> @student.email, :role=>'Student')
             else
@@ -389,7 +389,7 @@ class StudentController < ApplicationController
           redirect_to :controller => "student", :action => "edit", :id => @student.id
         end
       else
-        if @student.update_attributes(params[:student])
+        if @student.update_attributes(student_params)
           unless @student.changed.include?('admission_no')
             @student_user.update_attributes(:username=> @student.admission_no,:password => "#{@student.admission_no.to_s}123",:first_name=> @student.first_name , :last_name=> @student.last_name, :email=> @student.email, :role=>'Student')
           else
@@ -1369,6 +1369,10 @@ class StudentController < ApplicationController
 
 
   private
+
+    def student_params
+      params.require(:student).permit(:admission_no, :admission_date, :first_name, :middle_name, :last_name, :batch_id, :date_of_birth, :gender, :blood_group, :birth_place, :nationality_id:, :language, :student_category_id, :religion, :address_line1, :address_line2, :city, :state, :pin_code, :country_id, :phone1, :phone2, :email)
+    end
 
     def find_student
       @student = Student.find params[:id]

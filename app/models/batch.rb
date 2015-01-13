@@ -55,8 +55,8 @@ class Batch < ActiveRecord::Base
 
   attr_accessor :job_type
 
-  scope :active, -> { where( is_deleted: false, is_active: true ).joins(:course).select( "`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
-  scope :inactive, -> { where(is_deleted: false, is_active: false).joins(:course).select("`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
+  scope :active, -> { where( is_deleted: false, is_active: true ).joins(:course).select("batches.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
+  scope :inactive, -> { where(is_deleted: false, is_active: false).joins(:course).select("batches.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
   scope :deleted, -> { where( is_deleted: true).joins(:course).select("`batches`.*,CONCAT(courses.code,'-',batches.name) as course_full_name").order("course_full_name")}
   scope :cce, -> { select("batches.*").joins(:course).where("courses.grading_type = #{GRADINGTYPES.invert["CCE"]}").order(:code)}
 

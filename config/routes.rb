@@ -260,6 +260,7 @@ Fedena::Application.routes.draw do
   resources :student, only: :index do
     collection do
       get :admission1
+      post :admission1
       get :view_all
       get :advanced_search
       get :search_ajax
@@ -268,6 +269,9 @@ Fedena::Application.routes.draw do
       post :categories
       get :add_additional_details
       post :add_additional_details
+    end
+    member do
+      get :profile
     end
   end
 

@@ -23,19 +23,19 @@ class Student < ActiveRecord::Base
   belongs_to :country
   belongs_to :batch
   belongs_to :student_category
-  belongs_to :nationality, :class_name => 'Country'
+  belongs_to :nationality, class_name: :Country
   belongs_to :user
 
   has_one    :immediate_contact
   has_one    :student_previous_data
   has_many   :student_previous_subject_mark
-  has_many   :guardians, :foreign_key => 'ward_id'
-  has_many   :finance_transactions, :as => :payee
+  has_many   :guardians, foreign_key: :ward_id
+  has_many   :finance_transactions, as: :payee
   has_many   :attendances
   has_many   :finance_fees
-  has_many   :fee_category ,:class_name => "FinanceFeeCategory"
+  has_many   :fee_category, class_name: :FinanceFeeCategory
   has_many   :students_subjects
-  has_many   :subjects ,:through => :students_subjects
+  has_many   :subjects, through: :students_subjects
   has_many   :student_additional_details
   has_many   :batch_students
   has_many   :subject_leaves
@@ -46,7 +46,7 @@ class Student < ActiveRecord::Base
   has_many   :previous_exam_scores
 
 
-  scope :active, -> { where(:is_active => true )}
+  scope :active, -> { where(is_active: true )}
   scope :with_full_name_only, -> { select("id, CONCAT_WS('',first_name,' ',last_name) AS name,first_name,last_name").order(:first_name)}
   scope :with_name_admission_no_only, ->{ select(" id, CONCAT_WS('',first_name,' ',last_name,' - ',admission_no) AS name,first_name,last_name,admission_no").order(first_name)}
 
@@ -55,10 +55,9 @@ class Student < ActiveRecord::Base
   validates_presence_of :admission_no, :admission_date, :first_name, :batch_id, :date_of_birth
   validates_uniqueness_of :admission_no
   validates_presence_of :gender
-  validates_format_of     :email, :with => /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,   :allow_blank=>true,
-    :message => I18n.t('must_be_a_valid_email_address'), :multiline => true
-  validates_format_of     :admission_no, :with => /^[A-Z0-9_-]*$/i, :multiline => true,
-    :message => I18n.t('must_contain_only_letters')
+  validates_format_of :email, with: /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i, allow_blank: true,
+    message: I18n.t('must_be_a_valid_email_address'), multiline: true
+  validates_format_of :admission_no, with: /^[A-Z0-9_-]*$/i, multiline: true, message: I18n.t('must_contain_only_letters')
 
   validates_associated :user
   before_validation :create_user_and_validate
@@ -66,26 +65,25 @@ class Student < ActiveRecord::Base
   before_save :is_active_true
 
   has_attached_file :photo,
-    :styles => {:original=> "125x125#"},
-    :url => "/system/:class/:attachment/:id/:style/:basename.:extension",
-    :path => ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
+    styles: { original: "125x125#"},
+    url: "/system/:class/:attachment/:id/:style/:basename.:extension",
+    path: ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
 
   VALID_IMAGE_TYPES = ['image/gif', 'image/png','image/jpeg', 'image/jpg']
 
-  validates_attachment_content_type :photo, :content_type =>VALID_IMAGE_TYPES,
-    :message=>'Image can only be GIF, PNG, JPG',:if=> Proc.new { |p| !p.photo_file_name.blank? }
-  validates_attachment_size :photo, :less_than => 512000,\
-    :message=>'must be less than 500 KB.',:if=> Proc.new { |p| p.photo_file_name_changed? }
+  validates_attachment_content_type :photo, content_type: VALID_IMAGE_TYPES,
+    message: 'Image can only be GIF, PNG, JPG', if: Proc.new { |p| !p.photo_file_name.blank? }
+  validates_attachment_size :photo, less_than: 512000, message: 'must be less than 500 KB.', if: Proc.new { |p| p.photo_file_name_changed? }
 
-  def validate
-    errors.add(:date_of_birth, "#{I18n.t('cant_be_a_future_date')}.") if self.date_of_birth >= Date.today \
-      unless self.date_of_birth.nil?
-    errors.add(:gender, "#{I18n.t('model_errors.student.error2')}.") unless ['m', 'f'].include? self.gender.downcase \
-      unless self.gender.nil?
-    errors.add(:admission_no, "#{I18n.t('model_errors.student.error3')}.") if self.admission_no=='0'
-    errors.add(:admission_no, "#{I18n.t('should_not_be_admin')}") if self.admission_no.to_s.downcase== 'admin'
+  # def validate
+  #   errors.add(:date_of_birth, I18n.t('cant_be_a_future_date')) if self.date_of_birth >= Date.today \
+  #     unless self.date_of_birth.nil?
+  #   errors.add(:gender, I18n.t('model_errors.student.error2')) unless ['m', 'f'].include? self.gender.downcase \
+  #     unless self.gender.nil?
+  #   errors.add(:admission_no, I18n.t('model_errors.student.error3')) if self.admission_no=='0'
+  #   errors.add(:admission_no, I18n.t('should_not_be_admin')) if self.admission_no.to_s.downcase== 'admin'
 
-  end
+  # end
 
   def is_active_true
     unless self.is_active==1
