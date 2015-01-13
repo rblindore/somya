@@ -288,7 +288,6 @@ class UserController < ApplicationController
     @config = Settings.available_modules
     @current_user = current_user
     @username = @current_user.username if session[:user_id]
-    binding.pry
     @user = User.active.find_by_username(params[:id])
     unless @user.nil?
       @employee = Employee.find_by_employee_number(@user.username)
