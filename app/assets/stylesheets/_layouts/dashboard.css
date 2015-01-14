@@ -10,7 +10,7 @@ body {
 }
 #header_bg {
     height : 80px;
-    background : #b00 url(../../images/application/bg_pattern.png) repeat;
+    background : #b00 url(/assets/application/bg_pattern.png) repeat;
 }
 #header {
     width : 980px;
@@ -79,7 +79,7 @@ body {
     border-bottom-width : 0;
     font: normal 0.9em Arial;
     line-height: 18px;
-    background: #b00 url(../../images/application/bg_pattern.png) repeat;
+    background: #b00 url(/assets/application/bg_pattern.png) repeat;
 }
 #main-menu li:hover ul.level-1{
     visibility: visible;
@@ -123,7 +123,7 @@ body {
     border-bottom-width : 0;
     font: normal 0.9em Arial;
     line-height: 18px;
-    background: #b00 url(../../images/application/bg_pattern.png) repeat;
+    background: #b00 url(/assets/application/bg_pattern.png) repeat;
 }
 #main-menu li ul.level-1 li:hover ul.level-2{
     visibility: visible;
@@ -188,7 +188,7 @@ p.flash-msg {
 
 #footer {
     height:33px;
-    background:#b00 url(../../images/application/app_layout_footer_bg.jpg) repeat;
+    background:#b00 url(/assets/application/app_layout_footer_bg.jpg) repeat;
 }
 #footer #footer_links {
     height:33px;width:614px;
@@ -210,7 +210,7 @@ p.flash-msg {
 
 #content-header {
     height:150px;
-    background:#fff url(../../images/examination/header_underline.jpg) bottom no-repeat;
+    background:#fff url(/assets/examination/header_underline.jpg) bottom no-repeat;
 }
 #content-header img {
     width:90px;/*height:80px;*/
@@ -254,14 +254,14 @@ p.flash-msg {
 #news_feed {
     width:157px;
     margin:0 auto;
-    background:#fff url(../../images/fedena_user/dashboard/news_feed_bg.jpg) repeat;
+    background:#fff url(/assets/fedena_user/dashboard/news_feed_bg.jpg) repeat;
 }
 #news_feed small {
     padding-top:0px;
     color:#b00;
 }
 #news_feed_top_img {
-    background: url("../../images/fedena_user/dashboard/dash_news_top.jpg") no-repeat scroll 0 0 #FFFFFF;
+    background: url("/assets/fedena_user/dashboard/dash_news_top.jpg") no-repeat scroll 0 0 #FFFFFF;
     color: #000000;
     display: block;
     font-weight: bold;
@@ -274,7 +274,7 @@ p.flash-msg {
 }
 
 #bottom_read_more {
-    background: url("../../images/fedena_user/dashboard/news_feed_more_link.jpg") no-repeat scroll 0 0 #FFFFFF;
+    background: url("/assets/fedena_user/dashboard/news_feed_more_link.jpg") no-repeat scroll 0 0 #FFFFFF;
     color: #FFFFFF;
     display: block;
     font-size: 13px;
@@ -374,7 +374,7 @@ body > #content_wrapper {
     font: normal 0.9em Arial;
     line-height: 18px;
     z-index: 100; /* zIndex should be greater than that of shadow's below */
-    background: #b00 url(../../images/application/bg_pattern.png) repeat;
+    background: #b00 url(/assets/application/bg_pattern.png) repeat;
     width: 125px; /* default width for menu */
 }
 
@@ -535,7 +535,7 @@ body > #content_wrapper {
     margin-top :15px;
     height : 66px;
     clear : both;
-    background: url(foot.png) repeat-x;
+    background: url(/assets/foot.png) repeat-x;
     width:100%;
 }
 #footer_logo {
@@ -550,11 +550,11 @@ body > #content_wrapper {
     height:66px;
     margin-top:-55px;
     width:210px;
-    background: url(/images/footer-logo.png) no-repeat 0 0 transparent;
+    background: url(/assets/footer-logo.png) no-repeat 0 0 transparent;
 }
 
 #footer_logo a.footer-logo:hover {
-    background: url(/images/footer-logo.png) no-repeat -210px 0 transparent;
+    background: url(/assets/footer-logo.png) no-repeat -210px 0 transparent;
 
 }
 
@@ -588,7 +588,7 @@ body > #content_wrapper {
 #news_bar .news_box{
     width: 313px;
     height: 66px;
-    background: url(/images/application/note-bg.png) no-repeat;
+    background: url(/assets/application/note-bg.png) no-repeat;
     float: left;
     margin: 0 0 0 20px;
 }
@@ -619,7 +619,7 @@ body > #content_wrapper {
     color: #666666;
     margin: 0 15px 0 0;
     padding: 0 0 0 20px;
-    background: url(/images/application/chat.png) no-repeat left;
+    background: url(/assets/application/chat.png) no-repeat left;
 }
 #news_bar .news_box .comments-count a{
     color: #666666;

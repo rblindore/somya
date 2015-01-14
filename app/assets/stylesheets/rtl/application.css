@@ -146,7 +146,7 @@ body {
     border-bottom-width : 0;
     font: normal 0.9em Arial;
     line-height: 18px;
-    background: #b00 url(../../images/application/bg_pattern.png) repeat;
+    background: #b00 url(../../assets/application/bg_pattern.png) repeat;
 }
 #main-menu li ul.level-1 li:hover ul.level-2{
     visibility: visible;
@@ -209,7 +209,7 @@ p.flash-msg {
 
 #content-header {
     height:100px;
-    background:#fff url(../../../images/examination/header_underline_rtl.jpg) bottom no-repeat;
+    background:#fff url(/assets/examination/header_underline_rtl.jpg) bottom no-repeat;
 }
 #content-header img {
     margin:0;
@@ -257,7 +257,7 @@ p.flash-msg {
 #news_feed {
     width:157px;
     margin:0 auto;
-    background:#fff url(../../../images/fedena_user/dashboard/news_feed_bg.jpg) repeat;
+    background:#fff url(/assets/fedena_user/dashboard/news_feed_bg.jpg) repeat;
 }
 #news_feed small {
     padding-top:0px;
@@ -267,7 +267,7 @@ p.flash-msg {
     margin:0 auto;
     margin-top:25px;
     height:36px;width:157px;
-    background:#fff url(../../../images/fedena_user/dashboard/dash_news_top.jpg) no-repeat;
+    background:#fff url(/assets/fedena_user/dashboard/dash_news_top.jpg) no-repeat;
     display: block;
 }
 #news_feed_bottom_img a {
@@ -336,7 +336,7 @@ body > #content_wrapper {
     font: normal 0.9em Arial;
     line-height: 18px;
     z-index: 100; /* zIndex should be greater than that of shadow's below */
-    background: #b00 url(../../../images/application/bg_pattern.png) repeat;
+    background: #b00 url(/assets/application/bg_pattern.png) repeat;
     width: 125px; /* default width for menu */
 }
 
@@ -453,7 +453,7 @@ body > #content_wrapper {
 
 }
 .errorExplanation {
-    background: #ffdedf url(/images/_global/error.png) no-repeat 10px 14px;
+    background: #ffdedf url(/assets/_global/error.png) no-repeat 10px 14px;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     height : auto; width : 510px;
@@ -518,7 +518,7 @@ body > #content_wrapper {
 /* Modalbox styles */
 
 #MB_frame #MB_header {
-    background: transparent url(../../images/modalbox/header-underline_rtl.jpg) bottom center no-repeat;
+    background: transparent url(../../assets/modalbox/header-underline_rtl.jpg) bottom center no-repeat;
     height: 55px;
 }
 #MB_frame #MB_caption {
@@ -902,7 +902,7 @@ tr.tr-blank{
     text-decoration: underline;
 }
 #error-box {
-    background: #ffdedf url(/images/_global/error.png) no-repeat 10px 14px;
+    background: #ffdedf url(/assets/_global/error.png) no-repeat 10px 14px;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     height : auto;
@@ -915,7 +915,7 @@ tr.tr-blank{
     margin-top : -33px; */
     height : 66px;
     clear : both;
-    background: url(foot.png) repeat-x;
+    background: url(/assets/foot.png) repeat-x;
     width:100%;
      margin-top:15px;
 }
@@ -931,11 +931,11 @@ tr.tr-blank{
     height:66px;
     margin-top:-55px;
     width:210px;
-    background: url(/images/footer-logo.png) no-repeat 0 0 transparent;
+    background: url(/assets/footer-logo.png) no-repeat 0 0 transparent;
 }
 
 #footer_logo a.footer-logo:hover {
-    background: url(/images/footer-logo.png) no-repeat -210px 0 transparent;
+    background: url(/assets/footer-logo.png) no-repeat -210px 0 transparent;
 
 }
 

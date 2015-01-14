@@ -17,66 +17,69 @@
 #limitations under the License.
 
 class UserController < ApplicationController
-  before_filter :login_required, :except => [:forgot_password, :login, :set_new_password, :reset_password,:first_login_change_password]
-  before_filter :only_admin_allowed, :only => [:edit, :create, :index, :edit_privilege, :user_change_password,:delete,:list_user,:all]
-  before_filter :protect_user_data, :only => [:profile, :user_change_password]
-  before_filter :check_if_loggedin, :only => [:login]
+
+  before_filter :login_required, except: [:forgot_password, :login, :set_new_password, :reset_password,:first_login_change_password]
+  before_filter :only_admin_allowed, only: [:edit, :create, :index, :edit_privilege, :user_change_password,:delete,:list_user,:all]
+  before_filter :protect_user_data, only: [:profile, :user_change_password]
+  before_filter :check_if_loggedin, only: [:login]
   #  filter_access_to :edit_privilege
 
   def all
-    @users = User.active.all
+    @users = User.active
+    render layout: 'application'
   end
 
   def list_user
-    if params[:user_type] == 'Admin'
-      @users = User.active.find(:all, :conditions => {:admin => true}, :order => 'first_name ASC')
+    case params[:user_type]
+    when 'Admin'
+      @users = User.active.where(admin: true).order('first_name ASC')
       render(:update) do |page|
-        page.replace_html 'users', :partial=> 'users'
-        page.replace_html 'employee_user', :text => ''
-        page.replace_html 'student_user', :text => ''
+        page.replace_html 'users', partial: 'users'
+        page.replace_html 'employee_user', text: ''
+        page.replace_html 'student_user', text:''
       end
-    elsif params[:user_type] == 'Employee'
+    when 'Employee'
       render(:update) do |page|
         hr = Settings.find_by_config_value("HR")
         unless hr.nil?
-          page.replace_html 'employee_user', :partial=> 'employee_user'
-          page.replace_html 'users', :text => ''
-          page.replace_html 'student_user', :text => ''
+          page.replace_html 'employee_user', partial: 'employee_user'
+          page.replace_html 'users', text: ''
+          page.replace_html 'student_user', text: ''
         else
           @users = User.active.find_all_by_employee(1)
-          page.replace_html 'users', :partial=> 'users'
-          page.replace_html 'employee_user', :text => ''
-          page.replace_html 'student_user', :text => ''
+          page.replace_html 'users', partial: 'users'
+          page.replace_html 'employee_user', text: ''
+          page.replace_html 'student_user', text: ''
         end
       end
-    elsif params[:user_type] == 'Student'
+    when 'Student'
       render(:update) do |page|
-        page.replace_html 'student_user', :partial=> 'student_user'
-        page.replace_html 'users', :text => ''
-        page.replace_html 'employee_user', :text => ''
+        page.replace_html 'student_user', partial: 'student_user'
+        page.replace_html 'users', text: ''
+        page.replace_html 'employee_user', text: ''
       end
-    elsif params[:user_type] == "Parent"
+    when "Parent"
       render(:update) do |page|
-        page.replace_html 'student_user', :partial=> 'parent_user'
-        page.replace_html 'users', :text => ''
-        page.replace_html 'employee_user', :text => ''
+        page.replace_html 'student_user', partial: 'parent_user'
+        page.replace_html 'users', text: ''
+        page.replace_html 'employee_user', text: ''
       end
-    elsif params[:user_type] == ''
+    when ''
       @users = ""
       render(:update) do |page|
-        page.replace_html 'users', :partial=> 'users'
-        page.replace_html 'employee_user', :text => ''
-        page.replace_html 'student_user', :text => ''
+        page.replace_html 'users', partial: 'users'
+        page.replace_html 'employee_user', text: ''
+        page.replace_html 'student_user', text: ''
       end
     end
   end
 
   def list_employee_user
     emp_dept = params[:dept_id]
-    @employee = Employee.find_all_by_employee_department_id(emp_dept, :order =>'first_name ASC')
+    @employee = Employee.where(employee_department_id: emp_dept).order('first_name ASC')
     @users = @employee.collect { |employee| employee.user}
     @users.delete(nil)
-    render(:update) {|page| page.replace_html 'users', :partial=> 'users'}
+    render(:update) {|page| page.replace_html 'users', partial: 'users'}
   end
 
   def list_student_user
@@ -206,20 +209,21 @@ class UserController < ApplicationController
           user.reset_password_code = Digest::SHA1.hexdigest( "#{user.email}#{Time.now.to_s.split(//).sort_by {rand}.join}" )
           user.reset_password_code_until = 1.day.from_now
           user.role = user.role_name
-          user.save(false)
+          user.save(validate: false)
           url = "#{request.protocol}#{request.host_with_port}"
-          UserNotifier.deliver_forgot_password(user,url)
-          flash[:notice] = "#{t('flash18')}"
-          redirect_to :action => "index"
+          UserNotifier.forgot_password(user,url).deliver
+          redirect_to url_for(action: :index), notice: t('flash18')
         else
-          flash[:notice] = "#{t('flash20')}"
-          return
+          flash[:notice] = t('flash20')
+          render layout: 'forgotpw'
         end
       else
         flash[:notice] = "#{t('flash19')} #{params[:reset_password][:username]}"
+        render layout: 'forgotpw'
       end
+    else
+      render layout: 'forgotpw'
     end
-    render layout: 'forgotpw'
   end
 
 
@@ -274,13 +278,13 @@ class UserController < ApplicationController
     Rails.cache.delete("user_autocomplete_menu#{session[:user_id]}")
     session[:user_id] = nil
     session[:language] = nil
-    flash[:notice] = "#{t('logged_out')}"
+    flash[:notice] = t('logged_out')
     available_login_authes = FedenaPlugin::AVAILABLE_MODULES.select{|m| m[:name].classify.constantize.respond_to?("logout_hook")}
     selected_logout_hook = available_login_authes.first if available_login_authes.count>=1
     if selected_logout_hook
       selected_logout_hook[:name].classify.constantize.send("logout_hook",self,"/")
     else
-      redirect_to :controller => 'user', :action => 'login' and return
+      redirect_to controller: :user, action: :login and return
     end
   end
 
@@ -295,23 +299,20 @@ class UserController < ApplicationController
       @ward  = @user.parent_record if @user.parent
 
     else
-      flash[:notice] = "#{t('flash14')}"
-      redirect_to :action => 'dashboard'
+      redirect_to url_for(conroller: :user, action:  :dashboard), notice: t('flash14')
     end
   end
 
   def reset_password
-    user = User.active.find_by_reset_password_code(params[:id],:conditions=>"reset_password_code IS NOT NULL")
+    user = User.active.fwhere(reset_password_code: params[:id]).where.not(reset_password_code: nil).first
     if user
       if user.reset_password_code_until > Time.now
-        redirect_to :action => 'set_new_password', :id => user.reset_password_code
+        redirect_to url_for(controller: :user, action: :set_new_password, id: user.reset_password_code)
       else
-        flash[:notice] = "#{t('flash1')}"
-        redirect_to :action => 'index'
+        redirect_to url_for(controller: :user, action: :index), notice: t('flash1')
       end
     else
-      flash[:notice]= "#{t('flash2')}"
-      redirect_to :action => 'index'
+      redirect_to url_for(controller: :user, action: :index), notice: t('flash2')
     end
   end
 
@@ -371,7 +372,7 @@ class UserController < ApplicationController
       new_privileges ||= []
       @user.privileges = Privilege.find_all_by_id(new_privileges)
       @user.clear_menu_cache
-      flash[:notice] = "#{t('flash15')}"
+      flash[:notice] = t('flash15')
       redirect_to :action => 'profile',:id => @user.username
     end
   end
@@ -386,16 +387,21 @@ class UserController < ApplicationController
     render :partial=>'header_link'
   end
 
+  def index
+    render layout: 'application'
+  end
+
 
   private
-  def successful_user_login(user)
-    session[:user_id] = user.id
-    flash[:notice] = "#{t('welcome')}, #{user.first_name} #{user.last_name}!"
-    redirect_to session[:back_url] || {:controller => 'user', :action => 'dashboard'}
-  end
 
-  def user_params
-    params.require(:user).permit(:username, :password)
-  end
+    def successful_user_login(user)
+      session[:user_id] = user.id
+      flash[:notice] = "#{t('welcome')}, #{user.first_name} #{user.last_name}!"
+      redirect_to session[:back_url] || {controller: :user, action: :dashboard}
+    end
+
+    def user_params
+      params.require(:user).permit(:username, :password)
+    end
 end
 

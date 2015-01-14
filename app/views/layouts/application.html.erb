@@ -25,24 +25,24 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><%= @title %></title>
     <% unless current_school_detail.new_record? %>
-    <link rel="icon" href="<%=current_school_detail.logo.url%>" type="<%=current_school_detail.logo.content_type%>" />
-    <link rel="shortcut icon" href="<%=current_school_detail.logo.url%>" type="<%=current_school_detail.logo.content_type%>" />
+      <link rel="icon" href="<%=current_school_detail.logo.url%>" type="<%=current_school_detail.logo.content_type%>" />
+      <link rel="shortcut icon" href="<%=current_school_detail.logo.url%>" type="<%=current_school_detail.logo.content_type%>" />
     <% end %>
 
-    <%= stylesheet_link_tag(*get_stylesheets) %>
+    <%= stylesheet_link_tag :application, media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 
-    <%= javascript_include_tag :defaults, :cache => 'cache/javascripts/all' %>
+    <%#= javascript_include_tag :defaults, :cache => 'cache/javascripts/all' %>
     <%= javascript_include_tag 'scripts/nicetitle', 'droplicious' %>
-    <%= javascript_include_tag "fckeditor/fckeditor" %>
     <%= javascript_include_tag 'builder' %>
     <%= javascript_include_tag 'modalbox' %>
-<%#= javascript_include_tag 'popup' %>
+    <%#= javascript_include_tag 'popup' %>
 
     <% FedenaPlugin::REGISTERED_HOOKS[:application_layout_header].each do |mod| %>
       <%= render :partial=>mod.camelize.constantize.send("application_layout_header") %>
     <% end %>
 
-    <%= calendar_date_select_includes 'red' %>
+    <%#= calendar_date_select_includes 'red' %>
     <% CalendarDateSelect.format = :iso_date %>
 
     <%= javascript_include_tag "calendar_date_select/locale/#{I18n.locale}.js" unless I18n.locale==:en %>
