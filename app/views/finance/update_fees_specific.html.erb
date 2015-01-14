@@ -18,16 +18,16 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/show_finance.png") %>
+<%= image_tag("show_finance.png") %>
   <h1><%= t('special_fees_for_student') %></h1>
   <h3><%= @student.full_name%></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
   </div>
 </div>
 
 
-<% form_for :element , :url => {:action => 'fees_student_specific', :id => @student.id } do |f| %>
+<%= form_for :element , :url => {:action => 'fees_student_specific', :id => @student.id } do |f| %>
   <div id="create_user_form">
     <div class="label_field">
       <label for="label"><%= t('label') %></label>

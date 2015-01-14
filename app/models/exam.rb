@@ -21,7 +21,7 @@ class Exam < ActiveRecord::Base
   validates_numericality_of :maximum_marks, :minimum_marks, :allow_nil => true
   validates_presence_of :maximum_marks, :minimum_marks, :if => :validation_should_present?, :on=>:update
   belongs_to :exam_group
-  belongs_to :subject, :conditions => { :is_deleted => false }
+  belongs_to :subject, -> { where(is_deleted: false) }
   before_destroy :removable?
   before_save :update_exam_group_date
 
@@ -42,7 +42,7 @@ class Exam < ActiveRecord::Base
       return true
     end
   end
-  
+
   def removable?
     self.exam_scores.reject{|es| es.marks.nil? and es.grading_level_id.nil?}.empty?
 

@@ -19,9 +19,11 @@
 class Course < ActiveRecord::Base
 
   GRADINGTYPES = {"1"=>"GPA","2"=>"CWA","3"=>"CCE"}
-  
+
   validates_presence_of :course_name, :code
   validate :presence_of_initial_batch, :on => :create
+
+  before_save :cce_weightage_valid
 
   has_many :batches
   has_many :batch_groups
@@ -30,28 +32,29 @@ class Course < ActiveRecord::Base
   has_many :subject_amounts
   accepts_nested_attributes_for :batches
   has_and_belongs_to_many :observation_groups
-  has_and_belongs_to_many_with_deferred_save :cce_weightages
-  
-  before_save :cce_weightage_valid
+  # has_and_belongs_to_many_with_deferred_save :cce_weightages
+  has_and_belongs_to_many :cce_weightages
 
-  named_scope :active, :conditions => { :is_deleted => false }, :order => 'course_name asc'
-  named_scope :deleted, :conditions => { :is_deleted => true }, :order => 'course_name asc'
-  named_scope :cce, {:select => "courses.*",:conditions=>{:grading_type => GRADINGTYPES.invert["CCE"]}, :order => 'course_name asc'}
+
+
+  scope :active, -> { where(is_deleted: false ).order('course_name asc')}
+  scope :deleted, -> { where(is_deleted: true ).order('course_name asc')}
+  scope :cce, -> { select("courses.*").where(grading_type: GRADINGTYPES.invert["CCE"]).order('course_name asc')}
 
   def presence_of_initial_batch
-    errors.add_to_base "#{t('should_have_an_initial_batch')}" if batches.length == 0
+    errors.add(:base, I18n.t('should_have_an_initial_batch')) if batches.length == 0
   end
 
   def inactivate
     update_attribute(:is_deleted, true)
   end
-  
+
   def full_name
     "#{course_name} #{section_name}"
   end
 
   def active_batches
-    self.batches.all(:conditions=>{:is_active=>true,:is_deleted=>false})
+    self.batches.where(is_active: true, is_deleted: false)
   end
 
   def has_batch_groups_with_active_batches
@@ -104,15 +107,15 @@ class Course < ActiveRecord::Base
   end
 
   def cce_enabled?
-    Configuration.cce_enabled? and grading_type == "3"
+    Settings.cce_enabled? and grading_type == "3"
   end
 
   def gpa_enabled?
-    Configuration.has_gpa? and self.grading_type=="1"
+    Settings.has_gpa? and self.grading_type=="1"
   end
 
   def cwa_enabled?
-    Configuration.has_cwa? and self.grading_type=="2"
+    Settings.has_cwa? and self.grading_type=="2"
   end
 
   def normal_enabled?
@@ -139,7 +142,7 @@ class Course < ActiveRecord::Base
     def grading_types
       hsh =  ActiveSupport::OrderedHash.new
       hsh["0"]="Normal"
-      types = Configuration.get_grading_types
+      types = Settings.get_grading_types
       types.each{|t| hsh[t] = GRADINGTYPES[t]}
       hsh
     end

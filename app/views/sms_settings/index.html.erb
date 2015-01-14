@@ -17,14 +17,14 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% form_for :sms_settings do |s| %>
+<%= form_for :sms_settings do |s| %>
   <%= s.check_box :application_enabled, :checked=>@application_sms_enabled.is_enabled %><%= t('application') %><br/>
       <%= s.submit "#{t('update')}" %>
 <% end %>
 <br/><br/>
 <% unless @application_sms_enabled.is_enabled == false %>
   <%= t('general_sms_setting') %>:<br/>
-  <% form_for :general_settings, :url=>{:controller=>"sms_settings",:action=>"update_general_sms_settings"} do |sms| %>
+  <%= form_for :general_settings, :url=>{:controller=>"sms_settings",:action=>"update_general_sms_settings"} do |sms| %>
     <%= sms.check_box :student_admission_enabled, :checked=>@student_admission_sms_enabled.is_enabled %><%= t('student_admission') %><br/>
     <%= sms.check_box :exam_schedule_enabled, :checked=>@exam_schedule_sms_enabled.is_enabled %><%= t('exam_schedule') %><br/>
     <%= sms.check_box :result_publish_enabled, :checked=>@result_publish_sms_enabled.is_enabled %><%= t('result_publish') %><br/>

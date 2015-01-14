@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <img src="/images/student_details/student_details_logo.jpg" />
+  <img src="student_details/student_details_logo.jpg" />
   <h1><%= t('student_info') %></h1>
   <h3><%= t('student_profile') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -38,7 +38,7 @@
           :action => "guardians", :id => @student.id %></li>
     <% end %>
     <% if permitted_to? :email,:student %>
-      <% @config = Configuration.find_by_config_key('NetworkState').config_value %>
+      <% @config = Settings.find_by_config_key('NetworkState').config_value %>
       <% if @config == 'Online'  %>
         <li><%= link_to "#{t('send_email')}", :controller => "student",
             :action => "email", :id => @student.id %></li>

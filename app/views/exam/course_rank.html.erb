@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/examination/show_exam.png") %>
+  <%= image_tag("examination/show_exam.png") %>
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('student_ranking_per_course') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 <div id="page-yield">
@@ -30,21 +30,22 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
   <div class="bread_crumb">
-    <%= link_to t('exam_text'), :controller => "exam", :action=>"index" %> &raquo;
-    <%= link_to t('report_center'), :controller => "exam", :action => "report_center" %> &raquo;
+    <%= link_to t('exam_text'), exam_index_path %> &raquo;
+    <%= link_to t('report_center'), report_center_exam_index_path %> &raquo;
     <%= t('student_ranking_per_course') %>
   </div>
   <div class="box">
 
-    <% form_for :course_rank, :url=>{:action=>'student_course_rank'} do |x| %>
+    <%= form_for :course_rank, url: student_course_rank_exam_index_path do |x| %>
       <div class="label-field-pair">
         <label for="student_course"><%= t('select_a_course') %>:</label>
         <div  class="text-input-bg">
           <%= select :course_rank, :course_id,
             Course.active.map {|b| [b.full_name, b.id]},
-            {:prompt => "#{t('select_a_course')}"},{:onChange => "#{remote_function(:url => {:action => "batch_groups"}, :with => "'course_id='+value")}"}%></div></div>
+            { prompt: t('select_a_course') },{ onChange: "#{remote_function( url: batch_groups_exam_index_path(course_id: "value"), :with => "'course_id='+value")}"}%></div></div>
       <div id="batch_group_list"></div>
-      <%= submit_tag "", :value => "► #{t('view')}", :class => "submit_button" %>
+      <%= submit_tag "", value: "► #{t('view')}", class: :submit_button %>
     <% end %>
     <div class="extender"></div>
-  </div></div>
+  </div>
+</div>

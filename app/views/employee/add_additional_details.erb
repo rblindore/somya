@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/HR/show_hr.png") %>
+  <%= image_tag("  HR/show_hr.png") %>
   <h1><%= t('employee_settings') %></h1>
   <h3><%= t('add_additional_details') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -46,7 +46,7 @@
       <p class="flash-msg"> <%= flash[:notice] %> </p>
     <% end %>
 
-    <%- form_for @additional_field, :url=>{:action=>(@additional_field.new_record? ? "add_additional_details" : "edit_additional_details")} do |c| -%>
+    <%= form_for @additional_field, :url=>{:action=>(@additional_field.new_record? ? "add_additional_details" : "edit_additional_details")} do |c| -%>
 
       <%= error_messages_for 'additional_field' %>
       <div id="form-content">

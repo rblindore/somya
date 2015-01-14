@@ -18,25 +18,20 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/HR/leave-new.png") %>
+  <%= image_tag("HR/leave-new.png") %>
   <h1><%= t('leave_types') %></h1>
   <h3><%= t('add_leave_type') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
   </div>
 </div>
-
-
-
-
-
 <div id="page-yield">
 
   <% unless flash[:notice].nil? %>
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
   <div class="box">
-    <% form_for :leave_type do |c| %>
+    <%= form_for :leave_type do |c| %>
       <%= error_messages_for 'leave_type' %>
       <div id="form-content">
         <div class="label-field-pair">

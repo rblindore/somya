@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% form_for :select_options, :url=>{:controller=>"event",:action=>"course_event", :id=>@event_id} do |m| %>
+<%= form_for :select_options, :url=>{:controller=>"event",:action=>"course_event", :id=>@event_id} do |m| %>
 <ul id="category-list">
       <% @batches.each do |batch| %>
   <li class="list<%= cycle('odd','even') %>">
@@ -30,7 +30,7 @@
   </li>
   <% end %>
 </ul>
-      <%= submit_tag "#{t('create_text')}", :class=>"create" %>
+      <%= submit_tag t('create_text'), :class=>"create" %>
 <% end %>
 
 

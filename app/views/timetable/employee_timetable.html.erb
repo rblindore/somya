@@ -18,13 +18,13 @@
 #under the License. -%>
 <%# @stylesheets_for_page = 'timetable/school_timetable'  %>
 <div id="content-header">
-<%#*<img src="/images/show_timetable.png" />%>
-  <%= link_to  image_tag("/images/show_timetable.png"),:controller=>:timetable %>
+  <%#*<img src="show_timetable.png" />%>
+  <%= link_to image_tag("show_timetable.png"),:controller=>:timetable %>
   <h1><%= t('timetable_text') %></h1>
   <h3><%= t('teacher_timetable') %></h3>
 
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" -%>
+    <%= link_to image_tag("buttons/back.png",:border => 0), 'javascipt: void(0)', "history.back()" -%>
   </div>
 
 </div>
@@ -32,7 +32,7 @@
 <div id="page-yield">
 
 
-  <% form_for :timetable_entry do |s| %>
+  <%= form_for :timetable_entry do |s| %>
     <div class="label-field-pair">
       <label for="timetable_entry_course_id"><%= t('select_a_tte') %></label>
       <%= image_tag("loader.gif",
@@ -42,9 +42,8 @@
         :style =>"display: none;" ) %>
       <div class="text-input-bg">
         <%= select :timetable_entry, :timetable_id, @timetables.map {|c| ["#{c.start_date.strftime("%d %b %Y")} - #{c.end_date.strftime("%d %b %Y")}", c.id]},
-          {:selected => @current.present? ? @current.id : nil, :prompt => t('select_a_tte')},
-          {:onChange => "#{remote_function(:url => {:action => "update_employee_tt"}, :with => "'timetable_id='+value+'&employee_id='+#{@employee.id}",       :before => "Element.show('loader')",
-          :success => "Element.hide('loader')")}"} %>
+          { selected: @current.present? ? @current.id : nil, prompt: t('select_a_tte')},
+          { onChange: "#{remote_function(url: { action: "update_employee_tt", timetable_id: "value", employee_id: @employee.id}, with: "'timetable_id='+value+'&employee_id='+#{@employee.id}", before: "Element.show('loader')", success: "Element.hide('loader')")}"} %>
       </div>
     </div>
   <% end %>

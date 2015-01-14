@@ -19,7 +19,7 @@
 
 
 <div id="content-header">
-<%= image_tag("/images/admission/admission_page_logo.jpg") %>
+<%= image_tag("  admission/admission_page_logo.jpg") %>
   <h1><%= t('admission') %></h1>
   <h3><%= t('emergency_contact_step3') %></h3>
 </div>
@@ -30,7 +30,7 @@
 
   <p class="flash-msg"><%= t('select_one_of_the_guardians') %></p>
 
-  <% form_for :immediate_contact do |f| %>
+  <%= form_for :immediate_contact do |f| %>
     <ul id="parents-list">
       <%- @parents.each do |p| -%>
         <li class="list<%=cycle('odd', 'even')%>">

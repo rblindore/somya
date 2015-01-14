@@ -18,12 +18,12 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/show_timetable.png") %>
+  <%= image_tag("show_timetable.png") %>
   <h1><%= t('timetable_text') %></h1>
   <h3><%= t('select_batch_to_view') %></h3>
 
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(o)', onclick: "history.back()" %>
   </div>
 
 </div>
@@ -36,8 +36,8 @@
   <% if @timetables.blank? %>
     No timetables found
   <% else %>
-    <% current=Timetable.find(:first,:conditions=>["timetables.start_date <= ? AND timetables.end_date >= ?",@local_tzone_time.to_date,@local_tzone_time.to_date]) %>
-    <% form_for :timetable_entry do |s| %>
+    <% current=Timetable.where("timetables.start_date <= ? AND timetables.end_date >= ?",@local_tzone_time.to_date, @local_tzone_time.to_date).first %>
+    <%= form_for :timetable_entry do |s| %>
       <div class="label-field-pair">
         <label for="timetable_entry_course_id"><%= t('select_tte') %></label>
         <div class="text-input-bg">
@@ -54,7 +54,7 @@
           :style =>"display: none;" ) %>
         <div class="text-input-bg">
           <%= select :timetable_entry, :course_id, @courses.map {|c| [c.full_name, c.id]},
-            {:selected => @course_id, :prompt => "#{t('select_a_batch')}"},
+            {:selected => @course_id, :prompt => t('select_a_batch')},
             {:onChange => 'show_timetable()'   } %>
         </div>
 

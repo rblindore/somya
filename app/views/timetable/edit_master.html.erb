@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/show_timetable.png") %>
+  <%= image_tag("show_timetable.png") %>
   <h1><%= t('timetable_text') %></h1>
   <h3><%= t('edit_text') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -42,7 +42,8 @@
         <% @timetables.each_with_index do |tt,i| %>
           <li class="list<%=cycle('odd', 'even')%>">
             <div class="department-edit"><%= i+1 %></div>
-            <div class="department-name"><%= link_to "#{I18n.l(tt.start_date,:format=>"%d %b %Y")}  -  #{I18n.l(tt.end_date,:format=>"%d %b %Y")}",:controller=>:timetable,:action=>:update_timetable,:id=>tt.id %></div>
+            <div class="department-name"><%= link_to "#{I18n.l(tt.start_date, format: "%d %b %Y")}  -  #{I18n.l(tt.end_date, format: "%d %b %Y")}", controller: :timetable, action: :update_timetable, id: tt.id %>
+            </div>
           </li>
         <% end %>
       </ul>

@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/student_details/student_details_logo.jpg") %>
+  <%= image_tag("student_details/student_details_logo.jpg") %>
   <h1><%= t('student_text') %></h1>
   <h3><%= t('previous_marks_overview') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 

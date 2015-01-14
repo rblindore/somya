@@ -17,18 +17,18 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 <div id="content-header">
-<%#*<img src="/images/show_timetable.png" />%>
-  <%= link_to  image_tag("/images/show_timetable.png"),:controller=>:timetable %>
+  <%#*<img src="show_timetable.png" />%>
+  <%= link_to image_tag("show_timetable.png"), controller: :timetable %>
   <h1><%= t('timetable_text') %></h1>
   <h3><%= t('work_allotment') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png",:border => 0), 'javascript: void(0)', onclick: "histroy.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">
   <ul>
     <li>
-      <%= link_to t('assign_multiple_teachers'), :controller=>"employee", :action=>"subject_assignment"%>
+      <%= link_to t('assign_multiple_teachers'), controller: :employee, action: :subject_assignment %>
     </li>
   </ul>
 </div>
@@ -39,7 +39,7 @@
     </p>
   <% end %>
 
-  <% form_for :employee_subjects,:html=>{:id=>'work_allotment_form'} do |f| %>
+  <%= form_for :employee_subjects, html: { id: :work_allotment_form } do |f| %>
     <% @batches.each do |batch| %>
       <ul class="category-list">
         <li class="heading">

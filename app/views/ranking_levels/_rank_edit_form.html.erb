@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% remote_form_for :ranking_level,:url=>{:action=>"update_ranking_level", :id=>@ranking_level.id} do |c| %>
+<%= form_for :ranking_level,:url=>{:action=>"update_ranking_level", :id=>@ranking_level.id}, remote: true do |c| %>
 
   <div id="form-content">
     <div class="label-field-pair">

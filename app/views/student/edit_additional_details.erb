@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/admission/admission_page_logo.jpg") %>
+<%= image_tag("  admission/admission_page_logo.jpg") %>
   <h1><%= t('student_settings') %></h1>
   <h3><%= t('edit_additional_details') %></h3>
   <div id="app-back-button">
-     <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+     <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 
@@ -32,7 +32,7 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
 
-    <%- form_for :additional_details do |c| -%>
+    <%= form_for :additional_details do |c| -%>
 
       <%= error_messages_for 'additional_details' %>
       <div id="form-content">

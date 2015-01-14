@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/admission/admission_page_logo.jpg") %>
+<%= image_tag("admission/admission_page_logo.jpg") %>
   <h1><%= t('students') %></h1>
   <h3><%= t('leaving_school') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -44,7 +44,7 @@
       <% unless flash[:notice].nil? %> <p class="flash-msg"> <%= flash[:notice] %> </p> <% end %>
       <p><%= t('description_for_students_leaving') %></p>
 
-      <% remote_form_for :remove do |f| %>
+      <%= form_for :remove, remote: true do |f| %>
         <div class="label-field-pair">
           <label for="remove_descr"><%= t('reason_for_leaving') %></label>
           <div class="text-input-bg"><%= f.text_field :status_description %></div>

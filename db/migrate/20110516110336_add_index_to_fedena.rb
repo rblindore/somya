@@ -1,11 +1,11 @@
 class AddIndexToFedena < ActiveRecord::Migration
   def self.up
-      add_index :users, [:username],:limit => 10
+      add_index :users, [:username]
       add_index :finance_fee_collections, [:fee_category_id]
       add_index :finance_fees, [:fee_collection_id, :student_id]
       add_index :batch_students, [:batch_id, :student_id]
       add_index :subjects, [:batch_id, :elective_group_id,:is_deleted]
-      add_index :configurations, [:config_key],:limit => 10
+      add_index :configurations, [:config_key]
       add_index :exam_scores, [:student_id,:exam_id]
       add_index :archived_exam_scores, [:student_id,:exam_id]
       add_index :exams, [:exam_group_id,:subject_id]

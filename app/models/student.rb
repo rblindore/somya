@@ -19,23 +19,23 @@
 class Student < ActiveRecord::Base
 
   include CceReportMod
-    
+
   belongs_to :country
   belongs_to :batch
   belongs_to :student_category
-  belongs_to :nationality, :class_name => 'Country'
+  belongs_to :nationality, class_name: :Country
   belongs_to :user
 
   has_one    :immediate_contact
   has_one    :student_previous_data
   has_many   :student_previous_subject_mark
-  has_many   :guardians, :foreign_key => 'ward_id'
-  has_many   :finance_transactions, :as => :payee
+  has_many   :guardians, foreign_key: :ward_id
+  has_many   :finance_transactions, as: :payee
   has_many   :attendances
   has_many   :finance_fees
-  has_many   :fee_category ,:class_name => "FinanceFeeCategory"
+  has_many   :fee_category, class_name: :FinanceFeeCategory
   has_many   :students_subjects
-  has_many   :subjects ,:through => :students_subjects
+  has_many   :subjects, through: :students_subjects
   has_many   :student_additional_details
   has_many   :batch_students
   has_many   :subject_leaves
@@ -44,21 +44,20 @@ class Student < ActiveRecord::Base
   has_many   :assessment_scores
   has_many   :exam_scores
   has_many   :previous_exam_scores
-  
 
-  named_scope :active, :conditions => { :is_active => true }
-  named_scope :with_full_name_only, :select=>"id, CONCAT_WS('',first_name,' ',last_name) AS name,first_name,last_name", :order=>:first_name
-  named_scope :with_name_admission_no_only, :select=>"id, CONCAT_WS('',first_name,' ',last_name,' - ',admission_no) AS name,first_name,last_name,admission_no", :order=>:first_name
 
-  named_scope :by_first_name, :order=>'first_name',:conditions => { :is_active => true }
+  scope :active, -> { where(is_active: true )}
+  scope :with_full_name_only, -> { select("id, CONCAT_WS('',first_name,' ',last_name) AS name,first_name,last_name").order(:first_name)}
+  scope :with_name_admission_no_only, ->{ select(" id, CONCAT_WS('',first_name,' ',last_name,' - ',admission_no) AS name,first_name,last_name,admission_no").order(first_name)}
+
+  scope :by_first_name, -> { where(is_active: true).order(:first_name) }
 
   validates_presence_of :admission_no, :admission_date, :first_name, :batch_id, :date_of_birth
   validates_uniqueness_of :admission_no
   validates_presence_of :gender
-  validates_format_of     :email, :with => /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,   :allow_blank=>true,
-    :message => "#{t('must_be_a_valid_email_address')}"
-  validates_format_of     :admission_no, :with => /^[A-Z0-9_-]*$/i,
-    :message => "#{t('must_contain_only_letters')}"
+  validates_format_of :email, with: /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i, allow_blank: true,
+    message: I18n.t('must_be_a_valid_email_address'), multiline: true
+  validates_format_of :admission_no, with: /^[A-Z0-9_-]*$/i, multiline: true, message: I18n.t('must_contain_only_letters')
 
   validates_associated :user
   before_validation :create_user_and_validate
@@ -66,31 +65,33 @@ class Student < ActiveRecord::Base
   before_save :is_active_true
 
   has_attached_file :photo,
-    :styles => {:original=> "125x125#"},
-    :url => "/system/:class/:attachment/:id/:style/:basename.:extension",
-    :path => ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
+    styles: { original: "125x125#"},
+    url: "/system/:class/:attachment/:id/:style/:basename.:extension",
+    path: ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
 
   VALID_IMAGE_TYPES = ['image/gif', 'image/png','image/jpeg', 'image/jpg']
 
-  validates_attachment_content_type :photo, :content_type =>VALID_IMAGE_TYPES,
-    :message=>'Image can only be GIF, PNG, JPG',:if=> Proc.new { |p| !p.photo_file_name.blank? }
-  validates_attachment_size :photo, :less_than => 512000,\
-    :message=>'must be less than 500 KB.',:if=> Proc.new { |p| p.photo_file_name_changed? }
-  
-  def validate
-    errors.add(:date_of_birth, "#{t('cant_be_a_future_date')}.") if self.date_of_birth >= Date.today \
-      unless self.date_of_birth.nil?
-    errors.add(:gender, "#{t('model_errors.student.error2')}.") unless ['m', 'f'].include? self.gender.downcase \
-      unless self.gender.nil?
-    errors.add(:admission_no, "#{t('model_errors.student.error3')}.") if self.admission_no=='0'
-    errors.add(:admission_no, "#{t('should_not_be_admin')}") if self.admission_no.to_s.downcase== 'admin'
-    
-  end
+  validates_attachment_content_type :photo, content_type: VALID_IMAGE_TYPES,
+    message: 'Image can only be GIF, PNG, JPG', if: Proc.new { |p| !p.photo_file_name.blank? }
+  validates_attachment_size :photo, less_than: 512000, message: 'must be less than 500 KB.', if: Proc.new { |p| p.photo_file_name_changed? }
+
+  # def validate
+  #   errors.add(:date_of_birth, I18n.t('cant_be_a_future_date')) if self.date_of_birth >= Date.today \
+  #     unless self.date_of_birth.nil?
+  #   errors.add(:gender, I18n.t('model_errors.student.error2')) unless ['m', 'f'].include? self.gender.downcase \
+  #     unless self.gender.nil?
+  #   errors.add(:admission_no, I18n.t('model_errors.student.error3')) if self.admission_no=='0'
+  #   errors.add(:admission_no, I18n.t('should_not_be_admin')) if self.admission_no.to_s.downcase== 'admin'
+
+  # end
 
   def is_active_true
     unless self.is_active==1
       self.is_active=1
     end
+  end
+
+  def self.search(params)
   end
 
   def create_user_and_validate
@@ -119,7 +120,7 @@ class Student < ActiveRecord::Base
       if check_changes.include?('immediate_contact_id') or check_changes.include?('admission_no')
         Guardian.shift_user(self)
       end
-      
+
     end
     self.email = "" if self.email.blank?
     return false unless errors.blank?
@@ -252,7 +253,7 @@ class Student < ActiveRecord::Base
   def self.next_admission_no
     '' #stub for logic to be added later.
   end
-  
+
   def get_fee_strucure_elements(date)
     elements = FinanceFeeStructureElement.get_student_fee_components(self,date)
     elements[:all] + elements[:by_batch] + elements[:by_category] + elements[:by_batch_and_category]
@@ -301,9 +302,9 @@ class Student < ActiveRecord::Base
       #      end
       #
     end
- 
+
   end
-  
+
   def check_dependency
     return true if self.finance_transactions.present? or self.graduated_batches.present? or self.attendances.present? or self.finance_fees.present?
     return true if FedenaPlugin.check_dependency(self,"permanant").present?
@@ -461,5 +462,5 @@ class Student < ActiveRecord::Base
     return false
   end
 
-  
+
 end

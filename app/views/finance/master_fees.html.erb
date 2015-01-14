@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/show_finance.png") %>
+  <%= image_tag("  show_finance.png") %>
   <h1><%= t('master_category') %></h1>
   <h3><%= t('finance_management') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
   </div>
 </div>
 <div id="page-yield">
@@ -77,7 +77,7 @@
     </div>
     <div id="fee_collection_dates"></div>
 
-    <div id="categories">   
+    <div id="categories">
       <%= render :partial => "master_category_list" unless params[:batch_id].blank? %>
     </div>
   </div>

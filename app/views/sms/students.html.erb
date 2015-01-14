@@ -18,24 +18,22 @@
 #under the License. -%>
 
 <div id="content-header">
-    <%= image_tag("/images/sms/sms_icon.png") %>
+    <%= image_tag("sms/sms_icon.png") %>
   <h1><%= t('sms_text') %></h1>
   <h3><%= t('students') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
 <div id="page-yield">
   <div class="box">
-<% remote_form_for :send_sms,
-        :before => "Element.show('loader2')",
-        :success => "Element.hide('loader2')" do |x| %>
+<%= form_for :send_sms, before: "Element.show('loader2')", success: "Element.hide('loader2')", remote: true do |x| %>
    <div class="label-field-pair">
     <div class="label-container"><label><%= t('select_a_batch') %>:</label> </div>
     <div class="text-input-bg"><%= select :send_sms, :batch_id,
         Batch.active.map {|b| [b.full_name, b.id]},
-        {:prompt => "#{t('select_a_batch')}"},
+        {:prompt => t('select_a_batch')},
         {:onChange => "#{remote_function(:url => {:action => "list_students"},
         :with => "'batch_id='+value",
         :before => "Element.show('loader')",
@@ -49,7 +47,7 @@
     </div>
    </div>
 
-    
+
 
 <div id="student-list">
   <!--here students of the particular batch will be listed via ajax-->

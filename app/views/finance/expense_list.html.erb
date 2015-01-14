@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/show_finance.png") %>
+<%= image_tag("show_finance.png") %>
   <h1><%= t('expenses') %></h1>
   <h3><%= t('expenses_list') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
   </div>
 </div>
 
@@ -34,7 +34,7 @@
     <% unless flash[:warn_notice].nil? %>
     <div id="errorExplanation" class="errorExplanation"><p><%= flash[:warn_notice] %></p> </div>
   <% end %>
-    <% form_for :report, :url => {:action => 'expense_list_update'} do |form| %>
+    <%= form_for :report, :url => {:action => 'expense_list_update'} do |form| %>
       <div class="label-field-pair">
         <label><%= t('select_start_date') %>:</label>
         <div class="input-container"><%= calendar_date_select_tag 'start_date', I18n.localize(Date.today, :format=>:default),:popup=>:force %></div>

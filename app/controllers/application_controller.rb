@@ -20,8 +20,8 @@ class ApplicationController < ActionController::Base
   helper :all
   helper_method :can_access_request?
   protect_from_forgery # :secret => '434571160a81b5595319c859d32060c1'
-  filter_parameter_logging :password
-  
+  ##filter_parameter_logging :password
+
   before_filter { |c| Authorization.current_user = c.current_user }
   before_filter :message_user
   before_filter :set_user_language
@@ -29,13 +29,13 @@ class ApplicationController < ActionController::Base
   before_filter :login_check
 
   before_filter :dev_mode
-  include CustomInPlaceEditing
+  ## include CustomInPlaceEditing
 
   def login_check
     if session[:user_id].present?
       unless (controller_name == "user") and ["first_login_change_password","login","logout","forgot_password"].include? action_name
         user = User.active.find(session[:user_id])
-        setting = Configuration.get_config_value('FirstTimeLoginEnable')
+        setting = Settings.get_config_value('FirstTimeLoginEnable')
         if setting == "1" and user.is_first_login != false
           flash[:notice] = "#{t('first_login_attempt')}"
           redirect_to :controller => "user",:action => "first_login_change_password",:id => user.username
@@ -53,8 +53,8 @@ class ApplicationController < ActionController::Base
 
   def set_variables
     unless @current_user.nil?
-      @attendance_type = Configuration.get_config_value('StudentAttendanceType') unless @current_user.student?
-      @modules = Configuration.available_modules
+      @attendance_type = Settings.get_config_value('StudentAttendanceType') unless @current_user.student?
+      @modules = Settings.available_modules
     end
   end
 
@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
- 
+
   def only_assigned_employee_allowed
     @privilege = @current_user.privileges.map{|p| p.name}
     if @current_user.employee?
@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+
   def initialize
     @title = FedenaSetting.company_details[:company_name]
   end
@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
     User.active.find(session[:user_id]) unless session[:user_id].nil?
   end
 
-  
+
   def find_finance_managers
     Privilege.find_by_name('FinanceControl').users
   end
@@ -156,7 +156,7 @@ class ApplicationController < ActionController::Base
     flash[:notice] = "#{t('flash_msg4')}"
     redirect_to :controller => 'user', :action => 'dashboard'
   end
-  
+
   protected
   def login_required
     unless session[:user_id]
@@ -172,17 +172,17 @@ class ApplicationController < ActionController::Base
   end
 
   def configuration_settings_for_hr
-    hr = Configuration.find_by_config_value("HR")
+    hr = Settings.where(config_value: "HR").first
     if hr.nil?
       redirect_to :controller => 'user', :action => 'dashboard'
       flash[:notice] = "#{t('flash_msg4')}"
     end
   end
 
-  
+
 
   def configuration_settings_for_finance
-    finance = Configuration.find_by_config_value("Finance")
+    finance = Settings.find_by_config_value("Finance")
     if finance.nil?
       redirect_to :controller => 'user', :action => 'dashboard'
       flash[:notice] = "#{t('flash_msg4')}"
@@ -213,7 +213,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+
   def limit_employee_profile_access
     unless @current_user.employee
       unless params[:id] == @current_user.employee_record.id
@@ -324,7 +324,7 @@ class ApplicationController < ActionController::Base
     server_time = Time.now
     server_time_to_gmt = server_time.getgm
     @local_tzone_time = server_time
-    time_zone = Configuration.find_by_config_key("TimeZone")
+    time_zone = Settings.find_by_config_key("TimeZone")
     unless time_zone.nil?
       unless time_zone.config_value.nil?
         zone = TimeZone.find(time_zone.config_value)
@@ -344,14 +344,15 @@ class ApplicationController < ActionController::Base
 
   private
   def set_user_language
-    lan = Configuration.find_by_config_key("Locale")
+    lan =  {} #Settings.find_by_config_key("Locale")
     I18n.default_locale = :en
-    Translator.fallback(true)
+    #Translator.fallback(true)
     if session[:language].nil?
-      I18n.locale = lan.config_value
+      I18n.locale = lan.config_value rescue 'en'
     else
       I18n.locale = session[:language]
     end
+    I18n.locale = 'en'
     News.new.reload_news_bar
   end
 end

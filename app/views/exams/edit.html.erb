@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/examination/show_exam.png") %>
+  <%= image_tag("examination/show_exam.png") %>
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('edit_exam') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()" %>
   </div>
 </div>
 
@@ -35,7 +35,7 @@
   <div class="box">
 
     <div class="bread_crumb">
-      <%= link_to "#{t('courses_text')}", courses_path %> &raquo;
+      <%= link_to t('courses_text'), courses_path %> &raquo;
       <%= link_to @course.full_name, @course %> &raquo;
       <%= link_to "#{t('batch')} #{@batch.name}", [@course, @batch] %> &raquo;
       <%= link_to "#{t('exams_text')}", batch_exam_groups_path(@batch) %> &raquo;
@@ -45,7 +45,7 @@
 
     <h4><%= t('for_exam_group') %>- <%= @exam_group.name %></h4>
 
-    <% form_for [@exam_group, @exam] do |f| %>
+    <%= form_for [@exam_group, @exam] do |f| %>
       <%= error_messages_for :exam %>
       <div class="label-field-pair">
         <%= f.label "#{t('subject')}" %>

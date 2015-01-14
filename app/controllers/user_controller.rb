@@ -17,23 +17,16 @@
 #limitations under the License.
 
 class UserController < ApplicationController
-  layout :choose_layout
   before_filter :login_required, :except => [:forgot_password, :login, :set_new_password, :reset_password,:first_login_change_password]
   before_filter :only_admin_allowed, :only => [:edit, :create, :index, :edit_privilege, :user_change_password,:delete,:list_user,:all]
   before_filter :protect_user_data, :only => [:profile, :user_change_password]
   before_filter :check_if_loggedin, :only => [:login]
   #  filter_access_to :edit_privilege
-  def choose_layout
-    return 'login' if action_name == 'login' or action_name == 'set_new_password'
-    return 'forgotpw' if action_name == 'forgot_password'
-    return 'dashboard' if action_name == 'dashboard'
-    'application'
-  end
-  
+
   def all
     @users = User.active.all
   end
-  
+
   def list_user
     if params[:user_type] == 'Admin'
       @users = User.active.find(:all, :conditions => {:admin => true}, :order => 'first_name ASC')
@@ -44,7 +37,7 @@ class UserController < ApplicationController
       end
     elsif params[:user_type] == 'Employee'
       render(:update) do |page|
-        hr = Configuration.find_by_config_value("HR")
+        hr = Settings.find_by_config_value("HR")
         unless hr.nil?
           page.replace_html 'employee_user', :partial=> 'employee_user'
           page.replace_html 'users', :text => ''
@@ -104,7 +97,7 @@ class UserController < ApplicationController
   end
 
   def change_password
-    
+
     if request.post?
       @user = current_user
       if User.authenticate?(@user.username, params[:user][:old_password])
@@ -145,23 +138,23 @@ class UserController < ApplicationController
         end
       end
 
-      
+
     end
   end
 
   def create
-    @config = Configuration.available_modules
+    @config = Settings.available_modules
 
     @user = User.new(params[:user])
     if request.post?
-          
+
       if @user.save
         flash[:notice] = "#{t('flash17')}"
         redirect_to :controller => 'user', :action => 'edit', :id => @user.username
       else
         flash[:notice] = "#{t('flash16')}"
       end
-           
+
     end
   end
 
@@ -174,10 +167,10 @@ class UserController < ApplicationController
     end
     redirect_to :controller => 'user'
   end
-  
+
   def dashboard
     @user = current_user
-    @config = Configuration.available_modules
+    @config = Settings.available_modules
     @employee = @user.employee_record if ["#{t('admin')}","#{t('employee_text')}"].include?(@user.role_name)
     if @user.student?
       @student = Student.find_by_admission_no(@user.username)
@@ -185,11 +178,12 @@ class UserController < ApplicationController
     if @user.parent?
       @student = Student.find_by_admission_no(@user.username[1..@user.username.length])
     end
-    @first_time_login = Configuration.get_config_value('FirstTimeLoginEnable')
+    @first_time_login = Settings.get_config_value('FirstTimeLoginEnable')
     if  session[:user_id].present? and @first_time_login == "1" and @user.is_first_login != false
       flash[:notice] = "#{t('first_login_attempt')}"
       redirect_to :controller => "user",:action => "first_login_change_password",:id => @user.username
     end
+    render layout: 'dashboard'
   end
 
 
@@ -205,7 +199,7 @@ class UserController < ApplicationController
   def forgot_password
     #    flash[:notice]="You do not have permission to access forgot password!"
     #    redirect_to :action=>"login"
-    @network_state = Configuration.find_by_config_key("NetworkState")
+    @network_state = Settings.find_by_config_key("NetworkState")
     if request.post? and params[:reset_password]
       if user = User.active.find_by_username(params[:reset_password][:username])
         unless user.email.blank?
@@ -225,18 +219,19 @@ class UserController < ApplicationController
         flash[:notice] = "#{t('flash19')} #{params[:reset_password][:username]}"
       end
     end
+    render layout: 'forgotpw'
   end
 
 
   def login
-    @institute = Configuration.find_by_config_key("LogoName")
+    @institute = Settings.find_by_config_key("LogoName")
     available_login_authes = FedenaPlugin::AVAILABLE_MODULES.select{|m| m[:name].classify.constantize.respond_to?("login_hook")}
     selected_login_hook = available_login_authes.first if available_login_authes.count>=1
     if selected_login_hook
       authenticated_user = selected_login_hook[:name].classify.constantize.send("login_hook",self)
     else
       if request.post? and params[:user]
-        @user = User.new(params[:user])
+        @user = User.new(user_params)
         user = User.active.find_by_username @user.username
         if user.present? and User.authenticate?(@user.username, @user.password)
           authenticated_user = user
@@ -248,11 +243,12 @@ class UserController < ApplicationController
     elsif authenticated_user.blank? and request.post?
       flash[:notice] = "#{t('login_error_message')}"
     end
+    render layout: 'login'
   end
 
   def first_login_change_password
     @user = User.active.find_by_username(params[:id])
-    @setting = Configuration.get_config_value('FirstTimeLoginEnable')
+    @setting = Settings.get_config_value('FirstTimeLoginEnable')
     if @setting == "1" and @user.is_first_login != false
       if request.post?
         if params[:user][:new_password] == params[:user][:confirm_password]
@@ -289,7 +285,7 @@ class UserController < ApplicationController
   end
 
   def profile
-    @config = Configuration.available_modules
+    @config = Settings.available_modules
     @current_user = current_user
     @username = @current_user.username if session[:user_id]
     @user = User.active.find_by_username(params[:id])
@@ -297,10 +293,8 @@ class UserController < ApplicationController
       @employee = Employee.find_by_employee_number(@user.username)
       @student = Student.find_by_admission_no(@user.username)
       @ward  = @user.parent_record if @user.parent
-
     else
-      flash[:notice] = "#{t('flash14')}"
-      redirect_to :action => 'dashboard'
+      redirect_to action: 'dashboard', notice: t('flash14')
     end
   end
 
@@ -341,7 +335,7 @@ class UserController < ApplicationController
 
   def set_new_password
     if request.post?
-      user = User.active.find_by_reset_password_code(params[:id],:conditions=>"reset_password_code IS NOT NULL")
+      user = User.active.where(reset_password_code: params[:id]).where.not(reset_password_code: nil).first
       if user
         if params[:set_new_password][:new_password] === params[:set_new_password][:confirm_password]
           user.password = params[:set_new_password][:new_password]
@@ -349,24 +343,25 @@ class UserController < ApplicationController
           user.clear_menu_cache
           #User.update(user.id, :password => params[:set_new_password][:new_password],
           # :reset_password_code => nil, :reset_password_code_until => nil)
-          flash[:notice] = "#{t('flash3')}"
-          redirect_to :action => 'index'
+          flash[:notice] = t('flash3')
+          redirect_to action: :index
         else
-          flash[:notice] = "#{t('user.flash4')}"
-          redirect_to :action => 'set_new_password', :id => user.reset_password_code
+          flash[:notice] = t('user.flash4')
+          redirect_to action: :set_new_password, id: user.reset_password_code
         end
       else
-        flash[:notice] = "#{t('flash5')}"
-        redirect_to :action => 'index'
+        flash[:notice] = t('flash5')
+        redirect_to action: :index
       end
     end
+    render layout: 'login'
   end
 
   def edit_privilege
     @user = User.active.find_by_username(params[:id])
-    @finance = Configuration.find_by_config_value("Finance")
+    @finance = Settings.find_by_config_value("Finance")
     @sms_setting = SmsSetting.application_sms_status
-    @hr = Configuration.find_by_config_value("HR")
+    @hr = Settings.find_by_config_value("HR")
     @privilege_tags=PrivilegeTag.find(:all,:order=>"priority ASC")
     @user_privileges=@user.privileges
     if request.post?
@@ -382,7 +377,7 @@ class UserController < ApplicationController
   def header_link
     @user = current_user
     #@reminders = @users.check_reminders
-    @config = Configuration.available_modules
+    @config = Settings.available_modules
     @employee = Employee.find_by_employee_number(@user.username)
     @employee ||= Employee.first if current_user.admin?
     @student = Student.find_by_admission_no(@user.username)
@@ -395,6 +390,10 @@ class UserController < ApplicationController
     session[:user_id] = user.id
     flash[:notice] = "#{t('welcome')}, #{user.first_name} #{user.last_name}!"
     redirect_to session[:back_url] || {:controller => 'user', :action => 'dashboard'}
+  end
+
+  def user_params
+    params.require(:user).permit(:username, :password)
   end
 end
 

@@ -18,19 +18,19 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/show_settings.png") %>
+  <%= image_tag("show_settings.png") %>
   <h1><%= t('courses_text') %></h1>
   <h3><%= t('grouped_batches') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 <div id="page-yield">
   <div class="bread_crumb">
     <%= link_to t('configuration_text'), :controller => "configuration", :action=>"index" %> &raquo;
-    <%= link_to "#{t('courses_text')}", :controller => "courses", :action => "index" %> &raquo;
-    <%= link_to "#{t('manage_course')}", :controller => "courses", :action => "manage_course" %> &raquo;
-    <%= link_to "#{@course.full_name}", :controller => "courses", :action => "show", :id=>@course.id %> &raquo;
+    <%= link_to t('courses_text'), :controller => "courses", :action => "index" %> &raquo;
+    <%= link_to t('manage_course'), :controller => "courses", :action => "manage_course" %> &raquo;
+    <%= link_to @course.full_name, :controller => "courses", :action => "show", :id=>@course.id %> &raquo;
     <%= t('grouped_batches') %>
   </div>
   <div id="flash"></div>
@@ -39,7 +39,7 @@
     <%= error_messages_for 'batch_group' %>
   </div>
   <div id="class_form">
-    <% remote_form_for :batch_group,:url=>{:action=>"create_batch_group", :course_id=>@course.id} do |c| %>
+    <%= form_for :batch_group, url: {action: :create_batch_group, course_id: @course.id}, remote: true do |c| %>
 
       <div id="form-content">
         <div class="label-field-pair">

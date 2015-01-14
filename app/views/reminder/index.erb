@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("/images/reminder/reminder_small.png") %>
+  <%= image_tag("reminder/reminder_small.png") %>
   <h1><%= t('messages') %></h1>
   <h3><%= t('inbox') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png",:border => 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -46,7 +46,7 @@
 
 
   <div id="application-list">
-    <% form_for :reminder, :url=>{:controller=>'reminder', :action=>'reminder_actions' } do |f| %>
+    <%= form_for :reminder, :url=>{:controller=>'reminder', :action=>'reminder_actions' } do |f| %>
       <%= hidden_field_tag :page, (params[:page].nil? ? 1 : params[:page]) %>
       <table id="listing" align="center" width="100%" cellpadding="1" cellspacing="1">
         <tr class="tr-select">

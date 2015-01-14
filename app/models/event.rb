@@ -19,8 +19,8 @@
 class Event < ActiveRecord::Base
   validates_presence_of :title, :description, :start_date, :end_date
 
-  named_scope :holidays, :conditions => {:is_holiday => true}
-  named_scope :exams, :conditions => {:is_exam => true}
+  scope :holidays, -> { where(is_holiday: true)}
+  scope :exams, -> { where(is_exam: true)}
   has_many :batch_events, :dependent => :destroy
   has_many :employee_department_events, :dependent => :destroy
   has_many :user_events, :dependent => :destroy
@@ -28,7 +28,7 @@ class Event < ActiveRecord::Base
 
   def validate
     unless self.start_date.nil? or self.end_date.nil?
-      errors.add(:end_time, "#{t('can_not_be_before_the_start_time')}") if self.end_date < self.start_date
+      errors.add(:end_time, "#{I18n.t('can_not_be_before_the_start_time')}") if self.end_date < self.start_date
     end
   end
 
@@ -82,7 +82,7 @@ class Event < ActiveRecord::Base
 
   class << self
     def is_a_holiday?(day)
-      return true if Event.holidays.count(:all, :conditions => ["start_date <=? AND end_date >= ?", day, day] ) > 0
+      return true if Event.holidays.where("start_date <=? AND end_date >= ?", day, day).count > 0
       false
     end
   end

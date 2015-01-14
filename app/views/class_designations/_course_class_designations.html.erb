@@ -18,7 +18,7 @@
 #under the License. -%>
 
 <div id="class_form">
-  <% remote_form_for :class_designation,:url=>{:action=>"create_class_designation", :course_id=>@course.id} do |c| %>
+  <%= form_for :class_designation, url: { action: :create_class_designation , course_id: @course.id}, remote: true do |c| %>
 
     <div id="form-content">
       <div class="label-field-pair">

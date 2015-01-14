@@ -5,7 +5,7 @@ class AddIndexToFedena3 < ActiveRecord::Migration
     add_index :timetable_entries, [:timetable_id]
     add_index :timetables, [:start_date,:end_date],:name => 'by_start_and_end'
     add_index :students, [:batch_id]
-    add_index :batches,[:is_deleted,:is_active,:course_id,:name]
+    add_index :batches,[:is_deleted,:is_active,:course_id,:name], :name => 'batches_index'
     add_index :subject_leaves,[:month_date,:subject_id,:batch_id]
     add_index :subject_leaves,[:student_id,:batch_id]
     add_index :attendances,[:month_date,:batch_id]

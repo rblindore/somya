@@ -21,11 +21,11 @@
 <% end %>
 
 <div id="content-header">
-  <img src="/images/examination/show_exam.png" alt="Exam" />
+  <%= image_tag 'examination/show_exam.png', alt: 'Exam' %>
   <h1>Student Transcript</h1>
   <h3>CCE Report</h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("/images/buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">
@@ -37,7 +37,7 @@
   <% unless flash[:notice].nil? %>
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
-  
+
   <div id="batch_list">
     <% unless @batches.empty?  %>
     <div class="list_name">

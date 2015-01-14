@@ -20,7 +20,7 @@
 class StudentCategoryFeeDiscount < FeeDiscount
 
   belongs_to :receiver ,:class_name=>'StudentCategory'
-  validates_presence_of  :receiver_id , :message => "#{t('student_category_cant_be_blank')}"
+  validates_presence_of  :receiver_id , :message => "#{I18n.t('student_category_cant_be_blank')}"
 
   validates_uniqueness_of :name, :scope=>[:finance_fee_category_id, :type]
 
@@ -40,11 +40,11 @@ class StudentCategoryFeeDiscount < FeeDiscount
       percentage
     end
   end
-  
+
   def category_name
     c =StudentCategory.find(self.receiver_id)
     c.name unless c.nil?
   end
 
-  
+
 end

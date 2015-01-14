@@ -17,14 +17,12 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% remote_form_for :send_sms,:url=>{:action=>'sms_all'},
-        :before => "Element.show('loader')",
-        :success => "Element.hide('loader')" do |sms| %>
-<div class="label-field-pair">
-<div class="text-input-bg"><%= text_area :send_sms,:message, :rows=>5,:cols=>30 %>
-</div>
-</div>
-<%= submit_tag "#{t('send_sms')}",:class=>'submit_button' %>
+<%= form_for :send_sms,:url=>{:action=>'sms_all'}, remote: true, before: "Element.show('loader')", success: "Element.hide('loader')" do |sms| %>
+  <div class="label-field-pair">
+    <div class="text-input-bg"><%= text_area :send_sms,:message, :rows=>5,:cols=>30 %>
+    </div>
+  </div>
+  <%= submit_tag t('send_sms'),:class=>'submit_button' %>
 <% end %>
 
 

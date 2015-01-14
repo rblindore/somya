@@ -17,7 +17,7 @@
 #specific language governing permissions and limitations
 #under the License. -%>
 
-<% remote_form_for :class_designation,:url=>{:action=>"update_class_designation", :id=>@class_designation.id} do |c| %>
+<%= form_for :class_designation, url: { action: :update_class_designation, id: @class_designation.id}, remote: true do |c| %>
 
   <div id="form-content">
     <div class="label-field-pair">
