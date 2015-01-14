@@ -43,7 +43,7 @@
     <% end %>
 
     <%#= calendar_date_select_includes 'red' %>
-    <% CalendarDateSelect.format = :iso_date %>
+    <%# CalendarDateSelect.format = :iso_date %>
 
     <%= javascript_include_tag "calendar_date_select/locale/#{I18n.locale}.js" unless I18n.locale==:en %>
     <%= javascript_include_tag 'fedena_plugin.js'%>

@@ -40,7 +40,7 @@ class StudentController < ApplicationController
   end
 
   def admission1
-    @student = Student.new(student_params)
+    @student = Student.new(student_params) rescue Student.new
     @selected_value = Settings.default_country
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
     @last_admitted_student = Student.order(:id).last

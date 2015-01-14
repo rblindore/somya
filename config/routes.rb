@@ -242,10 +242,11 @@ Fedena::Application.routes.draw do
       get :all
       get :search_user_ajax
       get :list_user
-      delete :logout
+      get :logout
     end
     member do
       get :profile
+      get :change_password
     end
   end
 

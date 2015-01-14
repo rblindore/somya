@@ -55,7 +55,7 @@
               <%= link_to @current_user.first_name, { controller: :user, action: :profile, id: @current_user.username }, class: "profile-link" %>
             </div>
             <div id="logout-link">
-              <%= link_to t('log_out'), controller: :user, action: :logout, method: :DELETE %>
+              <%= link_to t('log_out'), logout_user_index_path %>
             </div>
           </div>
         </div>
