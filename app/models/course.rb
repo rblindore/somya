@@ -42,7 +42,7 @@ class Course < ActiveRecord::Base
   scope :cce, -> { select("courses.*").where(grading_type: GRADINGTYPES.invert["CCE"]).order('course_name asc')}
 
   def presence_of_initial_batch
-    errors.add(:base, I18n.t('should_have_an_initial_batch') ) if batches.length == 0
+    errors.add(:base, I18n.t('should_have_an_initial_batch')) if batches.length == 0
   end
 
   def inactivate
