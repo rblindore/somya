@@ -20,7 +20,7 @@ function dropliciousHidingEffect(dEl){
 function setDelayedHide(id){
 	$(id).addClassName('waitingtohide')
 	if(!$(id).hasClassName('hidding')){
-		if (!$(id).hasClassName('hiddingtimerset')){	
+		if (!$(id).hasClassName('hiddingtimerset')){
 			$(id).addClassName('hiddingtimerset');
 			setTimeout("delayedHide('" + id + "')", dropliciousHideDelay * 1000);
 		}
@@ -44,7 +44,7 @@ function finishedHiding(id){
 function linkMouseOut(id){
 	var currentElement = Event.element(id).id;
 	var currentElement = $(currentElement);
-	var dropElement = currentElement.next();		
+	var dropElement = currentElement.next();
 	if ($(dropElement).hasClassName('active')){
 		setDelayedHide($(dropElement).id);
 	}
@@ -52,7 +52,7 @@ function linkMouseOut(id){
 function linkMouseOver(id){
 	var currentElement = Event.element(id).id;
 	var currentElement = $(currentElement);
-	var dropElement = currentElement.next();	
+	var dropElement = currentElement.next();
 	if (!$(dropElement).hasClassName('hidding')){
 		dropElement.removeClassName('waitingtohide');
 	}
@@ -64,7 +64,7 @@ function linkMouseOver(id){
 function submenuMouseOut(id){
 	var currentElement = Event.findElement(id,'ul');
 	var currentElement = $(currentElement);
-	var dropElement = currentElement;	
+	var dropElement = currentElement;
 	if ($(dropElement).hasClassName('active')){
 		setDelayedHide($(dropElement).id);
 	}
@@ -77,13 +77,14 @@ function submenuMouseOver(id){
 		dropElement.removeClassName('waitingtohide');
 	}
 }
-document.observe('dom:loaded', function() {
-	var dropDowns = $$('a.drops');	
+
+$(document).on('dom:loaded', function() {
+	var dropDowns = $('a.drops');
 	dropDowns.each(function(name) {
 		name.observe('mousemove', linkMouseOver.bindAsEventListener(this));
 		name.observe('mouseout', linkMouseOut.bindAsEventListener(this));
 	})
-	var dropDowns = $$('ul.scriptaculously');
+	var dropDowns = $('ul.scriptaculously');
 	dropDowns.each(function(name){
 		name.observe('mousemove', submenuMouseOver.bindAsEventListener(this));
 		name.observe('mouseout', submenuMouseOut.bindAsEventListener(this));

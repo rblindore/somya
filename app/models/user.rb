@@ -20,34 +20,40 @@ class User < ActiveRecord::Base
   attr_accessor :password, :role, :old_password, :new_password, :confirm_password
   # attr_accessible :username, :password, :confirm_password, :role, :new_password, :old_password
 
-  validates_uniqueness_of :username, :scope=> [:is_deleted],:if=> 'is_deleted == false' #, :email
-  validates_length_of     :username, :within => 1..20
-  validates_length_of     :password, :within => 4..40, :allow_nil => true
-  validates_format_of     :username, :with => /^[A-Z0-9_-]*$/i,
-    :message => "#{I18n.t('must_contain_only_letters')}", :multiline => true
-  validates_format_of     :email, :with => /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,   :allow_blank=>true,
-    :message => "#{I18n.t('must_be_a_valid_email_address')}", :multiline => true
-  validates_presence_of   :role , :on=>:create
-  validates_presence_of   :password, :on => :create
+  ROLES = %w(Admin Student Employee Parent)
+
+  validates_uniqueness_of :username, scope: [:is_deleted], if: 'is_deleted == false' #, :email
+  validates_length_of :username, within: 1..20
+  validates_length_of :password, within: 4..40, allow_nil: true
+  validates_format_of :username, with: /^[A-Z0-9_-]*$/i, message: I18n.t('must_contain_only_letters'), multiline: true
+  validates_format_of :email, with: /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i, allow_blank: true, message: I18n.t('must_be_a_valid_email_address'), multiline: true
+  validates_presence_of :role, on: :create
+  validates_presence_of :password, on: :create
 
   has_and_belongs_to_many :privileges
-  has_many  :user_events
-  has_many  :events,:through=>:user_events
-  has_one :student_record,:class_name=>"Student",:foreign_key=>"user_id"
-  has_one :employee_record,:class_name=>"Employee",:foreign_key=>"user_id"
+  has_many :user_events
+  has_many :events, through: :user_events
+  has_one :student_record, class_name: "Student", foreign_key: "user_id"
+  has_one :employee_record, class_name: "Employee", foreign_key: "user_id"
 
   scope :active, -> { where(is_deleted: false) }
   scope :inactive, -> { where(is_deleted: true) }
+
+  ROLES.each do |method_name|
+    define_method "role_#{method_name.downcase}?" do
+      self.role == method_name
+    end
+  end
 
   def before_save
     self.salt = random_string(8) if self.salt == nil
     self.hashed_password = Digest::SHA1.hexdigest(self.salt + self.password) unless self.password.nil?
     if self.new_record?
       self.admin, self.student, self.employee = false, false, false
-      self.admin    = true if self.role == 'Admin'
-      self.student  = true if self.role == 'Student'
-      self.employee = true if self.role == 'Employee'
-      self.parent = true if self.role == 'Parent'
+      self.admin    = true if self.role_admin?
+      self.student  = true if self.role_student?
+      self.employee = true if self.role_employee?
+      self.parent = true if self.role_Parent?
       self.is_first_login = true
     end
   end
@@ -81,10 +87,10 @@ class User < ActiveRecord::Base
   end
 
   def role_name
-    return "#{I18n.t('admin')}" if self.admin?
-    return "#{I18n.t('student_text')}" if self.student?
-    return "#{I18n.t('employee_text')}" if self.employee?
-    return "#{I18n.t('parent')}" if self.parent?
+    return I18n.t('admin') if self.admin?
+    return I18n.t('student_text') if self.student?
+    return I18n.t('employee_text') if self.employee?
+    return I18n.t('parent') if self.parent?
     return nil
   end
 
@@ -129,58 +135,58 @@ class User < ActiveRecord::Base
   end
 
   def days_events(date)
-    all_events=[]
+    all_events = []
     case(role_name)
-    when "Admin"
-      all_events=Event.find(:all,:conditions => ["? between date(events.start_date) and date(events.end_date)",date])
-    when "Student"
-      all_events+= events.all(:conditions=>["? between date(events.start_date) and date(events.end_date)",date])
-      all_events+= student_record.batch.events.all(:conditions=>["? between date(events.start_date) and date(events.end_date)",date])
-      all_events+= Event.all(:conditions=>["(? between date(events.start_date) and date(events.end_date)) and is_common = true",date])
+    when 'Admin'
+      all_events = Event.where("? between date(events.start_date) and date(events.end_date)", date)
+    when 'Student'
+      all_events += events.where("? between date(events.start_date) and date(events.end_date)", date)
+      all_events += student_record.batch.events.where("? between date(events.start_date) and date(events.end_date)", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = true", date)
     when "Parent"
-      all_events+= events.all(:conditions=>["? between date(events.start_date) and date(events.end_date)",date])
-      all_events+= parent_record.user.events.all(:conditions=>["? between date(events.start_date) and date(events.end_date)",date])
-      all_events+= parent_record.batch.events.all(:conditions=>["? between date(events.start_date) and date(events.end_date)",date])
-      all_events+= Event.all(:conditions=>["(? between date(events.start_date) and date(events.end_date)) and is_common = true",date])
+      all_events += events.where("? between date(events.start_date) and date(events.end_date)", date)
+      all_events += parent_record.user.events.where("? between date(events.start_date) and date(events.end_date)", date)
+      all_events += parent_record.batch.events.where("? between date(events.start_date) and date(events.end_date)", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = true", date)
     when "Employee"
-      all_events+= events.all(:conditions=>["? between events.start_date and events.end_date",date])
-      all_events+= employee_record.employee_department.events.all(:conditions=>["? between date(events.start_date) and date(events.end_date)",date])
-      all_events+= Event.all(:conditions=>["(? between date(events.start_date) and date(events.end_date)) and is_exam = true",date])
-      all_events+= Event.all(:conditions=>["(? between date(events.start_date) and date(events.end_date)) and is_common = true",date])
+      all_events += events.where("? between events.start_date and events.end_date", date)
+      all_events += employee_record.employee_department.events.where("? between date(events.start_date) and date(events.end_date)", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_exam = true", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = true", date)
     end
     all_events
   end
 
   def next_event(date)
-    all_events=[]
+    all_events = []
     case(role_name)
-    when "Admin"
-      all_events=Event.find(:all,:conditions => ["? < date(events.end_date)",date],:order=>"start_date")
-    when "Student"
-      all_events+= events.all(:conditions=>["? < date(events.end_date)",date])
-      all_events+= student_record.batch.events.all(:conditions=>["? < date(events.end_date)",date],:order=>"start_date")
-      all_events+= Event.all(:conditions=>["(? < date(events.end_date)) and is_common = true",date],:order=>"start_date")
+    when 'Admin'
+      all_events = Event.where("? < date(events.end_date)", date).order(:start_date)
+    when 'Student'
+      all_events += events.where("? < date(events.end_date)", date)
+      all_events += student_record.batch.events.where("? < date(events.end_date)", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_common = true", date).order(:start_date)
     when "Parent"
-      all_events+= events.all(:conditions=>["? < date(events.end_date)",date])
-      all_events+= parent_record.user.events.all(:conditions=>["? < date(events.end_date)",date])
-      all_events+= parent_record.batch.events.all(:conditions=>["? < date(events.end_date)",date],:order=>"start_date")
-      all_events+= Event.all(:conditions=>["(? < date(events.end_date)) and is_common = true",date],:order=>"start_date")
+      all_events += events.where("? < date(events.end_date)", date)
+      all_events += parent_record.user.events.where("? < date(events.end_date)", date)
+      all_events += parent_record.batch.events.where("? < date(events.end_date)", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_common = true", date).order(:start_date)
     when "Employee"
-      all_events+= events.all(:conditions=>["? < date(events.end_date)",date],:order=>"start_date")
-      all_events+= employee_record.employee_department.events.all(:conditions=>["? < date(events.end_date)",date],:order=>"start_date")
-      all_events+= Event.all(:conditions=>["(? < date(events.end_date)) and is_exam = true",date],:order=>"start_date")
-      all_events+= Event.all(:conditions=>["(? < date(events.end_date)) and is_common = true",date],:order=>"start_date")
+      all_events += events.where("? < date(events.end_date)", date).order(:start_date)
+      all_events += employee_record.employee_department.events.where("? < date(events.end_date)", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_exam = true", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_common = true", date).order(:start_date)
     end
-    start_date=all_events.collect(&:start_date).min
+    start_date = all_events.collect(&:start_date).min
     unless start_date
       return ""
     else
-      next_date=(start_date.to_date<=date ? date+1.days : start_date )
+      next_date = ( start_date.to_date <= date ? date + 1.days : start_date )
       next_date
     end
   end
   def soft_delete
-    self.update_attributes(:is_deleted =>true)
+    self.update_attributes(is_deleted: true)
   end
 
 end

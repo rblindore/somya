@@ -20,7 +20,7 @@
   function check_blanks()
   {
     var blank_marks = 0;
-    $$('.marks-box').each(function(marks) {if(marks.value==""){blank_marks=1;} });
+    $('.marks-box').each(function(marks) {if(marks.value==""){blank_marks=1;} });
     if(blank_marks==1)
     {
       if (!confirm('Students with no marks will be marked as absent. Do you want to continue?')) return false;

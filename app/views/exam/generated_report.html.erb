@@ -22,7 +22,7 @@
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('generated_report') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">
@@ -60,7 +60,7 @@
 </div>
 <script type="text/javascript">
   function set_active(){
-    $$('.active-link').each(function(e){
+    $('.active-link').each(function(e){
       e.removeClassName('active-link');
     });
     this.addClassName('active-link')
@@ -73,7 +73,7 @@
     })
   }
   document.observe("dom:loaded", function() {
-    $$('.student-link').invoke('observe','click',draw_report);
-    $$('.student-link').invoke('observe','click',set_active);
+    $('.student-link').invoke('observe','click',draw_report);
+    $('.student-link').invoke('observe','click',set_active);
   });
 </script>

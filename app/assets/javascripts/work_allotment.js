@@ -16,20 +16,22 @@ function checkEmployeeAssignedHours(all_opts,emp_id){
         assigned_hrs += subject_limits[el.id.split('_').last()];
     });
     $('emp_status_'+emp_id).update(msgFor(max_limit-assigned_hrs));
-    
+
     return (assigned_hrs<=max_limit);
 }
 
 function recalculateAll(){
-    all_opts = $$('.category-employee-options select');
+    all_opts = $('.category-employee-options select');
     valid = true;
     for(i in employee_limits){
         valid = checkEmployeeAssignedHours(all_opts,i) && valid;
     }
     return valid;
 }
-document.observe("dom:loaded", function() {
-    $$('.category-employee-options select').invoke('observe','change',recalculateAll);
-    //$('work_allotment_form').onsubmit=recalculateAll;
-    recalculateAll();//init
+$(document).on("dom:loaded", function() {
+
+  $('.category-employee-options select').invoke('observe','change',recalculateAll);
+  //$('work_allotment_form').onsubmit=recalculateAll;
+  recalculateAll();//init
+
 });

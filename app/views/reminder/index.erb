@@ -98,9 +98,9 @@
         <% end %>
       </table>
       <script type="text/javascript">
-        $$('.message_check').invoke('observe','click',function() {
+        $('.message_check').invoke('observe','click',function() {
           if(this.checked == false){
-            $$('.check_all').first().checked = false
+            $('.check_all').first().checked = false
             $(this).up('tr').removeClassName('active')
           }
           else{
@@ -108,9 +108,9 @@
           }
 
         });
-        $$('.check_all').invoke('observe','click',function() {
+        $('.check_all').invoke('observe','click',function() {
           field_value = this.checked
-          $$('.message_check').each(function(check){
+          $('.message_check').each(function(check){
             check.checked = field_value;
             if(check.checked == false){
               $(check).up('tr').removeClassName('active')
@@ -127,7 +127,7 @@
           if (!origin.nodeName) return;
           if (origin.nodeName.toLowerCase() === 'input') {
             if (e.shiftKey) {
-              var checkBoxes = $$('.message_check');
+              var checkBoxes = $('.message_check');
               var last = checkBoxes.indexOf(lastSelected);
               var first = checkBoxes.indexOf(origin);
               if (-1 == last) {

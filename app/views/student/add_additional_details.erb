@@ -93,8 +93,8 @@
     $(link).up().insert({
       before: content.replace(regexp, new_id)
     });
-    if ($$('.input-type-select')!=""){
-      $$('.input-type-select').invoke('observe','change',toggle_custom);
+    if ($('.input-type-select')!=""){
+      $('.input-type-select').invoke('observe','change',toggle_custom);
     }
   }
 
@@ -119,10 +119,10 @@
     return true;
   }
   document.observe("dom:loaded", function() {
-    if ($$('.input-type-select')!=""){
-      $$('.input-type-select').invoke('observe','change',toggle_custom);
-      $$('.input-type-select').first().fire('change');
-      $$('select').each(function(e){
+    if ($('.input-type-select')!=""){
+      $('.input-type-select').invoke('observe','change',toggle_custom);
+      $('.input-type-select').first().fire('change');
+      $('select').each(function(e){
         toggle_custom.call(e);
       });
     }

@@ -32,8 +32,7 @@
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
   <% unless @id_lists.blank?  %>
-    <%= link_to "#{t('generate_tc_for_all')}",
-      {:controller => "student", :action => "generate_all_tc_pdf", :stud => @id_lists},:target => '_blank',:class=>'user_button' %>
+    <%= link_to t('generate_tc_for_all'), { controller: :student, action: :generate_all_tc_pdf, stud: @id_lists}, target: :blank, class: :user_button %>
     <br />
     <br />
   <% end %>
@@ -52,8 +51,8 @@
         <div class="heading-no"><%= t('adm_no') %></div>
         <div class="category-name"><%= t('name') %></div>
         <div class="sel-list">
-          <%= link_to t('all'), 'javascript: void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
-          <%= link_to t('none'), 'javascript:void(0)', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
+          <%= link_to t('all'), 'javascript: void(0);', onclick: "$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
+          <%= link_to t('none'), 'javascript:void(0)', onclick: "$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
         </div>
       </li>
       <% @batch.students.each do |student| %>

@@ -21,7 +21,7 @@
 <script type="text/javascript">
   function privilege_tag_check_all_or_none(privilege_tag_id, th_is){
     field_value = th_is.checked
-    $$('.privilege_check_'+privilege_tag_id).each(function(check){
+    $('.privilege_check_'+privilege_tag_id).each(function(check){
       check.checked = field_value;
       if(check.checked == false){
         $(check).up('tr').removeClassName('active')
@@ -34,21 +34,21 @@
 
   function privilege_check(privilege_tag_id, th_is){
     if(th_is.checked == false){
-      $$('.check_all_'+privilege_tag_id).first().checked = false
+      $('.check_all_'+privilege_tag_id).first().checked = false
       $(th_is).up('tr').removeClassName('active')
     }
     else
     {
       $(th_is).up('tr').addClassName('active')
       var flag =0;
-      $$('.privilege_check_'+privilege_tag_id).each(function(check){
+      $('.privilege_check_'+privilege_tag_id).each(function(check){
         if(check.checked == false){
           flag=1;
         }
       });
       if(flag==0)
       {
-        $$('.check_all_'+privilege_tag_id).first().checked = true
+        $('.check_all_'+privilege_tag_id).first().checked = true
       }
     }
   }

@@ -66,7 +66,7 @@
 </div>
 <script type="text/javascript">
   function set_active(){
-    $$('.active-link').each(function(e){
+    $('.active-link').each(function(e){
       e.removeClassName('active-link themed_text');
     });
     this.addClassName('active-link themed_text')
@@ -79,7 +79,7 @@
     })
   }
   document.observe("dom:loaded", function() {
-    $$('.student-link').invoke('observe','click',draw_report);
-    $$('.student-link').invoke('observe','click',set_active);
+    $('.student-link').invoke('observe','click',draw_report);
+    $('.student-link').invoke('observe','click',set_active);
   });
 </script>

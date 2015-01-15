@@ -42,8 +42,8 @@
       <%#= f.select :batch_id, @batches.map { |c| [c.full_name, c.id] },{:prompt => 'Select Batch'} %>
       <div class="batches">
          <div class="sel-list">
-           <%= t('select') %>: <%= link_to_function t('all'), "$$('input.MB_focusable').each(function(checkbox) { checkbox.checked = true; });" %>,
-      <%= link_to_function t('none'), "$$('input.MB_focusable').each(function(checkbox) { checkbox.checked = false; });" %>
+           <%= t('select') %>: <%= link_to_function t('all'), "$('input.MB_focusable').each(function(checkbox) { checkbox.checked = true; });" %>,
+      <%= link_to_function t('none'), "$('input.MB_focusable').each(function(checkbox) { checkbox.checked = false; });" %>
     </div>
       <% @batches.each do |f| %>
         <div class="each_batch">
