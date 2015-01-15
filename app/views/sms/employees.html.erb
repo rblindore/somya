@@ -35,11 +35,7 @@
           <%= select :send_sms, :batch_id,
             EmployeeDepartment.all.map {|b| [b.name, b.id]},
             { prompt: t('select_a_department') },
-            {:onChange => "#{remote_function(:url => {:action => "list_employees",},
-            :with => "'dept_id='+value",
-            :before => "Element.show('loader')",
-            :success => "Element.hide('loader')"
-            )}"} %>
+            { onChange: "onChangeRequest(this, '#{list_employees_sms_path(dept_id: 'paramid')}')"} %>
           <%= image_tag("loader.gif",
             :align => "absmiddle",
             :border => 0,
