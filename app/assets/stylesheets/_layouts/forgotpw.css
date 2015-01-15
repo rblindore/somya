@@ -27,12 +27,12 @@ body {
     margin-top: 19px;
     height: 156px;
     width: 100%;
-    background: #B00 url(/images/application/bg_pattern.png) repeat;
+    background: #B00 url(/assets/application/bg_pattern.png) repeat;
 }
 #login_area_bg{margin-top: -175px; height:362px;}
 #login_area {
     height:362px;width:614px;
-    background:#fff url(../../images/login/login_box.jpg) no-repeat;
+    background:#fff url(/assets/login/login_box.jpg) no-repeat;
     margin:0px auto;
     padding : 40px 0 0 0;
 }
@@ -63,7 +63,7 @@ body {
 #email_textbox_bg {
     width:507px;height:58px;
     margin:0px auto;
-    background:#fff url(login/text_box.jpg) no-repeat;
+    background:#fff url(/assets/login/text_box.jpg) no-repeat;
 }
 #email_textbox_bg input {
     width:490px;height:54px;
@@ -75,7 +75,7 @@ body {
 }
 
 #submit_area input {
-    /* background:#fff url(../../images/login/login_button.jpg) no-repeat; */
+    /* background:#fff url(/assets/login/login_button.jpg) no-repeat; */
     width:85px;height:38px;
     float:right;
     margin-right:58px;
@@ -100,7 +100,7 @@ body {
 #help_forgot_pw {margin:50px auto;text-align:center;width:614px;}
 #help_forgot_pw a {text-decoration:none;font-weight:bold;color:#b00;}
 
-/* #footer{height:33px;background:#b00 url(../../images/login/footer_bg.jpg) repeat;}
+/* #footer{height:33px;background:#b00 url(/assets/login/footer_bg.jpg) repeat;}
 #footer #footer_links {height:33px;width:614px;margin:0px auto;text-align:center;padding-top:5px;color:#fff;padding-left:114px;}
 #footer #footer_links a,span {color:#fff;width:100px;float:left;text-decoration:none;}
 #username_texbox_bg input{border:none;margin:0px; padding:0px;text-align:center;}
@@ -111,7 +111,7 @@ input[type="text"], input[type="password"], textarea, select {outline: none;}*/
     margin-top : -33px; */
     height : 66px;
     clear : both;
-    background: url(foot.png) repeat-x;
+    background: url(/assets/foot.png) repeat-x;
     width:100%;
 }
 #footer_logo {
@@ -127,11 +127,11 @@ input[type="text"], input[type="password"], textarea, select {outline: none;}*/
     height:66px;
     margin-top:-55px;
     width:210px;
-    background: url(/images/footer-logo.png) no-repeat 0 0 transparent;
+    background: url(/assets/footer-logo.png) no-repeat 0 0 transparent;
 }
 
 #footer_logo a.footer-logo:hover {
-    background: url(/images/footer-logo.png) no-repeat -210px 0 transparent;
+    background: url(/assets/footer-logo.png) no-repeat -210px 0 transparent;
 
 }
 

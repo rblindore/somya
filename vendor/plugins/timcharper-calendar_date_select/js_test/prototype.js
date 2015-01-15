@@ -3336,7 +3336,7 @@ Object.extend(Selector, {
   }
 });
 
-function $$() {
+function $() {
   return Selector.findChildElements(document, $A(arguments));
 }
 var Form = {

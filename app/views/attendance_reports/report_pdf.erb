@@ -47,9 +47,9 @@
           <div class="info1">
             <div class="info-left">
               <% if @config.config_value == 'Daily' %>
-                <h4> <%= "#{t('total_no_of_wrkng_days')} = " + @academic_days.to_s %></h4>
+                <h4> <%= "#{t('total_no_of_wrkng_days')} = #{@academic_days}" %></h4>
               <% else %>
-                <h4> <%= "#{t('total_no_of_wrkng_hours')} = " + @academic_days.to_s %></h4>
+                <h4> <%= "#{t('total_no_of_wrkng_hours')} = #{@academic_days}" %></h4>
               <% end %>
             </div>
           </div>
@@ -98,14 +98,14 @@
     var pageBreak = new Element('div',{'class' : 'page-break1'});
     var insertPageBreak = function(){body.appendChild(pageBreak.cloneNode(true))};
     var insertPage = function(){body.appendChild(page.cloneNode(true));};
-    var currPage = function(){return $$('.page1').last()};
+    var currPage = function(){return $('.page1').last()};
     var insertHeader = function(){
       header1 = header.cloneNode(true);
       header1.style.marginTop="50px";
       currPage().appendChild(header1.cloneNode(true));};
     var current_page_height=0;
     var i=0
-    $$('.available_sections1 .section1').each(function(el){
+    $('.available_sections1 .section1').each(function(el){
       a = parseInt(el.getHeight());
       c=current_page_height+a;
       current_page_height=c;

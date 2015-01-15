@@ -42,7 +42,7 @@
     <% unless @batches.empty?  %>
     <div class="list_name">
       All the batches of student
-      <%= image_tag("loader.gif",:align => "absmiddle",:border => 0,:id => "loader", :style =>"display: none;" ) %>
+      <%= image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" ) %>
     </div>
     <ul class="student_list">
       <% @batches.each do |b| %>
@@ -62,7 +62,7 @@
 
 <script type="text/javascript">
   function set_active(){
-    $$('.active-link').each(function(e){
+    $('.active-link').each(function(e){
       e.removeClassName('active-link themed_text');
     });
     this.addClassName('active-link themed_text')
@@ -75,7 +75,7 @@
     })
   }
   document.observe("dom:loaded", function() {
-    $$('.student-link').invoke('observe','click',draw_report);
-    $$('.student-link').invoke('observe','click',set_active);
+    $('.student-link').invoke('observe','click',draw_report);
+    $('.student-link').invoke('observe','click',set_active);
   });
 </script>

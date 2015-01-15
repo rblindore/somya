@@ -40,7 +40,7 @@ class StudentController < ApplicationController
   end
 
   def admission1
-    @student = Student.new(student_params rescue {})
+    @student = Student.new(student_params) rescue Student.new
     @selected_value = Settings.default_country
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
     @last_admitted_student = Student.order(:id).last
@@ -1371,7 +1371,7 @@ class StudentController < ApplicationController
   private
 
     def student_params
-      params.require(:student).permit(:admission_no, :admission_date, :first_name, :middle_name, :last_name, :batch_id, :date_of_birth, :gender, :blood_group, :birth_place, :nationality_id:, :language, :student_category_id, :religion, :address_line1, :address_line2, :city, :state, :pin_code, :country_id, :phone1, :phone2, :email)
+      params.require(:student).permit(:admission_no, :admission_date, :first_name, :middle_name, :last_name, :batch_id, :date_of_birth, :gender, :blood_group, :birth_place, :nationality_id, :language, :student_category_id, :religion, :address_line1, :address_line2, :city, :state, :pin_code, :country_id, :phone1, :phone2, :email)
     end
 
     def find_student

@@ -31,6 +31,9 @@ module Fedena
     config.autoload_paths << Rails.root.join('app', 'models', 'hr')
     config.autoload_paths << Rails.root.join('app', 'models', 'finance')
     config.filter_parameters += [:password]
+
+    # Line added to fix circular dependency error while loading student
+    config.middleware.delete Rack::Lock
     # config.eager_load = true
   end
 end

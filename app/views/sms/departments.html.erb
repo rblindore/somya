@@ -32,8 +32,8 @@
   <%= form_for :send_sms, remote: true, before: "Element.show('loader')", success: "Element.hide('loader')" do |sms| %>
     <div id="list">
       <div class="sel-list">
-        <%= t('select') %> : <%= link_to t('all'), 'javascript:void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
-        <%= link_to t('none'), 'javascript:void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
+        <%= t('select') %> : <%= link_to t('all'), 'javascript:void(0);', onclick: "$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
+        <%= link_to t('none'), 'javascript:void(0);', onclick: "$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
       </div>
       <% @departments.each do |dept| %>
         <div class="name_list<%=cycle('odd', 'even')%>">

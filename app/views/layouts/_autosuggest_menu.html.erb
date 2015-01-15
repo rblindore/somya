@@ -46,7 +46,7 @@
   };
   searchoptions = function (request,response){
     var query=request.term;
-    var available_options = <%= autosuggest_menuitems %>;
+    var available_options = '<%= autosuggest_menuitems %>';
     var options = jQuery.ui.autocomplete.filter(available_options,query).slice(0,11);
     options.push({'menutype': 'action',
       'label' : '<%=t('autosuggest_menu.search_students')%> : <strong>'+query+'</strong>',

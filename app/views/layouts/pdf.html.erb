@@ -22,11 +22,11 @@
 <html dir="<%= (rtl?) ? 'rtl' : 'ltr' %>">
   <head>
     <% @direction = (rtl?) ? 'rtl/' : '' %>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <%= stylesheet_link_tag([@direction+'application', @direction+'_styles/ui.all'])%>
     <%= stylesheet_link_tag(*get_pdf_stylesheets) %>
     <%= stylesheet_link_tag  @direction+"_layouts/pdf" %>
-    
+
     <%= wicked_pdf_javascript_include_tag 'cache/javascripts/all' %>
     <%= javascript_include_tag :all %>
 
@@ -57,8 +57,8 @@
       var pageBreak = new Element('div',{'class' : 'page-break'});
       var insertPageBreak = function(){body.appendChild(pageBreak.cloneNode(true))};
       var insertPage = function(){body.appendChild(page.cloneNode(true));};
-      var currPage = function(){return $$('.page').last()}
-      $$('.available_sections .section').each(function(el){
+      var currPage = function(){return $('.page').last()}
+      $('.available_sections .section').each(function(el){
         if(currPage() == null){
           insertPage();//first page
         }

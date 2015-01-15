@@ -921,7 +921,7 @@ tr.tr-blank{
     margin-top : -33px; */
     height : 66px;
     clear : both;
-    background: url(foot.png) repeat-x;
+    background: url(/assets/foot.png) repeat-x;
     width:100%;
     margin-top:15px;
 }

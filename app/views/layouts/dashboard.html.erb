@@ -30,13 +30,14 @@
     <% end %>
 
     <%= stylesheet_link_tag :application, media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag :application, 'data-turbolinks-track' => true %>
 
-    <%= javascript_include_tag :defaults, cache: 'cache/javascripts/all' %>
+    <%#= javascript_include_tag :defaults, cache: 'cache/javascripts/all' %>
     <%= javascript_include_tag 'scripts/nicetitle', 'droplicious' %>
     <%= javascript_include_tag 'builder' %>
     <%= javascript_include_tag 'modalbox' %>
     <%#= javascript_include_tag 'jquery/jquery.hotkeys.js'%>
+    <%= csrf_meta_tags %>
   </head>
 
   <body>
@@ -48,14 +49,14 @@
           </div>
           <div id="header_link" >
             <div id="messages-link">
-              <%= link_to t('messages'), :controller => "reminder", :action => "index" %>
+              <%= link_to t('messages'), reminder_index_path %>
               <%= render partial: 'layouts/reminder_count' %>
             </div>
             <div id="profile-link">
-              <%= link_to @current_user.first_name, { controller: :user, action: :profile, id: @current_user.username }, class: "profile-link" %>
+              <%= link_to @current_user.first_name, profile_user_path(id: @current_user.username), class: "profile-link" %>
             </div>
             <div id="logout-link">
-              <%= link_to t('log_out'), logout_user_index_path %>
+              <%= link_to t('log_out'), logout_user_index_path, method: :DELETE %>
             </div>
           </div>
         </div>

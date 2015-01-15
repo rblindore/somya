@@ -49,8 +49,8 @@
         <div class="heading-no"><%= t('adm_no') %></div>
         <div class="category-name"><%= t('name') %></div>
         <div class="sel-list">
-          <%= link_to t('all'), 'javascript: void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
-          <%= link_to t('none'), 'javascript: void(0);', onclick: "$$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
+          <%= link_to t('all'), 'javascript: void(0);', onclick: "$('input.right').each(function(checkbox) { checkbox.checked = true; });" %>,
+          <%= link_to t('none'), 'javascript: void(0);', onclick: "$('input.right').each(function(checkbox) { checkbox.checked = false; });" %>
         </div>
       </li>
       <% @batch.students.each do |student| %>

@@ -109,10 +109,10 @@
     var pageBreak = new Element('div',{'class' : 'page-break1'});
     var insertPageBreak = function(){body.appendChild(pageBreak.cloneNode(true))};
     var insertPage = function(){body.appendChild(page.cloneNode(true));};
-    var currPage = function(){return $$('.page1').last()};
+    var currPage = function(){return $('.page1').last()};
     var current_page_height=0
     var i=0
-    $$('.available_sections1 .section1').each(function(el){
+    $('.available_sections1 .section1').each(function(el){
       a = parseInt(el.getHeight());
       c=current_page_height+a;
       current_page_height=c;

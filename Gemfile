@@ -53,8 +53,8 @@ gem 'pry', group: [:development]
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 gem 'will_paginate'
-gem 'prototype-rails'
 gem 'delayed_job_active_record'
 gem 'jquery-ui-rails'
 gem 'ckeditor'
+#gem 'calendar_date_select', git: 'http://github.com/paneq/calendar_date_select.git'
 # gem 'has_and_belongs_to_many_with_deferred_save', '~> 0.2.0'

@@ -123,8 +123,8 @@
         <div class="fee_category_scroll">
           <div class="sel-list">
             <%= t('select') %>: <%= link_to t('all'), 'javascript: void
-            (0)', onclick: "$$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });" %>,
-            <%= link_to t('none'), 'javascript: void(0)', onclick: "$$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });" %>
+            (0)', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });" %>,
+            <%= link_to t('none'), 'javascript: void(0)', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });" %>
           </div>
           <% @grading_types.each do |key,val| %>
             <div class="each_batch">

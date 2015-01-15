@@ -51,8 +51,8 @@
           <div class="label-container">
             <label><%= t('select_a_category') %>:
               <b class="sel-list">
-                <%= link_to_function t('all'), "$$('input.category_select').each(function(checkbox) { checkbox.checked = true; });" %>,
-                <%= link_to_function t('none'), "$$('input.category_select').each(function(checkbox) { checkbox.checked = false; });" %>
+                <%= link_to_function t('all'), "$('input.category_select').each(function(checkbox) { checkbox.checked = true; });" %>,
+                <%= link_to_function t('none'), "$('input.category_select').each(function(checkbox) { checkbox.checked = false; });" %>
               </b>
             </label>
           </div>
