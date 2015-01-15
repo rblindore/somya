@@ -23,9 +23,10 @@ class ReminderController < ApplicationController
 
   def index
     @user = current_user
-    @reminders = Reminder.paginate(:page => params[:page], :conditions=>["recipient = '#{@user.id}' and is_deleted_by_recipient = false"], :order=>"created_at DESC",:include=>:user)
-    @read_reminders = Reminder.find_all_by_recipient(@user.id, :conditions=>"is_read = true and is_deleted_by_recipient = false", :order=>"created_at DESC")
-    @new_reminder_count = Reminder.find_all_by_recipient(@user.id, :conditions=>"is_read = false and is_deleted_by_recipient = false")
+    @reminders = Reminder.where(recipient: @user.id, is_deleted_by_recipient: false).order("created_at DESC").includes(:user).paginate(page: params[:page])
+    @read_reminders = Reminder.where(recipient: @user.id, is_read: true, is_deleted_by_recipient: false).order("created_at DESC")
+    @new_reminder_count = Reminder.where(recipient: @user.id, is_read: false, is_deleted_by_recipient: false)
+    render layout: 'application'
   end
 
   def create_reminder

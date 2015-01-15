@@ -2,6 +2,12 @@ Fedena::Application.routes.draw do
 
   resources :grading_levels
 
+  resources :application, only: :index do
+    member do
+      get :set_language
+    end
+  end
+
   resources :ranking_levels do
     collection do
       get :load_ranking_levels
@@ -257,7 +263,14 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :reminder, only: :index
+  resources :reminder, only: :index do
+    collection do
+      get :sent_reminder
+      get :create_reminder
+      get :reminder_actions
+      post :reminder_actions
+    end
+  end
 
   resources :student, only: :index do
     collection do

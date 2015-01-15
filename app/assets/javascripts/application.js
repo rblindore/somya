@@ -46,11 +46,11 @@ function onChangeRequest(obj, url){
 }
 
 
-$( document ).ajaxStart(function() {
-  Element.show('loader');
-});
+// $( document ).ajaxStart(function() {
+//   Element.show('loader');
+// });
 
-$( document ).ajaxStop(function() {
-  Element.hide('loader');
-});
+// $( document ).ajaxStop(function() {
+//   Element.hide('loader');
+// });
 

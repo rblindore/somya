@@ -107,18 +107,22 @@ class UserController < ApplicationController
       if User.authenticate?(@user.username, params[:user][:old_password])
         if params[:user][:new_password] == params[:user][:confirm_password]
           @user.password = params[:user][:new_password]
-          if @user.update_attributes(:password => @user.password, :role => @user.role_name)
-            flash[:notice] = "#{t('flash9')}"
-            redirect_to :action => 'dashboard'
+          if @user.update_attributes(password: @user.password, role: @user.role_name)
+            redirect_to url_for(controller: controller_name, action: :dashboard), notice: t('flash9')
           else
             flash[:warn_notice] = "<p>#{@user.errors.full_messages}</p>"
+            render layout: 'application'
           end
         else
           flash[:warn_notice] = "<p>#{t('flash10')}</p>"
+          render layout: 'application'
         end
       else
         flash[:warn_notice] = "<p>#{t('flash11')}</p>"
+        render layout: 'application'
       end
+    else
+      render layout: 'application'
     end
   end
 
@@ -298,6 +302,7 @@ class UserController < ApplicationController
       @employee = Employee.find_by_employee_number(@user.username)
       @student = Student.find_by_admission_no(@user.username)
       @ward  = @user.parent_record if @user.parent
+      render layout: 'application'
     else
       redirect_to url_for(conroller: :user, action:  :dashboard), notice: t('flash14')
     end
