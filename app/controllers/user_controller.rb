@@ -24,6 +24,7 @@ class UserController < ApplicationController
   before_filter :check_if_loggedin, only: [:login]
   #  filter_access_to :edit_privilege
 
+
   def all
     @users = User.active
     render layout: 'application'
@@ -284,7 +285,7 @@ class UserController < ApplicationController
     if selected_logout_hook
       selected_logout_hook[:name].classify.constantize.send("logout_hook",self,"/")
     else
-      redirect_to controller: :user, action: :login and return
+      redirect_to root_path, notice: 'Logout Successully.!'
     end
   end
 
