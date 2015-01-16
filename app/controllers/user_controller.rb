@@ -179,7 +179,7 @@ class UserController < ApplicationController
   def dashboard
     @user = current_user
     @config = Settings.available_modules
-    @employee = @user.employee_record if ["#{t('admin')}","#{t('employee_text')}"].include?(@user.role_name)
+    @employee = @user.employee_record if [t('admin'), t('employee_text')].include?(@user.role_name)
     if @user.student?
       @student = Student.find_by_admission_no(@user.username)
     end
@@ -188,8 +188,7 @@ class UserController < ApplicationController
     end
     @first_time_login = Settings.get_config_value('FirstTimeLoginEnable')
     if  session[:user_id].present? and @first_time_login == "1" and @user.is_first_login != false
-      flash[:notice] = "#{t('first_login_attempt')}"
-      redirect_to :controller => "user",:action => "first_login_change_password",:id => @user.username
+      redirect_to first_login_change_password_user_path(@user.username), notice: t('first_login_attempt')
     end
     render layout: 'dashboard'
   end

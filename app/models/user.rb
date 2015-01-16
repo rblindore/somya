@@ -39,6 +39,8 @@ class User < ActiveRecord::Base
   scope :active, -> { where(is_deleted: false) }
   scope :inactive, -> { where(is_deleted: true) }
 
+  after_find{|u| u.salt = 'fedena'}
+
   ROLES.each do |method_name|
     define_method "role_#{method_name.downcase}?" do
       self.role == method_name

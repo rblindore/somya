@@ -560,7 +560,7 @@ class StudentController < ApplicationController
   def profile
     @current_user = current_user
     @address = @student.address_line1.to_s + ' ' + @student.address_line2.to_s
-    @additional_fields = StudentAdditionalField.all(:conditions=>"status = true")
+    @additional_fields = StudentAdditionalField.where(status: true)
     @sms_module = Settings.available_modules
     @sms_setting = SmsSetting.new
     @previous_data = StudentPreviousData.find_by_student_id(@student.id)

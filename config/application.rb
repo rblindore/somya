@@ -27,5 +27,8 @@ module Fedena
     end
     config.autoload_paths << Rails.root.join('app', 'models', 'hr')
     config.autoload_paths << Rails.root.join('app', 'models', 'finance')
+
+    # Line added to fix circular dependency error while loading student
+    config.middleware.delete Rack::Lock
   end
 end

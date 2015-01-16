@@ -253,6 +253,7 @@ Fedena::Application.routes.draw do
     member do
       get :profile
       get :change_password
+      get :first_login_change_password
     end
   end
 
@@ -287,6 +288,7 @@ Fedena::Application.routes.draw do
     end
     member do
       get :profile
+      get :reports
     end
   end
 
@@ -349,6 +351,9 @@ Fedena::Application.routes.draw do
       get :timetable
       get :update_timetable_view
       get :update_teacher_tt
+    end
+    member do
+      get :student_view
     end
   end
 

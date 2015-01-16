@@ -3,17 +3,31 @@ namespace :db do
 
   desc "Create Users."
   task :create_users  => :environment do
-    [
-      {username: 'fedena_admin', first_name: 'fedena', last_name: 'fedena', email: 'admin@fedena.com', admin: true, salt: 'fedena', password: '123456789', role: 'Admin' },
-      {username: 'fedena_student', first_name: 'fedena', last_name: 'fedena', email: 'admin@fedena.com', student: true, salt: 'fedena', password: '123456789', role: 'Student' }
-    ].each do |u|
-      user = User.find_or_initialize_by(username: u[:username])
-      user.assign_attributes(u)
-      user.hashed_password = Digest::SHA1.hexdigest(user.salt + user.password)
-      unless user.save
-        puts user.errors.full_messages
+    user = User.find_or_initialize_by(username: 'fedena_admin')
+    user.assign_attributes(username: 'fedena_admin', first_name: 'fedena', last_name: 'fedena', email: 'admin@fedena.com', admin: true, salt: 'fedena', password: '123456789', role: 'Admin')
+    user.hashed_password = Digest::SHA1.hexdigest(user.salt + user.password)
+    unless user.save
+      puts user.errors.full_messages
+    else
+      puts "Admin user is created successfully", "username: #{user.username}", "password : '123456789'"
+    end
+
+    begin
+      # Student User
+      batch = Batch.create(name: 'Wild Life', start_date: Date.today, end_date: (Date.today + 1.month))
+      course = Course.new(course_name: 'Photography', code: 'ph1')
+      course.batches << batch
+      course.save
+      student = Student.new(first_name: 'Mitchel', last_name: 'Smith', admission_no: 'fedena_stud_1', admission_date: Date.today, date_of_birth: (Date.today - 20.years), batch: batch, gender: 'male')
+      if student.save
+        puts 'Student Crated successfully.'
+      else
+        puts student.errors.full_messages
       end
 
+    rescue Exception => e
+      puts e.message
     end
+
   end
 end
