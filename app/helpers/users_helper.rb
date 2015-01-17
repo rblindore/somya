@@ -17,7 +17,7 @@ module UsersHelper
       {name: t('attendance'), url: student_attendance_index_path, options: { class: :option_buttons, id: :student_attendance_button, title: t('attendance_link_title')}},
       {name: t('settings'), url: configuration_index_path, options: { class: :option_buttons, id: :settings_button, title: t('setting_link_title') }}
     ]
-    list << {name: t('human_resources'), url: hr_employee_index, options: {class: :option_buttons, id: :hr_button, title: t('hr_link_title')}} if @config.include?('HR')
+    list << {name: t('human_resources'), url: hr_employee_index_path, options: {class: :option_buttons, id: :hr_button, title: t('hr_link_title')}} if @config.include?('HR')
     list << {name: t('finance_text'), url: finance_index_path, options: {class: :option_buttons, id: :finance_button, title: t('finance_link_title')}} if @config.include?('Finance')
     list
   end

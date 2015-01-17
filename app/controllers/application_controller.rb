@@ -245,8 +245,7 @@ class ApplicationController < ActionController::Base
   def protect_sent_reminders
     reminder = Reminder.find(params[:id2])
     unless reminder.sender == current_user.id
-      flash[:notice] = "#{t('flash_msg5')}"
-      redirect_to :controller=>"reminder", :action=>"index"
+      redirect_to reminders_path, notice: t('flash_msg5')
     end
   end
 

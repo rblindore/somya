@@ -91,10 +91,10 @@ module AutosuggestMenuHelper
         {:menu_type => 'link' ,:label => 'autosuggest_menu.create_fees',:value =>{:controller => :finance,:action => :master_fees}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.fee_defaulters',:value =>{:controller => :finance,:action => :fees_defaulters}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.fee_structure',:value =>{:controller => :finance,:action => :fees_student_structure_search}},
-        {:menu_type => 'link' ,:label => 'autosuggest_menu.messages',:value =>{:controller => :reminder,:action => :index}},
-        {:menu_type => 'link' ,:label => 'autosuggest_menu.sent_messages',:value =>{:controller => :reminder,:action => :sent_reminder}},
-        {:menu_type => 'link' ,:label => 'autosuggest_menu.create_messages',:value =>{:controller => :reminder,:action => :create_reminder}},
-        {:menu_type => 'link' ,:label => 'autosuggest_menu.change_password',:value =>{:controller => :user,:action => :change_password}},
+        {:menu_type => 'link' ,:label => 'autosuggest_menu.messages',:value =>{:controller => :reminders,:action => :index}},
+        {:menu_type => 'link' ,:label => 'autosuggest_menu.sent_messages',:value =>{:controller => :reminders,:action => :sent_reminder}},
+        {:menu_type => 'link' ,:label => 'autosuggest_menu.create_messages',:value =>{:controller => :reminders,:action => :create_reminder}},
+        {:menu_type => 'link' ,:label => 'autosuggest_menu.change_password',:value =>{:controller => :users, :action => :change_password}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.employee_advanced_search',:value =>{:controller => :employee,:action => :advanced_search}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.view_employees',:value =>{:controller => :employee,:action => :view_all}}
       ]

@@ -401,7 +401,7 @@ class UsersController < ApplicationController
     def successful_user_login(user)
       session[:user_id] = user.id
       flash[:notice] = "#{t('welcome')}, #{user.first_name} #{user.last_name}!"
-      redirect_to session[:back_url] || {controller: :user, action: :dashboard}
+      redirect_to session[:back_url] || {controller: :users, action: :dashboard}
     end
 
     def user_params

@@ -98,11 +98,11 @@
     <% unless @new_reminder_count.size == 0 %>
       <li><%= link_to "<b>#{t('inbox')} (#{@new_reminder_count.size})</b>", :controller=>"reminder", :action=>"index"%></li>
     <% else %>
-      <li><%= link_to "#{t('inbox')}", :controller=>"reminder", :action=>"index"%></li>
+      <li><%= link_to t('inbox'), reminders_path %></li>
     <% end %>
 
-    <li><%= link_to "#{t('sent')}", :controller=>"reminder", :action=>"sent_reminder" %></li>
-    <li><%= link_to "#{t('create_text')}", :controller=>"reminder", :action=>"create_reminder" %></li>
+    <li><%= link_to t('sent'), :controller=>"reminders", :action=>"sent_reminder" %></li>
+    <li><%= link_to t('create_text'), :controller=>"reminders", :action=>"create_reminder" %></li>
   </ul>
 </div>
 
@@ -124,11 +124,11 @@
       <% @config = Settings.available_modules  %>
       <% if @config.include?('HR') %>
         <div class="to-options">
-          <%= link_to_remote "#{t('reminder_to_staff')}", :url=>{:controller=>"reminder",:action=>"select_employee_department"},:update=>"select-employee-department", :html=>{:class=>"themed_text"} %>
+          <%= link_to t('reminder_to_staff'), :url=>{:controller=>"reminders",:action=>"select_employee_department"}, :update=>"select-employee-department", :html=>{:class=>"themed_text"} %>
         </div>
       <% else %>
         <div class="to-options">
-          <%= link_to_remote "#{t('reminder_to_staff')}", :url=>{:controller=>"reminder",:action=>"select_users"},:update=>"select-employee-department", :html=>{:class=>"themed_text"} %>
+          <%= link_to t('reminder_to_staff'), :url=>{:controller=>"reminders",:action=>"select_users"},:update=>"select-employee-department", :html=>{:class=>"themed_text"} %>
         </div>
       <% end %>
       <%= image_tag("loader.gif",
@@ -140,7 +140,7 @@
       <% if @config.include?('HR') %>
         <div id="select-employee-department">
           <%     @user = current_user %>
-          <%  @departments = EmployeeDepartment.find(:all, :conditions=>"status = true") %>
+          <%  @departments = EmployeeDepartment.where(status: true) %>
           <%=   render :partial=>"select_employee_department" %>
         </div>
       <% end %>
@@ -154,7 +154,7 @@
 
 
       <div class="to-options">
-        <%= link_to_remote "#{t('reminder_to_student')}", :url=>{:controller=>"reminder",:action=>"select_student_course"},:update=>"select-student-course", :html=>{:class=>"themed_text"} %>
+        <%= link_to t('reminder_to_student'), :url=>{:controller=>"reminders",:action=>"select_student_course"},:update=>"select-student-course", :html=>{:class=>"themed_text"} %>
       </div>
       <div class="extender"></div>
       <div id="select-student-course">

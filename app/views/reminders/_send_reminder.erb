@@ -23,11 +23,11 @@
 
 
 <div id="form">
-    <% form_remote_for  :create_reminder,  :url => {:controller=>"reminder", :action => "send_reminder", :id=>@employee.id } do |l| %>
+    <% form_remote_for  :create_reminder,  :url => {:controller=>"reminders", :action => "send_reminder", :id=>@employee.id } do |l| %>
       <%= error_messages_for :create_reminder %>
       <%= l.hidden_field :from, :value=>@employee.user.id %>
       <%= l.hidden_field :to, :value=>@manager.id %>
-      
+
     <div class="label-field-pair ">
       <label for="subject"><%= t('subject') %></label>
       <div class="text-input-bg1"><%= l.text_field :subject %></div>
@@ -42,5 +42,5 @@
       </div>
   <div class="extender"></div>
   <% end %>
-  
+
 </div>

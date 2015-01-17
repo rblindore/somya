@@ -264,12 +264,27 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :reminder, only: :index do
+  resources :reminders, only: :index do
     collection do
-      get :sent_reminder
+      get :sent
       get :create_reminder
       get :reminder_actions
       post :reminder_actions
+      post :sent_reminder_delete
+      get :view_sent_reminder
+      get :select_employee_department
+      get :select_users
+      get :select_student_course
+      get :to_employees
+      get :to_students
+    end
+    member do
+      get :view
+      get :mark_unread
+      get :pull_form
+      get :view_sent
+      delete :delete_by_sender
+      delete :delete_by_recipient
     end
   end
 

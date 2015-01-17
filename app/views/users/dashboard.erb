@@ -41,13 +41,11 @@
     <div class="button-box">
       <% unless @user.check_reminders == 0 %>
         <div class="reminder1">
-          <%= link_to create_link(t('reminders')), {:controller => "reminder", :action => "index"},
-            :class => "option_buttons", :id => "reminders_button", :title => "         #{t('student_messages')}"%>
+          <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
           <div class ="count"><%= render :partial => 'layouts/reminder_count' %></div>
         </div>
       <% else %>
-        <%= link_to create_link(t('reminders')), {:controller => "reminder", :action => "index"},
-          :class => "option_buttons", :id => "reminders_button", :title => "         #{t('student_messages')}"%>
+        <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
       <% end %>
     </div>
 
@@ -113,15 +111,13 @@
     <div class="button-box">
       <% unless @user.check_reminders == 0 %>
         <div class="reminder1">
-          <%= link_to create_link(t('reminders')), {:controller => "reminder", :action => "index"},
-            :class => "option_buttons", :id => "reminders_button", :title => "#{t('employee_messages')}"%>
+          <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('employee_messages') %>
           <div class ="count"><%= render :partial => 'layouts/reminder_count' %></div>
         </div>
 
       <% else %>
         <div class="button-box">
-          <%= link_to create_link(t('reminders')), {:controller => "reminder", :action => "index"},
-            :class => "option_buttons", :id => "reminders_button", :title => "            #{t('student_messages')}"%>
+          <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
         </div>
       <% end %>
     </div>
