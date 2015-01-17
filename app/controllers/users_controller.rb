@@ -16,7 +16,7 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-class UserController < ApplicationController
+class UsersController < ApplicationController
 
   before_filter :login_required, except: [:forgot_password, :login, :set_new_password, :reset_password,:first_login_change_password]
   before_filter :only_admin_allowed, only: [:edit, :create, :index, :edit_privilege, :user_change_password,:delete,:list_user,:all]

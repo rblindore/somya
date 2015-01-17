@@ -239,7 +239,7 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :user do
+  resources :users do
     collection do
       post :login
       get :forgot_password
@@ -273,7 +273,7 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :student, only: :index do
+  resources :students, only: :index do
     collection do
       get :admission1
       post :admission1
@@ -289,6 +289,8 @@ Fedena::Application.routes.draw do
     member do
       get :profile
       get :reports
+      get :guardians
+      get :fees
     end
   end
 
@@ -443,7 +445,7 @@ Fedena::Application.routes.draw do
     end
   end
 
-  root 'user#login' # :controller => 'user', :action => 'login'
+  root 'users#login' # :controller => 'user', :action => 'login'
 
   ## map.fa_scores 'assessment_scores/exam/:exam_id/fa_group/:fa_group_id', :controller=>'assessment_scores',:action=>'fa_scores'
   ## map.observation_scores 'assessment_scores/batch/:batch_id/observation_group/:observation_group_id', :controller=>'assessment_scores',:action=>'observation_scores'

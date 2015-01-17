@@ -55,6 +55,7 @@ class Student < ActiveRecord::Base
   validates_presence_of :admission_no, :admission_date, :first_name, :batch_id, :date_of_birth
   validates_uniqueness_of :admission_no
   validates_presence_of :gender
+  validates_inclusion_of :gender, in: %w( m f )
   validates_format_of :email, with: /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i, allow_blank: true,
     message: I18n.t('must_be_a_valid_email_address'), multiline: true
   validates_format_of :admission_no, with: /^[A-Z0-9_-]*$/i, multiline: true, message: I18n.t('must_contain_only_letters')

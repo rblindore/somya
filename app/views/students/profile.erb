@@ -22,20 +22,18 @@
   <h1><%= t('student_info') %></h1>
   <h3><%= t('student_profile') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
 <div id="nav">
   <ul>
     <% if permitted_to? :reports,:student %>
-      <li><%= link_to "#{t('reports_text')}", :controller => 'student',
-          :action => 'reports', :id => @student %></li>
+      <li><%= link_to t('reports_text'), reports_student_path(@student) %></li>
     <%end%>
 
     <% if permitted_to? :guardians,:student %>
-      <li><%= link_to "#{t('guardians_text')}", :controller => "student",
-          :action => "guardians", :id => @student.id %></li>
+      <li><%= link_to t('guardians_text'), guardians_student_path(@student.id) %></li>
     <% end %>
     <% if permitted_to? :email,:student %>
       <% @config = Settings.find_by_config_key('NetworkState').config_value %>
@@ -52,11 +50,11 @@
       <a href="#" class="drops" id="link_one"><%= t('more') %> &#9660;</a>
       <ul id="box_one" class="scriptaculously" style="display:none;">
         <% if @sms_module.include?('Finance') and permitted_to? :fees, :student%>
-          <li><%= link_to "#{t('fees_text')}", :controller => 'student',:action => 'fees', :id => @student.id %></li>
+          <li><%= link_to t('fees_text'), fees_student_path(@student) %></li>
         <% end %>
         <% FedenaPlugin::ADDITIONAL_LINKS[:student_profile_more_menu].each do |mod| %>
           <% if permitted_to? "#{mod[:destination][:action]}".to_sym,"#{mod[:destination][:controller]}".to_sym  %>
-            <li><%= link_to "#{t(mod[:title])}",mod[:destination].merge(:id=>@student.id) %></li>
+            <li><%= link_to t(mod[:title]), mod[:destination].merge(:id=>@student.id) %></li>
           <% end %>
         <% end %>
       </ul>

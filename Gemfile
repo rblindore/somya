@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.4'
+gem 'rails', '4.2'
 # Use sqlite3 as the database for Active Record
 #gem 'mysql2'
 gem 'pg'
@@ -53,3 +53,5 @@ gem 'will_paginate'
 gem 'delayed_job_active_record'
 gem 'jquery-ui-rails'
 gem 'ckeditor'
+# The controller-level `respond_to' feature has been extracted to the `responders` gem. Add it to your Gemfile to continue using this feature
+gem 'responders', '~> 2.0'

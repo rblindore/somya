@@ -22,7 +22,7 @@ module Fedena
 
 
     config.autoload_paths << Rails.root.join('lib')
-    ['in_place_edit', 'fckeditor'].each do |name|
+    ['in_place_edit'].each do |name|
       config.autoload_paths << Rails.root.join('lib', name)
     end
     config.autoload_paths << Rails.root.join('app', 'models', 'hr')
@@ -30,5 +30,7 @@ module Fedena
 
     # Line added to fix circular dependency error while loading student
     config.middleware.delete Rack::Lock
+    config.reload_classes_only_on_change = false
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end
