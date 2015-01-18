@@ -68,8 +68,9 @@ class NewsController < ApplicationController
     @current_user = current_user
     @news = []
     if request.get?
-      @news = News.title_like_all params[:query].split unless params[:query].nil?
+      @news = News.where("title LIKE ?", "%#{params[:query]}%") unless params[:query].nil?
     end
+    render layout: 'application'
   end
 
   def search_news_ajax

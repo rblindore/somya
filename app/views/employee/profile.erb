@@ -93,7 +93,7 @@
 
     <% if current_username == profile_employee_no %>
       <% if @new_reminder_count.size == 0 %>
-        <li><%= link_to        "#{t('reminder_text')}", :controller=>"reminder", :action=>"index"%></li>
+        <li><%= link_to        "#{t('reminder_text')}", :controller=>"reminders", :action=>"index"%></li>
       <% else %>
         <li><%= link_to        "#{t('reminder_text')}(#{@new_reminder_count.size})", :controller=>"reminder", :action=>"index"%></li>
       <% end %>

@@ -1,8 +1,8 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.4'
+gem 'rails', '4.2'
 # Use sqlite3 as the database for Active Record
 #gem 'mysql2'
 gem 'pg'
@@ -15,32 +15,18 @@ gem 'coffee-rails', '~> 4.0.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
 
-gem 'wicked_pdf'
-
-gem 'ruby_parser'
-
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-
-gem 'declarative_authorization'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
-
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem "iconv", "~> 1.0.3"
-gem 'test-unit', '1.2.3'
+# Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+gem 'spring',        group: :development
 
-gem 'rspec-rails'
-
-gem 'delayed_job'
-gem 'paperclip'
-gem 'thin'
-# gem 'protected_attributes'
-gem 'pry', group: [:development]
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -52,9 +38,20 @@ gem 'pry', group: [:development]
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+gem 'wicked_pdf'
+gem 'declarative_authorization'
+gem 'ruby_parser'
+gem "iconv", "~> 1.0.3"
+gem 'test-unit', '1.2.3'
+gem 'rspec-rails'
+gem 'delayed_job'
+gem 'paperclip'
+gem 'thin'
+gem 'pry', group: [:development]
 gem 'will_paginate'
 gem 'delayed_job_active_record'
 gem 'jquery-ui-rails'
 gem 'ckeditor'
-#gem 'calendar_date_select', git: 'http://github.com/paneq/calendar_date_select.git'
-# gem 'has_and_belongs_to_many_with_deferred_save', '~> 0.2.0'
+# The controller-level `respond_to' feature has been extracted to the `responders` gem. Add it to your Gemfile to continue using this feature
+gem 'responders', '~> 2.0'

@@ -22,15 +22,15 @@
   <h1><%= t('school_news') %></h1>
   <h3><%= t('latest_announcement') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
 <div id="inner-tab-menu">
   <ul>
-    <li><%= link_to "#{t('view_all')}", :controller => 'news', :action => 'all' %></li>
+    <li><%= link_to t('view_all'), controller: :news, action: :all %></li>
     <% if permitted_to? :add,:news %>
-      <li><%= link_to "#{t('add')}", :controller => 'news', :action => 'add' %></li>
+      <li><%= link_to t('add'), controller: :news, action: :add %></li>
     <% end %>
   </ul>
 </div>
@@ -42,7 +42,7 @@
         <form name="s1form" action="" style="display:inline;">
           <h2><%= t('search_text') + ' ' + t('news_text') %></h2>
           <%= text_field_tag("query", params['query'], :autocomplete => 'off') %>
-          <div id="go"><%= submit_tag "", :value =>"#{t('search_text')}", :controller=> 'news', :action=>"index" %></div>
+          <div id="go"><%= submit_tag "", value: t('search_text'), controller: :news, action: :index %></div>
         </form>
         <div class="extender2"></div>
       </div>
@@ -83,7 +83,7 @@
               <%= i+1 %>
             </td>
             <td class="col-4">
-              <%=  link_to link_value, :controller => 'news', :action => 'view', :id => r.id%>
+              <%=  link_to link_value, controller: :news, action: :view, id: r.id%>
             </td>
             <td class="col-4">
               <% unless r.author.blank?  %>

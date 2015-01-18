@@ -40,6 +40,9 @@ class Course < ActiveRecord::Base
   scope :active, -> { where(is_deleted: false ).order('course_name asc')}
   scope :deleted, -> { where(is_deleted: true ).order('course_name asc')}
   scope :cce, -> { select("courses.*").where(grading_type: GRADINGTYPES.invert["CCE"]).order('course_name asc')}
+  scope :cce_weightages_for_exam_category, ->(cce_exam_cateogry_id){
+    cce_weightages.where(cce_exam_category_id: cce_exam_cateogry_id)
+  }
 
   def presence_of_initial_batch
     errors.add(:base, I18n.t('should_have_an_initial_batch')) if batches.length == 0
@@ -146,13 +149,10 @@ class Course < ActiveRecord::Base
       types.each{|t| hsh[t] = GRADINGTYPES[t]}
       hsh
     end
+
     def grading_types_as_options
       grading_types.invert.sort_by{|k,v| v}
     end
-  end
-
-  def cce_weightages_for_exam_category(cce_exam_cateogry_id)
-    cce_weightages.all(:conditions=>{:cce_exam_category_id=>cce_exam_cateogry_id})
   end
 
   private

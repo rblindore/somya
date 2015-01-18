@@ -27,7 +27,9 @@
       <link rel="icon" href="<%=current_school_detail.logo.url%>" type="<%=current_school_detail.logo.content_type%>" />
       <link rel="shortcut icon" href="<%=current_school_detail.logo.url%>" type="<%=current_school_detail.logo.content_type%>" />
     <% end %>
-    <%= stylesheet_link_tag :application, media: 'all', 'data-turbolinks-track' => true %>
+    <% get_stylesheets.each do |s| %>
+      <%= stylesheet_link_tag s, media: 'all'%>
+    <% end %>
     <%= javascript_include_tag :application, 'data-turbolinks-track' => true %>
     <%= yield :head %>
   </head>

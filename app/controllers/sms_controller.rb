@@ -19,6 +19,7 @@
 class SmsController < ApplicationController
   before_filter :login_required
   filter_access_to :all
+  layout :application
 
   def index
     @sms_setting = SmsSetting.new()
@@ -196,11 +197,12 @@ class SmsController < ApplicationController
         end
       end
     end
+    render layout: 'application'
   end
 
   def list_employees
-    dept = EmployeeDepartment.find(params[:dept_id])
-    @employees = dept.employees
+    @employees = EmployeeDepartment.find(params[:dept_id]).employees
+    render layout: 'application'
   end
 
   def departments

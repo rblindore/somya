@@ -20,11 +20,11 @@
 <% arrow_dir = rtl? ? "◀" : "▶" %>
 <ul id="main-menu">
   <li class="a">
-    <%= link_to t('dashboard_text'), controller: :user, action: :dashboard %>
+    <%= link_to t('dashboard_text'), controller: :users, action: :dashboard %>
   </li>
-  <% if permitted_to? :index, :student %>
+  <% if permitted_to? :index, :students %>
     <li class="a">
-      <%= link_to t('students'), controller: :student, action: :index %>
+      <%= link_to t('students'), controller: :students, action: :index %>
     </li>
   <% end %>
   <% if @current_user.admin? %>
@@ -86,7 +86,7 @@
         <% end %>
         <% if permitted_to? :settings, :configuration %>
           <li>
-            <%= link_to t('manage_student_category'), controller: :student, action: :categories %>
+            <%= link_to t('manage_student_category'), controller: :students, action: :categories %>
           </li>
         <% end %>
         <% if permitted_to? :index, :subjects %>
@@ -265,7 +265,7 @@
         </li>
       <% end %>
       <% if @current_user.admin? %>
-        <li><%= link_to t('user_text') , :controller => "user", :action=>"index" %></li>
+        <li><%= link_to t('user_text') , controller: :users, action: :index %></li>
       <% end %>
     </ul>
   </li>

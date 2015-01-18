@@ -2,6 +2,12 @@ Fedena::Application.routes.draw do
 
   resources :grading_levels
 
+  resources :application, only: :index do
+    member do
+      get :set_language
+    end
+  end
+
   resources :ranking_levels do
     collection do
       get :load_ranking_levels
@@ -233,7 +239,7 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :user do
+  resources :users do
     collection do
       post :login
       get :forgot_password
@@ -247,6 +253,7 @@ Fedena::Application.routes.draw do
     member do
       get :profile
       get :change_password
+      get :first_login_change_password
     end
   end
 
@@ -257,9 +264,31 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :reminder, only: :index
+  resources :reminders, only: :index do
+    collection do
+      get :sent
+      get :create_reminder
+      get :reminder_actions
+      post :reminder_actions
+      post :sent_reminder_delete
+      get :view_sent_reminder
+      get :select_employee_department
+      get :select_users
+      get :select_student_course
+      get :to_employees
+      get :to_students
+    end
+    member do
+      get :view
+      get :mark_unread
+      get :pull_form
+      get :view_sent
+      delete :delete_by_sender
+      delete :delete_by_recipient
+    end
+  end
 
-  resources :student, only: :index do
+  resources :students, only: :index do
     collection do
       get :admission1
       post :admission1
@@ -274,6 +303,9 @@ Fedena::Application.routes.draw do
     end
     member do
       get :profile
+      get :reports
+      get :guardians
+      get :fees
     end
   end
 
@@ -336,6 +368,9 @@ Fedena::Application.routes.draw do
       get :timetable
       get :update_timetable_view
       get :update_teacher_tt
+    end
+    member do
+      get :student_view
     end
   end
 
@@ -425,7 +460,7 @@ Fedena::Application.routes.draw do
     end
   end
 
-  root 'user#login' # :controller => 'user', :action => 'login'
+  root 'users#login' # :controller => 'user', :action => 'login'
 
   ## map.fa_scores 'assessment_scores/exam/:exam_id/fa_group/:fa_group_id', :controller=>'assessment_scores',:action=>'fa_scores'
   ## map.observation_scores 'assessment_scores/batch/:batch_id/observation_group/:observation_group_id', :controller=>'assessment_scores',:action=>'observation_scores'

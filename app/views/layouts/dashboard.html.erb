@@ -29,7 +29,10 @@
       <link rel="shortcut icon" href="<%=current_school_detail.logo.url%>" type="<%=current_school_detail.logo.content_type%>" />
     <% end %>
 
-    <%= stylesheet_link_tag :application, media: 'all', 'data-turbolinks-track' => true %>
+    <%# binding.pry %>
+    <% get_stylesheets.each do |s| %>
+      <%= stylesheet_link_tag s, media: 'all'%>
+    <% end %>
     <%= javascript_include_tag :application, 'data-turbolinks-track' => true %>
 
     <%#= javascript_include_tag :defaults, cache: 'cache/javascripts/all' %>
@@ -49,14 +52,14 @@
           </div>
           <div id="header_link" >
             <div id="messages-link">
-              <%= link_to t('messages'), reminder_index_path %>
+              <%= link_to t('messages'), reminders_path %>
               <%= render partial: 'layouts/reminder_count' %>
             </div>
             <div id="profile-link">
               <%= link_to @current_user.first_name, profile_user_path(id: @current_user.username), class: "profile-link" %>
             </div>
             <div id="logout-link">
-              <%= link_to t('log_out'), logout_user_index_path, method: :DELETE %>
+              <%= link_to t('log_out'), logout_users_path, method: :DELETE %>
             </div>
           </div>
         </div>

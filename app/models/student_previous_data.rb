@@ -17,6 +17,7 @@
 #limitations under the License.
 
 class StudentPreviousData < ActiveRecord::Base
+  self.table_name = :student_previous_datas
   belongs_to :student
   validates_presence_of :institution
 end
