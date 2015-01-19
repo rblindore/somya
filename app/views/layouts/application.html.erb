@@ -52,7 +52,7 @@
     <%= yield :head %>
 
     <script type="text/javascript">
-      $(document).on("dom:loaded", function() {
+      jQuery(document).on("dom:loaded", function() {
         render_generic_hook(<%= render_generic_hook %>)
       });
     </script>

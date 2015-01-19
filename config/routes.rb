@@ -280,6 +280,7 @@ Fedena::Application.routes.draw do
     end
     member do
       get :view
+      post :view
       get :mark_unread
       get :pull_form
       get :view_sent

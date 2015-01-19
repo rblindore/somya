@@ -56,9 +56,7 @@
       <%=h @new_reminder.body %>
     </div>
     <div id="reminder-reply">
-      <%= link_to "►#{t('reply')}", class: 'button user_button' do |page|
-        page.visual_effect :toggle_blind, "reply-form"
-      end  unless @sender.nil? %>
+      <%= link_to "►#{t('reply')}", 'javascript: void(0);', class: 'button user_button', onclick: "toggleEffect('reply-form')" unless @sender.nil? %>
     </div>
 
     <div id="reply-form" style="display:none;">

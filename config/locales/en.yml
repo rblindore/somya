@@ -1316,7 +1316,6 @@ en: # locale
   human_resources: "Human Resources"
   my_profile: "My Profile"
   campus_news: "Campus News"
-  reminders: "Reminders"
   remember_me: "Remember me"
   forgot_password: "Forgot Password?"
   login: "Login"
@@ -2101,6 +2100,7 @@ en: # locale
 
   #reminder controller translation
   reminders:
+    title: "Reminders"
     flash1: "Message sent successfully"
     flash2: "Reminder deleted."
     flash3: "Your reply has been sent"
