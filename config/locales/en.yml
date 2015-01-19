@@ -337,7 +337,7 @@ en: # locale
         other: "over {{count}} years"
 
 
-#Errors From Model
+  #Errors From Model
   model_errors:
     course:
       error1: "En caso de tener un lote inicial"
@@ -2058,21 +2058,21 @@ en: # locale
   flash_msg42: "Remove all students successfully"
   flash_msg43: "Invalid Submission. Please try again."
 
-#configuration controller translation
+  #configuration controller translation
   configuration:
     flash1: "Invalid Extention. Image must be .JPG"
     flash2: "File too large. File size should be less than 1 MB"
     daily_text: "Daily"
     subject_wise_text: "SubjectWise"
 
-#courses controller translation
+  #courses controller translation
   courses:
     flash1: "Created course successfully"
     flash2: "Updated course details successfully."
     flash3: "Course deleted successfully."
     flash4: "Unable to Delete. Please remove existing batches and students."
 
-#batches controller translation
+  #batches controller translation
   batches:
     flash1: "Batch created successfully."
     flash2: "Updated batch details successfully."
@@ -2082,25 +2082,25 @@ en: # locale
     flash6: "Unable to delete Batch.Please delete all Subjects"
     flash7: "No subjects found in previous batches."
 
-#batch_transfer controller translation
+  #batch_transfer controller translation
   batch_transfers:
     flash1: "Trasferred students successfully"
     flash2: "Graduated selected students successfully"
     flash3: "Already has the subject with name"
     flash4: "No subjects found in previous batches."
 
-#elective controller translation
+  #elective controller translation
   elective_groups:
     flash1: "New elective group created."
     flash2: "Deleted elective group."
     flash3: "Elective group updated successfully!"
 
-#subject controller translation
+  #subject controller translation
   subjects:
     flash1: "Selected Subjects have been sucessfully imported"
 
-#reminder controller translation
-  reminder:
+  #reminder controller translation
+  reminders:
     flash1: "Message sent successfully"
     flash2: "Reminder deleted."
     flash3: "Your reply has been sent"
@@ -2108,13 +2108,13 @@ en: # locale
     flash5: "Reminder marked unread."
     flash6: "Please fill the required fields to create this message"
 
-#event controller translation
+  #event controller translation
   event:
     flash1: "Event created for selected courses."
     flash2: "Event created for selected departments"
     flash3: "Event creation cancelled"
 
-#employee controller translation
+  #employee controller translation
   employee:
     flash1: "Employee category created"
     flash2: "Employee category updated"
@@ -2163,7 +2163,7 @@ en: # locale
     flash45: "Payslip Date cant be generated before joining date"
     flash46: "Employee deleted successfully."
 
-#payroll translation
+  #payroll translation
   payroll:
     flash1: "Payroll category saved"
     flash2: "Payroll category updated"
@@ -2171,7 +2171,7 @@ en: # locale
     flash4: "Unable to delete!"
     new_admission_link: "For new admission"
 
-#employee_attendance translation
+  #employee_attendance translation
   employee_attendance:
     flash1: "Employee leave type saved"
     flash2: "Leave type updated"
@@ -2185,13 +2185,13 @@ en: # locale
     flash10: "Sorry aproved leave cannot be deleted"
     flash12: "Department Wise Leave Reset Successfull"
 
-#news controller translation
+  #news controller translation
   news:
     flash1: "News added!"
     flash2: "News item deleted succefully!"
     flash3:  "News updated!"
 
-#user controller translation
+  #user controller translation
   user:
     flash1: "Reset time expired"
     flash2: "Invalid reset link"
@@ -2214,7 +2214,7 @@ en: # locale
     flash19: "No user exists with username"
     flash20: "User does not have an email id!"
 
-#student controller translation
+  #student controller translation
   student:
     flash1: "Additional field created"
     flash2: "Additional details updated"
@@ -2263,11 +2263,11 @@ en: # locale
     flash28: "No batches found in selected category"
 
 
-## traslation for xml controller
+  ## traslation for xml controller
   xml:
     flash1: "XML settings updated successfully"
 
-# translation for exam controller
+  # translation for exam controller
   exam:
     flash1: "Selected exams grouped successfully."
     flash2: "Select a batch and exam to continue."
@@ -2292,31 +2292,32 @@ en: # locale
     flash21: "Select a Student to continue."
     flash22: "Select a Batch and atleast one option to continue."
 
-# exams controller
+  # exams controller
   exams:
     flash1: "Updated exam details successfully."
     flash2: "Exam score exceeds Maximum Mark."
     flash3: "Exam scores updated."
     flash4: "Garading Levels are not set. Please set Garding Levels."
     flash5: "Exam deleted successfully."
-# exam_groups controller
+
+  # exam_groups controller
   exam_groups:
     flash1: "Exam group created successfully."
     flash2: "Updated exam group successfully."
     flash3: "Exam group deleted successfully"
 
 
-#additional exams controller
+  #additional exams controller
   additional_exams:
     flash1: "Additional exam scores updated."
     flash2: "Additional exam deleted successfully."
     flash3: "Updated additional exam details successfully."
 
-#additional exam groups controller
+  #additional exam groups controller
   additional_exam_groups:
     flash1: "Additional Exam Group successfully saved"
 
- ## translation for timetable controller
+  ## translation for timetable controller
   timetable:
     flash1: "Timetable has already been published"
     flash2: "Timetable updated"
@@ -2348,98 +2349,98 @@ en: # locale
     comment_notification:
       subject: "New Comment"
 
-## Translations for the autosuggest menu.
+  ## Translations for the autosuggest menu.
   autosuggest_menu:
-   search_employees: "Search employees"
-   search_students: "Search students"
-   employee_admission: "Employee Admission"
-   student_admission: "Student Admission"
-   exam: "Exam"
-   set_grading_levels: "Set Grading Levels"
-   exam_management: "Exam Management"
-   additional_exams: "Additional Exams"
-   exam_wise_report: "Exam Wise Report"
-   subject_wise_report: "Subject Wise Report"
-   grouped_exam_report: "Grouped Exam Report"
-   news: "News"
-   event: "Event"
-   view_news: "View News"
-   add_news: "Add News"
-   employee: "Employee"
-   employee_settings: "Employee Settings"
-   employee_subject_association: "Employee Subject Association"
-   employee_leave_management: "Employee Leave Management"
-   add_leave_type: "Add Leave Type"
-   attendance_register: "Attendance Register"
-   attendance_report: "Attendance Report"
-   reset_leave: "Reset Leave"
-   empolyee_payslip: "Employee Payslip"
-   department_wise_payslip: "Department Wise Payslip"
-   finance: "Finance"
-   manage_fees: "Manage Fees"
-   master_fees: "Master Fees"
-   additional_fees: "Additional Fees"
-   view_additional_fees: "View Additional Fees"
-   create_additional_fees: "Create Additional Fees"
-   fee_collection: "Fee Collection"
-   view_fee_collections: "View Fee Collections"
-   fee_submission_by_course: "Fee Submission By Course"
-   fee_submission_for_each_student: "Fee Submission For Each Student"
-   fee_structure: "Fee Structure"
-   fee_defaulters: "Fee Defaulters"
-   finance_categories: "Finance Categories"
-   transactions: "Transactions"
-   add_expense: "Add Expense"
-   expense_list: "Expense List"
-   add_income: "Add Income"
-   income_list: "Income List"
-   transaction_report: "Transaction Report"
-   compare_transactions: "Compare Transactions"
-   donations: "Donations"
-   donors: "Donors"
-   automatic_transactions: "Automatic Transactions"
-   view_payslip: "View Payslip"
-   asset: "Asset"
-   view_assets: "View Assets"
-   liability: "Liability"
-   view_liability: "View Liability"
-   tally_settings: "Tally Settings"
-   export_for_tally: "Export For Tally"
-   manage_users: "Manage Users"
-   view_users: "View Users"
-   add_users: "Add Users"
-   timetable: "Timetable"
-   create_timetable: "Create Timetable"
-   set_class_timings: "Set Class Timings"
-   view_timetables: "View Timetables"
-   institutional_timetable: "Institutional Timetable"
-   create_weekdays: "Create Weekdays"
-   settings: "Settings"
-   manage_course: "Manage Course"
-   manage_batch: "Manage Batch"
-   add_course: "Add Course"
-   add_batch: "Add Batch"
-   batch_transfers: "Batch Transfers"
-   manage_student_category: "Manage Student Category"
-   manage_subjects: "Manage Subjects"
-   general_settings: "General Settings"
-   add_admission_additional_detail: "Add Admission Additional Detail"
-   student_attendance: "Student Attendance"
-   attendance_register: "Attendance Register"
-   attendance_report: "Attendance Report"
-   view_students: "View Students"
-   student_advanced_search: "Student Advanced Search"
-   search_actions_and_events: "Search Actions, Events and People"
-   create_fees: "Create Fees"
-   messages: "Messages"
-   sent_messages: "Sent Messages"
-   create_messages: "Create Messages"
-   change_password: "Change Password"
-   employee_advanced_search: "Employee Advance Search"
-   view_employees: "View Employees"
+    search_employees: "Search employees"
+    search_students: "Search students"
+    employee_admission: "Employee Admission"
+    student_admission: "Student Admission"
+    exam: "Exam"
+    set_grading_levels: "Set Grading Levels"
+    exam_management: "Exam Management"
+    additional_exams: "Additional Exams"
+    exam_wise_report: "Exam Wise Report"
+    subject_wise_report: "Subject Wise Report"
+    grouped_exam_report: "Grouped Exam Report"
+    news: "News"
+    event: "Event"
+    view_news: "View News"
+    add_news: "Add News"
+    employee: "Employee"
+    employee_settings: "Employee Settings"
+    employee_subject_association: "Employee Subject Association"
+    employee_leave_management: "Employee Leave Management"
+    add_leave_type: "Add Leave Type"
+    attendance_register: "Attendance Register"
+    attendance_report: "Attendance Report"
+    reset_leave: "Reset Leave"
+    empolyee_payslip: "Employee Payslip"
+    department_wise_payslip: "Department Wise Payslip"
+    finance: "Finance"
+    manage_fees: "Manage Fees"
+    master_fees: "Master Fees"
+    additional_fees: "Additional Fees"
+    view_additional_fees: "View Additional Fees"
+    create_additional_fees: "Create Additional Fees"
+    fee_collection: "Fee Collection"
+    view_fee_collections: "View Fee Collections"
+    fee_submission_by_course: "Fee Submission By Course"
+    fee_submission_for_each_student: "Fee Submission For Each Student"
+    fee_structure: "Fee Structure"
+    fee_defaulters: "Fee Defaulters"
+    finance_categories: "Finance Categories"
+    transactions: "Transactions"
+    add_expense: "Add Expense"
+    expense_list: "Expense List"
+    add_income: "Add Income"
+    income_list: "Income List"
+    transaction_report: "Transaction Report"
+    compare_transactions: "Compare Transactions"
+    donations: "Donations"
+    donors: "Donors"
+    automatic_transactions: "Automatic Transactions"
+    view_payslip: "View Payslip"
+    asset: "Asset"
+    view_assets: "View Assets"
+    liability: "Liability"
+    view_liability: "View Liability"
+    tally_settings: "Tally Settings"
+    export_for_tally: "Export For Tally"
+    manage_users: "Manage Users"
+    view_users: "View Users"
+    add_users: "Add Users"
+    timetable: "Timetable"
+    create_timetable: "Create Timetable"
+    set_class_timings: "Set Class Timings"
+    view_timetables: "View Timetables"
+    institutional_timetable: "Institutional Timetable"
+    create_weekdays: "Create Weekdays"
+    settings: "Settings"
+    manage_course: "Manage Course"
+    manage_batch: "Manage Batch"
+    add_course: "Add Course"
+    add_batch: "Add Batch"
+    batch_transfers: "Batch Transfers"
+    manage_student_category: "Manage Student Category"
+    manage_subjects: "Manage Subjects"
+    general_settings: "General Settings"
+    add_admission_additional_detail: "Add Admission Additional Detail"
+    student_attendance: "Student Attendance"
+    attendance_register: "Attendance Register"
+    attendance_report: "Attendance Report"
+    view_students: "View Students"
+    student_advanced_search: "Student Advanced Search"
+    search_actions_and_events: "Search Actions, Events and People"
+    create_fees: "Create Fees"
+    messages: "Messages"
+    sent_messages: "Sent Messages"
+    create_messages: "Create Messages"
+    change_password: "Change Password"
+    employee_advanced_search: "Employee Advance Search"
+    view_employees: "View Employees"
 
 
-#cce exams
+  #cce exams
   cce_exam_categories_text: "CCE Exam Categories"
   cce_exam_categories_sub_text: "CCE Exam Categories"
   delete_exam_category: "Delete CCE Exam Category?"

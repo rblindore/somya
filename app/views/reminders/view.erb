@@ -28,9 +28,9 @@
 
 <div id="inner-tab-menu">
   <ul>
-     <li><%= link_to t('back_to_inbox'), reminders_path %></li>
+     <li><%= link_to t('back_to_inbox').html_safe, reminders_path %></li>
     <li><%= link_to t('mark_as_unread') , mark_unread_reminder_path(@new_reminder.id)%></li>
-    <li><%= link_to "#{t('delete_text')}",  {:controller=>"reminder", :action=>"delete_reminder_by_recipient", :id2=>@new_reminder.id}, :confirm=>"#{t('delete_confirm_msg')}" %></li>
+    <li><%= link_to t('delete_text'),  delete_by_recipient_reminder_path(@new_reminder), confirm: t('delete_confirm_msg'), method: :DELETE %></li>
   </ul>
 </div>
 
@@ -41,19 +41,28 @@
   <% end %>
 
   <div id="reminder-body">
-    <div id="reminder-from"><%= t('from') %>: <%= @sender.nil? ? "#{t('user_unavailable')}" : @sender.full_name %></div>
-    <div id="reminder-date"><%= t('sent_on') %>: <%= I18n.l(@new_reminder.created_at,:format=>"%A, %d %B, %Y") %></div>
-    <div id="reminder-subject" class="themed_text"><%= t('subject') %>: <%= @new_reminder.subject %></div>
-    <div id="reminder-message"><strong><%= t('message') %>:</strong><br /><br /><%=h @new_reminder.body %></div>
+    <div id="reminder-from">
+      <%= t('from') %>: <%= @sender.nil? ? t('user_unavailable') : @sender.full_name %>
+    </div>
+    <div id="reminder-date">
+      <%= t('sent_on') %>: <%= I18n.l(@new_reminder.created_at, format: "%A, %d %B, %Y") %>
+    </div>
+    <div id="reminder-subject" class="themed_text">
+      <%= t('subject') %>: <%= @new_reminder.subject %>
+    </div>
+    <div id="reminder-message">
+      <strong><%= t('message') %>:</strong>
+      <br /><br />
+      <%=h @new_reminder.body %>
+    </div>
     <div id="reminder-reply">
-
-      <%= link_to_function "►#{t('reply')}", :class=>'button user_button' do |page|
+      <%= link_to "►#{t('reply')}", class: 'button user_button' do |page|
         page.visual_effect :toggle_blind, "reply-form"
       end  unless @sender.nil? %>
-
     </div>
+
     <div id="reply-form" style="display:none;">
-      <%= form_for :reminder, :url=>{:id2 =>@new_reminder.id}  do |l| %>
+      <%= form_for :reminder, :url=>{id: @new_reminder.id}  do |l| %>
         <%= error_messages_for :reminder %>
         <div class="message">
           <div class="label-field-pair">
@@ -62,12 +71,12 @@
           </div>
           <div class="label-field-pair">
             <label for="start_date"><%= t('message') %></label>
-            <div class="text-area-bg"><%= l.text_area :body, :cols=>25, :rows=>10 %></div>
+            <div class="text-area-bg"><%= l.text_area :body, cols: 25, rows: 10 %></div>
           </div>
           <div class="extender"></div>
           <div id="submit-button">
-          <%=submit_tag "► #{t('send')}", :class=> 'button' %>
-        </div>
+            <%=submit_tag "► #{t('send')}", class: :button %>
+          </div>
         </div>
 
       <% end %>

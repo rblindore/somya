@@ -44,9 +44,9 @@ class RemindersController < ApplicationController
             recipient_ids: recipients_array,
             subject: params[:reminder][:subject],
             body: params[:reminder][:body] ))
-        redirect_to create_reminder_reminders_path, notice: t('flash1')
+        redirect_to create_reminder_reminders_path, notice: t('reminders.flash1')
       else
-        redirect_to create_reminder_reminders_path, notice: "<b>ERROR:</b>#{t('flash6')}"
+        redirect_to create_reminder_reminders_path, notice: "<b>ERROR:</b>#{t('reminders.flash6')}"
       end
     else
       render layout: 'application'
@@ -131,7 +131,7 @@ class RemindersController < ApplicationController
   def delete_by_sender
     @sent_reminder = Reminder.find(params[:id])
     Reminder.update(@sent_reminder.id, is_deleted_by_sender: true)
-    redirect_to sent_reminder_path, notice: t('flash2')
+    redirect_to sent_reminder_path, notice: t('reminders.flash2')
   end
 
   def delete_by_recipient
@@ -139,7 +139,7 @@ class RemindersController < ApplicationController
     employee = user.employee_record
     @reminder = Reminder.find(params[:id])
     Reminder.update(@reminder.id, is_deleted_by_recipient: true)
-    redirect_to url_for(controller: controller_name, action: :index), notice: t('flash2')
+    redirect_to url_for(controller: controller_name, action: :index), notice: t('reminders.flash2')
   end
 
   def view
@@ -151,9 +151,9 @@ class RemindersController < ApplicationController
     if request.post?
       unless params[:reminder][:body].blank? || params[:recipients].blank?
         Reminder.create(sender: user.id, recipient: @sender.id, subject: params[:reminder][:subject], body: params[:reminder][:body], is_read: false, is_deleted_by_sender: false, is_deleted_by_recipient: false)
-        redirect_to view_reminder_path(params[:id]), notice: t('flash3')
+        redirect_to view_reminder_path(params[:id]), notice: t('reminders.flash3')
       else
-        redirect_to view_reminder_path(params[:id]), notice: "<b>ERROR:</b>#{t('flash4')}"
+        redirect_to view_reminder_path(params[:id]), notice: "<b>ERROR:</b>#{t('reminders.flash4')}"
       end
     else
       render layout: 'application'
@@ -163,7 +163,7 @@ class RemindersController < ApplicationController
   def mark_unread
     @reminder = Reminder.find(params[:id])
     Reminder.update(@reminder.id, is_read: false)
-    redirect_to reminders_path, notice: t('flash5')
+    redirect_to reminders_path, notice: t('reminders.flash5')
   end
 
   def pull_form
@@ -177,11 +177,11 @@ class RemindersController < ApplicationController
       unless params[:create_reminder][:message].blank? || params[:create_reminder][:to].blank?
         Reminder.create(sender: params[:create_reminder][:from], recipient: params[:create_reminder][:to], subject: params[:create_reminder][:subject], body: params[:create_reminder][:message], is_read: false, is_deleted_by_sender: false, is_deleted_by_recipient: false)
         render(:update) do |page|
-          page.replace_html 'error-msg', text: "<p class='flash-msg'>#{t('your_message_sent')}</p>", layout: 'application'
+          page.replace_html 'error-msg', text: "<p class='flash-msg'>#{t('reminders.your_message_sent')}</p>", layout: 'application'
         end
       else
         render(:update) do |page|
-          page.replace_html 'error-msg', text: "<p class='flash-msg'>#{t('enter_subject')}</p>", layout: 'application'
+          page.replace_html 'error-msg', text: "<p class='flash-msg'>#{t('reminders.enter_subject')}</p>", layout: 'application'
         end
       end
     else

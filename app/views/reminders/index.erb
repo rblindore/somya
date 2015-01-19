@@ -73,7 +73,9 @@
           <% if ur.is_read %>
             <% sender_user = ur.user  %>
             <tr class="tr-read-<%= cycle('odd', 'even') %>">
-              <td class="col-8"><%= check_box_tag "message_ids[]", ur.id, false, {:class=>'message_check' } %></td>
+              <td class="col-8">
+                <%= check_box_tag "message_ids[]", ur.id, false, {class: :message_check} %>
+              </td>
               <% unless sender_user.nil? %>
                 <td class="col-4">
                   <%= link_to sender_user.first_name, view_reminder_path(ur.id) %>

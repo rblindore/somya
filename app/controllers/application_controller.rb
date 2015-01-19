@@ -238,12 +238,12 @@ class ApplicationController < ActionController::Base
 
   #reminder filters
   def protect_view_reminders
-    reminder = Reminder.find(params[:id2])
+    reminder = Reminder.find(params[:id])
     redirect_to dashboard_users_path, notice: t('flash_msg5') unless reminder.recipient == current_user.id
   end
 
   def protect_sent_reminders
-    reminder = Reminder.find(params[:id2])
+    reminder = Reminder.find(params[:id])
     unless reminder.sender == current_user.id
       redirect_to reminders_path, notice: t('flash_msg5')
     end
