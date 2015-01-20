@@ -38,7 +38,7 @@
     <% if permitted_to? :email,:student %>
       <% @config = Settings.find_by_config_key('NetworkState').config_value %>
       <% if @config == 'Online'  %>
-        <li><%= link_to "#{t('send_email')}", :controller => "student",
+        <li><%= link_to "#{t('send_email')}", :controller => "students",
             :action => "email", :id => @student.id %></li>
       <%  end %>
     <%  end %>
@@ -183,18 +183,18 @@
     <% if @current_user.admin? %>
       <div class="buttons">
         <%= link_to " ► #{t('edit_text')}",
-          { :controller => "student", :action => "edit", :id => @student.id },:class => "user_button"%>
+          { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button"%>
 
         <%= link_to " ► #{t('pdf_report')}",
-          {:controller => "student", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button' %>
+          {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button' %>
       </div>
     <% elsif permitted_to? :edit, :student %>
       <div class="buttons">
         <%= link_to " ► #{t('edit_text')}",
-          { :controller => "student", :action => "edit", :id => @student.id },:class => "user_button"%>
+          { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button"%>
 
         <%= link_to " ► #{t('pdf_report')}",
-          {:controller => "student", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button' %>
+          {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button' %>
       </div>
     <% end %>
 

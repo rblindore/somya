@@ -261,8 +261,7 @@ class UsersController < ApplicationController
       if request.post?
         if params[:user][:new_password] == params[:user][:confirm_password]
           if @user.update_attributes(:password => params[:user][:confirm_password],:is_first_login => false)
-            flash[:notice] = "#{t('password_update')}"
-            redirect_to :controller => "user",:action => "dashboard"
+            redirect_to url_for(controller: :users, action: :dashboard), notice: t('password_update')
           else
             render :first_login_change_password
           end
@@ -272,8 +271,7 @@ class UsersController < ApplicationController
         end
       end
     else
-      flash[:notice] = "#{t('not_applicable')}"
-      redirect_to :controller => "user",:action => "dashboard"
+      redirect_to url_for(controller: :users, action: :dashboard), notice: t('not_applicable')
     end
   end
 
@@ -303,7 +301,7 @@ class UsersController < ApplicationController
       @ward  = @user.parent_record if @user.parent
       render layout: 'application'
     else
-      redirect_to url_for(conroller: :user, action:  :dashboard), notice: t('flash14')
+      redirect_to dashboard_users_path, notice: t('flash14')
     end
   end
 
@@ -311,12 +309,12 @@ class UsersController < ApplicationController
     user = User.active.fwhere(reset_password_code: params[:id]).where.not(reset_password_code: nil).first
     if user
       if user.reset_password_code_until > Time.now
-        redirect_to url_for(controller: :user, action: :set_new_password, id: user.reset_password_code)
+        redirect_to url_for(controller: :users, action: :set_new_password, id: user.reset_password_code)
       else
-        redirect_to url_for(controller: :user, action: :index), notice: t('flash1')
+        redirect_to users_path, notice: t('flash1')
       end
     else
-      redirect_to url_for(controller: :user, action: :index), notice: t('flash2')
+      redirect_to users_path, notice: t('flash2')
     end
   end
 

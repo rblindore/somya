@@ -16,7 +16,7 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-class TimetableController < ApplicationController
+class TimetablesController < ApplicationController
   before_filter :login_required
   before_filter :protect_other_student_data
   before_filter :default_time_zone_present_time
@@ -164,7 +164,7 @@ class TimetableController < ApplicationController
         end
       else
         flash[:warn_notice] = @timetable.errors.full_messages unless @timetable.errors.empty?
-        #        redirect_to :controller=>"timetable",:action => "update_timetable",:id=>@timetable.id
+        #        redirect_to :controller=>"timetables",:action => "update_timetable",:id=>@timetable.id
         render action: :update_timetable#,:id=>@timetable.id
       end
     end
@@ -335,8 +335,7 @@ class TimetableController < ApplicationController
         flash[:notice] = t('no_entries_found')
       end
     else
-      flash[:notice] = t('flash_msg6')
-      redirect_to controller: :user, action: :dashboard
+      redirect_to url_for(controller: :users, action: :dashboard), notice: t('flash_msg6')
     end
   end
 

@@ -101,4 +101,4 @@
 </div>
 
 <%= link_to " ► #{t('pdf_report')}",
-  {:controller => "timetable", :action => "timetable_pdf", :course_id => @batch.id, :timetable_id=>@tt.id},:target => '_blank', :class=> 'user_button' %>
+  {controller: :timetable, action: :timetable_pdf, course_id: @batch.id, timetable_id: @tt.id}, target: :blank, class: :user_button %>

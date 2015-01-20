@@ -71,8 +71,7 @@ class StudentsController < ApplicationController
             Delayed::Job.enqueue(SmsManager.new(message,recipients))
           end
         end
-        flash[:notice] = "#{t('flash8')}"
-        redirect_to controller: :student, action: :admission2, id: @student.id
+        redirect_to admission2_student_path(@student), notice: t('flash8')
       end
     end
   end
@@ -81,7 +80,7 @@ class StudentsController < ApplicationController
     @student = Student.find params[:id], :include => [:guardians]
     @guardian = Guardian.new params[:guardian]
     if request.post? and @guardian.save
-      redirect_to :controller => "student", :action => "admission2", :id => @student.id
+      redirect_to admission2_student_path(@student)
     end
   end
 
@@ -89,7 +88,7 @@ class StudentsController < ApplicationController
     @student = Student.find(params[:id])
     @parents = @student.guardians
     if @parents.empty?
-      redirect_to :controller => "student", :action => "previous_data", :id => @student.id
+      redirect_to previous_data_student(@student)
     end
     return if params[:immediate_contact].nil?
     if request.post?
@@ -114,7 +113,7 @@ class StudentsController < ApplicationController
     @student = Student.find(params[:id])
     @parents = @student.guardians
     if @parents.empty?
-      redirect_to :controller => "student", :action => "admission4", :id => @student.id
+      redirect_to admission4_student_path(@student)
     end
     return if params[:immediate_contact].nil?
     if request.post?
@@ -185,8 +184,7 @@ class StudentsController < ApplicationController
     @student_additional_details = StudentAdditionalDetail.find_all_by_student_id(@student.id)
     @additional_fields = StudentAdditionalField.where(status: true).order("priority ASC")
     if @additional_fields.empty?
-      flash[:notice] = "#{t('flash9')} #{@student.first_name} #{@student.last_name}."
-      redirect_to :controller => "student", :action => "profile", :id => @student.id
+      redirect_to profile_student_path(@student), notice: "#{t('flash9')} #{@student.first_name} #{@student.last_name}."
     end
     if request.post?
       @error=false
@@ -219,7 +217,7 @@ class StudentsController < ApplicationController
           end
         end
         flash[:notice] = "#{t('flash9')} #{@student.first_name} #{@student.last_name}. #{t('new_admission_link')} <a href='/student/admission1'>Click Here</a>"
-        redirect_to :controller => "student", :action => "profile", :id => @student.id
+        redirect_to profile_student_path(@student)
       end
     end
   end
@@ -230,7 +228,7 @@ class StudentsController < ApplicationController
     @additional_details = StudentAdditionalDetail.find_all_by_student_id(@student)
 
     if @additional_details.empty?
-      redirect_to :controller => "student",:action => "admission4" , :id => @student.id
+      redirect_to admission4_student_path(@student)
     end
     if request.post?
 
@@ -244,7 +242,7 @@ class StudentsController < ApplicationController
         end
       end
       flash[:notice] = "#{t('student_text')} #{@student.first_name} #{t('flash2')}"
-      redirect_to :action => "profile", :id => @student.id
+      redirect_to profile_student_path(@student)
     end
   end
   def add_additional_details
@@ -381,12 +379,10 @@ class StudentsController < ApplicationController
             else
               @student_user.update_attributes(:username=> @student.admission_no,:first_name=> @student.first_name , :last_name=> @student.last_name, :email=> @student.email, :role=>'Student')
             end
-            flash[:notice] = "#{t('flash3')}"
-            redirect_to :controller => "student", :action => "profile", :id => @student.id
+            redirect_to profile_student_path(@student.id), notice: t('flash3')
           end
         else
-          flash[:notice] = "#{t('flash_msg11')}"
-          redirect_to :controller => "student", :action => "edit", :id => @student.id
+          redirect_to edit_student_path(@student), notice: t('flash_msg11')
         end
       else
         if @student.update_attributes(student_params)
@@ -395,8 +391,7 @@ class StudentsController < ApplicationController
           else
             @student_user.update_attributes(:username=> @student.admission_no,:first_name=> @student.first_name , :last_name=> @student.last_name, :email=> @student.email, :role=>'Student')
           end
-          flash[:notice] = "#{t('flash3')}"
-          redirect_to :controller => "student", :action => "profile", :id => @student.id
+          redirect_to profile_student_path( @student), notice: t('flash3')
         end
       end
     end
@@ -419,8 +414,7 @@ class StudentsController < ApplicationController
           @parent.create_guardian_user(@student)
         end
       end
-      flash[:notice] = "#{t('student.flash4')}"
-      redirect_to :controller => "student", :action => "guardians", :id => @student.id
+      redirect_to guardians_student_path(@student), notice: t('student.flash4')
     end
   end
 
@@ -548,7 +542,7 @@ class StudentsController < ApplicationController
     @countries = Country.all
     if request.post? and @parent_info.save
       flash[:notice] = "#{t('flash5')} #{@parent_info.ward.full_name}"
-      redirect_to :controller => "student" , :action => "admission3_1", :id => @parent_info.ward_id
+      redirect_to admission3_1_student_path(id: @parent_info.ward_id)
     end
   end
 

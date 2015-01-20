@@ -22,7 +22,7 @@ class Batch < ActiveRecord::Base
   belongs_to :course
 
   has_many :students
-  has_many :all_students, class_name: :Student
+  has_many :all_students, class_name: 'Student'
   has_many :grouped_exam_reports
   has_many :grouped_batches
   has_many :archived_students

@@ -63,7 +63,7 @@
                 :method => 'delete',
                 :confirm => t('delete_confirm_msg'),
                 :update => "subject-#{subject.id}") %> </div>
-            <div class="category-assign"><%= link_to " #{t('assign_student')}", :controller=>"student", :action=>"electives",:id=>@batch,:id2=>subject.id%>
+            <div class="category-assign"><%= link_to " #{t('assign_student')}", :controller=>"students", :action=>"electives",:id=>@batch,:id2=>subject.id%>
             </div>
           </li>
         <% end %>

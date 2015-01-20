@@ -78,36 +78,36 @@
         <li>
           <a href="#" class="drops" id="link_three"><%= t('leaves') %> &#9660;</a>
           <ul id="box_three" class="scriptaculously" style="display:none;">
-            <li><%= link_to_remote "#{t('attendance')}", :url => {:action => "view_attendance", :id => @employee.id}, :update => "profile-infos" %></li>
+            <li><%= link_to t('attendance'), url: {action: :view_attendance, id: @employee.id}, remote: true, update: "profile-infos" %></li>
           </ul>
         </li>
 
       <%end%>
     <%end%>
 
-    <% if permitted_to? :employee_timetable, :timetable %>
+    <% if permitted_to? :employee_timetable, :timetables %>
       <% unless @employee.subjects.empty? %>
-        <li><%= link_to        "#{t('timetable_text')}", :controller=>"timetable", :action=>"employee_timetable", :id=>@employee.id %></li>
+        <li><%= link_to t('timetable_text'), controller: :timetables, action: :employee_timetable, id: @employee.id %></li>
       <% end %>
     <%end%>
 
     <% if current_username == profile_employee_no %>
       <% if @new_reminder_count.size == 0 %>
-        <li><%= link_to        "#{t('reminder_text')}", :controller=>"reminders", :action=>"index"%></li>
+        <li><%= link_to t('reminder_text'), controller: :reminders, action: :index %></li>
       <% else %>
-        <li><%= link_to        "#{t('reminder_text')}(#{@new_reminder_count.size})", :controller=>"reminder", :action=>"index"%></li>
+        <li><%= link_to "#{t('reminder_text')}(#{@new_reminder_count.size})", controller: :reminders, action: :index %></li>
       <% end %>
     <%end%>
     <% if @current_user.admin? %>
       <li>
-      <%= link_to "#{t('delete_text')}" ,:action=>'remove',:id=>@employee.id %>
+      <%= link_to t('delete_text'), action: :remove, id: @employee.id %>
       </li>
     <% end %>
     <li>
       <a href="#" class="drops" id="link_four"><%= t('more') %>&#9660;</a>
           <ul id="box_four" class="scriptaculously" style="display:none;">
         <% FedenaPlugin::ADDITIONAL_LINKS[:employee_profile_more_menu].each do |mod| %>
-          <li><%= link_to "#{t(mod[:title])}",mod[:destination].merge(:id=>@employee.id) %></li>
+          <li><%= link_to t(mod[:title]), mod[:destination].merge(:id=>@employee.id) %></li>
         <% end %>
       </ul>
     </li>

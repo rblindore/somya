@@ -48,7 +48,7 @@
     </div>
     <%if permitted_to? :work_allotment,:timetable%>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('work_allotment')}", :controller => "timetable", :action => "work_allotment"   %></div>
+        <div class="link-heading"><%= link_to t('work_allotment'), controller: :timetables, action: :work_allotment   %></div>
         <div class="link-descr"><%= t('work_allotment_descr') %>.</div>
       </div>
     <%  end%>

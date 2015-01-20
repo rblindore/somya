@@ -1265,8 +1265,7 @@ class ExamController < ApplicationController
     @exam_group = @exam.exam_group
     @batch = @exam_group.batch
     unless @employee_subjects.include?(@exam.subject_id) or @current_user.admin? or @current_user.privileges.map{|p| p.name}.include?('ExaminationControl') or @current_user.privileges.map{|p| p.name}.include?('EnterResults')
-      flash[:notice] = "#{t('flash_msg6')}"
-      redirect_to :controller=>"user", :action=>"dashboard"
+      redirect_to url_for(controller: :users, action: :dashboard), notice: t('flash_msg6')
     end
     #scores = ExamScore.find_all_by_exam_id(@exam.id)
     exam_subject = Subject.find(@exam.subject_id)

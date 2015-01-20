@@ -95,8 +95,7 @@ class ExamsController < ApplicationController
     @employee_subjects= @current_user.employee_record.subjects.map { |n| n.id} if @current_user.employee?
     @exam = Exam.find params[:id], :include => :exam_group
     unless @employee_subjects.include?(@exam.subject_id) or @current_user.admin? or @current_user.privileges.map{|p| p.name}.include?('ExaminationControl') or @current_user.privileges.map{|p| p.name}.include?('EnterResults')
-      flash[:notice] = "#{t('flash_msg6')}"
-      redirect_to :controller=>"user", :action=>"dashboard"
+      redirect_to url_for(controller: :users, action: :dashboard), notice: t('flash_msg6')
     end
     exam_subject = Subject.find(@exam.subject_id)
     is_elective = exam_subject.elective_group_id
