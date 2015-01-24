@@ -52,12 +52,13 @@
         </div>
         <div class="fee_category_scroll">
           <div class="sel-list">
-            <%= t('select') %>: <%= link_to_function t('all'), "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });" %>,
-            <%= link_to_function t('none'), "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });" %>
+            <%= t('select') %>: <%= link_to t('all'), 'javascript
+            :void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });" %>,
+            <%= link_to t('none'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });" %>
           </div>
           <% @batches.each do |b| %>
             <div class="each_batch">
-              <%= check_box_tag "batch_ids[]", b.id,false,:class=>'batches_box' %> <%= b.name %>
+              <%= check_box_tag "batch_ids[]", b.id, false, class: :batches_box %> <%= b.name %>
             </div>
           <% end %>
         </div>

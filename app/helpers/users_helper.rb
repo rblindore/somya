@@ -13,7 +13,7 @@ module UsersHelper
       {name: t('manage_users'), url: users_path, options: { class: :option_buttons, id: :manage_users_button, title: t('user_link_title')}},
       {name: t('manage_news'), url: news_index_path, options: { class: :option_buttons, id: :manage_news_button, title: t('news_link_title') }},
       {name: t('examinations'), url: exam_index_path, options: { class: :option_buttons, id: :examinations_button, title: t('manage_examinations')}},
-      {name: t('timetable_text'), url: timetable_index_path, options: { class: :option_buttons, id: :timetable_button, title: t('timetable_link_title') }},
+      {name: t('timetable_text'), url: timetables_path, options: { class: :option_buttons, id: :timetable_button, title: t('timetable_link_title') }},
       {name: t('attendance'), url: student_attendance_index_path, options: { class: :option_buttons, id: :student_attendance_button, title: t('attendance_link_title')}},
       {name: t('settings'), url: configuration_index_path, options: { class: :option_buttons, id: :settings_button, title: t('setting_link_title') }}
     ]

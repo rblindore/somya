@@ -79,7 +79,7 @@ module AutosuggestMenuHelper
         {:menu_type => 'link' ,:label => 'autosuggest_menu.manage_batch',:value =>{:controller => :courses,:action => :manage_batches}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.add_course',:value =>{:controller => :courses,:action => :new}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.batch_transfers',:value =>{:controller => :batch_transfers,:action => :index}},
-        {:menu_type => 'link' ,:label => 'autosuggest_menu.manage_student_category',:value =>{:controller => :student,:action => :categories}},
+        {:menu_type => 'link' ,:label => 'autosuggest_menu.manage_student_category',:value =>{:controller => :students,:action => :categories}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.manage_subjects',:value =>{:controller => :subjects,:action => :index}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.general_settings',:value =>{:controller => :configuration,:action => :settings}},
         {:menu_type => 'link' ,:label => 'autosuggest_menu.add_admission_additional_detail',:value =>{:controller => :students,:action => :add_additional_details}},

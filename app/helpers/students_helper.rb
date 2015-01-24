@@ -3,7 +3,7 @@
 
 module StudentsHelper
     def link_to_remove_fields(name, c)
-    c.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)", {:class=>"delete_button_img"})
+    c.hidden_field(:_destroy) + (link_to name, 'javascript:void(0);', onclick: "remove_fields(this)",class: :delete_button_img)
   end
 
   def link_to_add_fields(name, c, association)
@@ -11,6 +11,6 @@ module StudentsHelper
     fields = c.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
       render(association.to_s.singularize + "_fields", :c => builder)
     end
-    link_to_function(name, h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"),{:class=>"add_button_img"})
+    link_to name, 'javascript:void(0);', onclick: h("add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")"), class: :add_button_img
   end
 end
