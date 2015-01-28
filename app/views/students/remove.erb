@@ -39,12 +39,12 @@
   <div class="extender"> </div>
 
   <div class="link-box">
-    <div class="link-heading"> <%= link_to t('leaving_institution'), :controller => "student", :action => "change_to_former", :id => @student.id %> </div>
+    <div class="link-heading"> <%= link_to t('leaving_institution'), :controller => "students", :action => "change_to_former", :id => @student.id %> </div>
     <div class="link-descr"><%= t('leaving_institution_message') %></div>
   </div>
 
   <div class="link-box">
-    <div class="link-heading"> <%= link_to t('remove_student_records'), :controller => "student", :action => "delete", :id => @student.id %> </div>
+    <div class="link-heading"> <%= link_to t('remove_student_records'), :controller => "students", :action => "delete", :id => @student.id %> </div>
     <div class="link-descr"><%= t('remove_student_message') %></div>
   </div>
 

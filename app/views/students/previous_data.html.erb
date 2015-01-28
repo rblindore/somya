@@ -62,7 +62,7 @@
         <div class="extender"></div>
       </div>
       <div class="save-proceed-button">
-        <%= link_to "► #{t('skip')}", {:controller => "student", :action => "admission4", :id => @student.id },:class=>'user_button' %>
+        <%= link_to "► #{t('skip')}", {:controller => "students", :action => "admission4", :id => @student.id },:class=>'user_button' %>
 
         <%= submit_tag "► #{t('save_and_proceed')}" %>
 
@@ -85,7 +85,7 @@
         <% end %>
       <% end %>
     </ul>
-    <%= link_to_remote "#{t('add_subject')}", :url=>{:controller=>"student",:action=>"previous_subject", :id=>@student.id}%>
+    <%= link_to_remote "#{t('add_subject')}", :url=>{:controller=>"students",:action=>"previous_subject", :id=>@student.id}%>
     <div id="subject">
 
     </div>

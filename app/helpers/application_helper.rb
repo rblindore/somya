@@ -163,4 +163,12 @@ module ApplicationHelper
     return hooks.to_json
   end
 
+  def flash_message
+    string = ''
+    flash.each do |name, msg|
+      string += content_tag :div, msg, class: "alert alert-info"
+    end
+    string
+  end
+
 end

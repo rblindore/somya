@@ -31,8 +31,8 @@
   <% unless flash[:notice].nil? %> <p class="flash-msg"> <%= flash[:notice] %> </p> <% end %>
   <% unless @user.student == true %>
   <div class="prev-next-links">
-   <%= link_to "<", :controller=>"student", :action=>"academic_report_all", :id=>@prev_student.id %>
-    <%= link_to ">", :controller=>"student", :action=>"academic_report_all", :id=>@next_student.id %>
+   <%= link_to "<", :controller=>"students", :action=>"academic_report_all", :id=>@prev_student.id %>
+    <%= link_to ">", :controller=>"students", :action=>"academic_report_all", :id=>@next_student.id %>
   </div>
   <% end %>
 

@@ -63,7 +63,7 @@ Fedena::Application.routes.draw do
 
   resources :employee_attendances
 
-  resources :employee_attendance do
+  resources :employee_attendances do
     collection do
       get :add_leave_types
       get :report
@@ -230,15 +230,6 @@ Fedena::Application.routes.draw do
   #    additional_exam_group.resources :additional_exams , :member => { :save_additional_scores => :post }
   #  end
 
-  resources :timetables do
-    resources :timetable_entries do
-      collection do
-        get :update_multiple_timetable_entries2
-        get :new_entry
-      end
-    end
-  end
-
   resources :users do
     collection do
       post :login
@@ -257,10 +248,17 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :news, only: :index do
+  resources :news, only: [:index, :edit] do
     collection do
       get :all
       get :add
+      post :add
+    end
+    member do
+      get :view
+      delete :delete
+      delete :delete_comment
+      post :edit
     end
   end
 
@@ -280,6 +278,7 @@ Fedena::Application.routes.draw do
     end
     member do
       get :view
+      post :view
       get :mark_unread
       get :pull_form
       get :view_sent
@@ -357,7 +356,7 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :timetable, only: :index do
+  resources :timetables, only: :index do
     collection do
       get :work_allotment
       get :new_timetable
@@ -370,7 +369,16 @@ Fedena::Application.routes.draw do
       get :update_teacher_tt
     end
     member do
+      get :update_student_tt
+    end
+    member do
       get :student_view
+    end
+    resources :timetable_entries do
+      collection do
+        get :update_multiple_timetable_entries2
+        get :new_entry
+      end
     end
   end
 

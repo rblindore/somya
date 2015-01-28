@@ -34,8 +34,8 @@
 
     <% unless @user.student == true %>
       <div class="prev-next-links">
-        <%= link_to "<", :controller=>"student", :action=>"academic_report", :id=>@prev_student.id %>
-        <%= link_to ">", :controller=>"student", :action=>"academic_report", :id=>@next_student.id %>
+        <%= link_to "<", :controller=>"students", :action=>"academic_report", :id=>@prev_student.id %>
+        <%= link_to ">", :controller=>"students", :action=>"academic_report", :id=>@next_student.id %>
       </div>
     <% end %>
 
@@ -111,7 +111,7 @@
 
   <div id="pdf-view-button">
     <%= link_to "► #{t('view_pdf')}",
-      :controller => "student", :action => "academic_pdf", :id => @student.id %>
+      :controller => "students", :action => "academic_pdf", :id => @student.id %>
   </div>
 
 </div>

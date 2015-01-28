@@ -40,7 +40,7 @@
 <%#*<li><%= link_to "Delete", :controller => 'archived_student',%>
 <%#*:action => 'delete', :id => @archived_student.id %><%#</li>%>
     <li><%= link_to "#{t('generate_tc')}",
-        {:controller => "student", :action => "generate_tc_pdf", :id => @archived_student.admission_no},:target => '_blank' %></li>
+        {:controller => "students", :action => "generate_tc_pdf", :id => @archived_student.admission_no},:target => '_blank' %></li>
 
   </ul>
 </div>

@@ -41,11 +41,11 @@
     <div class="button-box">
       <% unless @user.check_reminders == 0 %>
         <div class="reminder1">
-          <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
+          <%= link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
           <div class ="count"><%= render :partial => 'layouts/reminder_count' %></div>
         </div>
       <% else %>
-        <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
+        <%= link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
       <% end %>
     </div>
 
@@ -59,23 +59,23 @@
     <% end  %>
 
 
-    <% if permitted_to? :admission1, :student %>
+    <% if permitted_to? :admission1, :students %>
       <div class="button-box">
-        <%= link_to create_link(t('admission')), {:controller => "student", :action => "admission1"},
-          :class => "option_buttons", :id => "admission_button", :title => "#{t('admission_link_title')}" %>
+        <%= link_to create_link(t('admission')), {controller: :students, action: :admission1},
+          :class => "option_buttons", :id => "admission_button", :title => t('admission_link_title') %>
       </div>
     <%end%>
 
-    <% if permitted_to? :index, :student%>
+    <% if permitted_to? :index, :students %>
       <div class="button-box">
-        <%= link_to create_link(t('student_details')), {:controller => "student", :action => "index"},
+        <%= link_to create_link(t('student_details')), student_path,
           :class => "option_buttons", :id => "student_details_button", :title => t('student_link_title')%>
       </div>
     <%end%>
 
-    <% if permitted_to? :index, :user %>
+    <% if permitted_to? :index, :users %>
       <div class="button-box">
-        <%= link_to create_link(t('manage_users')), {:controller => "user", :action => "index"},
+        <%= link_to create_link(t('manage_users')), users_path,
           :class => "option_buttons", :id => "manage_users_button", :title => t('user_link_title') %>
       </div>
     <%end%>
@@ -111,13 +111,13 @@
     <div class="button-box">
       <% unless @user.check_reminders == 0 %>
         <div class="reminder1">
-          <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('employee_messages') %>
+          <%= link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('employee_messages') %>
           <div class ="count"><%= render :partial => 'layouts/reminder_count' %></div>
         </div>
 
       <% else %>
         <div class="button-box">
-          <%= link_to create_link(t('reminders')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
+          <%= link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages') %>
         </div>
       <% end %>
     </div>
@@ -163,7 +163,7 @@
 
     <% if permitted_to? :index, :timetable %>
       <div class="button-box">
-        <%= link_to create_link(t('timetable_text')), {:controller => "timetable", :action => "index"},
+        <%= link_to create_link(t('timetable_text')), {:controller => "timetables", :action => "index"},
           :class => "option_buttons", :id => "timetable_button",:title => t('timetable_link_title') %>
       </div>
     <%end%>

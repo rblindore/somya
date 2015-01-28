@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui/datepicker
+//= require jquery-ui/autocomplete
 //= require turbolinks
 //= require ckeditor/init
 
@@ -53,3 +54,8 @@ function onChangeRequest(obj, url){
 //   Element.hide('loader');
 // });
 
+
+
+function toggleEffect(eId){
+  jQuery('#' + eId).toggle();
+}

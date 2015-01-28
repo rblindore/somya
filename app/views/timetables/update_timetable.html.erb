@@ -58,7 +58,7 @@
     <% unless flash[:notice].nil? %>
       <p class="flash-msg"> <%= flash[:notice] %> </p>
     <% end %>
-    <%= form_for @timetable,:url=>{:controller=>"timetable",:action=>"update_timetable"} do |f| %>
+    <%= form_for @timetable, url: {controller: :timetables, action: :update_timetable} do |f| %>
       <input type="hidden" name="_method" value="post" />
       <div class="label-field-pair" >
         <label for="start_date"><%= t('start_date') %></label>

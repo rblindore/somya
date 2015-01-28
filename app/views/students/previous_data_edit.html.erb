@@ -88,7 +88,7 @@
         <% end %>
       <% end %>
     </ul>
-    <%= link_to_remote "#{t('add_subject')}", :url=>{:controller=>"student",:action=>"previous_subject", :id=>@student.id}%>
+    <%= link_to_remote "#{t('add_subject')}", :url=>{:controller=>"students",:action=>"previous_subject", :id=>@student.id}%>
     <div id="subject">
 
     </div>

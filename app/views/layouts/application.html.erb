@@ -52,7 +52,7 @@
     <%= yield :head %>
 
     <script type="text/javascript">
-      $(document).on("dom:loaded", function() {
+      jQuery(document).on("dom:loaded", function() {
         render_generic_hook(<%= render_generic_hook %>)
       });
     </script>
@@ -69,13 +69,14 @@
           </div>
           <div id="header_link" >
             <div id="messages-link">
-              <%= link_to t('messages'), reminders_path %><%= render :partial =>'layouts/reminder_count'%>
+              <%= link_to t('messages'), reminders_path %>
+                <%= render :partial =>'layouts/reminder_count'%>
             </div>
             <div id="profile-link">
-              <%= link_to @current_user.first_name, { :controller => 'users', :action => 'profile', :id => @current_user.username }, :class=>"profile-link" %>
+              <%= link_to @current_user.first_name, { controller: :users, action: :profile, id: @current_user.username }, class: "profile-link" %>
             </div>
             <div id="logout-link">
-              <%= link_to t('log_out'), :controller => 'users', :action => 'logout' %>
+              <%= link_to t('log_out'), controller: :users, action: :logout %>
             </div>
           </div>
         </div>
@@ -107,7 +108,9 @@
           <% end %>
         </div>
       </div>
-      <div id="content"> <%= yield %> </div>
+      <div id="content">
+        <%= yield %>
+      </div>
 
       <div class="extender"></div>
     </div>
