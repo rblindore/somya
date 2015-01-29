@@ -23,12 +23,16 @@
   Settings.find_or_create_by(param)
 end
 
+puts 'Settings created!'
+
 [
   {"config_key" => "AvailableModules"                ,"config_value" => "HR"},
   {"config_key" => "AvailableModules"                ,"config_value" => "Finance"}
 ].each do |param|
   Settings.find_or_create_by(param)
 end
+
+puts 'new settings created.'
 
 if GradingLevel.count == 0
   [
@@ -41,6 +45,7 @@ if GradingLevel.count == 0
   ].each do |param|
     GradingLevel.create(param)
   end
+  puts 'GradingLevel created.'
 end
 
 

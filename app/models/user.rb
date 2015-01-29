@@ -33,8 +33,10 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :privileges
   has_many :user_events
   has_many :events, through: :user_events
-  has_one :student_record, class_name: "Student", foreign_key: "user_id"
-  has_one :employee_record, class_name: "Employee", foreign_key: "user_id"
+  has_many :news, foreign_key: :author_id
+  has_many :news_comments, foreign_key: :author_id
+  has_one :student_record, class_name: "Student", foreign_key: :user_id
+  has_one :employee_record, class_name: "Employee", foreign_key: :user_id
 
   scope :active, -> { where(is_deleted: false) }
   scope :inactive, -> { where(is_deleted: true) }

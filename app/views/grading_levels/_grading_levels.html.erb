@@ -18,7 +18,7 @@
 #under the License. -%>
 
 <div class="add_grade">
-  <%= link_to_remote "#{t('add_grades')}", :url => { :action => 'new', :id => @batch }%>
+  <%= link_to t('add_grades'), { action: :new, id: @batch }, remote: true %>
 
 </div>
 <% if @batch.present?
@@ -47,11 +47,7 @@ end %>
         <td class="col-2"><%= grade.description.present? ? grade.description : "-" %></td>
         <td class="col-1"><small><%= link_to_remote(t('edit_text'),
               :url => edit_grading_level_path(grade), :method => 'get' ) %>
-            | <%= link_to_remote(t('delete_text'),
-              :url => grading_level_path(grade),
-              :method => 'delete',
-              :confirm => t('delete_confirm_msg'),
-              :update => "grading-level-#{grade.id}") %></small></td>
+            | <%= link_to(t('delete_text'), grading_level_path(grade), method: :DELETE, confirm: t('delete_confirm_msg'), update: "grading-level-#{grade.id}") %></small></td>
       </tr>
     <% end %>
   </table>

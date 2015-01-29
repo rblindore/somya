@@ -1,6 +1,10 @@
 Fedena::Application.routes.draw do
 
-  resources :grading_levels
+  resources :grading_levels do
+    collection do
+      get :show
+    end
+  end
 
   resources :application, only: :index do
     member do
@@ -260,6 +264,7 @@ Fedena::Application.routes.draw do
     end
     member do
       get :view
+      post :add_comment
       delete :delete
       delete :delete_comment
       post :edit

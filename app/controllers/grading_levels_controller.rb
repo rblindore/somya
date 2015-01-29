@@ -22,6 +22,7 @@ class GradingLevelsController < ApplicationController
   def index
     @batches = Batch.active
     @grading_levels = GradingLevel.default
+    render layout: 'application'
   end
 
   def new

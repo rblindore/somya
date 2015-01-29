@@ -20,10 +20,8 @@ class NewsController < ApplicationController
   before_filter :login_required
   filter_access_to :all
 
-
   def add
-    @news = News.new(params[:news])
-    @news.author = current_user
+    @news = current_user.news.build(news_params)
     if request.post? and @news.save
       sms_setting = SmsSetting.new()
       if sms_setting.application_sms_active
@@ -36,11 +34,14 @@ class NewsController < ApplicationController
   end
 
   def add_comment
-    @cmnt = NewsComment.new(params[:comment])
-    @cmnt.author = current_user
+    @cmnt = current_user.news_comment.build(params[:comment])
     @cmnt.is_approved = true if @current_user.privileges.include?(Privilege.find_by_name('ManageNews')) || @current_user.admin?
     @config = Settings.find_by_config_key('EnableNewsCommentModeration')
-    @cmnt.save
+    if @cmnt.save
+      render layout: 'application'
+    else
+      redirect_to :back
+    end
   end
 
   def all
@@ -50,18 +51,20 @@ class NewsController < ApplicationController
 
   def delete
     @news = News.find(params[:id]).destroy
-    redirect_to news_index_path, notice: t('flash2')
+    redirect_to news_index_path, notice: t('news.flash2')
   end
 
   def delete_comment
     @comment = NewsComment.find(params[:id])
-    NewsComment.destroy(params[:id])
+    @comment.destroy
   end
 
   def edit
     @news = News.find(params[:id])
-    if request.post? and @news.update_attributes(params[:news])
-      redirect_to view_news_path(@news), notice: t('flash3')
+    if request.post? and @news.update_attributes(news_params)
+      redirect_to view_news_path(@news), notice: t('news.flash3')
+    else
+      render layout: 'application'
     end
   end
 
@@ -69,7 +72,7 @@ class NewsController < ApplicationController
     @current_user = current_user
     @news = []
     if request.get?
-      @news = News.where("title LIKE ?", "%#{params[:query]}%") unless params[:query].nil?
+      @news = News.where("title LIKE ?", "%#{params[:query]}%") unless params[:query].blank?
     end
     render layout: 'application'
   end
@@ -77,7 +80,7 @@ class NewsController < ApplicationController
   def search_news_ajax
     @news = nil
     conditions = ["title LIKE ?", "%#{params[:query]}%"]
-    @news = News.where(conditions) unless params[:query] == ''
+    @news = News.where(conditions) unless params[:query].blank?
     render :layout => false
   end
 
@@ -87,6 +90,7 @@ class NewsController < ApplicationController
     @comments = @news.comments
     @is_moderator = @current_user.privileges.include?(Privilege.find_by_name('ManageNews')) || @current_user.admin?
     @config = Settings.find_by_config_key('EnableNewsCommentModeration')
+    render layout: 'application'
   end
 
   def comment_approved
@@ -97,4 +101,11 @@ class NewsController < ApplicationController
       page.reload
     end
   end
+
+  private
+
+    # this method permist rge news attributes.
+    def news_params
+      params.require(:news).permit(:title, :content)
+    end
 end

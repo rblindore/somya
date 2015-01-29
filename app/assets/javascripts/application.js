@@ -14,7 +14,6 @@
 //= require jquery_ujs
 //= require jquery-ui/datepicker
 //= require jquery-ui/autocomplete
-//= require turbolinks
 //= require ckeditor/init
 
 // require_tree .
@@ -33,16 +32,22 @@ $(document).on('ready, dom:loaded', function(){
 });
 
 function onChangeRequest(obj, url){
-  var reg = /paramid/g;
-    console.log(obj.value)
   if (obj.value != '' ){
-    var new_url = url.replace(reg, obj.value);
     jQuery.ajax({
-      url: new_url,
+      url: makeUrl(obj, url),
       type: 'GET',
       dataType: 'script',
     });
   }
+}
+
+function makeUrl(obj, url ){
+  var reg = /paramid/g;
+  return url.replace(reg, obj.value);
+}
+
+function redirectTo(obj, url){
+  window.location.href = makeUrl(obj, url);
 }
 
 
