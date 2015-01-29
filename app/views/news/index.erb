@@ -76,7 +76,7 @@
         </tr>
         <tr class="tr-blank"></tr>
         <% @news.each_with_index do |r,i| %>
-          <% @comments = NewsComment.find_all_by_news_id(r.id) %>
+          <% @comments = r.comments %>
           <% link_value = r.title %>
           <tr class="tr-<%= cycle('odd', 'even') %>">
             <td class="col-1">

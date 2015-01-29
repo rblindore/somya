@@ -20,17 +20,18 @@ module Fedena
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
 
-
-    config.autoload_paths << Rails.root.join('lib')
-    ['in_place_edit'].each do |name|
-      config.autoload_paths << Rails.root.join('lib', name)
-    end
+    # config.autoload_paths << Rails.root.join('lib')
+    # ['in_place_edit'].each do |name|
+    #   config.autoload_paths << Rails.root.join('lib', name)
+    # end
+    config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
     config.autoload_paths << Rails.root.join('app', 'models', 'hr')
     config.autoload_paths << Rails.root.join('app', 'models', 'finance')
+    config.autoload_paths << Rails.root.join('app', 'models', 'student.rb')
 
     # Line added to fix circular dependency error while loading student
     config.middleware.delete Rack::Lock
-    config.reload_classes_only_on_change = false
+    config.reload_classes_only_on_change = true
     config.active_record.raise_in_transactional_callbacks = true
   end
 end

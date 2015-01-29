@@ -99,7 +99,7 @@
         <% end %>
         <% if permitted_to? :settings, :configuration %>
           <li>
-            <%= link_to t('add_admission_additional_detail'), controller: :student, action: :add_additional_details %>
+            <%= link_to t('add_admission_additional_detail'), add_additional_details_students_path, title: t('add_admission_additional_detail') %>
           </li>
         <% end %>
         <% if permitted_to? :index, :sms %>
@@ -113,13 +113,13 @@
   <!--
   <li><%#= link_to t('news_text'), controller: :news, action: :index \
     if @current_user.admin? %></li> -->
-  <% if permitted_to? :index, :timetable %>
+  <% if permitted_to? :index, :timetables %>
     <li class="a">
-      <%= link_to (t('timetable_text') + (content_tag :span, '▼', class: 'down-arrow')).html_safe, controller: :timetable, action: :index %>
+      <%= link_to (t('timetable_text') + (content_tag :span, '▼', class: 'down-arrow')).html_safe, timetables_path %>
       <ul class="level-1">
-        <%  if permitted_to? :new_timetable,:timetable%>
+        <%  if permitted_to? :new_timetable,:timetables %>
           <li>
-            <%= link_to t('create_timetable'), controller:  :timetable, action: :new_timetable %>
+            <%= link_to t('create_timetable'), new_timetable_timetables_path, title: t('create_timetable')  %>
           </li>
         <% end %>
         <% if permitted_to? :edit_master,:timetable%>
