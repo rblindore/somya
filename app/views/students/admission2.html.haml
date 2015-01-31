@@ -1,0 +1,165 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  %img{:src => "  admission/admission_page_logo.jpg"}/
+  %h1= t('admission')
+  %h3= t('parent_guardian_details_step2')
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  #parents
+    - unless @student.guardians.empty?
+      %ul#parents-list
+        %p
+          = t('saved_message')
+          = @student.full_name
+        - @student.guardians.each do |p|
+          %li{:class => "list#{cycle('odd', 'even')}"}
+            = p.full_name
+            \- #{p.relation}
+        #add-more-parent
+          = link_to_function "► #{t('add_another_guardian')}", :class => "user_button" do |page| |
+              page.visual_effect :toggle_slide, "admission1_form"                                |
+              page.hide "parents"                                                                |
+            end                                                                                  |
+        #skip
+          = link_to "► #{t('finish')}", {:controller => "students", :action => "admission3", :id => @student.id }, :class => "user_button"
+        :javascript
+          Event.observe(window, 'load', function() { $('admission1_form').hide(); });
+  = form_for :guardian do |f|
+    = f.error_messages :header_message => nil
+    - if f.error_messages.present?
+      :javascript
+        Event.observe(window, 'load', function() { $('parents').hide(); });
+        Event.observe(window, 'load', function() { $('admission1_form').show(); });
+    #admission1_form
+      #admission1_form_vertical_block_left
+        .label-field-pair
+          %label{:for => "parent_detail_student_id"}= "#{t('student_text')}  #{t('admission_number')}"
+          .text_display= @student.admission_no
+          = f.hidden_field :ward_id, :value => @student.id
+        %br/
+        %span.span-sub-heading
+          = t('parent')
+          \- #{t('personal_details')}
+        %hr.sub-heading/
+        .label-field-pair
+          %label{:for => "parent_detail_name"}
+            = t('first_name')
+            %span.necessary-field *
+          .text-input-bg= f.text_field :first_name
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_name"}= t('last_name')
+          .text-input-bg= f.text_field :last_name
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_relation"}
+            = t('relation')
+            %span.necessary-field *
+          .text-input-bg= f.text_field :relation
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_dob"}= t("date_of_birth")
+          .text-input-bg= calendar_date_select_tag 'guardian[dob]', nil,                              |
+              :year_range => 60.years.ago..20.years.ago, :readonly=>true, :popup=>"force" |
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_education"}= t('education')
+          .text-input-bg= f.text_field :education
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_occupation"}= t('occupation')
+          .text-input-bg= f.text_field :occupation
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_income"}= t('income')
+          .text-input-bg= f.text_field :income
+        %br/
+        %span.span-sub-heading
+          = t("parent")
+          \- #{t('contact_details')}
+        %hr.sub-heading/
+        .label-field-pair
+          %label{:for => "parent_detail_email"}= t('email')
+          .text-input-bg= f.text_field :email
+        %hr.label-underline/
+      #admission1_form_vertical_block_right
+        .label-field-pair
+          %label{:for => "master_student_city"}
+            = t('address_line')
+            1
+          - unless @student.address_line1.empty?
+            .text-input-bg= f.text_field :office_address_line1,:value=>@student.address_line1
+          - else
+            .text-input-bg= f.text_field :office_address_line1
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "master_student_city"}
+            = t('address_line')
+            2
+          - unless @student.address_line2.empty?
+            .text-input-bg= f.text_field :office_address_line2,:value=>@student.address_line2
+          - else
+            .text-input-bg= f.text_field :office_address_line2
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_city"}= t('city')
+          - unless @student.city.empty?
+            .text-input-bg= f.text_field :city,:value=>@student.city
+          - else
+            .text-input-bg= f.text_field :city
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_state"}= t('state')
+          - unless @student.state.empty?
+            .text-input-bg= f.text_field :state,:value=>@student.state
+          - else
+            .text-input-bg= f.text_field :state
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_country"}= t('country')
+          - unless @student.country.nil?
+            .text-input-bg
+              = select :guardian, :country_id, Country.all.map {|c| [c.name, c.id]}, :selected => @student.country_id
+          - else
+            .text-input-bg
+              = select :guardian, :country_id, Country.all.map {|c| [c.name, c.id]}, :selected => 76
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_office_phone1"}
+            = t('phone')
+            1
+          .text-input-bg= f.text_field :office_phone1
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_office_phone2"}
+            = t('phone')
+            2
+          .text-input-bg= f.text_field :office_phone2
+        %hr.label-underline/
+        .label-field-pair
+          %label{:for => "parent_detail_mob_phone"}= t('mobile')
+          .text-input-bg= f.text_field :mobile_phone
+        %hr.label-underline/
+      .extender
+        = submit_tag "", :value => " ► #{t('finish')}",  :name => "commit", :class => "submit_button3"
+      #skip
+        = link_to "► #{t('click_here_to_skip')}", {:controller => "students", :action => "admission3", :id => @student.id }, :class => "user_button"

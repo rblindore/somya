@@ -25,7 +25,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring',        group: :development
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -48,10 +48,15 @@ gem 'rspec-rails'
 gem 'delayed_job'
 gem 'paperclip'
 gem 'thin'
-gem 'pry', group: [:development]
+gem 'haml'
 gem 'will_paginate'
 gem 'delayed_job_active_record'
 gem 'jquery-ui-rails'
 gem 'ckeditor'
 # The controller-level `respond_to' feature has been extracted to the `responders` gem. Add it to your Gemfile to continue using this feature
 gem 'responders', '~> 2.0'
+
+group :development do
+  gem 'pry'
+  gem 'spring'
+end

@@ -1,0 +1,108 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#page-yield
+  .hor_line
+  %h2= t('finance_transaction_report')
+  .hor_line
+  .extender
+  .report
+    #main_info
+      %h4
+        = "#{t('from')} ( #{@start_date}) #{t('to')} ( #{@end_date})"
+    #pdf-info
+      %table#pdf-table{:cellspacing => "0", :width => "100%"}
+        %tr.table-header
+          %td.col-pdf= t('sl_no')
+          %td.col-pdf= t('particulars')
+          %td.col-pdf3= "#{t('expenses')}( #{currency})"
+          %td.col-pdf3= "#{t('income')}( #{currency})"
+        - index = 0
+        - i = 0
+        - income_total = 0
+        - expenses_total = 0
+        - c= 'even'
+        - unless @hr.nil?
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= index+=1
+            %td.col-pdf2= t('salary')
+            %td.col-pdf3
+               #{@salary}
+            %td.col-pdf3
+          - i+= 1
+        %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+          %td.col-pdf= index+=1
+          %td.col-pdf2= t('donations')
+          %td.col-pdf3
+          %td.col-pdf3
+             #{@donations_total}
+        %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+          %td.col-pdf= index+=1
+          %td.col-pdf2= t('fees_account')
+          %td.col-pdf3
+          %td.col-pdf3
+             #{@transactions_fees}
+        - FedenaPlugin::FINANCE_CATEGORY.each do |category|
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= index+=1
+            %td.col-pdf2
+              = "#{t(category[:category_name]+'_account')}"
+            - if  @category_transaction_totals["#{category[:category_name]}"][:category_type] == "income"
+              %td.col-pdf3
+              %td.col-pdf3= @category_transaction_totals["#{category[:category_name]}"][:amount]
+            - else
+              %td.col-pdf3= @category_transaction_totals["#{category[:category_name]}"][:amount]
+              %td.col-pdf3
+        - i+= 2
+        - @other_transaction_categories.each_with_index do |t,i|
+          - income = t.total_income(@start_date,@end_date)
+          - expense = t.total_expense(@start_date,@end_date)
+          - if i == 19
+            - i= 0
+            - c= 'even'
+            %tr.page-break
+              %td{:colspan => "3"}
+            %tr.table-header
+              %td.col-pdf= t('sl_no')
+              %td.col-pdf= t('particulars')
+              %td.col-pdf= "#{t('expenses')}( #{currency})"
+              %td.col-pdf= "#{t('income')}( #{currency})"
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= index+=1
+            %td.col-pdf2
+              = t.name
+            %td.col-pdf3= expense
+            %td.col-pdf3
+               #{income}
+          - i+= 1
+          - income_total +=income
+          - expenses_total +=expense
+        - if @grand_total >= 0
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf
+            %td.col-pdf1= t('grand_total')
+            %td.col-pdf3
+            %td.col-pdf3
+               #{sprintf("%.2f",@grand_total)}
+        - else
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf
+            %td.col-pdf1= t('grand_total')
+            %td.col-pdf3
+               #{sprintf("%.2f",@grand_total * -1)}
+            %td.col-pdf3

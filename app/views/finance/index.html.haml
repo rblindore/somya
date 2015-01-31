@@ -1,0 +1,55 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("  show_finance.png")
+  %h1= t('finance_text')
+  %h3= t('manage_finance')
+  #app-back-button
+    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg= flash[:notice]
+  .box
+    .link-box
+      .link-heading
+        = link_to "#{t('fees_text')}", :action => "fees_index"
+      .link-descr= t('manage_fees')
+    .link-box
+      .link-heading
+        = link_to "#{t('category')}", :action => "categories"
+      .link-descr= t('manage_category')
+    .link-box
+      .link-heading
+        = link_to "#{t('transactions')}", :action => "transactions"
+      .link-descr= t('manage_expense_and_income')
+    .link-box
+      .link-heading= link_to "#{t('donations')}", :action => "donation"
+      .link-descr= t('creates_new_donations')
+    .link-box
+      .link-heading= link_to "#{t('automatic_transactions')}", :action => "automatic_transactions"
+      .link-descr= t('add_automatic_transactions')
+    - unless @hr.nil?
+      .link-box
+        .link-heading= link_to "#{t('payslip_text')}", :action => "payslip_index"
+        .link-descr= t('employee_payslips')
+    .link-box
+      .link-heading= link_to "#{t('asset_liability_management')}", :action => "asset_liability"
+      .link-descr
+        = t('asset_liability')
+        = t('management')

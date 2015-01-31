@@ -1,0 +1,94 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+%ul.item-list
+  / <li class="heading"><haml_loud> @employee.full_name </haml_loud></li>
+  %li.heading
+    = t('payslip_generated_on')
+    = @salary_date
+%ul.item-list
+  %li.heading1= t('salary')
+  - @monthly_payslips.each do |mp|
+    - category = PayrollCategory.find(mp.payroll_category_id)
+    - @emp = Employee.find(mp.employee_id)
+    - unless category.is_deduction == true
+      %li{:class => "list#{cycle('odd', 'even')}"}
+        .item-name
+          = category.name
+        .item-edit
+          %span.currency-type= @currency_type
+          = mp.amount
+  - unless @individual_payslip_category.empty?
+    - @individual_payslip_category.each do |pc|
+      - if  pc.is_deduction == false
+        %li{:class => "list#{cycle('odd', 'even')}"}
+          .item-name= pc.name
+          .item-edit
+            %span.currency-type= @currency_type
+            = pc.amount
+  %li{:class => "list#{cycle('odd', 'even')}"}
+    .item-name
+      %b= t('total_salary')
+    .item-edit
+      %b
+        %span.currency-type= @currency_type
+        = @net_non_deductionable_amount
+%ul.item-list
+  %li.heading1= t('deductions')
+  - @monthly_payslips.each do |mp|
+    - category = PayrollCategory.find(mp.payroll_category_id)
+    - @emp = Employee.find(mp.employee_id)
+    - @reason = mp.reason
+    - unless category.is_deduction == false
+      %li{:class => "list#{cycle('odd', 'even')}"}
+        .item-name= category.name
+        .item-edit
+          %span.currency-type= @currency_type
+          = mp.amount
+  - unless @individual_payslip_category.empty?
+    - @individual_payslip_category.each do |pc|
+      - if  pc.is_deduction == true
+        %li{:class => "list#{cycle('odd', 'even')}"}
+          .item-name= pc.name
+          .item-edit
+            %span.currency-type= @currency_type
+            = pc.amount
+  %li{:class => "list#{cycle('odd', 'even')}"}
+    .item-name
+      %b= t('total_deduction')
+    .item-edit
+      %span.currency-type
+        %b= @currency_type
+      %b= @net_deductionable_amount
+%ul.item-list
+  %li.heading1= t('total')
+  %li.listeven
+    .item-name
+      %b= t('net_salary')
+    .item-edit
+      %span.currency-type
+        %b= @currency_type
+      %b
+        = @net_amount
+%ul.item-list
+  %li.heading1= t('reason')
+  %li.listeven
+    .item-name= @reason
+    .item-edit
+.approve
+  = link_to "#{t('edit_text')}", {:controller=>"employee", :action=>"edit_rejected_payslip",:id =>@employee.id,:id2 => @salary_date }, :class=>"user_button"

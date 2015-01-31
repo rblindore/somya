@@ -1,0 +1,67 @@
+- # Licensed to the Apache Software Foundation (ASF) under one
+- #or more contributor license agreements.  See the NOTICE file
+- #distributed with this work for additional information
+- #regarding copyright ownership.  The ASF licenses this file
+- #to you under the Apache License, Version 2.0 (the
+- #"License"); you may not use this file except in compliance
+- #with the License.  You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+%label.head_label
+  = t('edit_master_category_for_fee')
+  %span
+#grading-levels-form
+  - form_remote_for @finance_fee_category,
+  - :url=>{:action=>'additional_fees_update',
+  - :id => @finance_fee_category.id} do |f|
+    #form-errors
+    .label-field-pair
+      .label-container
+        %label
+          = t('name')
+          \:
+      .input-container
+        = f.text_field :name
+    .label-field-pair
+      .label-container
+        %label
+          = t('description')
+          \:
+      .input-container= f.text_field :description
+    .label-field-pair
+      .label-container
+        %label
+          = t('start_date')
+          \:
+      .input-container= calendar_date_select_tag 'additional_fees[start_date]', I18n.l(@collection_date.start_date,:format=>:default),:readonly=>true,:popup=>"force"
+    .label-field-pair
+      .label-container
+        %label
+          = t('end_date')
+          = succeed ":" do
+            %span.necessary-field *
+      .input-container= calendar_date_select_tag 'additional_fees[end_date]', I18n.l(@collection_date.end_date,:format=>:default),:readonly=>true,:popup=>"force"
+    .label-field-pair
+      .label-container
+        %label
+          = t('due_date')
+          \:
+      .input-container= calendar_date_select_tag 'additional_fees[due_date]', I18n.l(@collection_date.due_date,:format=>:default),:readonly=>true,:popup=>"force"
+    .label-field-pair
+      .label-container
+        %label
+          = t('course_text')
+          \:
+      .input-container
+        - unless @finance_fee_category.batch_id.nil?
+          = f.text_field :batch, :value => @finance_fee_category.batch.full_name, :disabled => true
+        - else
+          %label= t('all')
+    = submit_tag "► #{t('update')}",:class=>'submit_button'

@@ -1,0 +1,48 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+.add_grade
+  = link_to t('add_grades'), { action: :new, id: @batch }, remote: true
+- if @batch.present?
+- @credit = @batch.gpa_enabled? || @batch.cce_enabled?
+- else
+- @credit = Settings.cce_enabled? || Settings.get_config_value('CWA')=='1' || Settings.get_config_value('GPA')=='1'
+- end
+- unless @grading_levels.empty?
+  %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+    %tr.tr-head
+      %td= t('name')
+      %td= t('min_score')
+      - if @credit
+        %td Credit Points
+      %td Description
+      %td
+    - @grading_levels.each do |grade|
+      %tr{:class => "tr-#{cycle('odd', 'even')}", :id => "grading-level-#{grade.id}"}
+        %td.col-2= grade.name
+        %td.col-2= grade.min_score
+        - if @credit
+          %td.col-2= grade.credit_points
+        %td.col-2= grade.description.present? ? grade.description : "-"
+        %td.col-1
+          %small
+            = link_to_remote(t('edit_text'),                             |
+              :url => edit_grading_level_path(grade), :method => 'get' ) |
+            | #{link_to(t('delete_text'), grading_level_path(grade), method: :DELETE, confirm: t('delete_confirm_msg'), update: "grading-level-#{grade.id}")}
+- else
+  %h4= t('set_in_common')

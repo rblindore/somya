@@ -1,0 +1,79 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("examination/show_exam.png")
+  %h1 Scheduled Jobs
+  %h3 Listing scheduled jobs
+  #app-back-button
+    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  .box
+    - job_name = "All"
+    - if @job_type.present?
+      - job_name = @job_type
+      - job_name = "Batch - Generate Reports" if @job_type=="Batch/1"
+      - job_name = "Batch - Generate Previous Reports" if @job_type=="Batch/2"
+      - job_name = "Batch - Generate CCE Reports" if @job_type=="Batch/3"
+    %h4
+      Scheduled Jobs for : #{job_name}
+    - unless @jobs.empty?
+      #score-table
+        %table#listing{:cellpadding => "1", :cellspacing => "1", :width => "100%"}
+          %tr.tr-head
+            %td Sl No.
+            %td Job Object
+            %td Job Type
+            %td Status
+          - @jobs.each_with_index do |job,i|
+            %tr{:class => "tr-#{cycle('odd', 'even')}"}
+              %td.col-1= i+1
+              %td.col-3= obj = job.payload_object.class.name
+              - type = job.payload_object.job_type
+              - j_type = "#{obj}/#{type}"
+              - if j_type=="Batch/1"
+                %td.col-3 Generate Reports
+              - elsif j_type=="Batch/2"
+                %td.col-3 Generate Previous Reports
+              - elsif j_type=="Batch/3"
+                %td.col-3 Generate CCE Reports
+              - else
+                %td.col-3 -
+              - if !job.failed_at.nil?
+                %td.col-3 Failed
+              - elsif !job.locked_by.nil?
+                %td.col-3 Running
+              - else
+                %td.col-3 In Queue
+    - else
+      %p.flash-msg No scheduled jobs for selected job type.
+    - if @job_type.present?
+      - if params[:job_type].present?
+        - last_completion_time_record = Settings.find_by_config_key("job/#{@job_type}")
+        - if last_completion_time_record.present?
+          - last_completion_time = last_completion_time_record.config_value.to_time
+      - else
+        - last_completion_time = Settings.where("config_key like ?","job/#{params[:job_object]}%").map{|t| t.config_value.to_time}.sort.last
+    - else
+      - last_completion_time = Settings.where("config_key like ?","job/%").map{|t| t.config_value.to_time}.sort.last
+    %h5
+      Last Successful Completion Time : #{last_completion_time.present? ? last_completion_time.strftime("%B %d, %Y  %r") : "-"}
+    .extender

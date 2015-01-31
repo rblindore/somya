@@ -1,0 +1,135 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+- cache News.cache_fragment_name do
+  = render :partial=>'news_bar'
+- unless flash[:notice].nil?
+  %p.flash-msg
+    = flash[:notice]
+#user_options
+  - if @user.admin?
+    - admin_dashboard_links.each do |link|
+      .button-box
+        = link_to link[:name], link[:url], (link[:options] || {})
+  - elsif @user.student? or @user.parent?
+    - student_parent_links.each do |link|
+      .button-box
+        = link_to link[:name], link[:url], (link[:options] || {})
+    .button-box
+      - unless @user.check_reminders == 0
+        .reminder1
+          = link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages')
+          .count= render :partial => 'layouts/reminder_count'
+      - else
+        = link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages')
+  - else
+    - if @config.include?('HR')
+      .button-box
+        = link_to create_link(t('my_profile')), {:controller => "employee", :action => "profile",:id => @employee.id},       |
+          :class => "option_buttons", :id => "my_profile_button", :title => "  #{t('profile_detail')}" unless @employee.nil? |
+    - if permitted_to? :admission1, :students
+      .button-box
+        = link_to create_link(t('admission')), {controller: :students, action: :admission1},         |
+          :class => "option_buttons", :id => "admission_button", :title => t('admission_link_title') |
+    - if permitted_to? :index, :students
+      .button-box
+        = link_to create_link(t('student_details')), student_path,                                       |
+          :class => "option_buttons", :id => "student_details_button", :title => t('student_link_title') |
+    - if permitted_to? :index, :users
+      .button-box
+        = link_to create_link(t('manage_users')), users_path,                                      |
+          :class => "option_buttons", :id => "manage_users_button", :title => t('user_link_title') |
+    - if permitted_to? :add,:news
+      .button-box
+        = link_to create_link(t('manage_news')), {:controller => "news", :action => "index"},    |
+          :class => "option_buttons", :id => "manage_news_button",:title => t('news_link_title') |
+    - else
+      .button-box
+        = link_to create_link(t('campus_news')), {:controller => "news", :action => "index"},    |
+          :class => "option_buttons", :id => "campus_news_button",:title => t('news_link_title') |
+    - if permitted_to? :leave_management, :employee
+      .button-box
+        = link_to create_link(t('leaves')), {:controller => "employee", :action => "leave_management"}, |
+          :class => "option_buttons", :id => "leaves_button", :title => "#{t('leave_management')}"      |
+    - else
+      - if @config.include?('HR')
+        .button-box
+          = link_to create_link(t('leaves')), {:controller => "employee_attendance", :action => "leaves",:id => @employee.id}, |
+            :class => "option_buttons", :id => "leaves_button", :title => "#{t('leave_details')}." unless @employee.nil?       |
+    .button-box
+      - unless @user.check_reminders == 0
+        .reminder1
+          = link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('employee_messages')
+          .count= render :partial => 'layouts/reminder_count'
+      - else
+        .button-box
+          = link_to create_link(t('reminders.title')), reminders_path, class: :option_buttons, id: :reminders_button, title: t('student_messages')
+    - if @user.employee?
+      - @employee_subjects= @user.employee_record.subjects.collect(&:id)
+      - if @employee_subjects.empty?
+        - if permitted_to? :index, :student_attendance or  permitted_to? :index, :attendances and @employee_subjects.present? or @user.privileges.map{|p| p.name}.include?("StudentAttendanceView") or @user.privileges.map{|p| p.name}.include?("StudentAttendanceRegister")
+          .button-box
+            = link_to create_link(t('attendance')), {:controller => "student_attendance", :action => "index"},     |
+              :class => "option_buttons", :id => "student_attendance_button", :title => t('attendance_link_title') |
+        - if permitted_to? :index, :exam and (@user.privileges.map{|p| p.name}.include?("ExaminationControl") or @user.privileges.map{|p| p.name}.include?("EnterResults") or @user.privileges.map{|p| p.name}.include?("ViewResults"))
+          .button-box
+            = link_to create_link(t('examinations')), {:controller => "exam", :action => "index"},    |
+              :class => "option_buttons", :id => "examinations_button",:title => t('exam_link_title') |
+      - else
+        - @attendance_type = Settings.find_by_config_key('StudentAttendanceType')
+        - unless @attendance_type.config_value == 'Daily'
+          .button-box
+            = link_to create_link(t('attendance')), {:controller => "student_attendance", :action => "index"},     |
+              :class => "option_buttons", :id => "student_attendance_button", :title => t('attendance_link_title') |
+        - else
+          .button-box
+            - if permitted_to? :index, :student_attendance or  permitted_to? :index, :attendances
+              = link_to create_link(t('attendance')), {:controller => "student_attendance", :action => "index"},     |
+                :class => "option_buttons", :id => "student_attendance_button", :title => t('attendance_link_title') |
+        .button-box
+          = link_to create_link(t('examinations')), {:controller => "exam", :action => "index"},    |
+            :class => "option_buttons", :id => "examinations_button",:title => t('exam_link_title') |
+    - if permitted_to? :index, :timetable
+      .button-box
+        = link_to create_link(t('timetable_text')), {:controller => "timetables", :action => "index"}, |
+          :class => "option_buttons", :id => "timetable_button",:title => t('timetable_link_title')    |
+    - if permitted_to? :index, :configuration
+      .button-box
+        = link_to create_link(t('settings')), {:controller => "configuration", :action => "index"}, |
+          :class => "option_buttons", :id => "settings_button", :title => t('setting_link_title')   |
+    - if @config.include?('HR')
+      - if permitted_to? :hr,:employee
+        .button-box
+          = link_to create_link(t('human_resources')), {:controller => "employee", :action => "hr"}, |
+            :class => "option_buttons", :id => "hr_button", :title => t('hr_link_title')             |
+    - if permitted_to? :index,:finance
+      .button-box
+        = link_to create_link('finance_text'), {:controller => "finance", :action => "index"},  |
+          :class => "option_buttons", :id => "finance_button", :title =>t('finance_link_title') |
+  - FedenaPlugin::AVAILABLE_MODULES.each do |mod|
+    - unless mod[:dashboard_menu].blank?
+      - if can_access_request? "#{mod[:dashboard_menu][:action]}".to_sym,"#{mod[:dashboard_menu][:controller]}".to_sym
+        .button-box
+          = link_to create_link(t("#{mod[:dashboard_menu][:title]}")), {:controller => "#{mod[:dashboard_menu][:controller]}", :action => "#{mod[:dashboard_menu][:action]}"}, :class=>"#{mod[:dashboard_menu][:options][:class]}", :id=>"#{mod[:dashboard_menu][:options][:id]}", :title=>"#{t("#{mod[:dashboard_menu][:options][:title]}")}"
+#option_description
+:javascript
+  jQuery('#user_options .button-box').each(function(ele, index){
+    if(index%5 == 0){
+      ele.addClassName("left-button");
+    }
+  });

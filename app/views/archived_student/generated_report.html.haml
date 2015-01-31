@@ -1,0 +1,181 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("examination/show_exam.png")
+  %h1= t('exams_text')
+  %h3= t('generated_report')
+  #app-back-button
+    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+#inner-tab-menu
+  %ul
+    %li= link_to " ► #{t('pdf_report')}",                                                                                                   |
+        {:action => "generated_report_pdf", :exam_group => @exam_group.id, :batch => @batch.id, :student=>@student.id},:target => '_blank' |
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  .box
+    %h3{:align => "center"}
+      = @student.batch.full_name
+      \- #{@exam_group.name}
+    - exam_score = []
+    - @exams.each do |exam|
+      - exam_score.push exam.exam_scores.find_by_student_id(@student.id) unless exam.exam_scores.find_by_student_id(@student.id).nil?
+    - if @batch.cwa_enabled?
+      - total_credits=0
+      - total_weighted_marks=0
+      #score-table
+        .custom_header
+          %span.student= "#{@student.full_name} - #{@student.admission_no}"
+        %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+          %tr.tr-head
+            %td= t('subject_code')
+            %td= t('title')
+            %td= t('marks')
+            %td= t('credit')
+            %td= t('grade')
+            %td= t('weighted_marks')
+          - exam_score.each do |es|
+            %tr{:class => "tr-#{cycle('odd', 'even')}"}
+              %td.col-1
+                = es.exam.subject.code
+              %td.col-1
+                = es.exam.subject.name
+              %td.col-2= es.marks.present? ? mark=(es.marks.to_f/es.exam.maximum_marks.to_f)*100 : '-'
+              %td.col-2= es.exam.subject.credit_hours
+              - total_credits = total_credits + es.exam.subject.credit_hours.to_f
+              %td.col-2= es.grading_level.present? ? es.grading_level : "-"
+              - weighted_mark=0
+              - weighted_mark = mark.to_f * es.exam.subject.credit_hours.to_f if es.marks.present?
+              - total_weighted_marks = total_weighted_marks + weighted_mark
+              %td.col-1= weighted_mark
+          %tr.tr-blank
+          %tr.tr-head
+            %td{:align => "right", :colspan => "3"}= t('total')
+            %td= total_credits
+            %td -
+            %td= total_weighted_marks
+      %h5
+        = t('weighted_average')
+        \=
+        - unless total_credits==0
+          = "%.2f" %(total_weighted_marks.to_f/total_credits.to_f)
+        - else
+          \-
+    - elsif @batch.gpa_enabled?
+      - total_credit_points=0
+      - total_credit_hours=0
+      #score-table
+        .custom_header
+          %span.student= "#{@student.full_name} - #{@student.admission_no}"
+        %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+          %tr.tr-head
+            %td= t('subject_code')
+            %td= t('subject_title')
+            %td= t('credits')
+            %td= t('marks')
+            %td= t('remarks')
+          - exam_score.each do |es|
+            %tr{:class => "tr-#{cycle('odd', 'even')}"}
+              %td.col-1
+                = es.exam.subject.code
+              %td.col-1
+                = es.exam.subject.name
+              %td.col-2= es.exam.subject.credit_hours
+              - total_credit_hours = total_credit_hours + es.exam.subject.credit_hours.to_f
+              %td.col-2= es.grading_level.present? ? es.grading_level : "-"
+              - points=0
+              - points = (es.grading_level.credit_points.to_f) * (es.exam.subject.credit_hours.to_f) if es.grading_level.present?
+              - total_credit_points = total_credit_points + points
+              %td.col-1= es.grading_level.present? ? (es.grading_level.description.present? ? es.grading_level.description : "-") : "-"
+          %tr.tr-blank
+          %tr.tr-head
+            %td{:align => "right", :colspan => "2"}= t('total')
+            %td= total_credit_hours
+            %td -
+            %td -
+      %h5
+        = t('grade_point_average_gpa')
+        \=
+        - unless total_credit_hours==0
+          = "%.2f" %(total_credit_points.to_f/total_credit_hours.to_f)
+        - else
+          \-
+    - else
+      - total_marks_attained = 0
+      - total_max_marks = 0
+      #score-table
+        .custom_header
+          %span.student= "#{@student.full_name} - #{@student.admission_no}"
+        %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+          %tr.tr-head
+            %td= t('subject')
+            - if @exam_group.exam_type == 'Marks'
+              %td= t('marks_obtained')
+              %td= t('max')
+              %td
+                = t('percentage')
+                (%)
+            - elsif @exam_group.exam_type == 'Grades'
+              %td= t('grades')
+            - else
+              %td= t('marks_obtained')
+              %td= t('max')
+              %td= t('grades')
+              %td
+                = t('percentage')
+                (%)
+          - exam_score.each do |es|
+            %tr{:class => "tr-#{cycle('odd', 'even')}"}
+              %td.col-1
+                = es.exam.subject.name
+              - if @exam_group.exam_type == 'Marks'
+                %td.col-1= es.marks || '-'
+                - total_marks_attained = total_marks_attained+(es.marks || 0)
+                %td.col-1= es.exam.maximum_marks
+                - total_max_marks = total_max_marks+es.exam.maximum_marks
+                %td.col-1= es.calculate_percentage
+              - elsif @exam_group.exam_type == 'Grades'
+                %td.col-1= es.grading_level || "-"
+              - else
+                %td.col-1= es.marks || "-"
+                - total_marks_attained = total_marks_attained+(es.marks || 0)
+                %td.col-1= es.exam.maximum_marks
+                - total_max_marks = total_max_marks+es.exam.maximum_marks
+                %td.col-1= es.grading_level || "-"
+                %td.col-1= es.calculate_percentage
+          - if @exam_group.exam_type == 'Marks' or @exam_group.exam_type == 'MarksAndGrades'
+            %tr.tr-head
+              %td
+                = t('total_marks')
+                \:
+              %td= total_marks_attained
+              %td= total_max_marks
+              - if @exam_group.exam_type == 'MarksAndGrades'
+                %td -
+              %td= "%.2f" %(total_marks_attained*100/total_max_marks) unless total_max_marks == 0
+        - if @exam_group.exam_type == 'Marks' or @exam_group.exam_type == 'MarksAndGrades'
+          .custom_header
+            = t('class_average_marks')
+            \: #{"%.2f" %@exam_group.batch_average_marks('marks') unless total_max_marks == 0} | #{t('class_average')} % : #{"%.2f" %(@exam_group.batch_average_marks('marks')*100/total_max_marks) unless total_max_marks == 0}
+    - unless @batch.gpa_enabled?
+      - if @exam_group.exam_type == 'Marks' or @exam_group.exam_type == 'MarksAndGrades'
+        %script{:src => "/javascripts/swfobject.js", :type => "text/javascript"}
+        = @graph
+    .extender

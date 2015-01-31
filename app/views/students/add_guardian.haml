@@ -1,0 +1,96 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("  admission/admission_page_logo.jpg")
+  %h1= t('admission')
+  %h3= t('add_guardian_details')
+  #app-back-button
+    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg= flash[:notice]
+  = error_messages_for 'parent_info'
+  = form_for :parent_detail do |s|
+    #admission1_form
+      .label-field-pair
+        %label{:for => "parent_detail_student_id"}= t('student_admission_no')
+        .text_display= @student.admission_no
+        = s.hidden_field :ward_id, :value => @student.id
+      %br/
+      %span.span-sub-heading= t('parent_personal_details')
+      %hr.sub-heading/
+      .label-field-pair
+        %label{:for => "parent_detail_name"}
+          = t('first_name')
+          %span.necessary-field *
+        .text-input-bg= s.text_field :first_name
+      .label-field-pair
+        %label{:for => "parent_detail_name"}= t('last_name')
+        .text-input-bg= s.text_field :last_name
+      .label-field-pair
+        %label{:for => "parent_detail_relation"}
+          = t('relation')
+          %span.necessary-field *
+        .text-input-bg= s.text_field :relation
+      .label-field-pair
+        %label{:for => "parent_detail_dob"}= t('date_of_birth')
+        .text-input-bg
+          = calendar_date_select_tag 'parent_detail[dob]', nil,:year_range => 60.years.ago..20.years.ago ,:popup=>"force"
+      .label-field-pair
+        %label{:for => "parent_detail_education"}= t('education')
+        .text-input-bg= s.text_field :education
+      .label-field-pair
+        %label{:for => "parent_detail_occupation"}= t('occupation')
+        .text-input-bg= s.text_field :occupation
+      .label-field-pair
+        %label{:for => "parent_detail_income"}= t('income')
+        .text-input-bg= s.text_field :income
+      .label-field-pair
+        %label{:for => "parent_detail_email"}= t('email')
+        .text-input-bg= s.text_field :email
+      %br/
+      %span.span-sub-heading= t('parent_contact_details')
+      %hr.sub-heading/
+      .label-field-pair
+        %label{:for => "master_student_city"}= t('office_address_line1')
+        .text-input-bg= s.text_field :office_address_line1,:value=>@student.address_line1.to_s
+      .label-field-pair
+        %label{:for => "master_student_city"}= t('office_address_line2')
+        .text-input-bg= s.text_field :office_address_line2,:value=>@student.address_line2.to_s
+      .label-field-pair
+        %label{:for => "parent_detail_city"}= t('city')
+        .text-input-bg= s.text_field :city,:value=>@student.city.to_s
+      .label-field-pair
+        %label{:for => "parent_detail_state"}= t('state')
+        .text-input-bg= s.text_field :state,:value=>@student.state.to_s
+      .label-field-pair
+        %label{:for => "parent_detail_country"}= t('country')
+        .text-input-bg
+          = select :parent_detail, :country_id, @countries.map {|c| [c.name, c.id]}, :selected =>@student.country.id
+      .label-field-pair
+        %label{:for => "parent_detail_office_phone1"}= t('office_phone1')
+        .text-input-bg= s.text_field :office_phone1
+      .label-field-pair
+        %label{:for => "parent_detail_office_phone2"}= t('office_phone2')
+        .text-input-bg= s.text_field :office_phone2
+      .label-field-pair
+        %label{:for => "parent_detail_mob_phone"}= t('mobile_phone_no')
+        .text-input-bg= s.text_field :mobile_phone
+    .extender
+    = submit_tag "",  :name => "commit", :class => "submit_button3", :value => "► #{t('finish')}"

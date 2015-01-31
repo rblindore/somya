@@ -1,0 +1,66 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("student_details/student_details_logo.jpg")
+  %h1= t('students')
+  %h3= t('remove_student')
+  #app-back-button
+    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+#page-yield
+  - unless flash[:warn_notice].nil?
+    #errorExplanation.errorExplanation
+      = flash[:warn_notice]
+  #student-details
+    %h3= @student.full_name
+    %h4
+      = t('adm_no')
+      \: #{@student.admission_no}
+    %h4
+      = t('class')
+      \: #{@student.batch.course_name}
+  .extender
+  .link-box
+    .link-heading
+      = link_to t('leaving_institution'), :controller => "students", :action => "change_to_former", :id => @student.id
+    .link-descr= t('leaving_institution_message')
+  .link-box
+    .link-heading
+      = link_to t('remove_student_records'), :controller => "students", :action => "delete", :id => @student.id
+    .link-descr= t('remove_student_message')
+  /
+    <div id="remove-student">
+    <h4><haml_loud> link_to t(&#39;student_left_message&#39;) </haml_loud></h4>
+    <p>For students leaving the school, use this option to remove them from the list of active students and place them in the former students list.</p>
+    <haml_loud> form_for :remove do |f| </haml_loud><haml_block>
+    <div class="label-field-pair">
+    <label for="remove_descr">Reason for leaving</label>
+    <div class="text-input-bg"><haml_loud> f.text_field :description </haml_loud></div>
+    </div>
+    <div class="extender"> </div>
+    <haml_loud> image_submit_tag &#39;buttons/remove.png&#39; </haml_loud>
+    </haml_block></div>
+    
+    <div id="delete-student">
+    <h4>Delete student</h4>
+    <p>Completely delete student's records from the school's databases. Use this option only if you created the student record by accident and want to remove it completely.</p>
+    
+    <p class="warning">(Warning: All records will be deleted for the student and cannot be recovered.)</p>
+    <haml_loud> link_to image_tag(&#39;buttons/delete.png&#39;, :border =&gt; 0),
+    { :action =&gt; &#39;destroy&#39;, :id =&gt; @student.id }, :confirm =&gt; t(&#39;are_you_completely_sure&#39;) </haml_loud>
+    </div>

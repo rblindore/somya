@@ -1,0 +1,198 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#page-yield.available_sections
+  .hor_line
+  %h2{:align => "center"}= t('combined_report')
+  %h3{:align => "center"}
+    = t('batch')
+    \: #{@batch.full_name}
+  .hor_line
+  .extender
+  .report
+    - page_val=23
+    #pdf-info.section
+      - unless @students.empty?
+        - unless @designations.blank?
+          - @designations.each do|designation|
+            .section
+              %h4= designation.name
+              - designated_students = []
+              - @students.each do|student|
+                - marks = GroupedExamReport.find_all_by_student_id_and_score_type(student.id,"c")
+                - unless marks.empty?
+                  - total = marks.map{|m| m.marks}
+                  - avg = (total.sum.to_f)/(total.count.to_f)
+                  - if @batch.gpa_enabled?
+                    - classes = ClassDesignation.find(:all,:conditions=>["cgpa <= ? AND course_id = ?",avg,student.batch.course_id],:order=>"cgpa DESC")
+                  - else
+                    - classes = ClassDesignation.find(:all,:conditions=>["marks <= ? AND course_id = ?",avg,student.batch.course_id],:order=>"marks DESC")
+                  - unless classes.empty?
+                    - if classes.first.id == designation.id
+                      - designated_students << [student,avg]
+              %table#pdf-table{:cellspacing => "0", :width => "100%"}
+                - c= 'even'
+                - unless designated_students.empty?
+                  %tr.table-header
+                    %td= t('sl_no')
+                    %td= t('adm_no')
+                    %td= t('name')
+                    - if @batch.cwa_enabled?
+                      %td= t('cwa')
+                    - elsif @batch.gpa_enabled?
+                      %td= t('cgpa')
+                    - else
+                      %td= t('percentage')
+                  - designated_students.each_with_index do|s,i|
+                    - if (i+1)%(page_val.to_i) == 0
+              %table#pdf-table.section{:cellspacing => "0", :width => "100%"}
+                %tr.table-header
+                  %td= t('sl_no')
+                  %td= t('adm_no')
+                  %td= t('name')
+                  - if @batch.cwa_enabled?
+                    %td= t('cwa')
+                  - elsif @batch.gpa_enabled?
+                    %td= t('cgpa')
+                  - else
+                    %td= t('percentage')
+                %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+                  - st = s[0]
+                  %td.col-pdf= i+1
+                  %td.col-pdf= st.admission_no.present? ? st.admission_no : "-"
+                  %td.col-pdf= st.full_name
+                  %td.col-pdf= "%.2f" %(s[1].to_f)
+                - else
+                  %tr.table-header
+                    %td= t('no_students_for_this_class_designation')
+          - unless @levels.blank?
+            - @levels.each do|level|
+              .section
+                %h4
+                  = level.name
+                  = t('students')
+                - unless level.subject_count.nil?
+                  - scores = GroupedExamReport.find(:all,:conditions=>{:student_id=>@students.collect(&:id),:score_type=>"s"})
+                - else
+                  - scores = GroupedExamReport.find(:all,:conditions=>{:student_id=>@students.collect(&:id),:score_type=>"c"})
+                - if level.marks_limit_type=="upper"
+                  - scores.reject!{|s| !(((s.marks < level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks < level.marks unless level.marks.nil?))}
+                - elsif level.marks_limit_type=="exact"
+                  - scores.reject!{|s| !(((s.marks == level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks == level.marks unless level.marks.nil?))}
+                - else
+                  - scores.reject!{|s| !(((s.marks >= level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks >= level.marks unless level.marks.nil?))}
+                - ranked_students =[]
+                - unless scores.empty?
+                  - unless level.subject_count.nil?
+                    - sub_count = level.subject_count
+                    - @students.each do|student|
+                      - student_scores = scores.dup
+                      - student_scores.reject!{|s| !(s.student_id==student.id)}
+                      - batch_ids = student_scores.collect(&:batch_id)
+                      - batch_ids.each do|batch_id|
+                        - unless batch_ids.empty?
+                          - count = batch_ids.count(batch_id)
+                          - if level.subject_limit_type=="upper"
+                            - if count < sub_count
+                              - flag=0
+                              - ranked_students.each do|r|
+                                - if r[0]==student.id
+                                  - r[1] << batch_id
+                                  - flag=1
+                              - unless flag==1
+                                - unless student.has_higher_priority_ranking_level(level.id,"course","")
+                                  - ranked_students << [student.id,[batch_id]]
+                          - elsif level.subject_limit_type=="exact"
+                            - if count == sub_count
+                              - flag=0
+                              - ranked_students.each do|r|
+                                - if r[0]==student.id
+                                  - r[1] << batch_id
+                                  - flag=1
+                              - unless flag==1
+                                - unless student.has_higher_priority_ranking_level(level.id,"course","")
+                                  - ranked_students << [student.id,[batch_id]]
+                          - else
+                            - if count >= sub_count
+                              - flag=0
+                              - ranked_students.each do|r|
+                                - if r[0]==student.id
+                                  - r[1] << batch_id
+                                  - flag=1
+                              - unless flag==1
+                                - unless student.has_higher_priority_ranking_level(level.id,"course","")
+                                  - ranked_students << [student.id,[batch_id]]
+                          - batch_ids.delete(batch_id)
+                  - else
+                    - scores.each do|score|
+                      - flag=0
+                      - ranked_students.each do|r|
+                        - if r[0]==score.student_id
+                          - r[1] << score.batch_id
+                          - flag=1
+                      - unless flag==1
+                        - unless score.student.has_higher_priority_ranking_level(level.id,"course","")
+                          - ranked_students << [score.student_id,[score.batch_id]]
+                %table#pdf-table{:cellspacing => "0", :width => "100%"}
+                  - c= 'even'
+                  - unless ranked_students.empty?
+                    %tr.table-header
+                      %td= t('sl_no')
+                      %td= t('adm_no')
+                      %td= t('name')
+                      - if @batch.cwa_enabled?
+                        %td= t('cwa')
+                      - elsif @batch.gpa_enabled?
+                        %td= t('cgpa')
+                      - else
+                        %td= t('percentage')
+                      %td
+                        = t('courses_text')
+                        = level.name
+                    - ranked_students.each_with_index do|r,indx|
+                      - if (indx+1)%(page_val.to_i) == 0
+                %table#pdf-table.section{:cellspacing => "0", :width => "100%"}
+                  %tr.table-header
+                    %td= t('sl_no')
+                    %td= t('adm_no')
+                    %td= t('name')
+                    - if @batch.cwa_enabled?
+                      %td= t('cwa')
+                    - elsif @batch.gpa_enabled?
+                      %td= t('cgpa')
+                    - else
+                      %td= t('percentage')
+                    %td
+                      = t('courses_text')
+                      = level.name
+                  %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+                    - stu = Student.find(r[0])
+                    - marks = GroupedExamReport.find_all_by_student_id_and_score_type(stu.id,"c")
+                    - unless marks.empty?
+                      - total = marks.map{|m| m.marks}
+                      - avg = (total.sum.to_f)/(total.count.to_f)
+                    %td.col-pdf= indx+1
+                    %td.col-pdf= stu.admission_no.present? ? stu.admission_no : "-"
+                    %td.col-pdf= stu.full_name
+                    %td.col-pdf= avg.present? ? "%.2f" %(avg) : "-"
+                    %td.col-pdf
+                      - batches = r[1]
+                      = Batch.find_all_by_id(batches).collect(&:full_name).join(", ")
+                  - else
+                    %tr.table-header
+                      %td= t('no_students_for_this_ranking_level')

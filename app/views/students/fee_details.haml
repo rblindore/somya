@@ -1,0 +1,146 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("  student_details/student_details_logo.jpg")
+  %h1= t('student_text')
+  %h3= t('fee_status')
+  #app-back-button
+    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+#inner-tab-menu
+  %ul
+    %li= link_to "#{t('fees_text')}", :controller => 'student', :action => 'fees', :id => @student.id
+    %li= link_to "#{t('student_profile')}", :controller => 'student', :action => 'profile', :id => @student.id
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  #student_profile_heading
+    #student_main_info
+      %span.name
+        = @student.full_name
+      %span.course
+        = t('course_and_batch')
+        \: #{@student.batch.course_name}
+      %span.adm
+        = t('adm_no')
+        \: #{@student.admission_no}
+    .extender
+  - unless @fee_particulars.nil?
+    - total_fees = 0
+    %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+      %tr.tr-head
+        %td= t('sl_no')
+        %td
+          = t('particulars')
+        %td
+          = t('amount')
+          (#{currency}  )
+      %tr.tr-blank
+      - i = 0
+      - @fee_particulars.each do |fee|
+        %tr{:class => "tr-#{cycle("odd","even")}"}
+          %td.col-1= i+=1
+          %td.col-2= fee.name
+          %td.col-6= fee.amount
+        - total_fees += fee.amount
+      - unless @total_discount == 0
+        %tr.tr-blank
+        %tr.tr-blank
+        %tr{:cellpadding => "1", :cellspacing => "1", :class => "tr-#{cycle("odd","even")}"}
+          %td.col-1
+          %td.col-1{:colspan => "2"}
+            %span= t('discount')
+        - @batch_discounts.each do |d|
+          %tr{:class => "tr-#{cycle("odd","even")}"}
+            %td.col-1= i+1
+            %td.col-2= d.name
+            %td.col-6
+              = d.discount
+              \%
+          - i += 1
+        - @student_discounts.each do |d|
+          %tr{:class => "tr-#{cycle("odd","even")}"}
+            %td.col-1= i+1
+            %td.col-2= d.name
+            %td.col-6
+              = d.discount
+              \%
+          - i += 1
+        - @category_discounts.each do |d|
+          %tr{:class => "tr-#{cycle("odd","even")}"}
+            %td.col-1= i+1
+            %td.col-2= d.name
+            %td.col-6
+              = d.discount
+              \%
+          - i += 1
+        %tr.tr-blank
+        %tr.tr-blank
+        %tr{:cellpadding => "1", :cellspacing => "1", :class => "tr-#{cycle("odd","even")}"}
+          %td.col-8{:colspan => "2"}= t('total_discount')
+          %td.col-6= "#{@total_discount} %"
+        %tr.tr-blank
+        %tr.tr-blank
+        - total_fees = (total_fees - ((total_fees*@total_discount)/100))
+        %tr{:cellpadding => "1", :cellspacing => "1", :class => "tr-#{cycle("odd","even")}"}
+          %td.col-8{:colspan => "2"}= t('total_fees')
+          %td.col-6= total_fees
+        %tr.tr-blank
+        %tr.tr-blank
+      - unless @fine.nil?
+        %tr{:class => "tr-#{cycle("odd","even")}"}
+          %td.col-1= i+=1
+          %td.col-2
+            %span= t('fine')
+          %td.col-6= @fine.to_f
+        - total_fees += @fine.to_f
+      - unless @financefee.transaction_id.nil?
+        - @trans = FinanceTransaction.find_by_id(@financefee.transaction_id)
+        - unless @trans.nil?
+          - if @trans.fine_included
+            %tr{:class => "tr-#{cycle("odd","even")}"}
+              %td.col-1= i+= 1
+              %td.col-2 Fine
+              %td.col-6= @trans.fine_amount
+            - total_fees += @trans.fine_amount.to_f
+      - unless @paid_fees.nil?
+        %tr.tr-blank
+        %tr.tr-blank
+        %tr{:cellpadding => "1", :cellspacing => "1", :class => "tr-#{cycle("odd","even")}"}
+          %td.col-1
+          %td.col-1{:colspan => "2"}
+            %span= t('payment_done')
+          - paid = 0
+          - @paid_fees.each do |p|
+            - paid += p.amount.to_f
+            %tr{:class => "tr-#{cycle("odd","even")}"}
+              %td.col-1= i+=1
+              %td.col-2
+                = t('partial_payment_on')
+                = p.transaction_date
+              %td.col-6
+                \-#{p.amount.to_f}
+          - total_fees -= paid
+        %tr.tr-blank
+        %tr.tr-blank
+        %tr{:cellpadding => "1", :cellspacing => "1", :class => "tr-#{cycle("odd","even")}"}
+          %td.col-8{:colspan => "2"}
+            = t('amount_to_be_paid')
+            \:
+          %td.col-6= total_fees

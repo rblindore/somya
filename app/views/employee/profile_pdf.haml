@@ -1,0 +1,204 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#page-yield
+  .hor_line
+  #main_info
+    %h2
+      = @employee.full_name
+    %h4
+      = t('employee_profile')
+      (#{t('general')})
+  #general_info
+    %table#pdf-table{:cellspacing => "0", :width => "100%"}
+      %tr.odd
+        %td.col-pdf= t('employee_number')
+        %td.col-pdf= @employee.employee_number unless @employee.employee_number.nil?
+      %tr.even
+        %td.col-pdf= t('joining_date')
+        %td.col-pdf= I18n.l(@employee.joining_date,:format=>:normal) unless @employee.joining_date.nil?
+      %tr.odd
+        %td.col-pdf= t('department')
+        %td.col-pdf= @employee.employee_department.name unless @employee.employee_department.name.nil?
+      %tr.even
+        %td.col-pdf= t('category')
+        %td.col-pdf= @employee.employee_category.name unless @employee.employee_category.name.nil?
+      %tr.odd
+        %td.col-pdf= t('position')
+        %td.col-pdf= @employee.employee_position.name unless @employee.employee_position.name.nil?
+      %tr.even
+        %td.col-pdf= t('job_title')
+        %td.col-pdf= @employee.job_title unless @employee.job_title.nil?
+      %tr.odd
+        %td.col-pdf= t('manager')
+        %td.col-pdf= @reporting_manager unless @reporting_manager.nil?
+      %tr.even
+        %td.col-pdf= t('gender')
+        %td.col-pdf= t("#{@gender.downcase}") unless @gender.nil?
+      %tr.odd
+        %td.col-pdf= t('status')
+        %td.col-pdf= t("#{@status.downcase}") unless @status.nil?
+      %tr.even
+        %td.col-pdf= t('qualification')
+        %td.col-pdf= @employee.qualification unless @employee.qualification.nil?
+      %tr.odd
+        %td.col-pdf= t('total_exp')
+        %td.col-pdf= @total_years.to_s+" #{t('years')} "+@total_months.to_s+" #{t('months')}" unless @total_years.nil? or @total_months.nil?
+      %tr.even
+        %td.col-pdf= t('exp_info')
+        %td.col-pdf= @employee.experience_detail unless @employee.experience_detail.nil?
+  #page-extender
+  #main_info
+    %h2
+      = @employee.full_name
+    %h4
+      = t('employee_profile')
+      (#{t('personal')})
+  #personal_info
+    %table#pdf-table{:cellspacing => "0", :width => "100%"}
+      %tr.odd
+        %td.col-pdf= t('dob')
+        %td.col-pdf= @employee.date_of_birth unless @employee.date_of_birth.nil?
+      %tr.even
+        %td.col-pdf= t('marital_status')
+        %td.col-pdf= @employee.marital_status unless @employee.marital_status.nil?
+      %tr.odd
+        %td.col-pdf= t('no_of_children')
+        %td.col-pdf= @employee.children_count unless @employee.children_count.nil?
+      %tr.even
+        %td.col-pdf= t('father_name')
+        %td.col-pdf= @employee.father_name unless @employee.father_name.nil?
+      %tr.odd
+        %td.col-pdf= t('mother_name')
+        %td.col-pdf= @employee.mother_name unless @employee.mother_name.nil?
+      %tr.even
+        %td.col-pdf= t('spouse_name')
+        %td.col-pdf= @employee.husband_name unless @employee.husband_name.nil?
+      %tr.odd
+        %td.col-pdf= t('blood_group')
+        %td.col-pdf= @employee.blood_group unless @employee.blood_group.nil?
+      %tr.even
+        %td.col-pdf= t('nationality')
+        %td.col-pdf= @employee.nationality.name unless @employee.nationality.name.nil?
+  #page-extender1
+  #main_info
+    %h2
+      = @employee.full_name
+    %h4
+      = t('employee_profile')
+      (#{t('address_details')})
+  #personal_info
+    %table#pdf-table{:cellspacing => "0", :width => "100%"}
+      %tr.odd
+        %td.col-pdf= t('home_address')
+        %td.col-pdf
+          = @employee.home_address_line1 unless @employee.home_address_line1.nil?
+          %br/
+          = @employee.home_address_line2 unless @employee.home_address_line2.nil?
+      %tr.even
+        %td.col-pdf= t('city')
+        %td.col-pdf= @employee.home_city unless @employee.home_city.nil?
+      %tr.odd
+        %td.col-pdf= t('state')
+        %td.col-pdf= @employee.home_state unless @employee.home_state.nil?
+      %tr.even
+        %td.col-pdf= t('country')
+        %td.col-pdf= @home_country unless @home_country.nil?
+      %tr.odd
+        %td.col-pdf
+          = t('home')
+          = t('zip')
+        %td.col-pdf= @employee.home_pin_code unless @employee.home_pin_code.nil?
+      %tr.even
+        %td.col-pdf= t('office_address')
+        %td.col-pdf
+          = @employee.office_address_line1 unless @employee.office_address_line1.nil?
+          %br/
+          = @employee.office_address_line2 unless @employee.office_address_line2.nil?
+      %tr.odd
+        %td.col-pdf= t('city')
+        %td.col-pdf= @employee.office_city unless @employee.office_city.nil?
+      %tr.even
+        %td.col-pdf= t('state')
+        %td.col-pdf= @employee.office_state unless @employee.office_state.nil?
+      %tr.odd
+        %td.col-pdf= t('country')
+        %td.col-pdf= @office_country unless @office_country.nil?
+      %tr.even
+        %td.col-pdf
+          = t('office')
+          = t('zip')
+        %td.col-pdf= @employee.office_pin_code unless @employee.office_pin_code.nil?
+  #page-extender1
+  #main_info
+    %h2
+      = @employee.full_name
+    %h4
+      = t('employee_profile')
+      (#{t('contact_details')})
+  #personal_info
+    %table#pdf-table{:cellspacing => "0", :width => "100%"}
+      %tr.odd
+        %td.col-pdf= t('office_phone1')
+        %td.col-pdf= @employee.office_phone1 unless @employee.office_phone1.nil?
+      %tr.even
+        %td.col-pdf= t('office_phone2')
+        %td.col-pdf= @employee.office_phone2 unless @employee.office_phone2.nil?
+      %tr.odd
+        %td.col-pdf= t('mobile')
+        %td.col-pdf= @employee.mobile_phone unless @employee.mobile_phone.nil?
+      %tr.even
+        %td.col-pdf= t('home_phone')
+        %td.col-pdf= @employee.home_phone unless @employee.home_phone.nil?
+      %tr.odd
+        %td.col-pdf= t('email')
+        %td.col-pdf= @employee.email unless @employee.email.nil?
+      %tr.even
+        %td.col-pdf= t('fax')
+        %td.col-pdf= @employee.fax unless @employee.fax.nil?
+  - p= 'odd'
+  - unless @bank_details.blank?
+    #page-extender1
+    #main_info
+      %h2
+        = @employee.full_name
+      %h4
+        = t('employee_profile')
+        (#{t('bank_account_details')})
+    #personal_info
+      %table#pdf-table{:cellspacing => "0", :width => "100%"}
+        - @bank_details.each do |b|
+          - p =cycle('odd','even ')
+          %tr{:class => "#{p}"}
+            %td.col-pdf= b.bank_field.name
+            %td.col-pdf= b.bank_info
+  - unless @additional_details.blank?
+    #page-extender1
+    #main_info
+      %h2
+        = @employee.full_name
+      %h4
+        = t('employee_profile')
+        (#{t('additional_detail')})
+    #personal_info
+      %table#pdf-table{:cellspacing => "0", :width => "100%"}
+        - @additional_details.each do |add_det|
+          - p =cycle('odd','even ')
+          %tr{:class => "#{p}"}
+            %td.col-pdf= add_det.additional_field.name
+            %td.col-pdf= add_det.additional_info

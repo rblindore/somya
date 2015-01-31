@@ -1,0 +1,66 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#page-yield
+  .hor_line
+  %h2= t('employee_attendance_report')
+  .hor_line
+  .extender
+  .report
+    #main_info
+      %h4
+        = @employee.full_name.upcase
+      %h4
+        = @employee.employee_number
+    #pdf-info
+      - c='even'
+      %table#pdf-table{:cellspacing => "0", :width => "100%"}
+        %tr.table-header
+          %td.col-pdf= t('leave_types')
+          %td.col-pdf Dates
+        - @leave_types.each do |lt|
+          - leave_count = EmployeeLeave.find_by_employee_leave_type_id_and_employee_id(lt.id, @employee.id)
+          - unless leave_count.reset_date.nil?
+            - @report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(@employee.id, lt.id, :conditions=> ["attendance_date >= '#{leave_count.reset_date}'"])
+          - else
+            - @report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(@employee.id, lt.id)
+          - if @report == []
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= lt.name
+              %td.col-pdf= t('no_dates')
+          - else
+            - i = 0
+            - @report.each do |r|
+              - if i == 22
+                - i= 0
+                %tr.page-break
+                  %td{:colspan => "2"}
+              %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+                %td.col-pdf= lt.name
+                %td.col-pdf= r.attendance_date.strftime("%B %d, %Y")
+              - i = i + 1
+        - total_leave = 0
+        - @leave_count.each do |e|
+          - leave_type = EmployeeLeaveType.find_by_id(e.employee_leave_type_id)
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-bold= "#{t('total')} #{leave_type.name}"
+            %td.col-bold= "#{e.leave_taken}/#{e.leave_count}"
+          - total_leave+= e.leave_taken
+        %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+          %td.col-bold= t('net_total_leaves')
+          %td.col-bold= total_leave

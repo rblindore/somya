@@ -1,0 +1,45 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("examination/show_exam.png")
+  %h1= t('exams_text')
+  %h3= t('grading_levels_text')
+  #app-back-button
+    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()"
+#inner-tab-menu
+  - if permitted_to? :index, :course
+    %ul
+      %li= link_to t('course_text'), courses_path
+#page-yield
+  #flash_box
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  .box
+    .label-field-pair
+      %label{:for => "student_course"}
+        = t('batch')
+        = image_tag("loader.gif", :align => "absmiddle", :border => 0, :id => "loader", :style =>"display: none;" )
+      .text-input-bg
+        = select :batch, :id,                                                               |
+          @batches.map {|b| [b.full_name, b.id] },                                          |
+          { prompt: t('common')},                                                           |
+          { onchange:"redirectTo(this, '#{url_for(action: :show, batch_id: 'paramid')}')" } |
+    #grading-levels= render :partial => "grading_levels"
+    #modal-box{:style => "display:none;"}

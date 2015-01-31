@@ -66,6 +66,8 @@ GEM
     execjs (2.2.2)
     globalid (0.3.0)
       activesupport (>= 4.1.0)
+    haml (4.0.6)
+      tilt
     hike (1.2.3)
     hoe (3.13.0)
       rake (>= 0.8, < 11.0)
@@ -206,6 +208,7 @@ DEPENDENCIES
   declarative_authorization
   delayed_job
   delayed_job_active_record
+  haml
   iconv (~> 1.0.3)
   jbuilder (~> 2.0)
   jquery-rails
