@@ -18,25 +18,25 @@
 
 class EmployeeAttendanceController < ApplicationController
   before_filter :login_required,:configuration_settings_for_hr
-  before_filter :protect_leave_dashboard, :only => [:leaves]#, :employee_attendance_pdf]
-  before_filter :protect_applied_leave, :only => [:own_leave_application, :cancel_application]
-  before_filter :protect_manager_leave_application_view, :only => [:leave_application]
-  before_filter :protect_leave_history, :only => [:leave_history,:update_leave_history]
+  before_filter :protect_leave_dashboard, only: [:leaves]#, :employee_attendance_pdf]
+  before_filter :protect_applied_leave, only: [:own_leave_application, :cancel_application]
+  before_filter :protect_manager_leave_application_view, only: [:leave_application]
+  before_filter :protect_leave_history, only: [:leave_history,:update_leave_history]
   #    prawnto :prawn => {:left_margin => 25, :right_margin => 25}
 
   filter_access_to :all
 
   def add_leave_types
-    @leave_types = EmployeeLeaveType.find(:all, :order => "name ASC",:conditions=>'status = 1')
-    @inactive_leave_types = EmployeeLeaveType.find(:all, :order => "name ASC",:conditions=>'status = 0')
+    @leave_types = EmployeeLeaveType.where(status: 1).order("name ASC")
+    @inactive_leave_types = EmployeeLeaveType.where(status: 0).order("name ASC")
     @leave_type = EmployeeLeaveType.new(params[:leave_type])
     @employee = Employee.all
     if request.post? and @leave_type.save
       @employee.each do |e|
-        EmployeeLeave.create( :employee_id => e.id, :employee_leave_type_id => @leave_type.id, :leave_count => @leave_type.max_leave_count)
+        EmployeeLeave.create(employee_id: e.id, employee_leave_type_id: @leave_type.id, leave_count: @leave_type.max_leave_count)
       end
             flash[:notice] = t('flash1')
-      redirect_to :action => "add_leave_types"
+      redirect_to action: :add_leave_types
     end
   end
 
@@ -44,7 +44,7 @@ class EmployeeAttendanceController < ApplicationController
     @leave_type = EmployeeLeaveType.find(params[:id])
     if request.post? and @leave_type.update_attributes(params[:leave_type])
             flash[:notice] = t('flash2')
-      redirect_to :action => "add_leave_types"
+      redirect_to action: :add_leave_types
     end
   end
 
@@ -61,7 +61,7 @@ class EmployeeAttendanceController < ApplicationController
     else
             flash[:notice] = "#{t('flash_msg12')}"
     end
-    redirect_to :action => "add_leave_types"
+    redirect_to action: :add_leave_types
 
 
   end
@@ -73,13 +73,12 @@ class EmployeeAttendanceController < ApplicationController
     @last_reset = Settings.find_by_config_key('LastAutoLeaveReset')
     @fin_start_date = Settings.find_by_config_key('FinancialYearStartDate')
     if request.post?
-      @auto_reset.update_attributes(:config_value=> params[:configuration][:automatic_leave_reset])
-      @reset_period.update_attributes(:config_value=> params[:configuration][:leave_reset_period])
-      @last_reset.update_attributes(:config_value=> params[:configuration][:financial_year_start_date])
-
-            flash[:notice] = t('flash_msg8')
-        end
+      @auto_reset.update_attributes(config_value: params[:configuration][:automatic_leave_reset])
+      @reset_period.update_attributes(config_value: params[:configuration][:leave_reset_period])
+      @last_reset.update_attributes(config_value: params[:configuration][:financial_year_start_date])
+      flash[:notice] = t('flash_msg8')
     end
+  end
 
   def update_employee_leave_reset_all
     @leave_count = EmployeeLeave.all
@@ -94,48 +93,43 @@ class EmployeeAttendanceController < ApplicationController
             balance_leave = available_leave - leave_taken
             available_leave = balance_leave.to_f
             available_leave += default_leave_count.to_f
-            leave_taken = 0
-            e.update_attributes(:leave_taken => leave_taken,:leave_count => available_leave, :reset_date => Date.today)
+            e.update_attributes(leave_taken: 0, leave_count: available_leave, reset_date: Date.today)
           else
-            available_leave = default_leave_count.to_f
-            leave_taken = 0
-            e.update_attributes(:leave_taken => leave_taken,:leave_count => available_leave, :reset_date => Date.today)
+            e.update_attributes(leave_taken: 0, leave_count: default_leave_count.to_f, reset_date: Date.today)
           end
         else
-          available_leave = default_leave_count.to_f
-          leave_taken = 0
-          e.update_attributes(:leave_taken => leave_taken,:leave_count => available_leave, :reset_date => Date.today)
+          e.update_attributes(leave_taken: 0, leave_count: default_leave_count.to_f, reset_date: Date.today)
         end
       end
     end
     render :update do |page|
-            page.replace_html "main-reset-box", :text => "<p class='flash-msg'>#{t('leave_count_reset_sucessfull')}</p>"
+            page.replace_html "main-reset-box", text: "<p class='flash-msg'>#{t('leave_count_reset_sucessfull')}</p>"
     end
   end
 
   def employee_leave_reset_by_department
-    @departments = EmployeeDepartment.find(:all, :conditions => "status = true", :order=> "name ASC")
+    @departments = EmployeeDepartment.where(status: true).order("name ASC")
 
   end
 
   def list_department_leave_reset
-    @leave_types = EmployeeLeaveType.find(:all, :conditions => "status = true")
-    if params[:department_id] == ""
+    @leave_types = EmployeeLeaveType.where(status: true)
+    if params[:department_id].blank?
       render :update do |page|
-        page.replace_html "department-list", :text => ""
+        page.replace_html "department-list", text: ""
       end
       return
     end
-    @employees = Employee.find_all_by_employee_department_id(params[:department_id])
+    @employees = Employee.where(employee_department_id: params[:department_id])
     render :update do |page|
-      page.replace_html "department-list", :partial => 'department_list'
+      page.replace_html "department-list", partial: 'department_list'
     end
   end
 
   def update_department_leave_reset
     @employee = params[:employee_id]
     @employee.each do |e|
-      @leave_count = EmployeeLeave.find_all_by_employee_id(e)
+      @leave_count = EmployeeLeave.where(employee_id: e)
       @leave_count.each do |c|
         #attendance = EmployeeAttendance.find_all_by_employee_id(e, :conditions=> "employee_leave_type_id = '#{c.employee_leave_type_id }' and attendance_date >= '#{Date.today.strftime('%Y-%m-%d')}'" )
         @leave_type = EmployeeLeaveType.find_by_id(c.employee_leave_type_id)
@@ -149,42 +143,37 @@ class EmployeeAttendanceController < ApplicationController
               available_leave = balance_leave.to_f
               available_leave += default_leave_count.to_f
               leave_taken = 0
-#              unless attendance.blank?
-#                attendance.each do |a|
-#                  if a.is_half_day
-#                    leave_taken += (0.5).to_f
-#
-#                  else
-#                    leave_taken += (1).to_f
-#
-#                  end
-#                end
-#              end
-              c.update_attributes(:leave_taken => leave_taken,:leave_count => available_leave, :reset_date => Date.today)
+             # unless attendance.blank?
+             #   attendance.each do |a|
+             #     if a.is_half_day
+             #       leave_taken += (0.5).to_f
+
+             #     else
+             #       leave_taken += (1).to_f
+
+             #     end
+             #   end
+             # end
+              c.update_attributes(leave_taken: leave_taken, leave_count: available_leave, reset_date: Date.today)
             else
-              available_leave = default_leave_count.to_f
-              leave_taken = 0
-              c.update_attributes(:leave_taken => leave_taken,:leave_count => available_leave, :reset_date => Date.today)
+              c.update_attributes(leave_taken: 0, leave_count: default_leave_count.to_f, reset_date: Date.today)
             end
           else
-            available_leave = default_leave_count.to_f
-            leave_taken = 0
-            c.update_attributes(:leave_taken => leave_taken,:leave_count => available_leave, :reset_date => Date.today)
+            c.update_attributes(leave_taken: 0, leave_count: default_leave_count.to_f, reset_date: Date.today)
           end
         end
 
       end
     end
-        flash[:notice]=t('flash12')
-    redirect_to :controller=>"employee_attendance", :action => "employee_leave_reset_by_department"
+    redirect_to employee_leave_reset_by_department_employee_attendance_path, notice: t('flash12')
   end
 
 
   def employee_leave_reset_by_employee
-    @departments = EmployeeDepartment.find(:all)
-    @categories  = EmployeeCategory.find(:all)
-    @positions   = EmployeePosition.find(:all)
-    @grades      = EmployeeGrade.find(:all)
+    @departments = EmployeeDepartment.all
+    @categories  = EmployeeCategory.all
+    @positions   = EmployeePosition.all
+    @grades      = EmployeeGrade.all
   end
 
   def employee_search_ajax
@@ -277,46 +266,46 @@ class EmployeeAttendanceController < ApplicationController
   end
 
   def update_attendance_form
-    @leave_types = EmployeeLeaveType.find(:all, :conditions=>"status = true", :order=>"name ASC")
-    if params[:department_id] == ""
+    @leave_types = EmployeeLeaveType.where(status: true).order("name ASC")
+    if params[:department_id].blank?
       render :update do |page|
-        page.replace_html "attendance_form", :text => ""
+        page.replace_html "attendance_form", text: ""
       end
       return
     end
 
-    @employees = Employee.find_all_by_employee_department_id(params[:department_id])
+    @employees = Employee.where(employee_department_id: params[:department_id])
     render :update do |page|
-      page.replace_html 'attendance_form', :partial => 'attendance_form'
+      page.replace_html 'attendance_form', partial: 'attendance_form'
     end
   end
 
   def report
-    @departments = EmployeeDepartment.find(:all, :conditions => "status = true", :order=> "name ASC")
+    @departments = EmployeeDepartment.where(status: true).order("name ASC")
   end
 
   def update_attendance_report
-    @leave_types = EmployeeLeaveType.find(:all, :conditions => "status = true")
-    if params[:department_id] == ""
+    @leave_types = EmployeeLeaveType.where(status: true)
+    if params[:department_id].blank?
       render :update do |page|
-        page.replace_html "attendance_report", :text => ""
+        page.replace_html "attendance_report", text: ""
       end
       return
     end
-    @employees = Employee.find_all_by_employee_department_id(params[:department_id])
+    @employees = Employee.where(employee_department_id: params[:department_id])
     render :update do |page|
-      page.replace_html "attendance_report", :partial => 'attendance_report'
+      page.replace_html "attendance_report", partial: 'attendance_report'
     end
   end
 
   def emp_attendance
     @employee = Employee.find(params[:id])
-    @attendance_report = EmployeeAttendance.find_all_by_employee_id(@employee.id)
-    @leave_types = EmployeeLeaveType.find(:all, :conditions => "status = true")
-    @leave_count = EmployeeLeave.find_all_by_employee_id(@employee,:joins=>:employee_leave_type,:conditions=>"status = true")
+    @attendance_report = EmployeeAttendance.where(employee_id: @employee.id)
+    @leave_types = EmployeeLeaveType.where(status: true)
+    @leave_count = EmployeeLeave.where(employee_id: @employee).joins(:employee_leave_type).where(status: true)
     @total_leaves = 0
     @leave_types.each do |lt|
-      leave_count = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(@employee.id,lt.id).size
+      leave_count = EmployeeAttendance.where(employee_id: @employee.id, employee_leave_type_id: lt.id).size
       @total_leaves = @total_leaves +leave_count
     end
   end

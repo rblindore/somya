@@ -1,6 +1,10 @@
 Fedena::Application.routes.draw do
 
-  resources :grading_levels
+  resources :grading_levels do
+    collection do
+      get :show
+    end
+  end
 
   resources :application, only: :index do
     member do
@@ -61,13 +65,17 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :employee_attendances
-
-  resources :employee_attendances do
+  resources :employee_attendance do
     collection do
+      get :employee_leave_reset_by_department
       get :add_leave_types
       get :report
       get :manual_reset
+    end
+  end
+
+  resources :employee_attendances do
+    collection do
     end
   end
 
@@ -256,6 +264,7 @@ Fedena::Application.routes.draw do
     end
     member do
       get :view
+      post :add_comment
       delete :delete
       delete :delete_comment
       post :edit
@@ -411,6 +420,7 @@ Fedena::Application.routes.draw do
       get :admission1
       get :advanced_search
       get :view_all
+      get :payslip_approve
     end
   end
   resources :sms, only: :index do

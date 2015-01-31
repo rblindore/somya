@@ -85,7 +85,7 @@ class UsersController < ApplicationController
 
   def list_student_user
     batch = params[:batch_id]
-    @student = Student.find_all_by_batch_id(batch, :conditions => { :is_active => true },:order =>'first_name ASC')
+    @student = Student.where(batch_id: batch.id, is_active: true).order('first_name ASC')
     @users = @student.collect { |student| student.user}
     @users.delete(nil)
     render(:update) {|page| page.replace_html 'users', :partial=> 'users'}
@@ -181,10 +181,10 @@ class UsersController < ApplicationController
     @config = Settings.available_modules
     @employee = @user.employee_record if [t('admin'), t('employee_text')].include?(@user.role_name)
     if @user.student?
-      @student = Student.find_by_admission_no(@user.username)
+      @student = Student.where(admission_no:@user.username).first
     end
     if @user.parent?
-      @student = Student.find_by_admission_no(@user.username[1..@user.username.length])
+      @student = Student.where(admission_no: @user.username[1..@user.username.length]).first
     end
     @first_time_login = Settings.get_config_value('FirstTimeLoginEnable')
     if  session[:user_id].present? and @first_time_login == "1" and @user.is_first_login != false

@@ -23,6 +23,12 @@ class ExamController < ApplicationController
   filter_access_to :all
 
   def index
+    @employee_subjects = @current_user.employee_record.subjects.map { |n| n.id} if @current_user.employee?
+    render layout: 'application'
+  end
+
+  def settings
+    render layout: 'application'
   end
 
   def update_exam_form

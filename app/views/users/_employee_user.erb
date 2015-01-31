@@ -19,14 +19,9 @@
 
  <div class="label-field-pair">
 
-<div class="text-input-bg"><%= select :user_type, :type, EmployeeDepartment.active.map {|c| [c.name, c.id]},
-    {:prompt => "#{t('select_a_department')}"},
-    {:onChange => "#{remote_function(:url => {:action => "list_employee_user"},
-    :with => "'dept_id='+value",
-        :before => "Element.show('loader')",
-        :success => "Element.hide('loader')"
-        )}"} %>
+  <div class="text-input-bg">
+    <%= select :user_type, :type, EmployeeDepartment.active.map {|c| [c.name, c.id]}, { prompt: t('select_a_department') }, { onChange:  "onChangeRequest(this, '#{url_for(action: :list_employee_user, dept_id: 'paramid')}')"} %>
 
+  </div>
 </div>
- </div>
 

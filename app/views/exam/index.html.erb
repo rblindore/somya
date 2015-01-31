@@ -18,11 +18,11 @@
 #under the License. -%>
 
 <div id="content-header">
-  <%= image_tag("  examination/show_exam.png") %>
+  <%= image_tag("examination/show_exam.png") %>
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('home') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 
@@ -34,26 +34,30 @@
   <% if (@current_user.admin? or @current_user.privileges.collect(&:name).include?('ExaminationControl')) %>
     <div class="box">
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('settings')}" ,:controller=>'exam' , :action=>'settings' %></div>
+        <div class="link-heading"><%= link_to t('settings'), controller: :exam, action: :settings %></div>
         <div class="link-descr"><%= t('manage_grade_rank_designation') %></div>
       </div>
     <% end %>
-    <% @employee_subjects=[] %>
-    <% @employee_subjects= @current_user.employee_record.subjects.map { |n| n.id} if @current_user.employee?  %>
-    <%  if (permitted_to? :create_exam,:exam and @allow_for_exams == true and !@current_user.privileges.map{|p| p.name}.include?("ViewResults")) or @current_user.admin? or !@employee_subjects.empty? or (@current_user.privileges.map{|p| p.name}.include?("ExaminationControl")) or @current_user.privileges.map{|p| p.name}.include?("EnterResults") %>
+    <% if (permitted_to? :create_exam, :exam and @allow_for_exams == true and !@current_user.privileges.map{|p| p.name}.include?("ViewResults")) or @current_user.admin? or !@employee_subjects.blank? or (@current_user.privileges.map{|p| p.name}.include?("ExaminationControl")) or @current_user.privileges.map{|p| p.name}.include?("EnterResults") %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('exam_management')}" ,:action=>'create_exam' %>  </div>
+        <div class="link-heading">
+          <%= link_to t('exam_management'), action: :create_exam %>
+        </div>
         <div class="link-descr"><%= t('create_a_new_exam_and_enter_result') %></div>
       </div>
     <% end %>
     <% if (@current_user.admin? or @current_user.privileges.collect(&:name).include?('ExaminationControl')) %>
       <div class="link-box">
-        <div class="link-heading"><%= link_to "#{t('generate_reports')}" , :controller=> "exam",:action=>'generate_reports' %></div>
+        <div class="link-heading">
+          <%= link_to t('generate_reports'), controller: :exam, action: :generate_reports %>
+        </div>
         <div class="link-descr"><%= t('generate_student_reports_for_grouped_exams') %></div>
       </div>
     <% end %>
     <div class="link-box">
-      <div class="link-heading"><%= link_to "#{t('report_center')}" , :controller=> "exam",:action=>'report_center' %></div>
+      <div class="link-heading">
+        <%= link_to t('report_center'), controller: :exam, action: :report_center %>
+      </div>
       <div class="link-descr"><%= t('view_student_report') %></div>
     </div>
 

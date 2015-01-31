@@ -22,7 +22,7 @@
   <h1><%= t('exams_text') %></h1>
   <h3><%= t('grading_levels_text') %></h3>
   <div id="app-back-button">
-    <%= link_to_function image_tag("buttons/back.png",:border => 0), "history.back()" %>
+    <%= link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()" %>
   </div>
 </div>
 <div id="inner-tab-menu">
@@ -47,13 +47,10 @@
       <div class="text-input-bg">
         <%= select :batch, :id,
           @batches.map {|b| [b.full_name, b.id] },
-          {:prompt => "#{t('common')}"},
-          {:onchange => "#{remote_function(
-          :url => { :action => 'show', id: "value" },
-          :with => "'batch_id='+value",
-          :before => "Element.show('loader')",
-          :success => "Element.hide('loader')"  )}"} %>
-      </div></div>
+          { prompt: t('common')},
+          { onchange:"redirectTo(this, '#{url_for(action: :show, batch_id: 'paramid')}')" } %>
+      </div>
+    </div>
 
 
     <div id="grading-levels" ><%= render :partial => "grading_levels" %></div>
