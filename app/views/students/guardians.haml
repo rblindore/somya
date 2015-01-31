@@ -17,11 +17,11 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = image_tag("  student_details/student_details_logo.jpg")
+  = image_tag("student_details/student_details_logo.jpg")
   %h1= t('parent_info')
   %h3= t('parents_profile')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('student_profile')}", :controller => 'student', :action => 'profile', :id => @student.id

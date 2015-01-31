@@ -21,7 +21,7 @@
   %h1= t('timetable_text')
   %h3= t('swap_class')
   #app-back-button
-    = link_to image_tag("buttons/back.png",:border => 0), 'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   .box
     - form_remote_for :extra_class do |f|

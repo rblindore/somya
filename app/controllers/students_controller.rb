@@ -19,9 +19,9 @@
 class StudentsController < ApplicationController
   filter_access_to :all
   before_filter :login_required
-  before_filter :protect_other_student_data, :except =>[:show]
+  before_filter :protect_other_student_data, except: [:show]
 
-  before_filter :find_student, :only => [
+  before_filter :find_student, only: [
     :academic_report, :academic_report_all, :admission3, :change_to_former,
     :delete, :edit, :add_guardian, :email, :remove, :reports, :profile,
     :guardians, :academic_pdf,:show_previous_details,:fees,:fee_details

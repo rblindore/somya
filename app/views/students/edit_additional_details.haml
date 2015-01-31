@@ -17,11 +17,11 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = image_tag("  admission/admission_page_logo.jpg")
+  = image_tag("admission/admission_page_logo.jpg")
   %h1= t('student_settings')
   %h3= t('edit_additional_details')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

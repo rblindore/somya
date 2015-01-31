@@ -21,7 +21,7 @@
   %h1= t('rejected_payslip')
   %h3= t('department_wise_payslip')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   .bread_crumb
     = link_to t('hr'), :controller => "employee", :action=>"hr"

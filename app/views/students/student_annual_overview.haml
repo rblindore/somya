@@ -17,10 +17,10 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = image_tag("  admission/admission_page_logo.jpg")
+  = image_tag("admission/admission_page_logo.jpg")
   %h1= t('student_info')
   %h3= t('previous_year_result')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 %script{:src => "/javascripts/swfobject.js", :type => "text/javascript"}
 = @graph

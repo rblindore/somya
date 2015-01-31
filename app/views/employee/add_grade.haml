@@ -21,13 +21,13 @@
   %h1= "#{t('employee_settings')}"
   %h3= "#{t('add_grade')}"
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   .box
     .bread_crumb
-      = link_to "#{t('hr_text')}", :controller => "employee",:action => "hr"
+      = link_to t('hr_text'), controller: :employee, action: :hr
       »
-      \#{link_to "#{t('hr_setting')}", :controller => "employee",:action => "settings"} »
+      \#{link_to t('hr_setting'), controller: :employee, action: :settings} »
       \#{t('add_grade')}
     - unless flash[:warn_notice].nil?
       #errorExplanation1

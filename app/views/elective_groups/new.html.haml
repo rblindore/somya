@@ -21,7 +21,7 @@
   %h1= t('batches_text')
   %h3= "#{t('new_elective')}"
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to t('new_text'), new_batch_elective_group_path(@batch)

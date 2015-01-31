@@ -17,11 +17,11 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = image_tag("  show_finance.png")
+  = image_tag("show_finance.png")
   %h1= t('asset_liability_management')
   %h3= t('liability')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   #flash_box
   - unless flash[:notice].nil?

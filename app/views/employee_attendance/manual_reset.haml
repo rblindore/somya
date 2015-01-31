@@ -21,7 +21,7 @@
   %h1= t('manual_leave_reset')
   %h3= t('reset_employee_leave_manually')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   .bread_crumb
     = link_to t('hr'), :controller => "employee", :action=>"hr"

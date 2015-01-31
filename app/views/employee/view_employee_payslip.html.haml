@@ -21,7 +21,7 @@
   %h1= t('employee_text')
   %h3= t('employee_payslip')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   %ul.item-list
     %li.heading= @monthly_payslips.first.active_or_archived_employee.full_name

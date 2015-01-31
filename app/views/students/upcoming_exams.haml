@@ -17,13 +17,13 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = image_tag("  admission/admission_page_logo.jpg")
+  = image_tag("admission/admission_page_logo.jpg")
   %h1
     = t('class')
     \: #{@course.name}
   %h3= t('upcoming_exams')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - @upcoming_exams.each do |exam|
     %li

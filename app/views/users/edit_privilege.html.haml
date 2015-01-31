@@ -55,7 +55,7 @@
   %h1= t('user_privilege')
   %h3= t('edit_privilege_text')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0)', onclick: "history.back()"
+    = back_button
 #page-yield
   .privileges
     = form_for :user do |form|

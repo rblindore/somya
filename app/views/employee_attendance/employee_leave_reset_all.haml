@@ -21,7 +21,7 @@
   %h1= t('full_leave_reset')
   %h3= t('reset_leave_count_for_all')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   #box
     - unless flash[:notice].nil?

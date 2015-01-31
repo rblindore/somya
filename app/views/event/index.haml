@@ -21,7 +21,7 @@
   %h1= t('event_text')
   %h3= t('event_creation')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()"
+    = back_button
 #page-yield
   = flash[:notice]
   = form_for :events do |f|

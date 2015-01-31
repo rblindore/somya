@@ -21,7 +21,7 @@
   %h1= t('admission')
   %h3= t('student_detail_step1')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   - if @config.config_value == '0'
     - if @last_admitted_student.nil?

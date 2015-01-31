@@ -23,7 +23,7 @@
   %h3
     = t('view_details')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

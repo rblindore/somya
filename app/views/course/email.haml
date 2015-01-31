@@ -23,7 +23,7 @@
     \: #{@course.name}
   %h3= t('send_email')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   = form_for :email do |f|
     .label-field-pair

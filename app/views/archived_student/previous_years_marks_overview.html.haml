@@ -21,7 +21,7 @@
   %h1= t('student_text')
   %h3= t('previous_marks_overview')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   %h4= @student.full_name
   .box

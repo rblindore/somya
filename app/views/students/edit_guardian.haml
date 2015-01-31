@@ -21,7 +21,7 @@
   %h1= t('parent_information')
   %h3= t('edit_parent_guardian_details')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

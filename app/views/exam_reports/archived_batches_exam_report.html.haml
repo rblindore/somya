@@ -21,7 +21,7 @@
   %h1= t('archived_exams')
   %h3= t('grouped_exam_reports')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
 #page-yield
   - unless flash[:notice].nil?

@@ -21,7 +21,7 @@
   %h1= t('exams_text')
   %h3= t('transcript_of_academic_record')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('pdf_report')}", {:controller => "exam", :action => "student_transcript_pdf", :student_id=>@student.id},:target => '_blank'

@@ -21,7 +21,7 @@
   %h1= t('attendance_report')
   %h3= t('report')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     / <li><haml_loud> link_to t(&#39;advanced&#39;), :controller=&gt;&quot;student_attendance&quot;, :action=&gt;&quot;advance_search&quot; </haml_loud></li>

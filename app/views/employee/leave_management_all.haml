@@ -21,7 +21,7 @@
   %h1= t('leave_management')
   %h3= t('all_employee')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   = select :leave_management_all, :department_id, @departments.map { |s| [s.name, s.id] }, |
     {:prompt => "#{t('select_department')}"},                                              |

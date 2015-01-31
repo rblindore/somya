@@ -21,7 +21,7 @@
   %h1= t('attendance')
   %h3= t('student_report')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   #box
     = form_for :advance_search, remote: true do |f|

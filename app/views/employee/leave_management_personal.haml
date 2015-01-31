@@ -21,7 +21,7 @@
   %h1= t('personal_leave_management')
   %h3= @employee.first_name
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   .link-box
     .link-heading= link_to "#{t('apply')}", :controller=>"employee_attendance", :action=>"apply_leave", :id=> @employee.id

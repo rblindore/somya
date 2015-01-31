@@ -21,8 +21,7 @@
   = image_tag("show_timetable.png")
   %h1= t('timetable_text')
   %h3= t('edit_timetable')
-  #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), 'javascript: void(0)', onclick: "history.back()"
+  #app-back-button= back_button
 #inner-tab-menu
   %ul
     - unless @current

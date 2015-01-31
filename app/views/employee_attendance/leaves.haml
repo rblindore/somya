@@ -21,7 +21,7 @@
   %h1= t('leave_management')
   %h3= t('apply_or_check_status')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to t('apply'), :controller=>"employee_attendance", :action=>"leaves", :id=> @employee.id

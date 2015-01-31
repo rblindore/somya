@@ -21,7 +21,7 @@
   %h1= t('employee_attendance_text')
   %h3= t('detailed_report')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('leave_history')}", :action => 'leave_history', :id=>@employee.id

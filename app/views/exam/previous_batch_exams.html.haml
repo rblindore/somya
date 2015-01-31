@@ -21,7 +21,7 @@
   %h1= t('exams_text')
   %h3= t('previous_batch_exam')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

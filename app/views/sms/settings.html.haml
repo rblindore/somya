@@ -21,7 +21,7 @@
   %h1= t('sms_text')
   %h3= t('settings')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0)', onclick: "history.back()"
+    = back_button
 #page-yield
   = form_for :sms_settings do |s|
     #list

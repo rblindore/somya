@@ -21,7 +21,7 @@
   %h1= t('manage_attendance')
   %h3= t('leave_attendance')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

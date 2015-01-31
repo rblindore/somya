@@ -21,7 +21,7 @@
   %h1= t('donations')
   %h3= t('add_new_donation')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('donors')}", :action => "donors"

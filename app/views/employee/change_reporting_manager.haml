@@ -21,7 +21,7 @@
   %h1= t('reporting_manager')
   %h3= t('change')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()"
+    = back_button
 :javascript
   function update_reporting_manager(id) {
     $('employee_reporting_manager_id').value = id;
@@ -78,7 +78,7 @@
       :update=>"information"
       )}"}
       }
-      
+
       document.observe("dom:loaded", function() {
         new Form.Element.Observer('query', 1, search_ajax);
         new Form.Element.Observer('employee_department_id', 0.1, search_ajax);

@@ -19,11 +19,11 @@
 - content_for :head do
   = stylesheet_link_tag("observation_groups/show.css")
 #content-header
-  = image_tag("  examination/show_exam.png")
+  = image_tag("examination/show_exam.png")
   %h1 Formative Assessment
   %h3 Assessment Criterias
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to_remote "#{t('new_text')}", :url => { :action => 'new_fa_criteria', :fa_group_id => @fa_group.id }

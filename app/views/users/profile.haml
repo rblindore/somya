@@ -21,7 +21,7 @@
   %h1= t('user_profile')
   %h3= t('user_information')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()"
+    = back_button
 - if @current_user.id == @user.id
   #inner-tab-menu
     %ul

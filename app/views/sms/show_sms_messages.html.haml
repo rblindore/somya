@@ -17,11 +17,11 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = image_tag("  sms/sms_icon.png")
+  = image_tag("sms/sms_icon.png")
   %h1= t('sms_text')
   %h3= t('messages')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   .box
     %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}

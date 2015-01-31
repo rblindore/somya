@@ -21,7 +21,7 @@
   %h1= t('exams_text')
   %h3= t('generated_report')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('pdf_report')}", {:controller => "exam", :action => "generated_report2_pdf", :subject_id=> @subject.id,:page_height=>760},:target => '_blank'

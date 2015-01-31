@@ -23,10 +23,10 @@
     = t('edit_text')
     \- #{@batch.full_name}
   #app-back-button
-    = link_to image_tag("buttons/back.png",:border => 0), 'javascript: void(0);', onclick: "history.back()"
+    = back_button
 :javascript
   var selected_divs = new Array();
-  
+
   function update_selected_divs(id) {
     var exists_in_list = 0;
     for (x in selected_divs)
@@ -40,11 +40,11 @@
       selected_divs.push(id);
     }
   }
-  
+
   function clear_selected_divs() {
     selected_divs = [];
   }
-  
+
   function make_ajax_calls(tte_id, emp_sub_id){
       if (selected_divs.length == 0) {
           #{remote_function(:update => "timetable",

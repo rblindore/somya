@@ -21,7 +21,7 @@
   %h1= t('select_reporting_manager')
   %h3= t('step_5')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 :javascript
   function update_reporting_manager(id) { $('employee_reporting_manager_id').value = id; }
 #page-yield

@@ -21,7 +21,7 @@
   %h1= t('fees_submission')
   %h3= t('student_fees_submission')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()"
+    = back_button
 #page-yield
   #batchs1
     = form_for :fees_submission_batch do

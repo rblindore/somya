@@ -21,7 +21,7 @@
   %h1= t('exams_text')
   %h3= t('exam_groups_text')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     - if @current_user.admin? or @user_privileges.map{|p| p.name}.include?('ExaminationControl') or @user_privileges.map{|p| p.name}.include?('EnterResults')

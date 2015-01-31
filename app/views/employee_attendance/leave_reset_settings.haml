@@ -21,7 +21,7 @@
   %h1= t('reset_leave')
   %h3= t('leave_reset_settings')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', "history.back()"
+    = back_button
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

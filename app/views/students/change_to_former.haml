@@ -21,7 +21,7 @@
   %h1= t('students')
   %h3= t('leaving_school')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   #student-details
     %h3= @student.full_name

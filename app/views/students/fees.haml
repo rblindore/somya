@@ -21,7 +21,7 @@
   %h1= t('student_text')
   %h3= t('fee_status')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0)', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('student_profile')}", :controller => 'student', :action => 'profile', :id => @student.id

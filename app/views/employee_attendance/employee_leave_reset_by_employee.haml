@@ -21,7 +21,7 @@
   %h1= t('reset_employee_leaves')
   %h3= t('reset_employee_leave_for_each_emp')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('view_all')}", :controller=>"employee_attendance", :action=>"employee_view_all"
@@ -61,7 +61,7 @@
     :update=>"information"
     )}"}
       }
-    
+
       document.observe("dom:loaded", function() {
         new Form.Element.Observer('query', 1, employee_search_ajax);
         new Form.Element.Observer('employee_department_id', 0.1, employee_search_ajax);

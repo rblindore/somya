@@ -21,7 +21,7 @@
   %h1= t('timetable_text')
   %h3= t('teacher_timetable')
   #app-back-button
-    = link_to image_tag("buttons/back.png",:border => 0), 'javascipt: void(0)', "history.back()"
+    = back_button
 #page-yield
   = form_for :timetable_entry do |s|
     .label-field-pair

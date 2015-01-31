@@ -21,7 +21,7 @@
   %h1= t('exams_text')
   %h3= t('create_exam')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     - if permitted_to? :previous_batch_exams, :exam

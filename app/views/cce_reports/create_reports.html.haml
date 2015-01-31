@@ -21,7 +21,7 @@
   %h1 CCE Reports
   %h3 Generate CCE Report
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "View Scheduled Jobs", scheduled_task_path(:job_object=>"Batch", :job_type=>"3")

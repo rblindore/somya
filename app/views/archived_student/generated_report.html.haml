@@ -21,7 +21,7 @@
   %h1= t('exams_text')
   %h3= t('generated_report')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to " ► #{t('pdf_report')}",                                                                                                   |

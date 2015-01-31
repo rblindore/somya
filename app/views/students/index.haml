@@ -23,7 +23,7 @@
   %h1= t('student_details')
   %h3= t('view_details')
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to t('view_all'), :controller=>"students", :action=>"view_all"
@@ -61,7 +61,7 @@
     :update=>"information"
     )}"}
       }
-    
+
       document.observe("dom:loaded", function() {
         new Form.Element.Observer('query', 1, search_ajax);
         new Form.Element.Observer('option', 0.5, search_ajax);

@@ -22,7 +22,7 @@
   %h3
     = t('attendance' ) + ' '  + t('home')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onlclick: "history.back()"
+    = back_button, border: 0)
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

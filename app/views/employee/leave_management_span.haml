@@ -21,7 +21,7 @@
   %h1= t('span_leave_management')
   %h3= t('my_span')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - unless @reporting_employees == []
     #new-application-links

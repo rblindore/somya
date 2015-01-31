@@ -3,7 +3,7 @@
   %h1= t('courses_text')
   %h3= t('edit_subject_amount')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to t('courses_text'), courses_path

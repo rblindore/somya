@@ -21,7 +21,7 @@
   %h1= t('students')
   %h3= t('remove_student')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0),'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   - unless flash[:warn_notice].nil?
     #errorExplanation.errorExplanation
@@ -55,11 +55,11 @@
     <div class="extender"> </div>
     <haml_loud> image_submit_tag &#39;buttons/remove.png&#39; </haml_loud>
     </haml_block></div>
-    
+
     <div id="delete-student">
     <h4>Delete student</h4>
     <p>Completely delete student's records from the school's databases. Use this option only if you created the student record by accident and want to remove it completely.</p>
-    
+
     <p class="warning">(Warning: All records will be deleted for the student and cannot be recovered.)</p>
     <haml_loud> link_to image_tag(&#39;buttons/delete.png&#39;, :border =&gt; 0),
     { :action =&gt; &#39;destroy&#39;, :id =&gt; @student.id }, :confirm =&gt; t(&#39;are_you_completely_sure&#39;) </haml_loud>

@@ -23,7 +23,7 @@
     = t('configuration_text')
     = t('home')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

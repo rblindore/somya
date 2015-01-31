@@ -21,7 +21,7 @@
   %h1= t('messages')
   %h3= t('sent')
   #app-back-button
-    = link_to image_tag("buttons/back.png",:border => 0), 'javascript: void(0);', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     - unless @new_reminder_count.size == 0

@@ -21,7 +21,7 @@
   %h1= t('employee_settings')
   %h3= "#{t('edit_department')}"
   #app-back-button
-    = link_to_function image_tag("buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #page-yield
   - form_for :department do |c|
     - unless flash[:notice].nil?

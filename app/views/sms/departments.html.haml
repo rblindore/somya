@@ -21,7 +21,7 @@
   %h1= t('sms_text')
   %h3= t('departments')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()"
+    = back_button
 #page-yield
   .box
     = form_for :send_sms, remote: true, before: "Element.show('loader')", success: "Element.hide('loader')" do |sms|

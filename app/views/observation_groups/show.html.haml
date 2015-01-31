@@ -17,11 +17,11 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = image_tag("  examination/show_exam.png")
+  = image_tag("examination/show_exam.png")
   %h1 Co Scholastic Group
   %h3 Co Scholastic Criterias
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to_remote "#{t('new_text')}", :url => { :action => 'new_observation', :id => @obs_group.id }

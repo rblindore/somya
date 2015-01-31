@@ -171,4 +171,9 @@ module ApplicationHelper
     string
   end
 
+  # This method generate back button.
+  def back_button
+    link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()"
+  end
+
 end

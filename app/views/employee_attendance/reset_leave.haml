@@ -21,7 +21,7 @@
   %h1= t('automatic_reset')
   %h3= t('configure_auto_leave_reset')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('manual_reset')}", :action=>"manual_reset"

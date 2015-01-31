@@ -22,7 +22,7 @@
   %h1= t('exams_text')
   %h3= t('student_ranking_per_batch')
   #app-back-button
-    = link_to_function image_tag("  buttons/back.png",:border => 0), "history.back()"
+    = back_button
 #inner-tab-menu
   %ul
     %li= link_to "#{t('pdf_report')}", {:controller => "exam", :action => "student_batch_rank_pdf", :batch_id=>@batch.id},:target => '_blank'

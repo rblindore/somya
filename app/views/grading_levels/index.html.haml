@@ -21,7 +21,7 @@
   %h1= t('exams_text')
   %h3= t('grading_levels_text')
   #app-back-button
-    = link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()"
+    = back_button
 #inner-tab-menu
   - if permitted_to? :index, :course
     %ul
