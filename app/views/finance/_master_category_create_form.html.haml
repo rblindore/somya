@@ -20,13 +20,13 @@
   = t('create_master_category_for_fees')
   %span
 #grading-levels-form
-  - form_remote_for @finance_fee_category, :url=>{:action=>'master_category_create'} do |f|
+  = form_for @finance_fee_category, url: {:action=>'master_category_create'}, remote: true do |f|
     #form-errors
     .label-field-pair
-      .label-container= f.label "#{t('name')}"
+      .label-container= f.label t('name')
       .input-container= f.text_field :name
     .label-field-pair
-      .label-container= f.label "#{t('description')}"
+      .label-container= f.label t('description')
       .input-container= f.text_field :description
     .label-field-pair
       .label-container
@@ -36,10 +36,10 @@
       .batches
         .sel-list
           = t('select')
-          \: #{link_to_function t('all'), "$('input.MB_focusable').each(function(checkbox) { checkbox.checked = true; });"},
-          \#{link_to_function t('none'), "$('input.MB_focusable').each(function(checkbox) { checkbox.checked = false; });"}
+          = select_all
+          = select_none
         - @batches.each do |f|
           .each_batch
             = check_box_tag "finance_fee_category[batch_id][]", f.id
             %label= f.full_name
-    = submit_tag "► #{t('save')}",:class=>'submit_button'
+    = submit_tag "► #{t('save')}", class: :submit_button

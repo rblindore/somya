@@ -19,16 +19,16 @@
 #list
   .sel-list
     = t('select')
-    \: #{link_to_function "#{t('all')}", "$('input.right').each(function(checkbox) { checkbox.checked = true; });"},
-    \#{link_to_function "#{t('none')}", "$('input.right').each(function(checkbox) { checkbox.checked = false; });"}
+    = select_all
+    = select_none
   - @employees.each do |employee|
-    %div{:class => "name_list#{cycle('odd', 'even')}"}
+    %div{ class: "name_list#{cycle('odd', 'even')}"}
       %li
         %label
-          = check_box_tag "send_sms[employee_ids][]", employee.id, false,:class=>'right'
+          = check_box_tag "send_sms[employee_ids][]", employee.id, false, class: :right
           .att_list_names= employee.full_name
 .label-field-pair
   .text-input-bg
-    = text_area :send_sms,:message, :rows=>5,:cols=>30
+    = text_area :send_sms, :message, rows: 5, cols: 30
     %br/
-= submit_tag "#{t('send_sms')}",:class=>'submit_button'
+= submit_tag "#{t('send_sms')}", class: :submit_button

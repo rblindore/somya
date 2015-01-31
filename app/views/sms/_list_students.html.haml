@@ -19,8 +19,8 @@
 #list
   .sel-list
     = t('select')
-    \: #{link_to_function "#{t('all')}", "$('input.right').each(function(checkbox) { checkbox.checked = true; });"},
-    \#{link_to_function "#{t('none')}", "$('input.right').each(function(checkbox) { checkbox.checked = false; });"}
+    = select_all
+    = select_none
   - @students.each do |student|
     %div{:class => "name_list#{cycle('odd', 'even')}"}
       %li

@@ -59,8 +59,8 @@
             .fee_category_scroll
               .sel-list
                 = t('select')
-                \: #{link_to_function t('all'), "$('input.check#{i}').each(function(checkbox) { checkbox.checked = true; });"},
-                \#{link_to_function t('none'), "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });"}
+                = select_all
+                = select_none
               - additional.student_additional_field_options.each do |k|
                 .each_batch
                   = check_box_tag "student_additional_details[#{additional.id}][additional_info][]", k.field_option,(!(input_val.nil?) and input_val.include?(k.field_option)), :class=>"batches_box check#{i}"

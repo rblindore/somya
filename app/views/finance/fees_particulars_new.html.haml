@@ -41,9 +41,8 @@
               = t('select_a_category')
               \:
               %b.sel-list
-                = link_to_function t('all'), "$('input.category_select').each(function(checkbox) { checkbox.checked = true; });"
-                ,
-                \#{link_to_function t('none'), "$('input.category_select').each(function(checkbox) { checkbox.checked = false; });"}
+                = select_all
+                = select_none
           .categories
             - @fees_categories.each do |c|
               .each_category

@@ -24,8 +24,8 @@
   .fee_category_scroll
     .sel-list
       = t('select')
-      \: #{link_to_function t('all'), "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });"},
-      \#{link_to_function t('none'), "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });"}
+      = select_all
+      = select_none
     - @class_designations.each do |d|
       .each_batch
         = check_box_tag "combined_report[designation_ids][]", d.id,false,:class=>'batches_box'
@@ -38,8 +38,8 @@
   .fee_category_scroll
     .sel-list
       = t('select')
-      \: #{link_to_function t('all'), "$('input.batches_box1').each(function(checkbox) { checkbox.checked = true; });"},
-      \#{link_to_function t('none'), "$('input.batches_box1').each(function(checkbox) { checkbox.checked = false; });"}
+      = select_all
+      = select_none
     - @ranking_levels.each do |r|
       .each_batch
         = check_box_tag "combined_report[level_ids][]", r.id,false,:class=>'batches_box1'

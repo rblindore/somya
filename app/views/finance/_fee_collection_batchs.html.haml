@@ -22,9 +22,8 @@
         \:
     .fee_category_scroll
       .sel-list
-        = link_to_function t('all'), "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });"
-        ,
-        \#{link_to_function t('none'), "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });"}
+        = select_all
+        = select_none
       - @fee_category.each do |f|
         .each_batch
           - checked = true
