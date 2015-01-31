@@ -64,3 +64,11 @@ function redirectTo(obj, url){
 function toggleEffect(eId){
   jQuery('#' + eId).toggle();
 }
+
+function selectAll(class_name){
+  jQuery('div.' + class_name + ' > input').prop('checked', true)
+}
+
+function selectNone(class_name){
+  jQuery('div.' + class_name + ' > input').prop('checked', false)
+}

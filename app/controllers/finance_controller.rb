@@ -22,6 +22,7 @@ class FinanceController < ApplicationController
 
   def index
     @hr = Settings.find_by_config_value("HR")
+    render layout: 'application'
   end
 
   def automatic_transactions
@@ -31,28 +32,32 @@ class FinanceController < ApplicationController
     end
     @triggers = FinanceTransactionTrigger.all
     @categories = FinanceTransactionCategory.find(:all ,:conditions => ["name NOT IN (#{@cat_names.join(',')}) and is_income=1 and deleted=0 "])
+    render layout: 'application'
   end
 
   def donation
     @donation = FinanceDonation.new(params[:donation])
     if request.post? and @donation.save
-      flash[:notice] = "#{t('flash1')}"
-      redirect_to :action => 'donation_receipt', :id => @donation.id
+      redirect_to url_for(action: :donation_receipt, id: @donation.id), notice: t('finance.flash1')
+    else
+      render layout: 'application'
     end
   end
 
   def donation_receipt
     @donation = FinanceDonation.find(params[:id])
+    render layout: 'application'
   end
 
   def donation_edit
     @donation = FinanceDonation.find(params[:id])
     @transaction = FinanceTransaction.find(@donation.transaction_id)
     if request.post? and @donation.update_attributes(params[:donation])
-      donor = "#{t('flash15')} #{params[:donation][:donor]}"
-      FinanceTransaction.update(@transaction.id, :description => params[:donation][:description], :title=>donor, :amount=>params[:donation][:amount], :transaction_date=>@donation.transaction_date)
-      redirect_to :action => 'donors'
-      flash[:notice] = "#{t('flash16')}"
+      donor = "#{t('finance.flash15')} #{params[:donation][:donor]}"
+      FinanceTransaction.update(@transaction.id, description: params[:donation][:description], title: donor, amount: params[:donation][:amount], transaction_date: @donation.transaction_date)
+      redirect_to url_for(action: :donors), notice: t('finance.flash16')
+    else
+      render layout: 'application'
     end
   end
 
@@ -61,35 +66,33 @@ class FinanceController < ApplicationController
     @transaction = FinanceTransaction.find(@donation.transaction_id)
     if  @donation.destroy
       @transaction.destroy
-      redirect_to :action => 'donors'
-      flash[:notice] = "#{t('flash25')}"
+      redirect_to url_for(action: :donors), notice: t('finance.flash25')
     end
   end
 
   def donation_receipt_pdf
     @donation = FinanceDonation.find(params[:id])
     @currency_type = Settings.find_by_config_key("CurrencyType").config_value
-    render :pdf => 'donation_receipt_pdf'
-
+    render pdf: :donation_receipt_pdf
   end
 
   def donors
-    @donations = FinanceDonation.find(:all, :order => 'transaction_date desc')
+    @donations = FinanceDonation.order('transaction_date desc')
+    render layout: 'application'
   end
 
   def expense_create
     @finance_transaction = FinanceTransaction.new
     @categories = FinanceTransactionCategory.expense_categories
     if @categories.empty?
-      flash[:notice] = "#{t('flash2')}"
+      flash[:notice] = t('finance.flash2')
     end
     if request.post?
       @finance_transaction = FinanceTransaction.new(params[:finance_transaction])
       if @finance_transaction.save
-        flash[:notice] = "#{t('flash3')}"
-        redirect_to :action=>"expense_create"
+        redirect_to url_for(action: :expense_create), notice: t('finance.flash3')
       else
-        render :action=>"expense_create"
+        render action: :expense_create, layout: 'application'
       end
     end
   end
@@ -98,22 +101,24 @@ class FinanceController < ApplicationController
     @transaction = FinanceTransaction.find(params[:id])
     @categories = FinanceTransactionCategory.all(:conditions =>"name != 'Salary' and is_income = false" )
     if request.post? and @transaction.update_attributes(params[:transaction])
-      flash[:notice] = "#{t('flash4')}"
-      redirect_to  :action=>:expense_list
+      redirect_to url_for(action: :expense_list), notice: t('finance.flash4')
+    else
+      render layout: 'application'
     end
   end
 
   def expense_list
+    render layout: 'application'
   end
 
   def expense_list_update
     if params[:start_date].to_date > params[:end_date].to_date
-      flash[:warn_notice] = "#{t('flash17')}"
-      redirect_to :action => 'expense_list'
+      redirect_to url_for(action: :expense_list), warn_notice: t('finance.flash17')
     end
     @start_date = (params[:start_date]).to_date
     @end_date = (params[:end_date]).to_date
     @expenses = FinanceTransaction.expenses(@start_date,@end_date)
+    render layout: 'application'
   end
 
   def expense_list_pdf
@@ -175,8 +180,6 @@ class FinanceController < ApplicationController
     else
       redirect_to :action=>'expense_list'
     end
-
-
   end
 
   def income_list_update
@@ -685,8 +688,9 @@ class FinanceController < ApplicationController
     @finance_fee_category = FinanceFeeCategory.new
     @finance_fee_particular = FinanceFeeParticular.new
     @batchs = Batch.active
-    @master_categories = FinanceFeeCategory.find(:all,:conditions=> ["is_deleted = '#{false}' and is_master = 1 and batch_id=?",params[:batch_id]]) unless params[:batch_id].blank?
+    @master_categories = FinanceFeeCategory.where(is_deleted: false, is_master: 1, batch_id: params[:batch_id]) unless params[:batch_id].blank?
     @student_categories = StudentCategory.active
+    render layout: 'application'
   end
 
   def master_category_new
@@ -714,13 +718,13 @@ class FinanceController < ApplicationController
           end
         end
       else
-        @finance_fee_category = FinanceFeeCategory.new(params[:finance_fee_category])
+        @finance_fee_category = FinanceFeeCategory.new(finance_fee_category)
         @finance_fee_category.valid?
         @error = true
       end
-      @master_categories = FinanceFeeCategory.find(:all,:conditions=> ["is_deleted = '#{false}' and is_master = 1"])
+      @master_categories = FinanceFeeCategory.where(is_deleted: false, is_master: 1)
       respond_to do |format|
-        format.js { render :action => 'master_category_create' }
+        format.js { render action: :master_category_create }
       end
     end
   end
@@ -803,18 +807,14 @@ class FinanceController < ApplicationController
     unless params[:id].nil?
       @finance_fee_category = FinanceFeeCategory.new
       @finance_fee_particular = FinanceFeeParticular.new
-      @batches = Batch.find params[:id] unless params[:id] == ""
-      @master_categories = FinanceFeeCategory.find(:all,:conditions=> ["is_deleted = '#{false}' and is_master = 1 and batch_id=?",params[:id]])
+      @batches = Batch.find(params[:id]) unless params[:id].blank?
+      @master_categories = FinanceFeeCategory.where(is_deleted: false, is_master: 1, batch_id: params[:id])
       @student_categories = StudentCategory.active
-
-      render :update do |page|
-        page.replace_html 'categories', :partial => 'master_category_list'
-      end
     end
   end
 
   def fees_particulars_new
-    @fees_categories = FinanceFeeCategory.find(:all ,:conditions=> "is_deleted = 0 and is_master = 1", :order=>"name ASC")
+    @fees_categories = FinanceFeeCategory.where(is_deleted: 0, is_master: 1).order("name ASC")
     @fees_categories.reject!{|f|f.batch.is_deleted or !f.batch.is_active }
     @student_categories = StudentCategory.active
   end
@@ -2535,4 +2535,14 @@ class FinanceController < ApplicationController
     end
     @fixed_cat_ids = FinanceTransactionCategory.find(:all,:conditions=>{:name=>@cat_names}).collect(&:id)
   end
+
+  def fees_index
+    render layout: 'application'
+  end
+
+  private
+    def finance_fee_category
+      params.permit(:finance_fee_category).permit(:name, :description)
+    end
+
 end

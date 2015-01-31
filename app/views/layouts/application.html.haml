@@ -78,5 +78,4 @@
       #footer_logo
         #powered_by
           = t('powered_by')
-          %a{:href => "<haml_loud"}
-            "\#{FedenaSetting.company_details[:company_url]}"  target="_blank"&gt;#{FedenaSetting.company_details[:company_name]}
+          = link_to FedenaSetting.company_details[:company_name], FedenaSetting.company_details[:company_url], target: :blank

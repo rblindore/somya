@@ -27,31 +27,31 @@
 #nav
   %ul
     %li
-      %a#link_one.drops{:href => "#"}
+      %a#link_one.drops{ href: 'javascript:void(0);'}
         = t('profile_text')
         ▼
-      %ul#box_one.scriptaculously{:style => "display:none;"}
-        %li= link_to_remote "#{t('general')}", :url => {:action => "profile_general", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('personal')}", :url => {:action => "profile_personal", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('address')}", :url => {:action => "profile_address", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('contact')}", :url => {:action => "profile_contact", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('bank_info')}", :url => {:action => "profile_bank_details", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('additional_info')}", :url => {:action => "profile_additional_details", :id => @employee.id}, :update => "profile-infos"
+      %ul#box_one.scriptaculously{ style: "display:none;"}
+        %li= link_to t('general'), { action: :profile_general, id: @employee.id }, update: "profile-infos", remote: true
+        %li= link_to t('personal'), { action: :profile_personal, id: @employee.id }, update: "profile-infos", remote: true
+        %li= link_to t('address'), { action: :profile_address, id: @employee.id }, update: "profile-infos", remote: true
+        %li= link_to t('contact'), { action: :profile_contact, id: @employee.id}, update: "profile-infos", remote: true
+        %li= link_to t('bank_info'), { action: :profile_bank_details, id: @employee.id}, update: "profile-infos", remote: true
+        %li= link_to t('additional_info'), { action: :profile_additional_details, id: @employee.id}, update: "profile-infos", remote: true
     - if current_username == profile_employee_no
       %li
-        %a#link_two.drops{:href => "#"}
+        %a#link_two.drops{ href: 'javascript:void(0);'}
           = t('salary')
           ▼
-        %ul#box_two.scriptaculously{:style => "display:none;"}
-          %li= link_to_remote "#{t('payroll_text')}", :url => {:action => "profile_payroll_details", :id => @employee.id}, :update => "profile-infos"
+        %ul#box_two.scriptaculously{ style: "display:none;"}
+          %li= link_to t('payroll_text'), { action: :profile_payroll_details, id: @employee.id}, update: "profile-infos", remote: true
     - else
       - if permitted_to? :payslip, :employee
         %li
-          %a#link_two.drops{:href => "#"}
+          %a#link_two.drops{ href: 'javascript:void(0);'}
             = t('salary')
             ▼
-          %ul#box_two.scriptaculously{:style => "display:none;"}
-            %li= link_to_remote "#{t('payroll_text')}", :url => {:action => "profile_payroll_details", :id => @employee.id}, :update => "profile-infos"
+          %ul#box_two.scriptaculously{style: "display:none;"}
+            %li= link_to t('payroll_text'), { action: :profile_payroll_details, id: @employee.id}, update: "profile-infos", remote: true
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg
@@ -73,5 +73,5 @@
     #profile-general-info
     .extender
   #profile-infos
-    = render :partial => "general"
+    = render "general"
   .extender

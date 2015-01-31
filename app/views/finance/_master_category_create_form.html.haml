@@ -20,7 +20,7 @@
   = t('create_master_category_for_fees')
   %span
 #grading-levels-form
-  = form_for @finance_fee_category, url: {:action=>'master_category_create'}, remote: true do |f|
+  = form_for @finance_fee_category, url: { action: :master_category_create}, remote: true do |f|
     #form-errors
     .label-field-pair
       .label-container= f.label t('name')

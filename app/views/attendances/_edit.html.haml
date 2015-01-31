@@ -23,7 +23,7 @@
 #ajax-edit
   %br/
   - if @config.config_value == 'Daily'
-    - form_remote_for @absentee do |f|
+    = form_for @absentee, remote: true do |f|
       .label-field-pair
         %label{:for => "reason"}
           = t('reason')
@@ -37,20 +37,16 @@
           = f.check_box :afternoon
           = t('afternoon')
       .extender
-      = f.submit "► #{t('update')}", :class => 'submit-button'
-    #delete-button= link_to_remote("► #{t('delete_text')}",   |
-        :url => attendance_path(@absentee),       |
-        :method =>'delete',                       |
-        :confirm => "#{t('delete_confirm_msg')}") |
+      = f.submit "► #{t('update')}", class: 'submit-button'
+    #delete-button
+      = link_to "► #{t('delete_text')}", attendance_path(@absentee), method: :DELETE, confirm: t('delete_confirm_msg'), remote: true
   - else
-    - form_remote_for @absentee,:url=>{:controller=>"attendances",:action=>'update'} do |f|
+    = form_for @absentee, url: { controller: :attendances, action: :update}, remote: true do |f|
       .label-field-pair
-        %label{:for => "reason"}
+        %label{ for: :reason}
           = t('reason')
         .text-input-bg= f.text_field :reason
       .extender
-      = f.submit "► #{t('update')}", :class => 'submit-button'
-    #delete-button= link_to_remote("► #{t('delete_text')}",   |
-        :url => attendance_path(@absentee),       |
-        :method =>'delete',                       |
-        :confirm => "#{t('delete_confirm_msg')}") |
+      = f.submit "► #{t('update')}", class: 'submit-button'
+    #delete-button
+      = link_to "► #{t('delete_text')}", attendance_path(@absentee), method: :DELETE, confirm: t('delete_confirm_msg'), remote: true

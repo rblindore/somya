@@ -178,12 +178,12 @@ module ApplicationHelper
 
   # This method generate link for all select button
   def select_all
-    link_to t('all'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });"
+    link_to t('all'), 'javascript:void(0);', onclick: "selectAll('each_batch')"
   end
 
   # This method generate link for de-select all
   def select_none
-    link_to t('none'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });"
+    link_to t('none'), 'javascript:void(0);', onclick: "selectNone('each_batch')"
   end
 
 end

@@ -26,7 +26,7 @@
 #inner-tab-menu
   %ul
     %li
-      = link_to_remote "#{t('new_text')}", :url => { :action => 'new', :id => @descriptive.id }
+      = link_to t('new_text'), { action: :new, id: @descriptive.id }, remote: true
 #page-yield
   #flash-box
     - unless flash[:notice].nil?
@@ -53,5 +53,5 @@
     .description
       \:   #{@descriptive.desc}
   #assessment_tools
-    = render  :partial=>'assessment_tools'
-  #modal-box{:style => "display:none;"}
+    = render 'assessment_tools'
+  #modal-box{ style: "display:none;"}

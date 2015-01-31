@@ -17,7 +17,7 @@
 - #specific language governing permissions and limitations
 - #under the License.
 - unless @assessment_tools.empty?
-  %table{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+  %table{ align: "center", cellpadding: "1", cellspacing: "1", width: "100%"}
     %tr.tr-head
       %td= t("descriptive_indicators")
       %td= t("desc_text")
@@ -27,13 +27,13 @@
       %td
       %td
     - @assessment_tools.each do |g|
-      %tr{:class => "tr-#{cycle('odd', 'even')}"}
+      %tr{ class: "tr-#{cycle('odd', 'even')}"}
         %td.col-1
           = g.name
         %td.col-2
           = g.desc
         %td.col-3
           .category-edit
-            = link_to_remote "#{t("edit_text")}", :url => { :action => 'edit', :id => g.id },:method=>:get
+            = link_to t("edit_text"), { action: :edit, id: g.id }, remote: true
 - else
   = t('no_assessment_tools')
