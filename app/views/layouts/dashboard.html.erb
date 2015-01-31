@@ -30,9 +30,7 @@
     <% end %>
 
     <%# binding.pry %>
-    <% get_stylesheets.each do |s| %>
-      <%= stylesheet_link_tag s, media: 'all'%>
-    <% end %>
+    <%= stylesheet_link_tag(*get_stylesheets, media: :all) %>
     <%= javascript_include_tag :application, 'data-turbolinks-track' => true %>
 
     <%#= javascript_include_tag :defaults, cache: 'cache/javascripts/all' %>
