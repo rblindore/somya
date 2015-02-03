@@ -24,15 +24,16 @@
     = back_button
 #inner-tab-menu
   %ul
-    %li= link_to "#{t('master_fees')}", :action=>'master_fees'
+    %li= link_to t('master_fees'), action: :master_fees
 #page-yield
   #flash_box
-  - unless flash[:notice].nil?
+  - unless flash[:notice].blank?
     %p.flash-msg
       = flash[:notice]
   #grading-levels-form
-    = form_for  :finance_fee_particular,:url =>{:action => 'fees_particulars_create'}  do |f|
-      #form-errors= error_messages_for 'finance_fee_particular'
+    = form_for :finance_fee_particular, url: { action: :fees_particulars_create }  do |f|
+      #form-errors
+        = error_messages_for 'finance_fee_particular'
       #form-errors
       #right-side-inputs
         .label-field-pair.category_list
@@ -46,38 +47,33 @@
           .categories
             - @fees_categories.each do |c|
               .each_category
-                = check_box_tag "finance_fee_particular[finance_fee_category_ids][]", c.id, false, :class=>"category_select"
-                %label= "#{c.name} - #{c.batch.full_name}"
+                = check_box_tag "finance_fee_particular[finance_fee_category_ids][]", c.id, false, class: :category_select
+                %label
+                  = "#{c.name} - #{c.batch.full_name}"
       #left-side-inputs
         .label-field-pair
           .label-container
-            = f.label "#{t('name')}"
+            = f.label t('name')
           .input-container= f.text_field :name
         .label-field-pair
-          .label-container= f.label "#{t('description')}"
+          .label-container= f.label t('description')
           .input-container= f.text_field :description
         .label-field-pair2
           .label-container2
             %label= t('create_using')
           .input-container2
             .opt
-              = radio_button("particulars","select","all",                                                          |
-                {:checked=>true,:onchange => "#{remote_function(:url => {:action => "student_or_student_category"}, |
-                :with => "'select_value='+value")}"})                                                               |
+              = radio_button("particulars","select","all", { checked: true, onchange: "onChangeRequest(this, '#{url_for(action: :student_or_student_category, select_value: 'paramid')}')"})
               = t('all')
             .opt
-              = radio_button("particulars","select","student",                                       |
-                {:onchange => "#{remote_function(:url => {:action => "student_or_student_category"}, |
-                :with => "'select_value='+value")}"})                                                |
+              = radio_button("particulars","select","student", { onchange: "onChangeRequest(this, '#{url_for(action: :student_or_student_category, select_value: 'paramid')}')" })
               = t('admission_no')
             .opt
-              = radio_button("particulars","select","category",                                      |
-                {:onchange => "#{remote_function(:url => {:action => "student_or_student_category"}, |
-                :with => "'select_value='+value")}"})                                                |
+              = radio_button("particulars","select","category", { onchange: "onChangeRequest(this, '#{url_for(action: :student_or_student_category, select_value: 'paramid' )}')" })
               = t('student_category')
         #student
         .label-field-pair
-          .label-container= f.label "#{t('amount')}"
+          .label-container= f.label t('amount')
           .input-container
             = f.text_field :amount
-      = submit_tag "► #{t('create_text')}",:class=>'submit_button'
+      = submit_tag "► #{t('create_text')}", class: :submit_button

@@ -24,18 +24,18 @@
     = back_button
 #inner-tab-menu
   %ul
-    %li= link_to "#{t('view_discount')}", :action=>'fee_discounts'
+    %li= link_to t('view_discount'), action: :fee_discounts
 #page-yield
   #flash_box
-  - unless flash[:notice].nil?
+  - unless flash[:notice].blank?
     %p.flash-msg
       = flash[:notice]
   .bread_crumb
-    = link_to t('finance_text'), :controller => "finance", :action=>"index"
+    = link_to t('finance_text'), controller: :finance, action: :index
     »
-    \#{link_to "#{t('fees_text')}", :controller => "finance", :action => "fees_index"} »
-    \#{link_to "#{t('create_fees')}", :controller => "finance", :action => "fees_create"} »
-    \#{link_to "#{t('master_fees')}", :controller => "finance", :action => "master_fees"} »
+    \#{link_to t('fees_text'), controller: :finance, action: :fees_index} »
+    \#{link_to "#{t('create_fees'), controller: :finance, action: :fees_create} »
+    \#{link_to "#{t('master_fees'), controller: :finance, action: :master_fees} »
     \#{t('create_discount')}
   #form-errors
   #batch
@@ -44,7 +44,5 @@
         = t('select_discount_type')
         \:
       .text-input-bg
-        = select("id",:id,[["#{t('batch')}","batch_wise"],["#{t('student_category')}","category_wise"],["#{t('student_text')}","student_wise"]], |
-          {:prompt => "#{t('select_discount_type')}"},                                                                                           |
-          {:onChange => "#{remote_function(:url => {:action => "load_discount_create_form"}, :with => "'type='+value")}"})                       |
+        = select("id",:id,[[t('batch'),"batch_wise"],[t('student_category'),"category_wise"],[t('student_text'),"student_wise"]], { prompt: t('select_discount_type')}, { onChange: "onChangeRequest(this, '#{url_for(action: :load_discount_create_form, type: 'paramid')}')" })
   #form-box

@@ -24,19 +24,19 @@
     = back_button
 #inner-tab-menu
   %ul
-    %li= link_to "#{t('create_discount')}", :action=>'fee_discount_new'
+    %li= link_to t('create_discount'), action: :fee_discount_new
 #page-yield
   #flash_box
   #flash-notice
-  - unless flash[:notice].nil?
+  - unless flash[:notice].blank?
     %p.flash-msg
       = flash[:notice]
   .bread_crumb
-    = link_to t('finance_text'), :controller => "finance", :action=>"index"
+    = link_to t('finance_text'), controller: :finance, action: :index
     »
-    \#{link_to "#{t('fees_text')}", :controller => "finance", :action => "fees_index"} »
-    \#{link_to "#{t('create_fees')}", :controller => "finance", :action => "fees_create"} »
-    \#{link_to "#{t('master_fees')}", :controller => "finance", :action => "master_fees"} »
+    \#{link_to t('fees_text'), controller: :finance, action: :fees_index} »
+    \#{link_to t('create_fees'), controller: :finance, action: :fees_create} »
+    \#{link_to t('master_fees'), controller: :finance, action: :master_fees} »
     \#{t('fee_discounts')}
   #batch
     .label-field-pair
@@ -44,9 +44,7 @@
         = t('select_a_batch')
         \:
       .text-input-bg
-        = select("id",:id,@batches.map { |c| [c.full_name, c.id] },                                                            |
-          {:prompt => "#{t('select_a_batch')}"},                                                                               |
-          {:onChange => "#{remote_function(:url => {:action => "update_master_fee_category_list"}, :with => "'id='+value")}"}) |
+        = select("id", :id, @batches.map { |c| [c.full_name, c.id] }, { prompt: t('select_a_batch')}, { onChange: "onChangeRequest(this, '#{url_for(action: :update_master_fee_category_list, id: 'paramid')}')" })
   #master-category-box
   #discount-box
-  #modal-box{:style => "display:none;"}
+  #modal-box{style: "display:none;"}

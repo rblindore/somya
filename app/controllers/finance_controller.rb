@@ -697,7 +697,7 @@ class FinanceController < ApplicationController
     @finance_fee_category = FinanceFeeCategory.new
     @batches = Batch.active
     respond_to do |format|
-      format.js { render :action => 'master_category_new' }
+      format.js { render action: :master_category_new }
     end
   end
 
@@ -707,11 +707,7 @@ class FinanceController < ApplicationController
       unless @batches.nil?
         unless @batches.empty?
           @batches.each do |b|
-            @finance_fee_category = FinanceFeeCategory.new()
-            @finance_fee_category.name = params[:finance_fee_category][:name]
-            @finance_fee_category.description = params[:finance_fee_category][:description]
-            @finance_fee_category.batch_id = b
-            @finance_fee_category.is_master = true
+            @finance_fee_category = FinanceFeeCategory.new(finance_fee_category.merge(batch_id: b, is_master: true))
             unless @finance_fee_category.save
               @error = true
             end
@@ -722,7 +718,7 @@ class FinanceController < ApplicationController
         @finance_fee_category.valid?
         @error = true
       end
-      @master_categories = FinanceFeeCategory.where(is_deleted: false, is_master: 1)
+      @master_categories = FinanceFeeCategory.where(is_deleted: false, is_master: true)
       respond_to do |format|
         format.js { render action: :master_category_create }
       end
@@ -814,9 +810,9 @@ class FinanceController < ApplicationController
   end
 
   def fees_particulars_new
-    @fees_categories = FinanceFeeCategory.where(is_deleted: 0, is_master: 1).order("name ASC")
-    @fees_categories.reject!{|f|f.batch.is_deleted or !f.batch.is_active }
+    @fees_categories = FinanceFeeCategory.joins(:batch).where("#{FinanceFeeCategory.quoted_table_name}.is_deleted = ? AND #{FinanceFeeCategory.quoted_table_name}.is_master = ? AND #{Batch.quoted_table_name}.is_deleted = ? AND #{Batch.quoted_table_name}.is_active = ? ", false, true, false, true).order("#{FinanceFeeCategory.quoted_table_name}.name ASC")
     @student_categories = StudentCategory.active
+    render layout: 'application'
   end
 
   def fees_particulars_create
@@ -2343,10 +2339,12 @@ class FinanceController < ApplicationController
   #fee Discount
   def fee_discounts
     @batches = Batch.active
+    render layout: 'application'
   end
 
   def fee_discount_new
     @batches = Batch.active
+    render layout: 'application'
   end
 
   def load_discount_create_form
@@ -2464,20 +2462,20 @@ class FinanceController < ApplicationController
         end
       else
         @error = true
-        @fee_discount.errors.add_to_base("#{t('admission_cant_be_blank')}")
+        @fee_discount.errors.add(base: t('admission_cant_be_blank'))
       end
     else
       @error = true
-      @fee_discount.errors.add_to_base("#{t('fees_category_cant_blank')}")
+      @fee_discount.errors.add(:base, t('fees_category_cant_blank'))
     end
   end
 
 
   def update_master_fee_category_list
     @batch = Batch.find(params[:id])
-    @fee_categories = FinanceFeeCategory.find_all_by_batch_id(@batch.id, :conditions=>"is_master=1 and is_deleted= 0")
-    render :update do |page|
-      page.replace_html "master-category-box", :partial => "update_master_fee_category_list"
+    @fee_categories = FinanceFeeCategory.where(batch_id: @batch.id, is_master: true, is_deleted: false)
+    respond_to do |format|
+      format.js { render 'update_master_fee_category_list' }
     end
   end
 
@@ -2530,10 +2528,10 @@ class FinanceController < ApplicationController
     @cat_names = ['Fee','Salary','Donation']
     @plugin_cat = []
     FedenaPlugin::FINANCE_CATEGORY.each do |category|
-      @cat_names << "#{category[:category_name]}"
-      @plugin_cat << "#{category[:category_name]}"
+      @cat_names << category[:category_name]
+      @plugin_cat << category[:category_name]
     end
-    @fixed_cat_ids = FinanceTransactionCategory.find(:all,:conditions=>{:name=>@cat_names}).collect(&:id)
+    @fixed_cat_ids = FinanceTransactionCategory.where(name: @cat_names).pluck(:id)
   end
 
   def fees_index

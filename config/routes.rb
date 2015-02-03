@@ -476,8 +476,13 @@ Fedena::Application.routes.draw do
       get :fees_particulars_new
       get :fee_discounts
       post :master_category_create
+      get :student_or_student_category
+      post :fees_particulars_create
+      get :fee_discount_new
     end
     member do
+      get :update_master_fee_category_list
+      get :show_fee_discounts
       get :show_master_categories_list
     end
   end

@@ -44,7 +44,6 @@ gem 'declarative_authorization'
 gem 'ruby_parser'
 gem "iconv", "~> 1.0.3"
 gem 'test-unit', '1.2.3'
-gem 'rspec-rails'
 gem 'delayed_job'
 gem 'paperclip'
 gem 'thin'
@@ -53,10 +52,22 @@ gem 'will_paginate'
 gem 'delayed_job_active_record'
 gem 'jquery-ui-rails'
 gem 'ckeditor'
+gem 'factory_girl_rails'
 # The controller-level `respond_to' feature has been extracted to the `responders` gem. Add it to your Gemfile to continue using this feature
 gem 'responders', '~> 2.0'
 
 group :development do
   gem 'pry'
   gem 'spring'
+end
+
+group :test do
+  gem 'rspec-rails'
+  gem 'shoulda'
+  gem 'capybara'
+  gem 'database_cleaner'
+  gem 'capybara-webkit'
+
+  # build server runs tests in parallel
+  gem 'parallel_tests'
 end
