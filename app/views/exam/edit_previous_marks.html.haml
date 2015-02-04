@@ -1,0 +1,89 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+:javascript
+  function check_blanks()
+  {
+    var blank_marks = 0;
+    $('.marks-box').each(function(marks) {if(marks.value==""){blank_marks=1;} });
+    if(blank_marks==1)
+    {
+      if (!confirm('Students with no marks will be marked as absent. Do you want to continue?')) return false;
+      else return true;
+    }
+    else return true;
+  }
+#content-header
+  = image_tag("examination/show_exam.png")
+  %h1= t('exams_text')
+  %h3= t('result_entry')
+  #app-back-button
+    = back_button
+    back()" %&gt;
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  - unless flash[:warn_notice].nil?
+    #errorExplanation.errorExplanation
+      %p= flash[:warn_notice]
+  .bread_crumb
+    = link_to t('exams_text'), :controller => "exam", :action=>"index"
+    »
+    \#{link_to t('exam_management'), :controller => "exam", :action => "create_exam"} »
+    \#{link_to t('previous_batch_exam'), :controller => "exam", :action => "previous_batch_exams"} »
+    \#{@exam.subject.name}
+  .box
+    = form_for :exam_scores, :url => {:controller=>"exam", :action=>"update_previous_marks", :exam_id=>@exam.id} do |f|
+      %table#listing{:width => "100%"}
+        %tr.tr-head
+          %td= t('name')
+          - unless @exam_group.exam_type == 'Grades'
+            %td= t('marks')
+          - else
+            %td= t('grades')
+          %td
+            = t('remarks')
+            (#{t('absent_disqualified_etc')})
+          - unless @exam_group.exam_type == 'Marks'
+            %td= t('grade')
+          %td Retake
+        - @students.each do |student|
+          %tr{:class => "tr-#{cycle('odd', 'even')}"}
+            %td.col-2
+              = student.full_name
+            - @exam_score = @exam.score_for(student)
+            - unless @exam_group.exam_type == 'Grades'
+              %td.col-1
+                .label-field-pair
+                  .text-input-bg
+                    = text_field_tag "exam[#{student.id}][marks]", @exam_score.marks, :size => '4', :class=>"marks-box"
+            - else
+              %td.col-2
+                .label-field-pair
+                  .text-input-bg= select "exam[#{student.id}]", "grading_level_id", @grades.map {|g| [g.name, g.id] },               |
+                      { :prompt =>"#{t('select_grade')}", :selected => @exam_score.grading_level_id},:class=>"marks-box" |
+            %td.col-2
+              .label-field-pair2
+                .text-input-bg2
+                  = text_field_tag "exam[#{student.id}][remarks]", @exam_score.remarks, :size => '40'
+            - unless @exam_group.exam_type == 'Marks'
+              %td.col-1= @exam_score.grading_level
+            %td.col-1= check_box_tag "student_ids[]", student.id,false,{:class=>'right',:id=>"check#{student.id}"}
+      #sub-button= submit_tag "", :value => "► #{t('save')}", :class => "submit_button", :onClick => "if(check_blanks()==true) return true; else return false;"
+    .extender

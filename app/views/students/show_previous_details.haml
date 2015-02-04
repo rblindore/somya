@@ -1,0 +1,85 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("student_details/student_details_logo.jpg")
+  %h1= t('student_info')
+  %h3= t('previous_details')
+  #app-back-button
+    = back_button
+#inner-tab-menu
+  %ul
+    %li
+      = link_to "#{t('profile_text')}", :action=>:profile, :id=>@student.id
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  #student_profile_heading
+    #profile_picture_display
+      - if @student.photo.file?
+        = image_tag @student.photo.url
+      - else
+        = image_tag "master_student/profile/default_student.png"
+    #student_main_info
+      %h3
+        = @student.full_name
+      %h4
+        = t('course_and_batch')
+        \: #{@student.batch.course_name}
+      %h4
+        = t('adm_no')
+        \: #{@student.admission_no}
+    .extender
+  #new_profile_info_top
+    - unless @previous_data.nil?
+      .new_profile_info_area1
+        .profile_info_label_top= t('institution_name')
+        .profile_info_text_top= @previous_data.institution
+      .new_profile_info_area1
+        .profile_info_label_top2= t('course_text')
+        .profile_info_text_top2= @previous_data.course
+        .profile_info_label_top= t('year')
+        .profile_info_text_top= @previous_data.year
+      .new_profile_info_area1
+        .profile_info_label_top2= t('total_mark')
+        .profile_info_text_top2= @previous_data.total_mark
+      .new_profile_info_area1
+        .profile_info_label_top
+        .profile_info_text_top
+          %u= t('subject')
+      - unless @previous_subjects.blank?
+        .prev_subject_box
+          - @previous_subjects.each do |s|
+            - a =cycle('2','')
+            .new_profile_info_area2
+              %div{:class => "profile_info_label_top_1#{a}"}
+                = s.subject
+              %div{:class => "profile_info_text_top_1#{a}"}
+                = s.mark
+      - else
+        .new_profile_info_area1
+          .profile_info_label_top
+          .profile_info_text_top
+            %u
+              (#{t('no_previous_subject')})
+    - if permitted_to? :previous_data_edit,:student
+      .buttons
+        = link_to " ► #{t('edit_text')}",                                                                            |
+          { :controller => "students", :action => "previous_data_edit", :id => @student.id },:class => "user_button" |
+    .extender

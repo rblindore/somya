@@ -1,0 +1,122 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#page-yield
+  %h3{:align => "center"}= t('archived_batches_grouped_exam_report')
+  .hor_line
+  .extender
+  .report
+    #main_info
+      %h4
+        = @student.full_name
+        \- #{@student.admission_no}
+    - grade_type = "normal"
+    - grade_type = "GPA" if @batch.gpa_enabled?
+    - grade_type = "CWA" if @batch.cwa_enabled?
+    #pdf-info
+      - if @type=="grouped"
+        %table#pdf-table{:cellspacing => "0", :width => "100%"}
+          %tr.table-header
+            %td= t('subject')
+            - if grade_type=="GPA" or grade_type=="CWA"
+              %td= t('credit')
+            - @exam_groups.each do |exam_group|
+              %td= exam_group.name
+            %td= t('combined')
+          - c ='even'
+          - @subjects.each do |subject|
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= subject.name
+              - if grade_type=="GPA" or grade_type=="CWA"
+                %td.col-pdf= subject.credit_hours.present? ? subject.credit_hours : "-"
+              - @exam_groups.each do |exam_group|
+                - @exam = Exam.find_by_subject_id_and_exam_group_id(subject.id,exam_group.id)
+                - exam_score = ExamScore.find_by_student_id(@student.id, :conditions=>{:exam_id=>@exam.id})unless @exam.nil?
+                %td.col-pdf
+                  - if grade_type=="GPA"
+                    = exam_score.present? ? "#{exam_score.grading_level || "-"}"+" ["+"#{exam_score.grading_level.present? ? (exam_score.grading_level.credit_points || "-") : "-"}"+"]" : "-"
+                  - elsif grade_type=="CWA"
+                    = exam_score.present? ? "#{exam_score.marks.present? ? ("%.2f" %((exam_score.marks.to_f/@exam.maximum_marks.to_f)*100)) : "-"}"+" ["+"#{exam_score.grading_level.present? ? exam_score.grading_level : "-"}"+"]" : "-"
+                  - else
+                    - if exam_group.exam_type == "MarksAndGrades"
+                      = exam_score.nil? ? '-' :  "#{(exam_score.marks || "-")}" +"/"+@exam.maximum_marks.to_s+"[#{(exam_score.grading_level || "-")}]"
+                    - elsif exam_group.exam_type == "Marks"
+                      = exam_score.nil? ? '-' : "#{exam_score.marks || "-"}/"+@exam.maximum_marks.to_s
+                    - else
+                      = exam_score.nil? ? '-' : (exam_score.grading_level || '-')
+              - subject_average = GroupedExamReport.find_by_student_id_and_subject_id_and_score_type(@student.id,subject.id,"s")
+              %td.col-pdf= subject_average.present? ? subject_average.marks : "-"
+          %tr.table-header
+            - if grade_type=="GPA"
+              %td{:align => "right", :colspan => "2"}= t('gpa')
+            - elsif grade_type=="CWA"
+              %td{:align => "right", :colspan => "2"}= t('weighted_average')
+            - else
+              %td{:align => "right"}= t('percentage')
+            - @exam_groups.each do |exam_group|
+              - exam_total = GroupedExamReport.find_by_student_id_and_exam_group_id_and_score_type(@student.id,exam_group.id,"e")
+              %td.col-pdf
+                = exam_total.present? ? exam_total.marks : "-"
+            - total_avg = GroupedExamReport.find_by_student_id_and_batch_id_and_score_type(@student.id,@batch.id,"c")
+            %td.col-pdf= total_avg.present? ? total_avg.marks : "-"
+      - else
+        %table#pdf-table{:cellspacing => "0", :width => "100%"}
+          %tr.table-header
+            %td= t('subject')
+            - @exam_groups.each do |exam_group|
+              %td= exam_group.name
+            %td= t('total')
+          - c ='even'
+          - @subjects.each do |subject|
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= subject.name
+              - @mmg = 1;@g = 1
+              - @exam_groups.each do |exam_group|
+                - @exam = Exam.find_by_subject_id_and_exam_group_id(subject.id,exam_group.id)
+                - exam_score = ExamScore.find_by_student_id(@student.id, :conditions=>{:exam_id=>@exam.id})unless @exam.nil?
+                %td.col-pdf
+                  - unless @exam.nil?
+                    - if exam_group.exam_type == "MarksAndGrades"
+                      = exam_score.nil? ? '-' :  "#{(exam_score.marks || "-")}" +"/"+@exam.maximum_marks.to_s+"[#{(exam_score.grading_level || "-")}]"
+                    - elsif exam_group.exam_type == "Marks"
+                      = exam_score.nil? ? '-' : "#{exam_score.marks || "-"}/"+@exam.maximum_marks.to_s
+                    - else
+                      = exam_score.nil? ? '-' : (exam_score.grading_level || '-')
+                      - @g = 0
+                  - else
+                    = "#{t('n_a')}"
+                - total_score = ExamScore.new()
+                - if @mmg == @g
+                  %td.col-pdf= total_score.grouped_exam_subject_total(subject,@student,@type)
+                - else
+                  %td.col-pdf -
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf-bold= t('total')
+            - @max_total = 0
+            - @marks_total = 0
+            - @exam_groups.each do |exam_group|
+              - if exam_group.exam_type == "MarksAndGrades"
+                %td.col-pdf-bold= exam_group.total_marks(@student)[0]
+              - elsif exam_group.exam_type == "Marks"
+                %td.col-pdf-bold= exam_group.total_marks(@student)[0]
+              - else
+                %td.col-pdf-bold -
+              - unless exam_group.exam_type == "Grades"
+                - @max_total = @max_total + exam_group.total_marks(@student)[1]
+                - @marks_total = @marks_total + exam_group.total_marks(@student)[0]
+            %td

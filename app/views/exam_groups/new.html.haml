@@ -1,0 +1,69 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("  examination/show_exam.png")
+  %h1= t('exams_text')
+  %h3= t('new_exam')
+  #app-back-button
+    = back_button
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  .bread_crumb
+    = link_to t('course_text'), courses_path
+    »
+    \#{link_to @course.full_name, @course} »
+    \#{link_to "#{t('batch')} #{@batch.name}", [@course, @batch]} »
+    \#{link_to "#{t('exam_text')}", batch_exam_groups_path(@batch)} »
+    \#{t('new_exam')}
+  .box
+    #flash
+    #exam-form
+      - unless params[:exam_group].blank?
+        - if params[:exam_group][:exam_type] == 'Marks' or params[:exam_group][:exam_type] == 'MarksAndGrades'
+          = render :partial=>'exam/exam_marks_form'
+        - else
+          = render :partial=>'exam/exam_grade_form'
+      - else
+        = error_messages_for :exam_group
+        - form_remote_for :exam_option, :url => {:controller=>'exam',:action => 'update_exam_form',:batch=>@batch} do |form|
+          .label-field-pair
+            %label{:for => "exam_name"}= t('exam_name')
+            - if params[:ename].nil?
+              - @ename = ""
+            - else
+              - @ename = params[:ename]
+            .text-input-bg= form.text_field :name, :value=>@ename
+          - if @batch.gpa_enabled? or @batch.cwa_enabled?
+            .label-field-pair
+              %label{:for => "exam_type"}= t('exam_type')
+              .text-input-bg= select :exam_option,:exam_type,[[t('marks_and_grades'),"MarksAndGrades"]]
+          - elsif @batch.cce_enabled?
+            .label-field-pair
+              %label{:for => "cce_exam_category_id"}= t('cce_exam_category')
+              .text-input-bg= select :exam_option,:cce_exam_category_id,@cce_exam_categories.map{|ec| [ec.name,ec.id]},:prompt=>t("select")
+            = hidden_field :exam_option,:exam_type, :value=>"MarksAndGrades"
+          - else
+            .label-field-pair
+              %label{:for => "exam_type"}= t('exam_type')
+              .text-input-bg= select :exam_option,:exam_type,[[t('marks'),"Marks"],[t('grades'), "Grades"],[t('marks_and_grades'),"MarksAndGrades"]]
+          = submit_tag "", :value => "► #{t('save')}", :class => "submit_button"
+          - #  form.submit("Save")
+    .extender

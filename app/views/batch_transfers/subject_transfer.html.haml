@@ -1,0 +1,60 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("show_settings.png")
+  %h1= t('subjects_text')
+  %h3= t('assign_subject')
+  #app-back-button
+    = back_button
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  #errors
+  #msg
+  .linker
+    = link_to_remote "#{t('add_normal_subject')}", :url => { :action => 'new_subject', :id => @batch}
+    |
+    \#{link_to "#{t('add_elective')}", batch_elective_groups_path(@batch)} |
+    \#{link_to_remote "#{t('assign_old_batch_subject')}", :url => { :controller=>'batch_transfers',:action => 'get_previous_batch_subjects', :id => @batch}}
+  #previous-batch-subjects
+  #subjects
+    - unless @normal_subjects.empty?
+      %ul#category-list
+        %h4= t('normal_subjects')
+        - @normal_subjects.each do |sub|
+          %li{:class => "list#{cycle('odd', 'even')}", :id => "subject-#{sub.id}"}
+            .category-name
+              = sub.name
+            .category-code= sub.code
+    - unless @elective_groups.empty?
+      - @elective_groups.each do |eg|
+        - unless @elective_subjects.empty?
+          %ul#category-list
+            %h4
+              = eg.name
+              \:
+            - @elective_subjects.each do |elect|
+              - if elect.elective_group_id == eg.id
+                %li{:class => "list#{cycle('odd', 'even')}", :id => "elect-#{elect.id}"}
+                  .category-name
+                    = elect.name
+                  .category-code= elect.code
+  #modal-box{:style => "display:none;"}
+  .extender

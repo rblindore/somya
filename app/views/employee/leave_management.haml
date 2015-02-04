@@ -1,0 +1,118 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("HR/leave-new.png")
+  %h1= t('leave_management')
+  %h3
+  #app-back-button
+    = back_button
+#nav
+  %ul
+    %li
+      %a#link_one.drops{:href => "#"}
+        = "#{t('my_leaves')}"
+        ▼
+      %ul#box_one.scriptaculously{:style => "display:none;"}
+        %li= link_to t('apply'), :controller=>"employee", :action=>"leave_management"
+        %li= link_to_remote t('my_leaves'),                                                                             |
+            :update => "application-list",                                                                             |
+            :url => {:controller=>"employee_attendance",:action => "individual_leave_applications", :id=>@employee.id} |
+        %li= link_to "#{t('history')}", :controller=>"employee_attendance", :action=>"leave_history",:id=>@employee.id
+    - unless @reporting_employees.empty?
+      - if @total_leave_count == 0
+        %li
+          %a#link_two.drops{:href => "#"}
+            = "#{t('my_emp')}"
+            ▼
+          %ul#box_two.scriptaculously{:style => "display:none;"}
+            / no new leave applications of any employee
+            %li= link_to_remote "#{t('all_leaves')}",                                                                |
+                :update => "application-list",                                                                      |
+                :url => {:controller=>"employee_attendance",:action => "all_leave_applications", :id=>@employee.id} |
+      - else
+        %li
+          %a#link_two.drops{:href => "#"}
+            = "#{t('my_emp')}"
+            = "(#{@total_leave_count})"
+            ▼
+          %ul#box_two.scriptaculously{:style => "display:none;"}
+            / no new leave applications of any employee
+            %li= link_to_remote "#{t('new')}(#{@total_leave_count})",                                                |
+                :update => "application-list",                                                                      |
+                :url => {:controller=>"employee_attendance",:action => "new_leave_applications", :id=>@employee.id} |
+            %li= link_to_remote "#{t('all_leaves')}",                                                                |
+                :update => "application-list",                                                                      |
+                :url => {:controller=>"employee_attendance",:action => "all_leave_applications", :id=>@employee.id} |
+    - if @all_employee_total_leave_count == 0
+      %li
+        %a#link_three.drops{:href => "#"}
+          = "#{t('all_employee')}"
+          ▼
+        %ul#box_three.scriptaculously{:style => "display:none;"}
+          / no new leave applications of any employee
+          %li= link_to_remote "#{t('all_records')}",                                                             |
+              :update => "application-list",                                                                    |
+              :url => {:controller=>"employee",:action => "all_employee_leave_applications", :id=>@employee.id} |
+    - else
+      %li
+        %a#link_three.drops{:href => "#"}
+          = "#{t('all_employee')}"
+          = "(#{@all_employee_total_leave_count})"
+          ▼
+        %ul#box_three.scriptaculously{:style => "display:none;"}
+          / no new leave applications of any employee
+          %li= link_to_remote "#{t('new_text')}(#{@all_employee_total_leave_count})",                                           |
+              :update => "application-list",                                                                                   |
+              :url => {:controller=>"employee_attendance",:action => "all_employee_new_leave_applications", :id=>@employee.id} |
+          %li= link_to_remote "#{t('all_records')}",                                                             |
+              :update => "application-list",                                                                    |
+              :url => {:controller=>"employee",:action => "all_employee_leave_applications", :id=>@employee.id} |
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  #application-list
+    .heading.themed_text= t('apply_for_a_leave')
+    = form_for :leave_apply do |l|
+      = error_messages_for :leave_apply
+      = l.hidden_field :employee_id, :value=>@employee.id
+      .label-field-pair
+        %label{:for => "leave_type"}
+          = "#{t('leave_types')}"
+          \:
+        .text-input-bg= select :leave_apply, :employee_leave_types_id, @leave_types.map {|s| [s.name, s.id]},:prompt => "Select"
+      .label-field-pair
+        %label#create_user_option{:for => "create_user"}= t('half_day')
+        .text-input-bg= check_box_tag :is_half_day, :checked => false
+      .label-field-pair
+        %label{:for => "start_date"}= t('start_date')
+        .text-input-bg= calendar_date_select_tag 'leave_apply[start_date]'
+      .label-field-pair
+        %label{:for => "end_date"}
+          = t('end_date')
+          \:
+        .text-input-bg= calendar_date_select_tag 'leave_apply[end_date]'
+      .label-field-pair
+        %label{:for => "reason"}
+          = t('reason')
+          \:
+        .text-input-bg= l.text_field   :reason
+      #submit-button
+        = submit_tag("► #{t('create_text')}")
+    .extender

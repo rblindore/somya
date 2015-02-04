@@ -1,0 +1,77 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+- current_username = @current_user.username
+- profile_employee_no = @employee.employee_number
+#content-header
+  = image_tag("HR/show_hr.png")
+  %h1= t('employee_profile')
+  %h3= t('details')
+  #app-back-button
+    = back_button
+#nav
+  %ul
+    %li
+      %a#link_one.drops{ href: 'javascript:void(0);'}
+        = t('profile_text')
+        ▼
+      %ul#box_one.scriptaculously{ style: "display:none;"}
+        %li= link_to t('general'), { action: :profile_general, id: @employee.id }, update: "profile-infos", remote: true
+        %li= link_to t('personal'), { action: :profile_personal, id: @employee.id }, update: "profile-infos", remote: true
+        %li= link_to t('address'), { action: :profile_address, id: @employee.id }, update: "profile-infos", remote: true
+        %li= link_to t('contact'), { action: :profile_contact, id: @employee.id}, update: "profile-infos", remote: true
+        %li= link_to t('bank_info'), { action: :profile_bank_details, id: @employee.id}, update: "profile-infos", remote: true
+        %li= link_to t('additional_info'), { action: :profile_additional_details, id: @employee.id}, update: "profile-infos", remote: true
+    - if current_username == profile_employee_no
+      %li
+        %a#link_two.drops{ href: 'javascript:void(0);'}
+          = t('salary')
+          ▼
+        %ul#box_two.scriptaculously{ style: "display:none;"}
+          %li= link_to t('payroll_text'), { action: :profile_payroll_details, id: @employee.id}, update: "profile-infos", remote: true
+    - else
+      - if permitted_to? :payslip, :employee
+        %li
+          %a#link_two.drops{ href: 'javascript:void(0);'}
+            = t('salary')
+            ▼
+          %ul#box_two.scriptaculously{style: "display:none;"}
+            %li= link_to t('payroll_text'), { action: :profile_payroll_details, id: @employee.id}, update: "profile-infos", remote: true
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  #employee_profile_heading
+    #profile_picture_display
+      - if @employee.photo.file?
+        = image_tag @employee.photo.url
+      - else
+        = image_tag "HR/default_employee.png"
+    #employee_main_info
+      %h3
+        = @employee.first_name
+        = @employee.middle_name
+        = @employee.last_name
+      %h4
+        = t('employee_id')
+        \. : #{@employee.employee_number}
+    #profile-general-info
+    .extender
+  #profile-infos
+    = render "general"
+  .extender

@@ -1,0 +1,57 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("sms/sms_icon.png")
+  %h1= t('sms_text')
+  %h3= t('home')
+  #app-back-button
+    = back_button
+#page-yield
+  .box
+    .link-box
+      .link-heading= link_to "#{t('sms_text')} #{t('settings')}",:action=>'settings'
+      .link-descr= t('sms_settings_page')
+    - if @sms_setting.application_sms_active
+      - if @students_sms_enabled.is_enabled or @parents_sms_enabled.is_enabled
+        .link-box
+          .link-heading= link_to "#{t('send_sms_to_students')}",:action=>'students'
+          .link-descr= t('send_sms_to_students')
+      - if @students_sms_enabled.is_enabled or  @parents_sms_enabled.is_enabled
+        .link-box
+          .link-heading= link_to "#{t('sms_to_batches')}",:action=>'batches'
+          .link-descr= t('sms_to_batches')
+      - if @employees_sms_enabled.is_enabled
+        .link-box
+          .link-heading= link_to "#{t('sms_to_employees')}",:action=>'employees'
+          .link-descr= t('sms_to_employees')
+        .link-box
+          .link-heading= link_to "#{t('sms_to_employee_department')}",:action=>'departments'
+          .link-descr= t('sms_to_employee_department')
+      .link-box
+        .link-heading= link_to_remote "#{t('sms_to_all')}",:url=>{:action=>'all'}
+        .link-descr= t('sms_to_all')
+      .link-box
+        .link-heading= link_to "#{t('sms_logs')}", :action=>'show_sms_messages'
+        .link-descr= t('view_all_messages')
+    #sms-box
+    = image_tag("loader2.gif",    |
+      :align => "absmiddle",      |
+      :border => 0,               |
+      :id => "loader",            |
+      :style =>"display: none;" ) |

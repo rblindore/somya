@@ -1,0 +1,131 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+%script{:src => "/javascripts/jquery-1.3.2.min.js", :type => "text/javascript"}
+%script{:src => "/javascripts/jquery-ui.min.js", :type => "text/javascript"}
+:javascript
+  $jq = jQuery.noConflict()
+  $jq(document).ready(function() {
+    $jq("#employee_joining_date").datepicker({dateFormat: 'yy-mm-dd'});
+    $jq("#employee_date_of_birth").datepicker({dateFormat: 'yy-mm-dd'});
+  });
+#content-header
+  = image_tag("HR/show_hr.png")
+  %h1= t('edit_employee_information')
+  %h3= t('general')
+  #app-back-button
+    = back_button
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  = form_for :employee,:id => @employee.id do |a|
+    = error_messages_for  'employee'
+    #admission1_form
+      #necessary-field-notification
+        = t('legend1')
+        %span.necessary-field *
+        = t('legend2')
+      %span.span-sub-heading= t('general_details')
+      %hr.sub-heading/
+      .label-field-pair
+        %label{:for => "employee_id"}
+          = t('employee_number')
+          %span.necessary-field *
+        .text-input-bg= a.text_field :employee_number, :value => @employee.employee_number
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_joining_date"}= t('joining_date')
+        .text-input-bg= calendar_date_select_tag 'employee[joining_date]', I18n.l(@employee.joining_date,:format=>:default),:popup => "force" , |
+            :year_range => 25.years.ago..0.years.from_now                                                                           |
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_name"}
+          = t('first_name')
+          %span.necessary-field *
+        .text-input-bg= a.text_field :first_name, :value => @employee.first_name
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_name"}= t('middle_name')
+        .text-input-bg= a.text_field :middle_name, :value => @employee.middle_name
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_name"}
+          = t('last_name')
+          %span.necessary-field *
+        .text-input-bg= a.text_field :last_name, :value => @employee.last_name
+      %hr.label-underline/
+      .label-field-pair
+        %label= t('email')
+        .text-input-bg= a.text_field :email
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_department"}
+          = t('department')
+          %span.necessary-field *
+        .text-input-bg= select :employee, :employee_department_id, @departments.map {|s| [s.name, s.id]}, :value => @employee.employee_department_id
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_category"}
+          = t('category')
+          %span.necessary-field *
+        .text-input-bg= select :employee, :employee_category_id, @categories.map { |s| [s.name, s.id] },                              |
+            {:prompt => "#{t('select')}"},                                                                                |
+            {:onChange => "#{remote_function(:url => {:action => "update_positions"}, :with => "'category_id='+value")}"} |
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_position"}
+          = t('position')
+          %span.necessary-field *
+        .text-input-bg
+          #positions1
+            = render :partial => 'positions', :object => @positions
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_grade"}
+          = t('grade')
+          %span.necessary-field *
+        .text-input-bg= select :employee, :employee_grade_id, @grades.map {|s| [s.name, s.id]}, :value => @employee.employee_grade_id
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_job_title"}= t('job_title')
+        .text-input-bg= a.text_field :job_title, :value => @employee.job_title
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_qualification"}= t('qualification')
+        .text-input-bg= a.text_field :qualification, :value => @employee.qualification
+      %hr.label-underline/
+      .label-field-pair-text-area
+        %label{:for => "employee_experience"}= t('exp_info')
+        .textarea-input-bg= a.text_area :experience_detail,:cols => 27, :rows => 5,:class => 'admission1-textarea'
+      %hr.label-underline/
+      .label-field-pair
+        %label{:for => "employee_total-experience"}= t('total_exp')
+        .text-input-bg
+          = select :employee, :experience_year, (0..20),{:prompt=>"#{t('year')}"}
+          = select :employee, :experience_month, (0..11),{:prompt=>"#{t('month')}"}
+      %hr.label-underline/
+      .label_field_pair
+        %label.label_for_employee_gender{:for => "master_student_gender"}= t('gender')
+        .employee_gender_value
+          %label.label_for_gender{:for => "master_student_gender_true"}= t('male')
+          = a.radio_button  "gender", "m", :checked => "checked"
+          %label.label_for_gender{:for => "master_student_gender_false"}= t('female')
+          = a.radio_button  "gender", "f"
+      %hr.label-underline/
+    = submit_tag "► #{ t('update')}", :class => "submit_button"

@@ -1,0 +1,59 @@
+!!! Strict
+%html
+  %body
+    - # Fedena
+    - #Copyright 2010 Foradian Technologies Private Limited
+    - #
+    - #This product includes software developed at
+    - #Project Fedena - http://www.projectfedena.org/
+    - #
+    - #Licensed under the Apache License, Version 2.0 (the "License");
+    - #you may not use this file except in compliance with the License.
+    - #You may obtain a copy of the License at
+    - #
+    - #  http://www.apache.org/licenses/LICENSE-2.0
+    - #
+    - #Unless required by applicable law or agreed to in writing,
+    - #software distributed under the License is distributed on an
+    - #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    - #KIND, either express or implied.  See the License for the
+    - #specific language governing permissions and limitations
+    - #under the License.
+    - @direction = (rtl?) ? 'rtl/' : ''
+    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "Content-Type"}/
+    %title= @title
+    - unless current_school_detail.new_record?
+      %link{:href => "#{current_school_detail.logo.url}", :rel => "icon", :type => "#{current_school_detail.logo.content_type}"}/
+      %link{:href => "#{current_school_detail.logo.url}", :rel => "shortcut icon", :type => "#{current_school_detail.logo.content_type}"}/
+    = stylesheet_link_tag(*get_stylesheets, media: :all)
+    = javascript_include_tag :application, 'data-turbolinks-track' => true
+    = javascript_include_tag 'scripts/nicetitle', 'droplicious'
+    = javascript_include_tag 'builder'
+    = javascript_include_tag 'modalbox'
+    = csrf_meta_tags
+    #header_bg
+      #header
+        #outer-header-link
+          #institution-name
+            = current_school_name
+          #header_link
+            #messages-link
+              = link_to t('messages'), reminders_path
+              = render partial: 'layouts/reminder_count'
+            #profile-link
+              = link_to @current_user.first_name, profile_user_path(id: @current_user.username), class: "profile-link"
+            #logout-link
+              = link_to t('log_out'), logout_users_path, method: :DELETE
+        #outer-main-menu
+          = main_menu
+        #outer-autosuggest-menu
+          = render :partial => "layouts/autosuggest_menu"
+    #content_wrapper
+      #content
+        = yield
+      .extender
+    #footer
+      #footer_logo
+        #powered_by
+          = t('powered_by')
+          = link_to FedenaSetting.company_details[:company_name], FedenaSetting.company_details[:company_url], target: :blank

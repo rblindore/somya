@@ -1,0 +1,153 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("  examination/show_exam.png")
+  %h1= t('exams_text')
+  %h3= t('ranking_level_report')
+  #app-back-button
+    = back_button
+#inner-tab-menu
+  %ul
+    %li= link_to "#{t('pdf_report')}", {:controller => "exam", :action => "student_ranking_level_report_pdf", :mode=>@mode, :report_type=>@report_type, :ranking_level_id=>@ranking_level.id, :batch_id=>params[:ranking_level_report][:batch_id], :course_id=>params[:ranking_level_report][:course_id], :batch_group_id=>params[:ranking_level_report][:batch_group_id], :subject_id=>params[:ranking_level_report][:subject_id], :page_height=>1150},:target => '_blank'
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  .box
+    - if @mode=="batch"
+      %h4
+        = @ranking_level.name
+        = t('students')
+        \: #{@batch.full_name} #{" | #{t('subject')} : "+@subject.name if @subject.present?}
+      #score-table
+        - unless @scores.empty?
+          - if @report_type=="subject"
+            - ranked_students = Student.find_all_by_id(@scores.collect(&:student_id))
+            - ranked_students = ranked_students.reject{|st| st.has_higher_priority_ranking_level(@ranking_level.id,"subject",@subject.id)==true}
+          - else
+            - unless @ranking_level.subject_count.nil?
+              - sub_count = @ranking_level.subject_count
+              - ranked_students = []
+              - @students.each do|student|
+                - @student_scores = @scores.dup
+                - @student_scores.reject!{|s| !(s.student_id==student.id)}
+                - if @ranking_level.subject_limit_type=="upper"
+                  - if @student_scores.count < sub_count
+                    - ranked_students << student
+                - elsif @ranking_level.subject_limit_type=="exact"
+                  - if @student_scores.count == sub_count
+                    - ranked_students << student
+                - else
+                  - if @student_scores.count >= sub_count
+                    - ranked_students << student
+            - else
+              - ranked_students = Student.find_all_by_id(@scores.collect(&:student_id))
+            - ranked_students = ranked_students.reject{|st| st.has_higher_priority_ranking_level(@ranking_level.id,"overall","")==true}
+          - unless ranked_students.empty?
+            %table#listing{:cellpadding => "1", :cellspacing => "1", :width => "100%"}
+              %tr.tr-head
+                %td= t('sl_no')
+                %td= t('adm_no')
+                %td= t('name')
+              %tr.tr-blank
+              - ranked_students.each_with_index do |s,i|
+                %tr{:class => "tr-#{cycle('odd', 'even')}"}
+                  %td.col-1= i+1
+                  %td.col-1= s.admission_no.present? ? s.admission_no : "-"
+                  %td.col-2= s.full_name
+          - else
+            %p.flash-msg= "#{t('no_text')} #{@ranking_level.name} #{t('students_found')}"
+        - else
+          %p.flash-msg= "#{t('no_text')} #{@ranking_level.name} #{t('students_found')}"
+    - else
+      %h4
+        = @ranking_level.name
+        = t('students')
+        \: #{@course.full_name}
+      #score-table
+        - unless @scores.empty?
+          - unless @ranking_level.subject_count.nil?
+            - sub_count = @ranking_level.subject_count
+            - ranked_students = []
+            - unless @ranking_level.full_course==true
+              - @students.each do|student|
+                - @student_scores = @scores.dup
+                - @student_scores.reject!{|s| !(s.student_id==student.id)}
+                - batch_ids = @student_scores.collect(&:batch_id)
+                - batch_ids.each do|batch_id|
+                  - unless batch_ids.empty?
+                    - count = batch_ids.count(batch_id)
+                    - if @ranking_level.subject_limit_type=="upper"
+                      - if count < sub_count
+                        - unless student.has_higher_priority_ranking_level(@ranking_level.id,"course","")
+                          - ranked_students << [student.id,batch_id]
+                    - elsif @ranking_level.subject_limit_type=="exact"
+                      - if count == sub_count
+                        - unless student.has_higher_priority_ranking_level(@ranking_level.id,"course","")
+                          - ranked_students << [student.id,batch_id]
+                    - else
+                      - if count >= sub_count
+                        - unless student.has_higher_priority_ranking_level(@ranking_level.id,"course","")
+                          - ranked_students << [student.id,batch_id]
+                    - batch_ids.delete(batch_id)
+            - else
+              - @students.each do|student|
+                - @student_scores = @scores.dup
+                - @student_scores.reject!{|s| !(s.student_id==student.id)}
+                - if @ranking_level.subject_limit_type=="upper"
+                  - if @student_scores.count < sub_count
+                    - unless student.has_higher_priority_ranking_level(@ranking_level.id,"course","")
+                      - ranked_students << [student.id,student.batch.id]
+                - elsif @ranking_level.subject_limit_type=="exact"
+                  - if @student_scores.count == sub_count
+                    - unless student.has_higher_priority_ranking_level(@ranking_level.id,"course","")
+                      - ranked_students << [student.id,student.batch.id]
+                - else
+                  - if @student_scores.count >= sub_count
+                    - unless student.has_higher_priority_ranking_level(@ranking_level.id,"course","")
+                      - ranked_students << [student.id,student.batch.id]
+          - else
+            - ranked_students = []
+            - @scores.each do|score|
+              - unless score.student.has_higher_priority_ranking_level(@ranking_level.id,"course","")
+                - ranked_students << [score.student_id,score.batch_id]
+          - unless ranked_students.empty?
+            %table#listing{:cellpadding => "1", :cellspacing => "1", :width => "100%"}
+              %tr.tr-head
+                %td= t('sl_no')
+                %td= t('adm_no')
+                %td= t('name')
+                %td= t('batch')
+                - unless @ranking_level.full_course==true
+                  %td= "#{@ranking_level.name} #{t('batch')}"
+              %tr.tr-blank
+              - ranked_students.each_with_index do |s,i|
+                - stu = Student.find(s[0])
+                - batch = Batch.find(s[1])
+                %tr{:class => "tr-#{cycle('odd', 'even')}"}
+                  %td.col-1= i+1
+                  %td.col-1= stu.admission_no.present? ? stu.admission_no : "-"
+                  %td.col-2= stu.full_name
+                  %td.col-2= stu.batch.full_name
+                  - unless @ranking_level.full_course==true
+                    %td.col-2= batch.full_name
+          - else
+            %p.flash-msg= "#{t('no_text')} #{@ranking_level.name} #{t('students_found')}"
+        - else
+          %p.flash-msg= "#{t('no_text')} #{@ranking_level.name} #{t('students_found')}"

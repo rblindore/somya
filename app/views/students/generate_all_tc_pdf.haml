@@ -1,0 +1,94 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+- @students.each do |student|
+  #page-yield
+    .hor_line
+    %h2= t('transfer_certificate')
+    .hor_line
+    .extender
+    .report
+      #pdf-info
+        %table#pdf-table{:cellspacing => "0", :width => "100%"}
+          - c= 'odd'
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('name')
+            %td.col-pdf
+              = student.full_name
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('admission_no')
+            %td.col-pdf= student.admission_no
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('admission_date')
+            %td.col-pdf= I18n.l(student.admission_date,:format=>:normal)
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('date_of_birth')
+            %td.col-pdf= I18n.l(student.date_of_birth,:format=>:normal)
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('last_course')
+            %td.col-pdf= student.batch.full_name
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('blood_group')
+            %td.col-pdf= student.blood_group
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('gender')
+            %td.col-pdf= "#{t(student.gender_as_text.downcase)}"
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('nationality')
+            %td.col-pdf= student.nationality.name
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('language')
+            %td.col-pdf= student.language
+          - if @father
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= t('father_name')
+              %td.col-pdf= @father.full_name
+          - elsif @mother
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= t('mother_name')
+              %td.col-pdf= @mother.full_name
+          - else
+            - unless @immediate_contact.nil?
+              %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+                %td.col-pdf= @immediate_contact.relation
+                %td.col-pdf= @immediate_contact.full_name
+          - unless student.student_category.nil?
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= t('category')
+              %td.col-pdf= student.student_category.name
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('religion')
+            %td.col-pdf= student.religion
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('address')
+            %td.col-pdf
+              = student.address_line1
+              %br/
+              = student.address_line2
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('city')
+            %td.col-pdf= student.city
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('state')
+            %td.col-pdf= student.state
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('country')
+            %td.col-pdf= student.country.name
+          %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+            %td.col-pdf= t('reason_for_leaving')
+            %td.col-pdf= student.status_description

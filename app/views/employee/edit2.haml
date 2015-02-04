@@ -1,0 +1,95 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("HR/show_hr.png")
+  %h1= t('edit_employee_information')
+  %h3= t('address')
+  #app-back-button
+    = back_button
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  = form_for :employee,:id => @employee.id do |a|
+    = error_messages_for 'employee'
+    %span.span-sub-heading= t('home_address')
+    %hr.sub-heading/
+    .label-field-pair
+      %label= t('line_1')
+      .text-input-bg= a.text_field :home_address_line1
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('line_2')
+      .text-input-bg= a.text_field :home_address_line2
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('city')
+      .text-input-bg= a.text_field :home_city
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('state')
+      .text-input-bg= a.text_field :home_state
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('country')
+      .text-input-bg= select :employee, :home_country_id, @countries.map {|c| [c.name, c.id]}, :selected => @employee.home_country_id
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('zip')
+      .text-input-bg= a.text_field :home_pin_code
+      .extender
+    %br/
+    %span.span-sub-heading= t('office_address')
+    %hr.sub-heading/
+    .label-field-pair
+      %label= t('line_1')
+      .text-input-bg= a.text_field :office_address_line1
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('line_2')
+      .text-input-bg= a.text_field :office_address_line2
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('city')
+      .text-input-bg= a.text_field :office_city
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('state')
+      .text-input-bg= a.text_field :office_state
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('country')
+      .text-input-bg= select :employee, :office_country_id, @countries.map {|c| [c.name, c.id]}, :selected => @employee.office_country_id
+      .extender
+    %hr.label-underline/
+    .label-field-pair
+      %label= t('zip')
+      .text-input-bg= a.text_field :office_pin_code
+      .extender
+    .save-proceed-button
+      = submit_tag "► #{t('update')}"

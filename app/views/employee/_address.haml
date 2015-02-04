@@ -1,0 +1,60 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+%table{:width => "700"}
+  %tr.odd.left
+    %td= t('home_address')
+    %td.right
+      = @employee.home_address_line1
+       #{@employee.home_address_line2}
+  %tr.even.left
+    %td= t('city')
+    %td.right= @employee.home_city
+  %tr.odd.left
+    %td= t('state')
+    %td.right= @employee.home_state
+  %tr.even.left
+    %td= t('country')
+    %td.right= @home_country
+  %tr.odd.left
+    %td= t('zip')
+    %td.right= @employee.home_pin_code
+  %tr.even.left
+    %td= t('office_address')
+    %td.right
+      = @employee.office_address_line1
+       #{@employee.office_address_line2}
+  %tr.odd.left
+    %td= t('city')
+    %td.right
+      = @employee.office_city
+  %tr.even.left
+    %td= t('country')
+    %td.right= @office_country
+  %tr.odd.left
+    %td= t('zip')
+    %td.right= @employee.office_pin_code
+.extender
+.edit-pdf-group
+  - if permitted_to? :edit2,:employee
+    %div
+      = link_to "► #{t('edit_text')}",  {:controller => "employee", :action => "edit2", :id =>@employee.id}, :class=> 'user_button'
+  - if permitted_to?  :profile_pdf , :employee
+    %div
+      = link_to " ► #{t('pdf_report')}",                                                                                       |
+        {:controller => "employee", :action => "profile_pdf", :id => @employee.id},:target => '_blank', :class=> 'user_button' |

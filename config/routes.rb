@@ -1,6 +1,10 @@
 Fedena::Application.routes.draw do
 
-  resources :grading_levels
+  resources :grading_levels do
+    collection do
+      get :show
+    end
+  end
 
   resources :application, only: :index do
     member do
@@ -260,6 +264,7 @@ Fedena::Application.routes.draw do
     end
     member do
       get :view
+      post :add_comment
       delete :delete
       delete :delete_comment
       post :edit
@@ -465,6 +470,20 @@ Fedena::Application.routes.draw do
       get :master_fees
       get :fees_defaulters
       get :fees_student_structure_search
+      get :fees_submission_index
+      get :fees_create
+      get :master_category_new
+      get :fees_particulars_new
+      get :fee_discounts
+      post :master_category_create
+      get :student_or_student_category
+      post :fees_particulars_create
+      get :fee_discount_new
+    end
+    member do
+      get :update_master_fee_category_list
+      get :show_fee_discounts
+      get :show_master_categories_list
     end
   end
   resources :weekday, only: [:index, :create] do

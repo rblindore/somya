@@ -1,0 +1,89 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("  examination/show_exam.png")
+  %h1= t('exams_text')
+  %h3= t('student_ranking_per_school')
+  #app-back-button
+    = back_button
+#inner-tab-menu
+  %ul
+    %li= link_to "#{t('pdf_report')}", {:controller => "exam", :action => "student_school_rank_pdf", :sort_order => @sort_order},:target => '_blank'
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  .bread_crumb
+    = link_to t('exam_text'), :controller => "exam", :action=>"index"
+    »
+    \#{link_to t('report_center'), :controller => "exam", :action => "report_center"} »
+    \#{t('student_ranking_per_school')}
+  .box
+    %h4
+      = t('overall_school_rankings')
+      \: #{Settings.find_by_config_key("InstitutionName").config_value.present? ? Settings.find_by_config_key("InstitutionName").config_value : "-"}
+    #score-table
+      - unless @courses.empty?
+        - unless @students.empty?
+          - unless @grouped_exams.empty?
+            %table#listing{:cellpadding => "1", :cellspacing => "1", :width => "100%"}
+              %tr.tr-head
+                %td= t('sl_no')
+                - if @sort_order=="name-ascend"
+                  %td= link_to  "#{t('name')}&nbsp;▲", {:action=>"student_school_rank",:page=>params[:page],:sort_order=>"name-descend"}
+                - elsif @sort_order=="name-descend"
+                  %td= link_to  "#{t('name')}&nbsp;▼", {:action=>"student_school_rank",:page=>params[:page],:sort_order=>"name-ascend"}
+                - else
+                  %td= link_to  "#{t('name')}", {:action=>"student_school_rank",:page=>params[:page],:sort_order=>"name-ascend"}
+                %td= t('batch')
+                %td= t('adm_no')
+                %td= t('marks')
+                - if @sort_order=="rank-ascend"
+                  %td= link_to  "#{t('rank')}&nbsp;▲", {:action=>"student_school_rank",:page=>params[:page],:sort_order=>"rank-descend"}
+                - elsif @sort_order=="rank-descend"
+                  %td= link_to  "#{t('rank')}&nbsp;▼", {:action=>"student_school_rank",:page=>params[:page],:sort_order=>"rank-ascend"}
+                - else
+                  %td= link_to  "#{t('rank')}", {:action=>"student_school_rank",:page=>params[:page],:sort_order=>"rank-ascend"}
+              - if params[:page].present?
+                - i = (params[:page].to_i - 1) * 25
+              - else
+                - i=0
+              - @ranked_students.each do |student|
+                %tr{:class => "tr-#{cycle('odd', 'even')}"}
+                  %td.col-1= i=i+1
+                  - if @sort_order=="" or @sort_order=="rank-ascend" or @sort_order=="rank-descend"
+                    %td.col-2= student[3].full_name
+                    %td.col-2= student[3].batch.full_name
+                    %td.col-1= student[3].admission_no.present? ? student[3].admission_no : "-"
+                    %td.col-1= student[1]
+                    %td.col-1= student[0]
+                  - else
+                    %td.col-2= student[4].full_name
+                    %td.col-2= student[4].batch.full_name
+                    %td.col-1= student[4].admission_no.present? ? student[4].admission_no : "-"
+                    %td.col-1= student[2]
+                    %td.col-1= student[1]
+            = will_paginate @ranked_students, :params=>{:sort_order=>@sort_order}
+          - else
+            %p.flash-msg= t('no_grouped_exams_in_this_school')
+        - else
+          %p.flash-msg= t('no_students_in_this_school')
+      - else
+        %p.flash-msg= t('no_courses_for_this_school')
+    .extender

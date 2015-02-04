@@ -1,0 +1,55 @@
+- # Fedena
+- #Copyright 2010 Foradian Technologies Private Limited
+- #
+- #This product includes software developed at
+- #Project Fedena - http://www.projectfedena.org/
+- #
+- #Licensed under the Apache License, Version 2.0 (the "License");
+- #you may not use this file except in compliance with the License.
+- #You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+#content-header
+  = image_tag("HR/leave-new.png")
+  %h1= t('leave_types')
+  %h3= t('add_leave_type')
+  #app-back-button
+    = back_button
+#page-yield
+  - unless flash[:notice].nil?
+    %p.flash-msg
+      = flash[:notice]
+  .box
+    = form_for :leave_type do |c|
+      = error_messages_for 'leave_type'
+      #form-content
+        .label-field-pair
+          %label{:for => "category_name"}= t('leave_name')
+          .text-input-bg= c.text_field :name
+        .label-field-pair
+          %label{:for => "category_name"}= t('leave_code')
+          .text-input-bg= c.text_field :code
+        .label-field-pair
+          %label{:for => "category_name"}= t('max_leave')
+          .text-input-bg= c.text_field :max_leave_count
+        .extender
+        .label-field-pair
+          %label{:for => "category_name"}= t('enable_carry_forward')
+          .check_box= c.check_box "carry_forward",:checked => false
+        .label-radio-pair
+          %label.status= t('status')
+          = c.radio_button  "status", "true", :checked => "checked"
+          %label.label_for_status{:for => "add_grade_status_true"}= t('active')
+          = c.radio_button  "status", "false"
+          %label.label_for_status{:for => "add_grade_status_false"}= t('inactive')
+        #submit-button
+          = submit_tag("► #{t('create_text')}")
+  #leave_type-list
+    = render :partial => "leave_types"

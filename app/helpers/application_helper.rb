@@ -171,4 +171,19 @@ module ApplicationHelper
     string
   end
 
+  # This method generate link for back button.
+  def back_button
+    link_to image_tag("buttons/back.png", border: 0), 'javascript:void(0);', onclick: "history.back()"
+  end
+
+  # This method generate link for all select button
+  def select_all
+    link_to t('all'), 'javascript:void(0);', onclick: "selectAll('each_batch')"
+  end
+
+  # This method generate link for de-select all
+  def select_none
+    link_to t('none'), 'javascript:void(0);', onclick: "selectNone('each_batch')"
+  end
+
 end

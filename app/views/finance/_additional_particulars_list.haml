@@ -1,0 +1,59 @@
+- # Licensed to the Apache Software Foundation (ASF) under one
+- #or more contributor license agreements.  See the NOTICE file
+- #distributed with this work for additional information
+- #regarding copyright ownership.  The ASF licenses this file
+- #to you under the Apache License, Version 2.0 (the
+- #"License"); you may not use this file except in compliance
+- #with the License.  You may obtain a copy of the License at
+- #
+- #  http://www.apache.org/licenses/LICENSE-2.0
+- #
+- #Unless required by applicable law or agreed to in writing,
+- #software distributed under the License is distributed on an
+- #"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- #KIND, either express or implied.  See the License for the
+- #specific language governing permissions and limitations
+- #under the License.
+%br/
+.linker= link_to_remote "#{t('add_particular')}", :url => { :action => 'add_particulars_new',:id => @collection_date.id}
+%br/
+- unless @particulars.empty?
+  %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+    %tr.tr-head
+      %td= t('sl_no')
+      %td= t('particulars')
+      %td= t('student_category')
+      %td= t('admission_no')
+      %td
+        = t('amount')
+        (#{currency})
+      %td= t('created_date')
+      %td
+    %tr.tr-blank
+    - @particulars.each_with_index do |fees,i|
+      %tr{:class => "tr-#{cycle("odd","even")}"}
+        %td.col-1= i+1
+        %td.col-2= fees.name
+        %td.col-3= StudentCategory.find(fees.student_category_id).name unless fees.student_category_id.nil?
+        %td.col-3
+          - unless fees.admission_no.nil?
+            - student =  Student.find_by_admission_no(fees.admission_no)
+            = student.nil? ? "#{t('n_a')}" : student.full_name
+          - else
+            \-
+        %td.col-1{:align => "right"}= fees.amount
+        %td.col-3= I18n.l(fees.created_at,:format=>"%m-%d-%Y")
+        %td.col-3
+          - unless @additional_category.check_fee_collection_for_additional_fees == false
+            %span.small
+              = link_to_remote t('delete_text'), :confirm=>t('delete_this_particular'),:url => { :action => 'add_particulars_delete',:id => fees.id}
+            %span.small
+              = link_to_remote t('edit_text'), :url => { :action => 'add_particulars_edit',:id => fees.id}
+          - else
+            %span.small-strike= t('delete_text')
+            %span.small-strike= t('edit_text')
+- else
+  %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+    %tr.tr-head
+      %td= t('no_categories_to_display')
+= link_to t('back'),{:action => 'additional_fees_list'},:class=>'user_button'
