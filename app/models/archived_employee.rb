@@ -21,15 +21,13 @@ class ArchivedEmployee < ActiveRecord::Base
   belongs_to  :employee_position
   belongs_to  :employee_grade
   belongs_to  :employee_department
-  belongs_to  :nationality, :class_name => 'Country'
+  belongs_to  :nationality, class_name: 'Country'
   has_many    :archived_employee_bank_details
   has_many    :archived_employee_additional_details
   before_save :status_false
 
   def status_false
-    unless self.status==0
-      self.status=0
-    end
+    self.status = false
   end
 
   def image_file=(input_data)
@@ -41,11 +39,9 @@ class ArchivedEmployee < ActiveRecord::Base
 
 
   has_attached_file :photo,
-    :styles => {
-    :thumb=> "100x100#",
-    :small  => "150x150>"},
-    :url => "/system/:class/:attachment/:id/:style/:basename.:extension",
-    :path => ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
+    styles: { thumb: "100x100#", small: "150x150>" },
+    url: "/system/:class/:attachment/:id/:style/:basename.:extension",
+    path: ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
 
   def full_name
     "#{first_name} #{middle_name} #{last_name}"
