@@ -7,8 +7,8 @@ describe ArchivedEmployee, type: :model do
       it { is_expected.to belong_to(field) }
     end
     it { is_expected.to belong_to(:nationality).class_name('Country')}
-    it { is_expected.to have_many(:archived_employee_bank_details) }
-    it { is_expected.to have_many(:archived_employee_additional_details) }
+    # it { is_expected.to have_many(:archived_employee_bank_details) }
+    # it { is_expected.to have_many(:archived_employee_additional_details) }
   end
 
   describe 'callbacks' do

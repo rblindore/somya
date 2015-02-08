@@ -28,8 +28,8 @@
     %p.flash-msg= flash[:notice]
   .box
     .link-heading
-      = link_to_remote t('create_finance_category'), :url => { :action => 'categories_new'}
+      = link_to t('create_finance_category'), url_for(action: :category_new), remote: true
     .link-descr
       = t('create_category')
-    #category-list= render :partial => "category_list"
-    #modal-box{:style => "display:none;"}
+    #category-list= render "category_list"
+    #modal-box{ style: "display:none;"}

@@ -445,10 +445,12 @@ Fedena::Application.routes.draw do
 
   resources :finance, only: :index do
     collection do
+      get :categories_new
       get :fees_index
       get :categories
       get :transactions
       get :donation
+      post :donation
       get :automatic_transactions
       get :payslip_index
       get :asset_liability
@@ -479,11 +481,32 @@ Fedena::Application.routes.draw do
       get :student_or_student_category
       post :fees_particulars_create
       get :fee_discount_new
+      get :categories_new
+      get :category_new
+      get :expense_create
+      post :expense_create
+      get :expense_list
+      get :expense_list_update
+      get :expense_list_pdf
+      get :income_create
+      post :income_create
+      get :monthly_income
+      get :income_list
     end
     member do
+      get :income_edit
       get :update_master_fee_category_list
       get :show_fee_discounts
       get :show_master_categories_list
+      get :category_edit
+      get :category_delete
+      get :donation_receipt
+      get :donation_edit
+      post :donation_edit
+      delete :donation_delete
+      get :donation_receipt_pdf
+      get :expense_edit
+      post :expense_edit
     end
   end
   resources :weekday, only: [:index, :create] do

@@ -17,7 +17,7 @@
 #limitations under the License.
 
 class FinanceController < ApplicationController
-  before_filter :login_required,:configuration_settings_for_finance
+  before_filter :login_required, :configuration_settings_for_finance
   filter_access_to :all
 
   def index
@@ -31,7 +31,7 @@ class FinanceController < ApplicationController
       @cat_names << "'#{category[:category_name]}'"
     end
     @triggers = FinanceTransactionTrigger.all
-    @categories = FinanceTransactionCategory.find(:all ,:conditions => ["name NOT IN (#{@cat_names.join(',')}) and is_income=1 and deleted=0 "])
+    @categories = FinanceTransactionCategory.where.not(name: @cat_names.join(',')).where(is_income: true, deleted: false)
     render layout: 'application'
   end
 
@@ -99,7 +99,7 @@ class FinanceController < ApplicationController
 
   def expense_edit
     @transaction = FinanceTransaction.find(params[:id])
-    @categories = FinanceTransactionCategory.all(:conditions =>"name != 'Salary' and is_income = false" )
+    @categories = FinanceTransactionCategory.where.not(name: 'Salary').where(is_income: false)
     if request.post? and @transaction.update_attributes(params[:transaction])
       redirect_to url_for(action: :expense_list), notice: t('finance.flash4')
     else
@@ -133,21 +133,21 @@ class FinanceController < ApplicationController
     @finance_transaction = FinanceTransaction.new()
     @categories = FinanceTransactionCategory.income_categories
     if @categories.empty?
-      flash[:notice] = "#{t('flash5')}"
+      flash[:notice] = t('flash5')
     end
     if request.post?
       @finance_transaction = FinanceTransaction.new(params[:finance_transaction])
       if @finance_transaction.save
-        flash[:notice] = "#{t('flash6')}"
-        redirect_to :action=>"income_create"
+        flash[:notice] = t('flash6')
+        redirect_to action: :income_create
       else
-        render :action=>"income_create"
+        render action: :income_create
       end
     end
   end
 
   def monthly_income
-
+    render layout: 'application'
   end
 
   def income_edit
@@ -156,14 +156,15 @@ class FinanceController < ApplicationController
       @cat_names << "'#{category[:category_name]}'"
     end
     @transaction = FinanceTransaction.find(params[:id])
-    @categories = FinanceTransactionCategory.all(:conditions => "is_income=true and name NOT IN (#{@cat_names.join(',')})")
+    @categories = FinanceTransactionCategory.where(is_income: true).where(name: @cat_names.join(','))
     if request.post? and @transaction.update_attributes(params[:transaction])
-      flash[:notice] = "#{t('flash7')}"
-      redirect_to :action=> 'income_list'
+      flash[:notice] = t('finance.flash7')
+      redirect_to action: :income_list
     end
   end
 
   def income_list
+    render layout: 'application'
   end
 
   def delete_transaction
@@ -212,9 +213,10 @@ class FinanceController < ApplicationController
   end
 
   def categories
-    @categories = FinanceTransactionCategory.all(:conditions => {:deleted => false},:order=>'name asc')
+    @categories = FinanceTransactionCategory.where(deleted: false).order('name asc')
     @fixed_categories = @categories.reject{|c|!c.is_fixed}
     @other_categories = @categories.reject{|c|c.is_fixed}
+    render layout: 'application'
   end
 
   def category_new
