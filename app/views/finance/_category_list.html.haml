@@ -18,19 +18,19 @@
 - #under the License.
 - c = 'even'
 - @fixed_categories.each do |cat|
-  %div{:class => "container#{cycle('odd', 'even')}"}
+  %div{class: "container#{cycle('odd', 'even')}"}
     .title
       = cat.name
 - @other_categories.each do |cat|
-  %div{:class => "container#{cycle('odd', 'even')}"}
+  %div{class: "container#{cycle('odd', 'even')}"}
     .title
       = cat.name
     .options
-      .edit= link_to_remote t('edit_text'), :url => { :action => 'category_edit', :id => cat.id }
+      .edit= link_to t('edit_text'), url_for(action: :category_edit, id: cat.id), remote: true
       .edit
-        - transaction = FinanceTransaction.find(:all, :conditions=>{:category_id=>cat.id})
+        - transaction = FinanceTransaction.where(category_id: cat.id)
         - if transaction.blank?
-          = link_to_remote t('delete_text'), :url => { :action => 'category_delete', :id => cat.id } , :confirm=>"#{t('are_you_sure_to_delete')}"
+          = link_to t('delete_text'), url_for(action: :category_delete, id: cat.id), remote: true, confirm: t('are_you_sure_to_delete')
         - else
-          = link_to_remote "<s>#{t('delete_text')}</s>", :url => { :action => '', :id => "" }
-#modal-box{:style => "display:none;"}
+          = link_to "<s>#{t('delete_text')}</s>", url_for(action: '', id: "" ), remote: true
+#modal-box{style: "display:none;"}
