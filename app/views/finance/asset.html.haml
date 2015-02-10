@@ -29,15 +29,21 @@
   .box
     .link-box
       .link-heading
-        = link_to_function("#{t('create_text')}") { |page|                                            |
-            page.replace_html 'modal-box', :partial => 'create_asset_form'                            |
-            page << "Modalbox.show($('modal-box'), {title: '#{t('create_new_asset')}', width: 500});" |
-          }                                                                                           |
+        = link_to t('create_text'), 'javascript:void(0);', onclick: 'openPopup();'
+        / = link_to_function("#{t('create_text')}") { |page|                                            |
+        /     page.replace_html 'modal-box', :partial => 'create_asset_form'                            |
+        /     page << "Modalbox.show($('modal-box'), {title: '#{t('create_new_asset')}', width: 500});" |
+        /   }
       .link-descr
         = t('creates_new_assets')
     .link-box
       .link-heading
-        = link_to t('view'), :action => "view_asset"
+        = link_to t('view'), action: :view_asset
       .link-descr
         = t('asset_view')
-    #modal-box{:style => "display:none;"}
+    #modal-box{style: "display:none;"}
+:javascript
+  function openPopup(){
+    jQuery('#modal-box').html("#{escape_javascript render 'create_asset_form'}")
+    jQuery('#modal-box').modalBox(width: 500)
+  }

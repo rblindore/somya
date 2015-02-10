@@ -515,6 +515,24 @@ Fedena::Application.routes.draw do
     end
   end
 
+  resources :payroll, only: :index do
+    collection do
+      get :update_dependent_fields
+      get :add_category
+      post :add_category
+    end
+    member do
+      get :edit_payroll_details
+      post :edit_payroll_details
+      get :manage_payroll
+      post :manage_payroll
+      delete :delete_category
+      get :inactivate_category
+      get :edit_category
+      post :edit_category
+    end
+  end
+
   root 'users#login' # :controller => 'user', :action => 'login'
 
   ## map.fa_scores 'assessment_scores/exam/:exam_id/fa_group/:fa_group_id', :controller=>'assessment_scores',:action=>'fa_scores'

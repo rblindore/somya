@@ -19,14 +19,7 @@
 = form_for :advance_search do |f|
   = f.text_field :student
   = f.text_field :student_id
-  = f.select :mode, :id,                                  |
-    [[t('monthly'),"Monthly"], [t('overall'),"Overall"]], |
-    {:prompt => "#{t('select_mode')}"},                   |
-    {:onchange => "#{remote_function(                     |
-    :url => { :action => 'month' },                       |
-    :with => "'mode='+value",                             |
-    :before => "Element.show('loader')",                  |
-    :success => "Element.hide('loader')"  )}"}            |
+  = f.select :mode, :id, [[t('monthly'),"Monthly"], [t('overall'),"Overall"]], { prompt: t('select_mode')}, { onchange: "onChangeRequest(this, '#{url_for(action: :month, mode: 'paramid')}')"}
   - unless @subject.nil?
-    = f.hidden_field :subject , :value=> @subject.id
+    = f.hidden_field :subject , value: @subject.id
   = f.submit t('submit')

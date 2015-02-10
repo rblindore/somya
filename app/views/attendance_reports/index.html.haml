@@ -32,24 +32,10 @@
       \:
     .text-input-bg
       - if @config.config_value == 'Daily'
-        = select :batch, :id,                          |
-          @batches.map {|b| [b.full_name, b.id] },     |
-          {:prompt => t('select_a_batch')},            |
-          {:onchange => "#{remote_function(            |
-          :url => { :action => 'mode' },               |
-          :with => "'batch_id='+value+'&subject_id='", |
-          :before => "Element.show('loader')",         |
-          :success => "Element.hide('loader')"  )}"}   |
+        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, {prompt: t('select_a_batch')}, {onchange: "onChangeRequest(this, '#{url_for(action: :mode, batch_id: 'paramid', subject_id: '')}')"}
       - else
-        = select :batch, :id,                        |
-          @batches.map {|b| [b.full_name, b.id] },   |
-          {:prompt => "#{t('select_a_batch')}"},     |
-          {:onchange => "#{remote_function(          |
-          :url => { :action => 'subject' },          |
-          :with => "'batch_id='+value",              |
-          :before => "Element.show('loader')",       |
-          :success => "Element.hide('loader')"  )}"} |
-      = image_tag("loader.gif", :align => "absmiddle", :border => 0, :id => "loader", :style =>"display: none;" )
+        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { prompt: t('select_a_batch')}, { onchange: "onChangeRequest(this, '#{url_for(action: :subject, batch_id: 'paramid')}')"}
+      = image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )
       .extender
   #subject
   #mode
