@@ -1,0 +1,7 @@
+- @dependent_categories.each do |c|
+  unless c.percentage.nil?
+    calculated_amount = (params[:amount].to_i * c.percentage/100)
+    jQuery("#manage_payroll_#{c.id}_amount").value(calculated_amount)
+    jQuery(document).on('click', "#manage_payroll_#{c.id}_amount", function(){
+      ajaxRequest(#{url_for(action: :update_dependent_fields, amount: calculated_amount, cat_id: c.id)})
+    })

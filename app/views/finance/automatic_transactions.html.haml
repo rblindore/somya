@@ -29,12 +29,18 @@
       = flash[:notice]
   .box
     .link-heading
-      = link_to_function("#{t('create_text')}") { |page|                               |
-          page.replace_html 'modal-box', :partial => 'transaction_trigger_create_form' |
-          page << "Modalbox.show($('modal-box'), {title: '', width: 500});"            |
-        }                                                                              |
+      = link_to t('create_text'), 'javascript:void(0);', onclick: 'create_text();'
+      / = link_to_function("#{t('create_text')}") { |page|                               |
+      /     page.replace_html 'modal-box', :partial => 'transaction_trigger_create_form' |
+      /     page << "Modalbox.show($('modal-box'), {title: '', width: 500});"            |
+      /   }                                                                              |
       .link-descr= t('create_auto_transaction')
     .link-descr
     #transaction-triggers-list
-      = render :partial => "transaction_triggers_list"
-    #modal-box{:style => "display:none;"}
+      = render "transaction_triggers_list"
+    #modal-box{ style: "display:none;"}
+:javascript
+  function create_text(){
+    jQuery('#modal-box').html("#{escape_javascript render 'transaction_trigger_create_form'}")
+    jQuery('#modal-box').modalBox(width: 500)
+  }

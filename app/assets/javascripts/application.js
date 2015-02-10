@@ -33,12 +33,17 @@ $(document).on('ready, dom:loaded', function(){
 
 function onChangeRequest(obj, url){
   if (obj.value != '' ){
-    jQuery.ajax({
-      url: makeUrl(obj, url),
-      type: 'GET',
-      dataType: 'script',
-    });
+    ajaxRequest(makeUrl(obj, url))
   }
+}
+
+
+function ajaxRequest(url){
+  jQuery.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'script',
+  });
 }
 
 function makeUrl(obj, url ){
