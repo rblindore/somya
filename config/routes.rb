@@ -478,9 +478,12 @@ Fedena::Application.routes.draw do
       get :fees_particulars_new
       get :fee_discounts
       post :master_category_create
+      post :category_create
       get :student_or_student_category
       post :fees_particulars_create
       get :fee_discount_new
+      get :transaction_pdf
+      get :salary_department
       get :categories_new
       get :category_new
       get :expense_create
@@ -491,15 +494,26 @@ Fedena::Application.routes.draw do
       get :income_create
       post :income_create
       get :monthly_income
-      get :income_list
+      get :income_list_update
+      post :transaction_trigger_create
+      get :update_monthly_report
     end
     member do
+      get :salary_employee
+      get :employee_payslip_monthly_report
+      get :transaction_trigger_edit
+      put :transaction_trigger_update
+      delete :transaction_trigger_delete
+      put :category_update
+      get :income_list_pdf
+      get :income_details_pdf
       get :income_edit
       get :update_master_fee_category_list
       get :show_fee_discounts
       get :show_master_categories_list
       get :category_edit
       get :category_delete
+      get :category_edit
       get :donation_receipt
       get :donation_edit
       post :donation_edit
@@ -507,6 +521,8 @@ Fedena::Application.routes.draw do
       get :donation_receipt_pdf
       get :expense_edit
       post :expense_edit
+      delete :delete_transaction
+      get :income_details
     end
   end
   resources :weekday, only: [:index, :create] do
