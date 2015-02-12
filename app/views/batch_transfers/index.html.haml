@@ -27,24 +27,17 @@
     %p.flash-msg
       = flash[:notice]
   .bread_crumb
-    = link_to t('configuration_text'), :controller => "configuration", :action=>"index"
+    = link_to t('configuration_text'), controller: :configuration, action: :index
     »
-    \#{link_to "#{t('courses_text')}", :controller => "courses", :action => "index"} »
-    \#{link_to "#{t('manage_batch')}", :controller => "courses", :action => "manage_batches"} »
+    \#{link_to t('courses_text'), controller: :courses, action: :index} »
+    \#{link_to t('manage_batch'), controller: :courses, action: :manage_batches} »
     \#{t('batch_transfer')}
   .label-field-pair
     %label
       = t('select_a_course')
       \:
-      \#{image_tag("loader.gif", :align => "absmiddle",:border => 0,:id => "loader", :style =>"display: none;" )}
+      \#{image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )}
     .text-input-bg
-      = select :courses, :name,                                               |
-        Course.active.map {|b| [b.full_name, b.id]},                          |
-        {:prompt => "#{t('select_a_course')}"},                               |
-        {:onChange => "#{remote_function(:url => {:action => "update_batch"}, |
-        :with => "'course_name='+ value",                                     |
-        :before => "Element.show('loader')",                                  |
-        :success => "Element.hide('loader')"                                  |
-        )}"}                                                                  |
+      = select :courses, :name, Course.active.map {|b| [b.full_name, b.id]}, { prompt: t('select_a_course')}, { onChange: "onChangeRequest(this, '#{url_for(action: 'update_batch', course_name: 'paramid')}'"}
   #update_batch
   .extender
