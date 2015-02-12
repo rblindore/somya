@@ -32,13 +32,7 @@
         = t('select_a_batch')
         \:
       .text-input-bg
-        = select :batch, :id,                              |
-          @batches.map {|b| [b.full_name, b.id] },         |
-          {prompt: t('common')},                           |
-          {onchange: "#{remote_function(                   |
-          url: week_weekday_index_path(batch_id: "value"), |
-          before: "Element.show('loader')",                |
-          success: "Element.hide('loader')"  )}"}          |
+        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { prompt: t('common')}, {onchange: "onChangeRequest(this, '#{week_weekday_index_path(batch_id: 'paramid')}')"}
         = image_tag("loader.gif", :align => "absmiddle", :border => 0, :id => "loader", :style =>"display: none;" )
     #weekdays= render :partial => "weekdays"
     #modal-box{:style => "display:none;"}

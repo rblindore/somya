@@ -29,28 +29,23 @@
   - if @timetables.blank?
     No timetables found
   - else
-    - current=Timetable.where("timetables.start_date <= ? AND timetables.end_date >= ?",@local_tzone_time.to_date, @local_tzone_time.to_date).first
+    - current = Timetable.where("timetables.start_date <= ? AND timetables.end_date >= ?",@local_tzone_time.to_date, @local_tzone_time.to_date).first
     = form_for :timetable_entry do |s|
       .label-field-pair
-        %label{:for => "timetable_entry_course_id"}= t('select_tte')
+        %label{ for: :timetable_entry_course_id}
+          = t('select_tte')
         .text-input-bg
-          = select :timetable_entry, :timetable_id, @timetables.map {|c| ["#{c.start_date.strftime("%d %b %Y")} - #{c.end_date.strftime("%d %b %Y")}", c.id]}, |
-            {:selected=>current.present? ? current.id : nil},{:onChange => 'show_timetable()'   }                                                              |
+          = select :timetable_entry, :timetable_id, @timetables.map {|c| ["#{c.start_date.strftime("%d %b %Y")} - #{c.end_date.strftime("%d %b %Y")}", c.id]}, { selected: current.present? ? current.id : nil}, {onChange: 'show_timetable()' }
       .label-field-pair
-        %label{:for => "timetable_entry_course_id"}= t('select_a_batch')
-        = image_tag("loader.gif",     |
-          :align => "absmiddle",      |
-          :border => 0,               |
-          :id => "loader",            |
-          :style =>"display: none;" ) |
+        %label{ for: :timetable_entry_course_id}
+          = t('select_a_batch')
+        = image_tag("loader.gif", align: "absmiddle", border: 0, id: "loader", style: "display: none;" )
         .text-input-bg
-          = select :timetable_entry, :course_id, @courses.map {|c| [c.full_name, c.id]}, |
-            {:selected => @course_id, :prompt => t('select_a_batch')},                   |
-            {:onChange => 'show_timetable()'   }                                         |
+          = select :timetable_entry, :course_id, @courses.map {|c| [c.full_name, c.id]}, { selected: @course_id, prompt: t('select_a_batch')}, { onChange: 'show_timetable()'}                                         |
   .extender
   #timetable_view
 :javascript
   function show_timetable(){
-  #{"\#{remote_function(:url => {:controller=>'timetable',:action => "update_timetable_view"},
-  :with => "'course_id='+$('timetable_entry_course_id').value+'&timetable_id='+$('timetable_entry_timetable_id').value", :before => "Element.show('loader')",
-  :success => "Element.hide('loader')")}"}}
+    - course_id = jQuery('timetable_entry_course_id').value;
+    - timetable_id = jQuery('timetable_entry_timetable_id').value;
+    ajaxRequest('#{url_for(controller: :timetable, action: :update_timetable_view, course_id: course_id, timetable_id: timetable_id  )}')
