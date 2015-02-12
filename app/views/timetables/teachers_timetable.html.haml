@@ -17,7 +17,7 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = link_to  image_tag("show_timetable.png"),:controller=>:timetable
+  = link_to  image_tag("show_timetable.png"), controller: :timetable
   %h1= t('timetable_text')
   %h3= t('teacher_timetable')
   #app-back-button
@@ -25,16 +25,10 @@
 #page-yield
   = form_for :timetable_entry do |s|
     .label-field-pair
-      %label{:for => "timetable_entry_course_id"}= t('select_a_tte')
-      = image_tag("loader.gif",     |
-        :align => "absmiddle",      |
-        :border => 0,               |
-        :id => "loader",            |
-        :style =>"display: none;" ) |
+      %label{for: :timetable_entry_course_id}
+        = t('select_a_tte')
+      = image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )
       .text-input-bg
-        = select :timetable_entry, :timetable_id, @timetables.map {|c| ["#{c.start_date.strftime("%d %b %Y")} - #{c.end_date.strftime("%d %b %Y")}", c.id]},      |
-          {:selected => @current.try(:id), :prompt => t('select_a_tte')},                                                                                         |
-          {:onChange => "#{remote_function(:url => {:action => "update_teacher_tt"}, :with => "'timetable_id='+value",       :before => "Element.show('loader')", |
-          :success => "Element.hide('loader')")}"}                                                                                                                |
+        = select :timetable_entry, :timetable_id, @timetables.map {|c| ["#{c.start_date.strftime("%d %b %Y")} - #{c.end_date.strftime("%d %b %Y")}", c.id]}, {selected: @current.try(:id), prompt: t('select_a_tte')}, {onChange: "onChangeRequest(this, '#{url_for(action: :update_teacher_tt, timetable_id: 'paramid')}')"}
   #timetable_view
     = render :partial=>"teacher_timetable"

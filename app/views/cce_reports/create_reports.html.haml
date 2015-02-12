@@ -24,16 +24,16 @@
     = back_button
 #inner-tab-menu
   %ul
-    %li= link_to "View Scheduled Jobs", scheduled_task_path(:job_object=>"Batch", :job_type=>"3")
+    %li= link_to "View Scheduled Jobs", scheduled_task_path(job_object: "Batch", job_type: "3")
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
   .bread_crumb
-    = link_to t('exam_text'), :controller => "exam", :action=>"index"
+    = link_to t('exam_text'), controller: :exam, action: :index
     »
-    \#{link_to t('report_center'), :controller => "exam", :action => "report_center"} »
-    \#{link_to t('cce_reports'), :controller => "cce_reports"} »
+    \#{link_to t('report_center'), controller: :exam, action: :report_center} »
+    \#{link_to t('cce_reports'), controller: :cce_reports} »
     Generate CCE Report
   - unless flash[:error].blank?
     #errorExplanation.errorExplanation
@@ -42,22 +42,14 @@
         - flash[:error].each do |error|
           %li= error
   .box
-    = form_for :course, :url=>{:action=>:create_reports} do |f|
+    = form_for :course, url: { action: :create_reports} do |f|
       .label-field-pair
         %label{:for => "student_course"}
           = t('select_a_course')
           \:
-          \#{image_tag("loader.gif",:align => "absmiddle",:border => 0,:id => "loader", :style =>"display: none;" )}
+          \#{image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )}
         .text-input-bg
-          = select :course, :id,                                                                                     |
-            @courses.map {|b| [b.course_name + " " + b.section_name, b.id]},                                         |
-            {:prompt => t('select_a_course')},                                                                       |
-            {:onChange => "#{remote_function(:url => {:controller=>"batches",:action=>"batches_ajax"},:method=>:get, |
-            :with => "'course_id='+ value +'&type=list'",                                                            |
-            :before => "Element.show('loader')",                                                                     |
-            :success => "Element.hide('loader')",                                                                    |
-            :update => "update_batch"                                                                                |
-            )}"}                                                                                                     |
+          = select :course, :id, @courses.map {|b| [ "#{b.course_name} #{b.section_name}", b.id]}, {prompt: t('select_a_course')}, { onChange:"onChangeRequest(this, '#{url_for(controller: :batches, action: :batches_ajax, course_id: 'paramid', type: 'list')}')"}
       #update_batch
-      = submit_tag "", :value => "► #{t('create_text')}", :class => "submit-button"
+      = submit_tag "", :value => "► #{t('create_text')}", class: "submit-button"
     .extender

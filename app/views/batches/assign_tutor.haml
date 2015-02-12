@@ -24,13 +24,10 @@
     = back_button
 #page-yield
   %ul#tutor-list
-    = render :partial=>'assigned_tutor_list'
+    = render 'assigned_tutor_list'
   .label-field-pair
-    %label{:for => "department_name"}= t('department')
+    %label{for: "department_name"}= t('department')
     .text-input-bg
-      = select :subject_assignment, :department_id, @departments.map { |s| [s.name, s.id] }, |
-        {:prompt => "#{t('select_a_department')}"},                                          |
-        {:onChange => "#{remote_function(:url => {:action => "update_employees"},            |
-        :with => "'department_id='+value+'&batch_id=#{@batch.id}&'+")}"}                     |
+      = select :subject_assignment, :department_id, @departments.map { |s| [s.name, s.id] }, {prompt: t('select_a_department')}, { onChange: "onChangeRequest(this, '#{url_for(action: :update_employees, department_id: 'paramid', batch_id: @batch.id)}')"}
   #employee-list
   .extender
