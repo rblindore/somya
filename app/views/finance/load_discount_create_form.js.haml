@@ -1,0 +1,7 @@
+- if ["batch_wise", "category_wise", "student_wise"].include?(params[:type])
+  jQuery("#form-box").html(#{escape_javascript( render "#{params[:type]}_discount_form")})
+  jQuery('#form-errors').html("")
+- else
+  jQuery("#form-box").html("")
+  jQuery('#form-errors').html("")
+
