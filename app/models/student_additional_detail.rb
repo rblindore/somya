@@ -31,7 +31,7 @@ class StudentAdditionalDetail < ActiveRecord::Base
   def validate
     if self.student_additional_field.is_mandatory == true
       if self.additional_info.blank?
-        errors.add("additional_info","can't be blank")
+        errors.add(:additional_info, "can't be blank")
         return false
       else
         return true
