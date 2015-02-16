@@ -18,14 +18,14 @@
 
 class Exam < ActiveRecord::Base
   validates_presence_of :start_time, :end_time
-  validates_numericality_of :maximum_marks, :minimum_marks, :allow_nil => true
-  validates_presence_of :maximum_marks, :minimum_marks, :if => :validation_should_present?, :on=>:update
+  validates_numericality_of :maximum_marks, :minimum_marks, allow_nil: true
+  validates_presence_of :maximum_marks, :minimum_marks, if: :validation_should_present?, :on=>:update
   belongs_to :exam_group
   belongs_to :subject, -> { where(is_deleted: false) }
   before_destroy :removable?
   before_save :update_exam_group_date
 
-  has_one :event ,:as=>:origin
+  has_one :event , as: :origin
 
   has_many :exam_scores
   has_many :archived_exam_scores
@@ -36,7 +36,7 @@ class Exam < ActiveRecord::Base
   accepts_nested_attributes_for :exam_scores
 
   def validation_should_present?
-    if self.exam_group.exam_type=="Grades"
+    if self.exam_group.exam_type == "Grades"
       return false
     else
       return true
@@ -49,12 +49,12 @@ class Exam < ActiveRecord::Base
   end
 
   def validate
-    errors.add_to_base("#{t('minmarks_cant_be_more_than_maxmarks')}") \
+    errors.add(:base, I18n.t('minmarks_cant_be_more_than_maxmarks')) \
       if minimum_marks and maximum_marks and minimum_marks > maximum_marks
-    errors.add_to_base("#{t('minmarks_cant_be_more_than_maxmarks')}") \
+    errors.add(:base, I18n.t('minmarks_cant_be_more_than_maxmarks')) \
       if minimum_marks and maximum_marks and minimum_marks > maximum_marks
     unless self.start_time.nil? or self.end_time.nil?
-      errors.add_to_base("#{t('end_time_cannot_before_start_time')}")if self.end_time < self.start_time
+      errors.add(:base, I18n.t('end_time_cannot_before_start_time')) if self.end_time < self.start_time
     end
   end
 
@@ -72,7 +72,7 @@ class Exam < ActiveRecord::Base
   end
 
   def score_for(student_id)
-    exam_score = self.exam_scores.find(:first, :conditions => { :student_id => student_id })
+    exam_score = self.exam_scores.where(student_id: student_id).first
     exam_score.nil? ? ExamScore.new : exam_score
   end
 
@@ -97,7 +97,7 @@ class Exam < ActiveRecord::Base
   def create_exam_event
     if self.event.blank?
       new_event = Event.create do |e|
-        e.title       = "#{t('exam_text')}"
+        e.title       = t('exam_text')
         e.description = "#{self.exam_group.name} #{t('for')} #{self.subject.batch.full_name} - #{self.subject.name}"
         e.start_date  = self.start_time
         e.end_date    = self.end_time
@@ -109,11 +109,11 @@ class Exam < ActiveRecord::Base
         be.batch_id = self.exam_group.batch_id
       end
       #self.event_id = new_event.id
-      self.update_attributes(:event_id=>new_event.id)
+      self.update_attributes(event_id: new_event.id)
     end
   end
 
   def update_exam_event
-    self.event.update_attributes(:start_date => self.start_time, :end_date => self.end_time) unless self.event.blank?
+    self.event.update_attributes(start_date: self.start_time, end_date: self.end_time) unless self.event.blank?
   end
 end

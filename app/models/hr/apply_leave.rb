@@ -21,37 +21,37 @@ class ApplyLeave < ActiveRecord::Base
   belongs_to :employee
   belongs_to :employee_leave_type
   before_create :check_leave_count
-  
+
   cattr_reader :per_page
   @@per_page = 12
 
   def check_leave_count
 
     unless self.start_date.nil? or self.end_date.nil?
-      errors.add_to_base("#{t('end_date_cant_before_start_date')}") if self.end_date < self.start_date
+      errors.add(:base, I18n.t('end_date_cant_before_start_date')) if self.end_date < self.start_date
 
     end
     unless self.start_date.nil? or self.end_date.nil? or self.employee_leave_types_id.nil?
-      leave = EmployeeLeave.find_by_employee_id(self.employee_id, :conditions=> "employee_leave_type_id = '#{self.employee_leave_types_id}'")
-      leave_required = (self.end_date.to_date-self.start_date.to_date).numerator+1
+      leave = EmployeeLeave.where(employee_id: self.employee_id, employee_leave_type_id: self.employee_leave_types_id).first
+      leave_required = (self.end_date.to_date-self.start_date.to_date).numerator + 1
       if self.start_date.to_date < self.employee.joining_date.to_date
-        errors.add_to_base("#{t('date_marked_is_before_join_date')}")
+        errors.add(:base, I18n.t('date_marked_is_before_join_date'))
 
       else
         if leave.leave_taken.to_f == leave.leave_count.to_f
-          errors.add_to_base("#{t('you_have_already_availed')}")
+          errors.add(:base, I18n.t('you_have_already_availed'))
 
         else
           if self.is_half_day == true
             new_leave_count = (leave_required)/2
             if leave.leave_taken.to_f+new_leave_count.to_f > leave.leave_count.to_f
-              errors.add_to_base("#{t('no_of_leaves_exceeded_max_allowed')}")
+              errors.add(:base, I18n.t('no_of_leaves_exceeded_max_allowed'))
 
             end
           else
             new_leave_count = leave_required.to_f
             if leave.leave_taken.to_f+new_leave_count.to_f > leave.leave_count.to_f
-              errors.add_to_base("#{t('no_of_leaves_exceeded_max_allowed')}")
+              errors.add(:base, I18n.t('no_of_leaves_exceeded_max_allowed'))
 
             end
           end

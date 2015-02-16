@@ -31,7 +31,7 @@ class Attendance < ActiveRecord::Base
       if self.student.batch_id == self.batch_id
         return true
       else
-        errors.add('batch_id',"attendance is not marked for present batch")
+        errors.add(:batch_id,"attendance is not marked for present batch")
         return false
       end
     end
@@ -39,9 +39,9 @@ class Attendance < ActiveRecord::Base
 
   def after_validate
     unless self.month_date.nil?
-      errors.add("#{t('attendance_before_the_date_of_admission')}")  if self.student.present? and self.month_date < self.student.admission_date
+      errors.add(:base, I18n.t('attendance_before_the_date_of_admission'))  if self.student.present? and self.month_date < self.student.admission_date
     else
-      errors.add("#{t('month_date_cant_be_blank')}")
+      errors.add(:base, I18n.t('month_date_cant_be_blank'))
     end
   end
 
@@ -52,5 +52,5 @@ class Attendance < ActiveRecord::Base
   def is_half_day
     forenoon == true or afternoon == true
   end
- 
+
 end

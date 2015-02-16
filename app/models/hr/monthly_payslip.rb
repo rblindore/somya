@@ -70,11 +70,11 @@ class MonthlyPayslip < ActiveRecord::Base
 
   def status_as_text
     if is_approved ==true
-      status = "#{t('approved')}"
+      status = I18n.t('approved')
     elsif is_rejected ==true
-      status = "#{t('rejected')}"
+      status = I18n.t('rejected')
     else
-      status = "#{t('pending')}"
+      status = I18n.t('pending')
     end
     return status
   end
@@ -83,19 +83,19 @@ class MonthlyPayslip < ActiveRecord::Base
   def self.total_employees_salary(start_date,end_date,dept_id="")
     total_monthly_payslips  = ""
     unless dept_id.blank?
-      active_employees_in_dept = Employee.find(:all,:select=>"id",:conditions=>"employee_department_id = #{dept_id}")
-      archived_employees_in_dept = ArchivedEmployee.find(:all,:select=>"former_id",:conditions=>"employee_department_id = #{dept_id}")
+      active_employees_in_dept = Employee.select("id").where(employee_department_id: dept_id)
+      archived_employees_in_dept = ArchivedEmployee.select("former_id").where(employee_department_id: dept_id)
       all_employees_in_dept = active_employees_in_dept.collect(&:id) + archived_employees_in_dept.collect{|a| a.former_id.to_i}
-      total_monthly_payslips = self.find(:all,:select=>"employee_id,amount,payroll_category_id,salary_date",:order => 'salary_date desc',:conditions => ["salary_date >= ? and salary_date <= ? and is_approved = 1 and employee_id IN (?)",start_date.to_date,end_date.to_date,all_employees_in_dept],:include=>[:payroll_category])
+      total_monthly_payslips = self.select("employee_id,amount,payroll_category_id,salary_date").order('salary_date desc').where("salary_date >= ? and salary_date <= ? and is_approved = 1 and employee_id IN (?)",start_date.to_date,end_date.to_date,all_employees_in_dept).includes(:payroll_category)
     else
-      total_monthly_payslips = self.find(:all,:select=>"employee_id,amount,payroll_category_id,salary_date",:order => 'salary_date desc',:conditions => ["salary_date >= ? and salary_date <= ? and is_approved = 1",start_date.to_date,end_date.to_date],:include=>[:payroll_category])
+      total_monthly_payslips = self.select("employee_id,amount,payroll_category_id,salary_date").order('salary_date desc').where("salary_date >= ? and salary_date <= ? and is_approved = 1", start_date.to_date, end_date.to_date).includes(:payroll_category)
     end
-    
+
     employee_ids = []
     employee_ids = total_monthly_payslips.collect(&:employee_id) unless total_monthly_payslips.blank?
     unless employee_ids.blank?
       employee_ids.uniq!
-      total_individual_payslips = IndividualPayslipCategory.find(:all,:conditions =>"salary_date >= '#{start_date.to_date}' and salary_date <= '#{end_date.to_date}' AND employee_id IN (#{employee_ids.join(",")})",:order=>"id ASC")
+      total_individual_payslips = IndividualPayslipCategory.where("salary_date >= '#{start_date.to_date}' and salary_date <= '#{end_date.to_date}' AND employee_id IN (#{employee_ids.join(",")})").order("id ASC")
     end
     total_salary = 0
     unless total_monthly_payslips.blank?
@@ -110,7 +110,7 @@ class MonthlyPayslip < ActiveRecord::Base
         total_salary -= payslip.amount.to_f if payslip.is_deduction==true
       end
     end
-    {:total_salary=>total_salary,:monthly_payslips=>total_monthly_payslips,:individual_categories=>total_individual_payslips}
+    { total_salary: total_salary, monthly_payslips: total_monthly_payslips, individual_categories: total_individual_payslips}
   end
 
 

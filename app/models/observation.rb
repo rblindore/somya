@@ -33,7 +33,7 @@ class Observation < ActiveRecord::Base
   end
 
   def validate
-    errors.add_to_base("Name can't be blank") if self.name.blank?
-    errors.add_to_base("Description can't be blank") if self.desc.blank?
+    errors.add(:base, "Name can't be blank") if self.name.blank?
+    errors.add(:base, "Description can't be blank") if self.desc.blank?
   end
 end

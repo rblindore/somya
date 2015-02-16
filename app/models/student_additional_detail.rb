@@ -18,7 +18,7 @@
 
 class StudentAdditionalDetail < ActiveRecord::Base
   belongs_to :student
-  belongs_to :student_additional_field, :foreign_key=>'additional_field_id'
+  belongs_to :student_additional_field, foreign_key: :additional_field_id
   #validates_presence_of :additional_info
 
   def save

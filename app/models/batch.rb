@@ -61,7 +61,7 @@ class Batch < ActiveRecord::Base
   scope :cce, -> { select("batches.*").joins(:course).where("courses.grading_type = #{GRADINGTYPES.invert["CCE"]}").order(:code)}
 
   def validate
-    errors.add(:start_date, "#{t('should_be_before_end_date')}.") \
+    errors.add(:start_date, I18n.t('should_be_before_end_date')) \
       if self.start_date > self.end_date \
       if self.start_date and self.end_date
   end

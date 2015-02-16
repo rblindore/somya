@@ -19,24 +19,24 @@
 class StudentCategory < ActiveRecord::Base
 
   has_many :students
-  has_many :fee_category ,:class_name =>"FinanceFeeCategory"
+  has_many :fee_category , class_name: "FinanceFeeCategory"
   before_destroy :check_dependence
   validates_presence_of :name
-  validates_uniqueness_of :name, :scope=>:is_deleted,:case_sensitive => false, :if=> 'is_deleted == false'
+  validates_uniqueness_of :name, scope: :is_deleted, case_sensitive: false, if: 'is_deleted == false'
 
   scope :active, -> { where(is_deleted: false)}
 
   def empty_students
     Student.find_all_by_student_category_id(self.id).each do |s|
-      s.update_attributes(:student_category_id=>nil)
+      s.update_attributes(student_category_id: nil)
     end
 
   end
 
   def check_dependence
     if Student.find_all_by_student_category_id(self.id).blank?
-       errors.add_to_base( "#{I18n.t('category_is_in_use')}")
-       return false
+      errors.add(:base, I18n.t('category_is_in_use'))
+      return false
     end
 
   end
