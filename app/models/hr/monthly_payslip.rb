@@ -44,24 +44,24 @@ class MonthlyPayslip < ActiveRecord::Base
     individual_payslip_category = ""
     unless dept_id =="All"
       active_employees_in_dept = Employee.find(:all,:select=>"id",:conditions=>"employee_department_id = #{dept_id}")
-      archived_employees_in_dept = ArchivedEmployee.find(:all,:select=>"former_id",:conditions=>"employee_department_id = #{dept_id}")
+      archived_employees_in_dept = ArchivedEmployee.select(:former_id).where(employee_department_id: dept_id)
       all_employees_in_dept = active_employees_in_dept.collect(&:id) + archived_employees_in_dept.collect{|a| a.former_id.to_i}
-      payslips = self.find_all_by_salary_date(salary_date.to_date,:conditions=>["employee_id IN (?)",all_employees_in_dept],:order=> "payroll_category_id ASC",:include=>[:payroll_category])
-      individual_payslip_category = IndividualPayslipCategory.find_all_by_salary_date(salary_date.to_date,:conditions=>["employee_id IN (?)",all_employees_in_dept],:order=>"id ASC")
+      payslips = self.where(salary_date: salary_date.to_date, employee_id: all_employees_in_dept).order("payroll_category_id ASC").includes(:payroll_category)
+      individual_payslip_category = IndividualPayslipCategory.where(salary_date: salary_date.to_date, employee_id: all_employees_in_dept).order("id ASC")
     else
-      payslips = self.find_all_by_salary_date(salary_date.to_date,:order=> "payroll_category_id ASC",:include=>[:payroll_category])
-      individual_payslip_category = IndividualPayslipCategory.find_all_by_salary_date(salary_date.to_date,:order=>"id ASC")
+      payslips = self.where(salary_date: salary_date.to_date).order("payroll_category_id ASC").includes(:payroll_category)
+      individual_payslip_category = IndividualPayslipCategory.where(salary_date: salary_date.to_date).order("id ASC")
     end
     grouped_monthly_payslips = payslips.group_by(&:employee_id) unless payslips.blank?
     grouped_individual_payslip_categories = individual_payslip_category.group_by(&:employee_id) unless individual_payslip_category.blank?
-    return_hash = {:monthly_payslips=>grouped_monthly_payslips,:individual_payslip_category=>grouped_individual_payslip_categories }
+    return_hash = { monthly_payslips: grouped_monthly_payslips, individual_payslip_category: grouped_individual_payslip_categories }
     return_hash
   end
 
   def active_or_archived_employee
-    employee = Employee.find(:first,:conditions=>"id=#{self.employee_id}")
+    employee = Employee.where(id: self.employee_id).first
     if employee.blank?
-      return  ArchivedEmployee.find(:first,:conditions=>"former_id=#{self.employee_id}")
+      return  ArchivedEmployee.where(former_id: self.employee_id).first
     else
       return employee
     end
@@ -69,9 +69,9 @@ class MonthlyPayslip < ActiveRecord::Base
 
 
   def status_as_text
-    if is_approved ==true
+    if is_approved == true
       status = I18n.t('approved')
-    elsif is_rejected ==true
+    elsif is_rejected == true
       status = I18n.t('rejected')
     else
       status = I18n.t('pending')

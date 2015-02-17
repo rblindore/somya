@@ -32,10 +32,16 @@ class ClassTiming < ActiveRecord::Base
     errors.add(:end_time, I18n.t('should_be_later')) \
       if self.start_time > self.end_time \
       unless self.start_time.nil? or self.end_time.nil?
-    self_check= self.new_record? ? "" : "id != #{self.id} and "
-    start_overlap = !ClassTiming.where(self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}", self.start_time,self.start_time,false).first.nil?
-    end_overlap = !ClassTiming.find(:first, :conditions=>[self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}", self.end_time,self.end_time,false]).nil?
-    between_overlap = !ClassTiming.find(:first, :conditions=>[self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}",self.end_time, self.start_time,false]).nil?
+
+
+    self_check = self.new_record? ? "" : "id != #{self.id} && "
+
+    start_overlap = !ClassTiming.where("#{self_check} start_time < ? && end_time > ? && is_deleted = ? && batch_id = ?", self.start_time, self.start_time, false, self.batch_id).blank?
+    # start_overlap = !ClassTiming.where(self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}", self.start_time,self.start_time,false).first.nil?
+    end_overlap = !ClassTiming.where("#{self_check} start_time < ? && end_time > ? && is_deleted = ? && batch_id = ? ", self.end_time, self.end_time, false, self.batch_id).blank?
+    # end_overlap = !ClassTiming.find(:first, :conditions=>[self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}", self.end_time,self.end_time,false]).nil?
+    between_overlap = !ClassTiming.where("#{self_check} start_time < ? && end_time > ? && is_deleted = ? && batch_id = ? ", self.end_time, self.start_time, false, self.batch_id).blank?
+    # between_overlap = !ClassTiming.find(:first, :conditions=>[self_check+"start_time < ? and end_time > ? and is_deleted = ? and batch_id #{self.batch_id.nil? ? 'is null' : '='+ self.batch_id.to_s}",self.end_time, self.start_time,false]).nil?
     errors.add(:start_time, I18n.t('overlap_existing_class_timing')) if start_overlap
     errors.add(:end_time, I18n.t('overlap_existing_class_timing')) if end_overlap
     errors.add(:base, I18n.t('class_time_overlaps_with_existing')) if between_overlap

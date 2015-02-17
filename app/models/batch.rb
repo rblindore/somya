@@ -103,13 +103,13 @@ class Batch < ActiveRecord::Base
   def allow_exam_acess(user)
     flag = true
     if user.employee? and user.role_symbols.include?(:subject_exam)
-      flag = false if user.employee_record.subjects.all(:conditions=>"batch_id = '#{self.id}'").blank?
+      flag = false if user.employee_record.subjects.where(batch_id: self.id).blank?
     end
     return flag
   end
 
   def is_a_holiday_for_batch?(day)
-    return true if Event.holidays.count(:all, :conditions => ["start_date <=? AND end_date >= ?", day, day] ) > 0
+    return true if Event.holidays.where("start_date <= ? AND end_date >= ?", day, day).count > 0
     false
   end
 
@@ -227,7 +227,7 @@ class Batch < ActiveRecord::Base
         ordered_percentages = []
         student_percentages = []
         @students.each do|student|
-          leaves = Attendance.find(:all,:conditions=>["student_id = ? and month_date >= ? and month_date <= ?",student.id,start_date,end_date])
+          leaves = Attendance.where("student_id = ? and month_date >= ? and month_date <= ?",student.id, start_date, end_date)
           absents = 0
           unless leaves.empty?
             leaves.each do|leave|
@@ -275,11 +275,11 @@ class Batch < ActiveRecord::Base
   def generate_batch_reports
     grading_type = self.grading_type
     students = self.students
-    grouped_exams = self.exam_groups.reject{|e| !GroupedExam.exists?(:batch_id=>self.id, :exam_group_id=>e.id)}
+    grouped_exams = self.exam_groups.reject{|e| !GroupedExam.exists?( batch_id: self.id, exam_group_id: e.id)
     unless grouped_exams.empty?
-      subjects = self.subjects(:conditions=>{:is_deleted=>false})
+      subjects = self.subjects.where(is_deleted: false)
       unless students.empty?
-        st_scores = GroupedExamReport.find_all_by_student_id_and_batch_id(students,self.id)
+        st_scores = GroupedExamReport.where(student_id: students, batch_id: self.id)
         unless st_scores.empty?
           st_scores.map{|sc| sc.destroy}
         end
@@ -287,20 +287,20 @@ class Batch < ActiveRecord::Base
         exam_marks=[]
         grouped_exams.each do|exam_group|
           subjects.each do|subject|
-            exam = Exam.find_by_exam_group_id_and_subject_id(exam_group.id,subject.id)
+            exam = Exam.where(exam_group_id: exam_group.id, subject_id: subject.id).first
             unless exam.nil?
               students.each do|student|
                 is_assigned_elective = 1
                 unless subject.elective_group_id.nil?
-                  assigned = StudentsSubject.find_by_student_id_and_subject_id(student.id,subject.id)
+                  assigned = StudentsSubject.where(student_id: student.id, subject_id: subject.id).first
                   if assigned.nil?
-                    is_assigned_elective=0
+                    is_assigned_elective = false
                   end
                 end
-                unless is_assigned_elective==0
+                unless is_assigned_elective == false
                   percentage = 0
                   marks = 0
-                  score = ExamScore.find_by_exam_id_and_student_id(exam.id,student.id)
+                  score = ExamScore.where(exam_id: exam.id, student_id: student.id).first
                   if grading_type.nil? or self.normal_enabled?
                     unless score.nil? or score.marks.nil?
                       percentage = (((score.marks.to_f)/exam.maximum_marks.to_f)*100)*((exam_group.weightage.to_f)/100)
@@ -356,11 +356,11 @@ class Batch < ActiveRecord::Base
           student_id = subject_mark[0]
           subject_id = subject_mark[1]
           marks = subject_mark[2].sum.to_f
-          prev_marks = GroupedExamReport.find_by_student_id_and_subject_id_and_batch_id_and_score_type(student_id,subject_id,self.id,"s")
+          prev_marks = GroupedExamReport.where(student_id: student_id, subject_id: subject_id, batch_id: self.id, score_type: "s").first
           unless prev_marks.nil?
-            prev_marks.update_attributes(:marks=>marks)
+            prev_marks.update_attributes(marks: marks)
           else
-            GroupedExamReport.create(:batch_id=>self.id,:student_id=>student_id,:marks=>marks,:score_type=>"s",:subject_id=>subject_id)
+            GroupedExamReport.create(batch_id: self.id, student_id: student_id, marks: marks,score_type: "s", subject_id: subject_id)
           end
         end
         exam_totals = []
@@ -380,11 +380,11 @@ class Batch < ActiveRecord::Base
               percent = ((score.to_f)/max_marks.to_f)*((exam_group.weightage.to_f)/100)
             end
           end
-          prev_exam_score = GroupedExamReport.find_by_student_id_and_exam_group_id_and_score_type(student_id,exam_group.id,"e")
+          prev_exam_score = GroupedExamReport.where(student_id: student_id, exam_group_id: exam_group.id, score_type: 'e').first
           unless prev_exam_score.nil?
-            prev_exam_score.update_attributes(:marks=>tot_score)
+            prev_exam_score.update_attributes(marks: tot_score)
           else
-            GroupedExamReport.create(:batch_id=>self.id,:student_id=>student_id,:marks=>tot_score,:score_type=>"e",:exam_group_id=>exam_group.id)
+            GroupedExamReport.create(batch_id: self.id, student_id: student_id, marks: tot_score, score_type: "e", exam_group_id: exam_group.id)
           end
           exam_flag=0
           exam_totals.each do|total|
@@ -400,11 +400,11 @@ class Batch < ActiveRecord::Base
         exam_totals.each do|exam_total|
           student_id=exam_total[0]
           total=exam_total[1].sum.to_f
-          prev_total_score = GroupedExamReport.find_by_student_id_and_batch_id_and_score_type(student_id,self.id,"c")
+          prev_total_score = GroupedExamReport.where(student_id: student_id, batch_id: self.id, score_type: "c")
           unless prev_total_score.nil?
-            prev_total_score.update_attributes(:marks=>total)
+            prev_total_score.update_attributes(marks: total)
           else
-            GroupedExamReport.create(:batch_id=>self.id,:student_id=>student_id,:marks=>total,:score_type=>"c")
+            GroupedExamReport.create(batch_id: self.id, student_id: student_id, marks: total, score_type: "c")
           end
         end
       end
@@ -560,9 +560,11 @@ class Batch < ActiveRecord::Base
         subject=subject.elective_group.subjects.first
       end
       #          Timetable.all(:conditions=>["('#{starting_date}' BETWEEN start_date AND end_date) OR ('#{ending_date}' BETWEEN start_date AND end_date) OR (start_date BETWEEN '#{starting_date}' AND #{ending_date}) OR (end_date BETWEEN '#{starting_date}' AND '#{ending_date}')"])
-      entries = TimetableEntry.find(:all,:joins=>:timetable,:include=>:weekday,:conditions=>["((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.subject_id = ? AND timetable_entries.batch_id = ?",starting_date,ending_date,starting_date,ending_date,starting_date,ending_date,subject.id,id]).group_by(&:timetable_id)
+      entries = TimetableEntry.joins(:timetable).includes(:weekday).where("((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.subject_id = ? AND timetable_entries.batch_id = ?", starting_date, ending_date, starting_date,ending_date, starting_date, ending_date, subject.id, id).group_by(&:timetable_id)
+      # entries = TimetableEntry.find(:all,:joins=>:timetable,:include=>:weekday,:conditions=>["((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.subject_id = ? AND timetable_entries.batch_id = ?",starting_date,ending_date,starting_date,ending_date,starting_date,ending_date,subject.id,id]).group_by(&:timetable_id)
     else
-      entries = TimetableEntry.find(:all,:joins=>:timetable,:include=>:weekday,:conditions=>["((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.batch_id = ?",starting_date,ending_date,starting_date,ending_date,starting_date,ending_date,id]).group_by(&:timetable_id)
+      entries = TimetableEntry.joins(:timetable).includes(:weekday).where("((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.batch_id = ?",starting_date, ending_date, starting_date, ending_date, starting_date, ending_date, id).group_by(&:timetable_id)
+      # entries = TimetableEntry.find(:all,:joins=>:timetable,:include=>:weekday,:conditions=>["((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.batch_id = ?",starting_date,ending_date,starting_date,ending_date,starting_date,ending_date,id]).group_by(&:timetable_id)
     end
     timetable_ids=entries.keys
     hsh2=Hash.new
@@ -587,12 +589,12 @@ class Batch < ActiveRecord::Base
 
   def create_coscholastic_reports
     report_hash={}
-    observation_groups.scoped(:include=>[{:observations=>:assessment_scores},{:cce_grade_set=>:cce_grades}]).each do |og|
+    observation_groups.scoped.includes([{:observations=>:assessment_scores},{:cce_grade_set=>:cce_grades}]).each do |og|
       og.observations.each do |o|
         report_hash[o.id]={}
-        o.assessment_scores.scoped(:conditions=>{:exam_id=>nil,:batch_id=>id}).group_by(&:student_id).each{|k,v| report_hash[o.id][k]=(v.sum(&:grade_points)/v.count.to_f).round}
+        o.assessment_scores.scoped.where(exam_id: nil, batch_id: id).group_by(&:student_id).each{|k,v| report_hash[o.id][k]=(v.sum(&:grade_points)/v.count.to_f).round}
         report_hash[o.id].each do |key,val|
-          o.cce_reports.build(:student_id=>key, :grade_string=>og.cce_grade_set.grade_string_for(val), :batch_id=> id)
+          o.cce_reports.build(student_id: key, grade_string: og.cce_grade_set.grade_string_for(val), batch_id: id)
         end
         o.save
       end
@@ -600,19 +602,19 @@ class Batch < ActiveRecord::Base
   end
 
   def delete_coscholastic_reports
-    CceReport.delete_all({:batch_id=>id,:exam_id=>nil})
+    CceReport.where(batch_id: id, exam_id: nil).delete_all
   end
 
   def fa_groups
-    FaGroup.all(:joins=>:subjects, :conditions=>{:subjects=>{:batch_id=>id}}).uniq
+    FaGroup.joins(:subjects).where('subjects.batch_id' => id).uniq
   end
 
   def create_scholastic_reports
     report_hash={}
     fa_groups.each do |fg|
-      fg.fa_criterias.all(:include=>:assessment_scores).each do |f|
+      fg.fa_criterias.includes(:assessment_scores).each do |f|
         report_hash[f.id]={}
-        f.assessment_scores.scoped(:conditions=>["exam_id IS NOT NULL AND batch_id = ?",id]).group_by(&:exam_id).each do |k1,v1|
+        f.assessment_scores.scoped.where("exam_id IS NOT NULL AND batch_id = ?",id).group_by(&:exam_id).each do |k1,v1|
           report_hash[f.id][k1]={}
           v1.group_by(&:student_id).each{|k2,v2| report_hash[f.id][k1][k2]=(v2.sum(&:grade_points)/v2.count.to_f)}
         end

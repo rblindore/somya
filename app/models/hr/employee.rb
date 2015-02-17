@@ -24,7 +24,7 @@ class Employee < ActiveRecord::Base
   belongs_to  :nationality, :class_name => 'Country'
   belongs_to  :user
   belongs_to  :reporting_manager,:class_name => "Employee"
-  
+
   has_many    :employees_subjects
   has_many    :subjects ,:through => :employees_subjects
   has_many    :timetable_entries
@@ -119,17 +119,17 @@ class Employee < ActiveRecord::Base
   end
   alias_method(:max_hours_day, :max_hours_per_day)
   alias_method(:max_hours_week, :max_hours_per_week)
-  
+
   def next_employee
-    next_st = self.employee_department.employees.first(:conditions => "id>#{self.id}",:order => "id ASC")
-    next_st ||= employee_department.employees.first(:order => "id ASC")
-    next_st ||= self.employee_department.employees.first(:order => "id ASC")
+    next_st = self.employee_department.employees.where("id>#{self.id}").order("id ASC").first
+    next_st ||= employee_department.employees.order("id ASC").first
+    next_st ||= self.employee_department.employees.order("id ASC").first
   end
 
   def previous_employee
-    prev_st = self.employee_department.employees.first(:conditions => "id<#{self.id}",:order => "id DESC")
-    prev_st ||= employee_department.employees.first(:order => "id DESC")
-    prev_st ||= self.employee_department.empoyees.first(:order => "id DESC")
+    prev_st = self.employee_department.employees.where("id<#{self.id}").order("id DESC").first
+    prev_st ||= employee_department.employees.order("id DESC").first
+    prev_st ||= self.employee_department.empoyees.order("id DESC").first
   end
 
   def full_name
@@ -137,20 +137,12 @@ class Employee < ActiveRecord::Base
   end
 
   def is_payslip_approved(date)
-    approve = MonthlyPayslip.find_all_by_salary_date_and_employee_id(date,self.id,:conditions => ["is_approved = true"])
-    if approve.empty?
-      return false
-    else
-      return true
-    end
+    approve = MonthlyPayslip.where(salary_date: date, employee_id: self.id, is_approved: true)
+    !approve.empty?
   end
   def is_payslip_rejected(date)
-    approve = MonthlyPayslip.find_all_by_salary_date_and_employee_id(date,self.id,:conditions => ["is_rejected = true"])
-    if approve.empty?
-      return false
-    else
-      return true
-    end
+    approve = MonthlyPayslip.where(salary_date: date, employee_id: self.id, is_rejected: true)
+    !approve.empty?
   end
 
   def self.total_employees_salary(employees,start_date,end_date)
@@ -166,12 +158,8 @@ class Employee < ActiveRecord::Base
 
   def employee_salary(salary_date)
 
-    monthly_payslips = MonthlyPayslip.find(:all,
-      :order => 'salary_date desc',
-      :conditions => ["employee_id ='#{self.id}'and salary_date = '#{salary_date}' and is_approved = 1"])
-    individual_payslip_category = IndividualPayslipCategory.find(:all,
-      :order => 'salary_date desc',
-      :conditions => ["employee_id ='#{self.id}'and salary_date >= '#{salary_date}'"])
+    monthly_payslips = MonthlyPayslip.where(employee_id: self.id, salary_date: salary_date, is_approved: true).order('salary_date desc')
+    individual_payslip_category = IndividualPayslipCategory.where("employee_id ='#{self.id}'and salary_date >= '#{salary_date}'").order('salary_date desc')
     individual_category_non_deductionable = 0
     individual_category_deductionable = 0
     individual_payslip_category.each do |pc|
@@ -210,13 +198,12 @@ class Employee < ActiveRecord::Base
 
 
   def salary(start_date,end_date)
-    MonthlyPayslip.find_by_employee_id(self.id,:order => 'salary_date desc',
-      :conditions => ["salary_date >= '#{start_date.to_date}' and salary_date <= '#{end_date.to_date}' and is_approved = 1"]).salary_date
+    MonthlyPayslip.where(employee_id: self.id).where("salary_date >= '#{start_date.to_date}' and salary_date <= '#{end_date.to_date}' and is_approved = 1").order('salary_date desc').first.salary_date
 
   end
 
   def archive_employee(status)
-    self.update_attributes(:status_description => status)
+    self.update_attributes(status_description: status)
     employee_attributes = self.attributes
     employee_attributes.delete "id"
     employee_attributes.delete "photo_file_size"
@@ -243,11 +230,10 @@ class Employee < ActiveRecord::Base
       self.destroy
     end
   end
- 
+
 
   def all_salaries(start_date,end_date)
-    MonthlyPayslip.find_all_by_employee_id(self.id,:select =>"distinct salary_date" ,:order => 'salary_date desc',
-      :conditions => ["salary_date >= '#{start_date.to_date}' and salary_date <= '#{end_date.to_date}' and is_approved = 1"])
+    MonthlyPayslip.where(employee_id: self.id).select("distinct salary_date").where("salary_date >= '#{start_date.to_date}' and salary_date <= '#{end_date.to_date}' and is_approved = #{true}").order('salary_date desc')
   end
 
   def self.calculate_salary(monthly_payslip,individual_payslip_category)
@@ -279,15 +265,14 @@ class Employee < ActiveRecord::Base
     net_deductionable_amount = individual_category_deductionable + deductionable_amount
     net_amount = net_non_deductionable_amount - net_deductionable_amount
 
-    return_hash = {:net_amount=>net_amount,:net_deductionable_amount=>net_deductionable_amount,\
-        :net_non_deductionable_amount=>net_non_deductionable_amount }
+    return_hash = { net_amount: net_amount, net_deductionable_amount: net_deductionable_amount, net_non_deductionable_amount: net_non_deductionable_amount }
     return_hash
   end
 
   def self.find_in_active_or_archived(id)
-    employee = Employee.find(:first,:conditions=>"id=#{id}")
+    employee = Employee.where(id: id).first
     if employee.blank?
-      return  ArchivedEmployee.find(:first,:conditions=>"former_id=#{id}")
+      return  ArchivedEmployee.where(former_id: id).first
     else
       return employee
     end
@@ -303,5 +288,5 @@ class Employee < ActiveRecord::Base
   def former_dependency
     FedenaPlugin.check_dependency(self,"former")
   end
-  
+
 end

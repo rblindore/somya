@@ -28,7 +28,7 @@ class Event < ActiveRecord::Base
 
   def validate
     unless self.start_date.nil? or self.end_date.nil?
-      errors.add(:end_time, "#{I18n.t('can_not_be_before_the_start_time')}") if self.end_date < self.start_date
+      errors.add(:end_time, I18n.t('can_not_be_before_the_start_time')) if self.end_date < self.start_date
     end
   end
 
@@ -69,7 +69,7 @@ class Event < ActiveRecord::Base
         end
       else
         flag = true
-      end 
+      end
     else
       flag = true
     end
@@ -87,5 +87,5 @@ class Event < ActiveRecord::Base
     end
   end
 
-  
+
 end

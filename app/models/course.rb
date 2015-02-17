@@ -73,14 +73,14 @@ class Course < ActiveRecord::Base
   end
 
   def find_course_rank(batch_ids,sort_order)
-    batches = Batch.find_all_by_id(batch_ids)
-    @students = Student.find_all_by_batch_id(batches)
-    @grouped_exams = GroupedExam.find_all_by_batch_id(batches)
+    batches = Batch.where(id: batch_ids)
+    @students = Student.where(batch_id: batches)
+    @grouped_exams = GroupedExam.where(batch_id: batches)
     ordered_scores = []
     student_scores = []
     ranked_students = []
     @students.each do|student|
-      score = GroupedExamReport.find_by_student_id_and_batch_id_and_score_type(student.id,student.batch_id,"c")
+      score = GroupedExamReport.where(student_id: student.id, batch_id: student.batch_id, score_type: "c").first
       marks = 0
       unless score.nil?
         marks = score.marks
