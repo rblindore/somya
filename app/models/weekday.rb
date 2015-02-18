@@ -19,7 +19,7 @@
 class Weekday < ActiveRecord::Base
 
   belongs_to :batch
-  has_many :timetable_entries , :dependent=>:destroy
+  has_many :timetable_entries , dependent: :destroy
   default_scope { order('weekday asc') }
   scope :default, -> { where(batch_id: nil, is_deleted: false)}
   scope :for_batch, -> (b) {  where(batch_id: b.to_i, is_deleted: false) }
@@ -30,7 +30,7 @@ class Weekday < ActiveRecord::Base
     if weekdays.empty?
       weekdays = Weekday.default
     end
-    days=weekdays.group_by(&:day_of_week)
+    days = weekdays.group_by(&:day_of_week)
   end
 
   def deactivate
@@ -38,18 +38,18 @@ class Weekday < ActiveRecord::Base
   end
 
   def self.add_day(batch_id,day)
-    unless batch_id==0
+    unless batch_id == 0
       unless Weekday.where(batch_id: batch_id, day_of_week: day).blank?
-        Weekday.where(batch_id: batch_id, day_of_week: day).first.update_attributes(is_deleted: false,:day_of_week => day)
+        Weekday.where(batch_id: batch_id, day_of_week: day).first.update_attributes(is_deleted: false, day_of_week: day)
       else
-        w=Weekday.new(day_of_week: day, weekday: day, batch_id: batch_id, is_deleted: false)
+        w = Weekday.new(day_of_week: day, weekday: day, batch_id: batch_id, is_deleted: false)
         w.save
       end
     else
       unless Weekday.where(batch_id: nil, day_of_week: day).blank?
-        Weekday.where(batch_id: nil, day_of_week: day).first.update_attributes(:is_deleted=>false,:day_of_week => day)
+        Weekday.where(batch_id: nil, day_of_week: day).first.update_attributes( is_deleted: false, day_of_week: day)
       else
-        w=Weekday.new(day_of_week: day, weekday: day, is_deleted: false)
+        w = Weekday.new(day_of_week: day, weekday: day, is_deleted: false)
         w.save
       end
     end

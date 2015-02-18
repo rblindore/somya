@@ -87,8 +87,8 @@ class Student < ActiveRecord::Base
   end
 
   def is_active_true
-    unless self.is_active == 1
-      self.is_active = 1
+    unless self.is_active == true
+      self.is_active = true
     end
   end
 
@@ -174,7 +174,7 @@ class Student < ActiveRecord::Base
   end
 
   def previous_fee_student(date)
-    fee = FinanceFee.where("student_id < #{self.id} and fee_collection_id = #{date}").
+    fee = FinanceFee.where("student_id < ? and fee_collection_id = ?", self.id, date).
       joins(:student).order("student_id DESC").first
 
     prev_st = fee.student unless fee.blank?

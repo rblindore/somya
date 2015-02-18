@@ -18,24 +18,24 @@
 
 class FinanceFeeCollection < ActiveRecord::Base
   belongs_to :batch
-  has_many :finance_fees, :foreign_key =>"fee_collection_id",:dependent=>:destroy
-  has_many :finance_transactions, :through => :finance_fees
-  has_many :students, :through => :finance_fees
-  has_many :fee_collection_particulars ,:dependent=>:destroy
-  has_many :fee_collection_discounts   ,:dependent=>:destroy
-  belongs_to :fee_category,:class_name => "FinanceFeeCategory"
-  has_one :event, :as => :origin
+  has_many :finance_fees, foreign_key: :fee_collection_id, dependent: :destroy
+  has_many :finance_transactions, through: :finance_fees
+  has_many :students, through: :finance_fees
+  has_many :fee_collection_particulars, dependent: :destroy
+  has_many :fee_collection_discounts, dependent: :destroy
+  belongs_to :fee_category, class_name: "FinanceFeeCategory"
+  has_one :event, as: :origin
 
 
-  validates_presence_of :name,:start_date,:fee_category_id,:end_date,:due_date
+  validates_presence_of :name, :start_date, :fee_category_id, :end_date, :due_date
 
   after_create :create_associates
 
   def validate
     unless self.start_date.nil? or self.end_date.nil?
-      errors.add_to_base("#{t('start_date_cant_be_after_end_date')}") if self.start_date > self.end_date
-      errors.add_to_base("#{t('start_date_cant_be_after_due_date')}") if self.start_date > self.due_date
-      errors.add_to_base("#{t('end_date_cant_be_after_due_date')}") if self.end_date > self.due_date
+      errors.add(:base, I18n.t('start_date_cant_be_after_end_date')) if self.start_date > self.end_date
+      errors.add(:base, I18n.t('start_date_cant_be_after_due_date')) if self.start_date > self.due_date
+      errors.add(:base, I18n.t('end_date_cant_be_after_due_date')) if self.end_date > self.due_date
     else
     end
   end

@@ -23,5 +23,5 @@ class TimetableEntry < ActiveRecord::Base
   belongs_to :subject
   belongs_to :employee
   belongs_to :weekday
-  delegate :day_of_week,:to=>:weekday
+  delegate :day_of_week, to: :weekday
 end

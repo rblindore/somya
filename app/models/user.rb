@@ -146,17 +146,17 @@ class User < ActiveRecord::Base
     when 'Student'
       all_events += events.where("? between date(events.start_date) and date(events.end_date)", date)
       all_events += student_record.batch.events.where("? between date(events.start_date) and date(events.end_date)", date)
-      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = true", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = #{true}", date)
     when "Parent"
       all_events += events.where("? between date(events.start_date) and date(events.end_date)", date)
       all_events += parent_record.user.events.where("? between date(events.start_date) and date(events.end_date)", date)
       all_events += parent_record.batch.events.where("? between date(events.start_date) and date(events.end_date)", date)
-      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = true", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = #{true}", date)
     when "Employee"
       all_events += events.where("? between events.start_date and events.end_date", date)
       all_events += employee_record.employee_department.events.where("? between date(events.start_date) and date(events.end_date)", date)
-      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_exam = true", date)
-      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = true", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_exam = #{true}", date)
+      all_events += Event.where("(? between date(events.start_date) and date(events.end_date)) and is_common = #{true}", date)
     end
     all_events
   end
@@ -169,17 +169,17 @@ class User < ActiveRecord::Base
     when 'Student'
       all_events += events.where("? < date(events.end_date)", date)
       all_events += student_record.batch.events.where("? < date(events.end_date)", date).order(:start_date)
-      all_events += Event.where("(? < date(events.end_date)) and is_common = true", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_common = #{true}", date).order(:start_date)
     when "Parent"
       all_events += events.where("? < date(events.end_date)", date)
       all_events += parent_record.user.events.where("? < date(events.end_date)", date)
       all_events += parent_record.batch.events.where("? < date(events.end_date)", date).order(:start_date)
-      all_events += Event.where("(? < date(events.end_date)) and is_common = true", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_common = #{true}", date).order(:start_date)
     when "Employee"
       all_events += events.where("? < date(events.end_date)", date).order(:start_date)
       all_events += employee_record.employee_department.events.where("? < date(events.end_date)", date).order(:start_date)
-      all_events += Event.where("(? < date(events.end_date)) and is_exam = true", date).order(:start_date)
-      all_events += Event.where("(? < date(events.end_date)) and is_common = true", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_exam = #{true}", date).order(:start_date)
+      all_events += Event.where("(? < date(events.end_date)) and is_common = #{true}", date).order(:start_date)
     end
     start_date = all_events.collect(&:start_date).min
     unless start_date
@@ -189,6 +189,7 @@ class User < ActiveRecord::Base
       next_date
     end
   end
+
   def soft_delete
     self.update_attributes(is_deleted: true)
   end

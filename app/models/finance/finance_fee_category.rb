@@ -95,13 +95,14 @@ class FinanceFeeCategory < ActiveRecord::Base
   end
 
   def self.common_active
-    self.find(:all , :conditions => ["finance_fee_categories.is_master = '#{1}' and finance_fee_categories.is_deleted = '#{false}'"], :joins=>"INNER JOIN batches on finance_fee_categories.batch_id = batches.id AND batches.is_active = 1 AND batches.is_deleted = 0 ",:group => :name)
+    where("finance_fee_categories.is_master = ? AND finance_fee_categories.is_deleted = ?", true, false).joins("INNER JOIN batches on finance_fee_categories.batch_id = batches.id AND batches.is_active = #{true} AND batches.is_deleted = #{false}").group('finance_fee_categories.name')
+    # self.find(:all , :conditions => ["finance_fee_categories.is_master = '#{1}' and finance_fee_categories.is_deleted = '#{false}'"], :joins=>"INNER JOIN batches on finance_fee_categories.batch_id = batches.id AND batches.is_active = 1 AND batches.is_deleted = 0 ",:group => :name)
   end
 
 
   def is_collection_open
-    collection = FinanceFeeCollection.find_all_by_fee_category_id(self.id,:conditions=>"start_date < '#{Date.today.to_date}' and due_date > '#{Date.today.to_date}'")
-    collection.reject!{ |c|c.no_transaction_present } unless collection.nil?
+    collection = FinanceFeeCollection.where(fee_category_id: self.id).where("start_date < '#{Date.today.to_date}' and due_date > '#{Date.today.to_date}'").to_a
+    collection.reject!{|c|c.no_transaction_present } unless collection.nil?
     collection.present?
   end
 

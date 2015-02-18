@@ -16,7 +16,7 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 class Timetable < ActiveRecord::Base
-  has_many :timetable_entries , :dependent=>:destroy
+  has_many :timetable_entries , dependent: :destroy
   validates_presence_of :start_date
   validates_presence_of :end_date
   default_scope {order('start_date ASC')}
@@ -27,9 +27,9 @@ class Timetable < ActiveRecord::Base
     end
     range=register_range(batch,date)
     holidays=batch.holiday_event_dates
-    entries = TimetableEntry.find(:all,:joins=>[:timetable, :weekday, :class_timing],:include=>:weekday,:conditions=>["((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.subject_id = ? AND timetable_entries.batch_id = ? AND class_timings.is_deleted = false AND weekdays.is_deleted = false",range.first,range.last,range.first,range.last,range.first,range.last,subject.id,batch.id])
+    entries = TimetableEntry.joins(:timetable, :weekday, :class_timing).includes(:weekday).where("((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date) OR (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)) AND timetable_entries.subject_id = ? AND timetable_entries.batch_id = ? AND class_timings.is_deleted = ? AND weekdays.is_deleted = ?", range.first, range.last, range.first, range.last, range.first, range.last, subject.id, batch.id, false, false)
     #    entries = TimetableEntry.find(:all,:joins=>:timetable,:include=>:weekday,:conditions=>["(timetables.start_date <= ? OR timetables.end_date >= ?) AND timetable_entries.subject_id = ? AND timetable_entries.batch_id = ?",range.first,range.last,subject.id,batch.id])
-    timetable_ids=entries.collect(&:timetable_id).uniq
+    timetable_ids = entries.collect(&:timetable_id).uniq
     hsh2=ActiveSupport::OrderedHash.new
     unless timetable_ids.nil?
       timetables=find(timetable_ids)
@@ -51,23 +51,23 @@ class Timetable < ActiveRecord::Base
   end
 
   def self.tte_for_the_day(batch,date)
-    entries = TimetableEntry.find(:all,:joins=>[:timetable, :class_timing, :weekday],:conditions=>["(timetables.start_date <= ? AND timetables.end_date >= ?)  AND timetable_entries.batch_id = ? AND class_timings.is_deleted = false AND weekdays.is_deleted = false",date,date,batch.id], :order=>"class_timings.start_time")
-    if entries.empty?
-      today=[]
+    entries = TimetableEntry.joins(:timetable, :class_timing, :weekday).where("(timetables.start_date <= ? AND timetables.end_date >= ?)  AND timetable_entries.batch_id = ? AND class_timings.is_deleted = ? AND weekdays.is_deleted = ?", date, date, batch.id, false, false).order("class_timings.start_time")
+    today = if entries.empty?
+      []
     else
-      today=entries.select{|a| a.day_of_week==date.wday}
+      entries.select{|a| a.day_of_week==date.wday}
     end
     today
   end
 
   def self.tte_for_the_weekday(batch,day)
     date=Date.today
-    entries = TimetableEntry.find(:all,:joins=>[:timetable, :class_timing, :weekday],:conditions=>["(timetables.start_date <= ? AND timetables.end_date >= ?)  AND timetable_entries.batch_id = ? AND class_timings.is_deleted = false AND weekdays.is_deleted = false",date,date,batch.id], :order=>"class_timings.start_time",:include=>[:employee,:class_timing,:subject])
-    if entries.empty?
-      today=[]
-    else
-      today=entries.select{|a| a.day_of_week==day}
-    end
+    entries = TimetableEntry.joins(:timetable, :class_timing, :weekday).includes(:employee,:class_timing,:subject).where("(timetables.start_date <= ? AND timetables.end_date >= ?)  AND timetable_entries.batch_id = ? AND class_timings.is_deleted = ? AND weekdays.is_deleted = ?",date, date, batch.id, false, false).order("class_timings.start_time")
+    # if entries.empty?
+      # today = []
+    # else
+      today = entries.select{|a| a.day_of_week == day}
+    # end
     today
   end
 
@@ -76,13 +76,13 @@ class Timetable < ActiveRecord::Base
     electives = employee.subjects.select{|sub| sub.elective_group_id.present?}
     elective_subjects=electives.map{|x| x.elective_group.subjects.first}
     entries =[]
-    entries += TimetableEntry.find(:all,:joins=>[:timetable, :class_timing, :weekday],:conditions=>["(timetables.start_date <= ? AND timetables.end_date >= ?) AND timetable_entries.subject_id in (?) AND timetable_entries.employee_id = (?) AND class_timings.is_deleted = false AND weekdays.is_deleted = false",date,date,subjects,employee.id], :order=>"class_timings.start_time")
-    entries += TimetableEntry.find(:all,:joins=>[:timetable, :class_timing, :weekday],:conditions=>["(timetables.start_date <= ? AND timetables.end_date >= ?) AND timetable_entries.subject_id in (?)  AND class_timings.is_deleted = false AND weekdays.is_deleted = false",date,date,elective_subjects], :order=>"class_timings.start_time")
-    if entries.empty?
-      today=[]
-    else
+    entries += TimetableEntry.joins(:timetable, :class_timing, :weekday).where("(timetables.start_date <= ? AND timetables.end_date >= ?) AND timetable_entries.subject_id in (?) AND timetable_entries.employee_id = (?) AND class_timings.is_deleted = ? AND weekdays.is_deleted = false", date, date, subjects, employee.id, false, false).order("class_timings.start_time")
+    entries += TimetableEntry.joins(:timetable, :class_timing, :weekday).where("(timetables.start_date <= ? AND timetables.end_date >= ?) AND timetable_entries.subject_id in (?)  AND class_timings.is_deleted = ? AND weekdays.is_deleted = ?", date, date, elective_subjects, false, false).order("class_timings.start_time")
+    # if entries.empty?
+      # today=[]
+    # else
       today=entries.select{|a| a.day_of_week==date.wday}
-    end
+    # end
     today
   end
 
@@ -91,12 +91,12 @@ class Timetable < ActiveRecord::Base
     unless subject.elective_group.nil?
       subject=subject.elective_group.subjects.first
     end
-    entries = TimetableEntry.find(:all,:joins=>[:timetable, :class_timing, :weekday],:conditions=>["(timetables.start_date <= ? AND timetables.end_date >= ?)  AND timetable_entries.subject_id = ? AND class_timings.is_deleted = false AND weekdays.is_deleted = false",date,date,subject.id])
-    if entries.empty?
-      today=[]
-    else
-      today=entries.select{|a| a.day_of_week==date.wday}
-    end
+    entries = TimetableEntry.joins(:timetable, :class_timing, :weekday).where("(timetables.start_date <= ? AND timetables.end_date >= ?)  AND timetable_entries.subject_id = ? AND class_timings.is_deleted = ? AND weekdays.is_deleted = ?", date, date, subject.id, false, false)
+    # if entries.empty?
+      # today=[]
+    # else
+      today = entries.select{|a| a.day_of_week == date.wday}
+    # end
     today
   end
 

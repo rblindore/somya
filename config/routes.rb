@@ -445,6 +445,7 @@ Fedena::Application.routes.draw do
 
   resources :finance, only: :index do
     collection do
+      get :load_discount_create_form
       get :categories_new
       get :fees_index
       get :categories

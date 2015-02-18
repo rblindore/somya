@@ -17,8 +17,8 @@
 #limitations under the License.
 class ClassDesignation < ActiveRecord::Base
   validates_presence_of :name
-  validates_numericality_of :cgpa,:if=>:has_gpa
-  validates_numericality_of :marks, :if=>:has_cwa
+  validates_numericality_of :cgpa, if: :has_gpa
+  validates_numericality_of :marks, if: :has_cwa
 
   belongs_to :course
 

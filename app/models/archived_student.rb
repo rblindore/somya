@@ -73,11 +73,11 @@ class ArchivedStudent < ActiveRecord::Base
 
   def graduated_batches
     # SELECT * FROM `batches` INNER JOIN `batch_students` ON `batches`.id = `batch_students`.batch_id
-    Batch.find(:all,:conditions=> ["batch_students.student_id = #{former_id.to_i}"], :joins =>'INNER JOIN batch_students ON batches.id = batch_students.batch_id' )
+    Batch.joins('INNER JOIN batch_students ON batches.id = batch_students.batch_id').where("batch_students.student_id = #{former_id.to_i}")
   end
 
   def additional_detail(additional_field)
-    StudentAdditionalDetail.find_by_additional_field_id_and_student_id(additional_field,self.former_id)
+    StudentAdditionalDetail.where(additional_field_id: additional_field, student_id: self.former_id).first
   end
 
   def has_retaken_exam(subject_id)

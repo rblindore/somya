@@ -17,9 +17,9 @@
 #limitations under the License.
 class RankingLevel < ActiveRecord::Base
   validates_presence_of :name
-  validates_numericality_of :gpa,:if=>:has_gpa
-  validates_numericality_of :marks, :if=>:has_cwa
-  validates_numericality_of :subject_count, :allow_nil=>true
+  validates_numericality_of :gpa, if: :has_gpa
+  validates_numericality_of :marks, if: :has_cwa
+  validates_numericality_of :subject_count, allow_nil: true
 
   belongs_to :course
 

@@ -2350,28 +2350,14 @@ class FinanceController < ApplicationController
     if params[:type]== "batch_wise"
       @fee_categories = FinanceFeeCategory.common_active
       @fee_discount = BatchFeeDiscount.new
-      render :update do |page|
-        page.replace_html "form-box", :partial => "batch_wise_discount_form"
-        page.replace_html 'form-errors', :text =>""
-      end
     elsif params[:type]== "category_wise"
       @fee_categories = FinanceFeeCategory.common_active
       @student_categories = StudentCategory.active
-      render :update do |page|
-        page.replace_html "form-box", :partial => "category_wise_discount_form"
-        page.replace_html 'form-errors', :text =>""
-      end
     elsif params[:type] == "student_wise"
       @courses = Course.active
-      render :update do |page|
-        page.replace_html "form-box", :partial => "student_wise_discount_form"
-        page.replace_html 'form-errors', :text =>""
-      end
-    else
-      render :update do |page|
-        page.replace_html "form-box", :text => ""
-        page.replace_html 'form-errors', :text =>""
-      end
+    end
+    respond_to do |format|
+      format.js { render 'load_discount_create_form' }
     end
   end
 
@@ -2482,9 +2468,6 @@ class FinanceController < ApplicationController
     @fee_category = FinanceFeeCategory.find(params[:id])
     @discounts = @fee_category.fee_discounts
     @fee_category.is_collection_open ? @discount_edit = false : @discount_edit = true
-    render :update do |page|
-      page.replace_html "discount-box", :partial => "show_fee_discounts"
-    end
   end
 
   def edit_fee_discount
