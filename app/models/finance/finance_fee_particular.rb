@@ -21,7 +21,7 @@ class FinanceFeeParticular < ActiveRecord::Base
   belongs_to :finance_fee_category
   belongs_to :student_category
   validates_presence_of :name,:amount
-  validates_numericality_of :amount, :greater_than_or_equal_to => 0, :message => "#{I18n.t('must_be_positive')}"
+  validates_numericality_of :amount, greater_than_or_equal_to: 0, message: I18n.t('must_be_positive')
 
   scope :active, -> { where(:is_deleted => false)}
   cattr_reader :per_page
