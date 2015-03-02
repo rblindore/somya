@@ -17,14 +17,14 @@
 #limitations under the License.
 
 class FinanceTransaction < ActiveRecord::Base
-  belongs_to :category, :class_name => 'FinanceTransactionCategory', :foreign_key => 'category_id'
+  belongs_to :category, class_name: 'FinanceTransactionCategory', foreign_key: :category_id
   belongs_to :student
-  belongs_to :finance, :polymorphic => true
-  belongs_to :payee, :polymorphic => true
+  belongs_to :finance, polymorphic: true
+  belongs_to :payee, polymorphic: true
   cattr_reader :per_page
   validates_presence_of :title,:amount,:transaction_date
-  validates_presence_of :category,:message=>"#{I18n.t('not_specified')}."
-  validates_numericality_of :amount, :greater_than_or_equal_to => 0, :message => "#{I18n.t('must_be_positive')}"
+  validates_presence_of :category, message: I18n.t('not_specified')
+  validates_numericality_of :amount, greater_than_or_equal_to: 0, message: I18n.t('must_be_positive')
 
   after_create  :create_auto_transaction
   after_update  :update_auto_transaction
@@ -36,10 +36,8 @@ class FinanceTransaction < ActiveRecord::Base
     FedenaPlugin::FINANCE_CATEGORY.each do |category|
       cat_names << "#{category[:category_name]}"
     end
-    fixed_cat_ids = FinanceTransactionCategory.find(:all,:conditions=>{:name=>cat_names}).collect(&:id)
-    self.find(:all,
-      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})"],
-      :order => 'transaction_date' )
+    fixed_cat_ids = FinanceTransactionCategory.where(name: cat_names).collect(&:id)
+    self.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})").order(:transaction_date)
   end
 
   def self.grand_total(start_date,end_date)
@@ -51,7 +49,7 @@ class FinanceTransaction < ActiveRecord::Base
       cat_names << "#{category[:category_name]}"
       plugin_name << "#{category[:category_name]}"
     end
-    fixed_categories = FinanceTransactionCategory.find(:all,:conditions=>{:name=>cat_names})
+    fixed_categories = FinanceTransactionCategory.where(name: cat_names)
     fixed_cat_ids = fixed_categories.collect(&:id)
     fixed_transactions = FinanceTransaction.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id IN (#{fixed_cat_ids.join(",")})")
     other_transactions = FinanceTransaction.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})")
@@ -167,25 +165,24 @@ class FinanceTransaction < ActiveRecord::Base
 
 
   def self.expenses(start_date,end_date)
-    expenses = FinanceTransaction.find(:all, :select=>'finance_transactions.*', :joins=>' INNER JOIN finance_transaction_categories ON finance_transaction_categories.id = finance_transactions.category_id',\
-        :conditions => ["finance_transaction_categories.is_income = 0 and finance_transaction_categories.id != 1 and transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'"])
+    expenses = FinanceTransaction.select('finance_transactions.*').joins(' INNER JOIN finance_transaction_categories ON finance_transaction_categories.id = finance_transactions.category_id').where("finance_transaction_categories.is_income = #{false} and finance_transaction_categories.id != 1 and transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'")
     expenses
   end
 
   def self.incomes(start_date,end_date)
-    incomes = FinanceTransaction.find(:all, :select=>'finance_transactions.*', :joins=>' INNER JOIN finance_transaction_categories ON finance_transaction_categories.id = finance_transactions.category_id',\
-        :conditions => ["finance_transaction_categories.is_income = 1 and transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' "])
+    incomes = FinanceTransaction.select('finance_transactions.*').joins(' INNER JOIN finance_transaction_categories ON finance_transaction_categories.id = finance_transactions.category_id').where("finance_transaction_categories.is_income = #{true} and transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' ")
     incomes = incomes.reject{|income| (income.category.is_fixed or income.master_transaction_id != 0)}
     incomes
   end
 
   def create_auto_transaction
     if self.master_transaction_id == 0
-      trigger = FinanceTransactionTrigger.find(:all,:conditions=>['finance_category_id = ?',self.category_id])
+      trigger = FinanceTransactionTrigger.where('finance_category_id = ?',self.category_id)
       trigger.each do |t|
         trigger_amount = (self.amount * t.percentage ) / 100
-        FinanceTransaction.create(:title=> self.title + ' - ' + t.title.to_s ,:transaction_date=>self.transaction_date, \
-            :amount=>trigger_amount,:category_id =>self.category_id,:master_transaction_id=>self.id)
+        FinanceTransaction.create(
+          title: "#{self.title}-#{t.title}", transaction_date: self.transaction_date,
+          amount: trigger_amount, category_id: self.category_id, master_transaction_id: self.id)
       end
     end
   end
@@ -195,11 +192,12 @@ class FinanceTransaction < ActiveRecord::Base
       f.destroy
     end
     if self.master_transaction_id == 0
-      trigger = FinanceTransactionTrigger.find(:all,:conditions=>['finance_category_id = ?',self.category_id])
+      trigger = FinanceTransactionTrigger.where('finance_category_id = ?',self.category_id)
       trigger.each do |t|
         trigger_amount = (self.amount * t.percentage ) / 100
-        FinanceTransaction.create(:title=> self.title + ' - ' + t.title.to_s ,:transaction_date=>self.transaction_date, \
-            :amount=>trigger_amount,:category_id =>self.category_id,:master_transaction_id=>self.id)
+        FinanceTransaction.create(
+          title: "#{self.title}-#{t.title}", transaction_date: self.transaction_date,
+          amount: trigger_amount, category_id: self.category_id, master_transaction_id: self.id)
       end
     end
   end
@@ -211,7 +209,7 @@ class FinanceTransaction < ActiveRecord::Base
 
 
   def delete_auto_transaction
-    FinanceTransaction.find_all_by_master_transaction_id(self.id).each do |f|
+    FinanceTransaction.where(master_transaction_id: self.id).each do |f|
       f.destroy
     end
   end
@@ -220,15 +218,14 @@ class FinanceTransaction < ActiveRecord::Base
     amount = 0
     finance_transaction_category = FinanceTransactionCategory.find_by_name("#{transaction_category}")
     category_type = finance_transaction_category.is_income ? "income" : "expense"
-    transactions = FinanceTransaction.find(:all,
-      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id ='#{finance_transaction_category.id}'"])
+    transactions = FinanceTransaction.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id ='#{finance_transaction_category.id}'")
     transactions.each {|transaction| amount += transaction.amount}
-    return {:amount=>amount,:category_type=>category_type}
+    return { amount: amount, category_type: category_type}
   end
 
   def add_voucher_or_receipt_number
     if self.category.is_income and self.master_transaction_id == 0
-      last_transaction = FinanceTransaction.last(:conditions=>"receipt_no IS NOT NULL")
+      last_transaction = FinanceTransaction.where("receipt_no IS NOT NULL").last
       last_receipt_no = last_transaction.receipt_no unless last_transaction.nil?
       unless last_receipt_no.nil?
         receipt_split = last_receipt_no.to_s.scan(/[A-Z]+|\d+/i)
@@ -242,7 +239,7 @@ class FinanceTransaction < ActiveRecord::Base
       end
       self.update_attributes(:receipt_no=>receipt_number)
     else
-      last_transaction = FinanceTransaction.last(:conditions=>"voucher_no IS NOT NULL")
+      last_transaction = FinanceTransaction.where("voucher_no IS NOT NULL").last
       last_voucher_no = last_transaction.voucher_no unless last_transaction.nil?
       unless last_voucher_no.nil?
         voucher_split = last_voucher_no.to_s.scan(/[A-Z]+|\d+/i)

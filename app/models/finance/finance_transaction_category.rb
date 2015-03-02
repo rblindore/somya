@@ -17,12 +17,12 @@
 #limitations under the License.
 
 class FinanceTransactionCategory < ActiveRecord::Base
-  has_many :finance_transactions,:class_name => 'FinanceTransaction', :foreign_key => 'category_id'
-  has_one  :trigger, :class_name => "FinanceTransactionTrigger", :foreign_key => "category_id"
+  has_many :finance_transactions, class_name: 'FinanceTransaction', foreign_key: :category_id
+  has_one  :trigger, class_name: "FinanceTransactionTrigger", foreign_key: :category_id
 
 
   validates_presence_of :name
-  validates_uniqueness_of  :name, :case_sensitive => false
+  validates_uniqueness_of  :name, case_sensitive: false
 
   scope :expense_categories, -> { where("is_income = false AND name NOT LIKE 'Salary'and deleted = 0")}
   # named_scope :income_categories, :conditions => "is_income = true AND name NOT IN ('Fee','Salary','Donation','Library','Hostel','Transport') and deleted = 0"
@@ -40,7 +40,7 @@ class FinanceTransactionCategory < ActiveRecord::Base
     FedenaPlugin::FINANCE_CATEGORY.each do |category|
       cat_names << "'#{category[:category_name]}'"
     end
-    self.where("is_income = true AND name NOT IN (#{cat_names.join(',')}) and deleted = 0")
+    self.where("is_income = true AND name NOT IN (#{cat_names.join(',')}) and deleted = #{false}")
   end
 
   def is_fixed
@@ -54,7 +54,7 @@ class FinanceTransactionCategory < ActiveRecord::Base
 
   def total_income(start_date,end_date)
     if is_income
-      self.finance_transactions.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id=0").map{|ft| ft.amount}.sum
+      self.finance_transactions.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id=#{false}").map{|ft| ft.amount}.sum
     else
       0
     end
@@ -62,7 +62,7 @@ class FinanceTransactionCategory < ActiveRecord::Base
 
   def total_expense(start_date,end_date)
     if is_income
-      self.finance_transactions.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id!=0").map{|ft| ft.amount}.sum
+      self.finance_transactions.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id!=#{false}").map{|ft| ft.amount}.sum
     else
       self.finance_transactions.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'").map{|ft| ft.amount}.sum
     end

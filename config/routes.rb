@@ -445,48 +445,9 @@ Fedena::Application.routes.draw do
 
   resources :finance, only: :index do
     collection do
-      get :load_discount_create_form
-      get :categories_new
-      get :fees_index
-      get :categories
-      get :transactions
-      get :donation
-      post :donation
       get :automatic_transactions
-      get :payslip_index
-      get :asset_liability
-      get :fee_collection
-      get :fees_submission_batch
-      get :fees_student_search
-      get :expense_create
-      get :expense_list
-      get :income_create
-      get :income_list
-      get :monthly_report
-      get :compare_report
+      post :donation
       get :donors
-      get :view_monthly_payslip
-      get :asset
-      get :view_asset
-      get :liability
-      get :view_liability
-      get :master_fees
-      get :fees_defaulters
-      get :fees_student_structure_search
-      get :fees_submission_index
-      get :fees_create
-      get :master_category_new
-      get :fees_particulars_new
-      get :fee_discounts
-      post :master_category_create
-      post :category_create
-      get :student_or_student_category
-      post :fees_particulars_create
-      get :fee_discount_new
-      get :transaction_pdf
-      get :salary_department
-      get :categories_new
-      get :category_new
       get :expense_create
       post :expense_create
       get :expense_list
@@ -495,26 +456,83 @@ Fedena::Application.routes.draw do
       get :income_create
       post :income_create
       get :monthly_income
+      get :income_list
       get :income_list_update
+      get :income_list_pdf
+      get :categories
+      get :category_new
+      post :category_create
       post :transaction_trigger_create
       get :update_monthly_report
+      get :transaction_pdf
+      get :salary_department
+      get :donations_report
+      get :fees_report
+      get :approve_monthly_payslip
+      get :one_click_approve
+      get :one_click_approve_submit
+      get :view_monthly_payslip
+      post :view_monthly_payslip
+      get :search_ajax
+      get :create_liability
+      get :liability_pdf
+      get :view_liability
+      post :create_asset
+      get :view_asset
+      get :asset_pdf
+      get :master_fees
+      get :master_category_new
+      post :master_category_create
+      get :show_master_categories_list
+      get :fees_particulars_new
+      post :fees_particulars_create
+      get :fees_particulars_new2
+      post :fees_particulars_create2
+      post :additional_fees_create_form
+      post :additional_fees_create
+      get :additional_fees_list
+      get :student_or_student_category
+      get :fee_collection_new
+      get :fee_collection_create
+      post :fee_collection_create
+      get :fee_collection_view
+      get :fees_submission_batch
+      get :update_fees_collection_dates
+      get :load_fees_submission_batch
+      post :update_ajax
+      post :update_fine_ajax
+      get :search_logic
+      post :update_student_fine_ajax
+      get :fees_submission_save
+      post :fees_submission_save
+      get :fees_index
+      get :fees_student_structure_search_logic
+      get :fees_defaulters
+      post :update_batches
+      post :update_fees_collection_dates_defaulters
+      post :student_wise_fee_discount_create
+      get :graph_for_transaction_comparison
+      get :pay_fees_defaulters
+      post :pay_fees_defaulters
+      post :update_defaulters_fine_ajax
+      get :compare_report
+      get :fee_defaulters_pdf
+      get :fees_defaulters_students
+      get :report_compare
+      get :month_date
+      get :partial_payment
+      post :graph_for_update_monthly_report
+      post :graph_for_compare_monthly_report
+      get :fee_discounts
+      get :fee_discount_new
+      get :load_discount_create_form
+      get :load_batch_fee_category
+      post :batch_wise_discount_create
+      post :category_wise_fee_discount_create
+      get :update_master_fee_category_list
+      get :fixed_category_name
     end
     member do
-      get :salary_employee
-      get :employee_payslip_monthly_report
-      get :transaction_trigger_edit
-      put :transaction_trigger_update
-      delete :transaction_trigger_delete
-      put :category_update
-      get :income_list_pdf
-      get :income_details_pdf
-      get :income_edit
-      get :update_master_fee_category_list
-      get :show_fee_discounts
-      get :show_master_categories_list
-      get :category_edit
-      get :category_delete
-      get :category_edit
       get :donation_receipt
       get :donation_edit
       post :donation_edit
@@ -522,12 +540,74 @@ Fedena::Application.routes.draw do
       get :donation_receipt_pdf
       get :expense_edit
       post :expense_edit
+      get :income_edit
+      post :income_edit
       delete :delete_transaction
       get :income_details
       get :master_category_particulars
       delete :master_category_delete
       get :master_category_edit
       post :master_category_update
+      get :income_details_pdf
+      delete :category_delete
+      get :category_edit
+      post :category_update
+      put :transaction_trigger_edit
+      put :transaction_trigger_update
+      delete :transaction_trigger_delete
+      get :salary_employee
+      get :employee_payslip_monthly_report
+      get :batch_fees_report
+      get :student_fees_structure
+      get :employee_payslip_approve
+      get :employee_payslip_reject
+      get :employee_payslip_accept_form
+      get :employee_payslip_reject_form
+      get :view_employee_payslip
+      get :edit_liability
+      put :update_liability
+      get :delete_liability
+      get :each_liability_view
+      get :edit_asset
+      post :update_asset
+      delete :delete_asset
+      get :each_asset_view
+      get :master_category_edit
+      put :master_category_update
+      get :master_category_particulars
+      get :master_category_particulars_edit
+      post :master_category_particulars_update
+      delete :master_category_particulars_delete
+      delete :master_category_delete
+      get :additional_fees_edit
+      put :additional_fees_update
+      delete :additional_fees_delete
+      get :add_particulars
+      get :add_particulars_new
+      post :add_particulars_create
+      get :show_additional_fees_list
+      get :additional_particulars
+      get :add_particulars_edit
+      post :add_particulars_update
+      delete :add_particulars_delete
+      get :fee_collection_batch_update
+      get :fee_collection_dates_batch
+      get :fee_collection_edit
+      post :fee_collection_update
+      delete :fee_collection_delete
+      get :student_fee_receipt_pdf
+      get :fees_student_dates
+      get :fees_submission_student
+      get :fees_structure_dates
+      get :fees_structure_for_student
+      get :student_fees_structure
+      get :pdf_fee_structure
+      get :load_discount_batch
+      get :show_fee_discounts
+      get :edit_fee_discount
+      post :update_fee_discount
+      delete :delete_fee_discount
+      get :collection_details_view
     end
   end
   resources :weekday, only: [:index, :create] do
