@@ -445,7 +445,14 @@ Fedena::Application.routes.draw do
 
   resources :finance, only: :index do
     collection do
+      get :transactions
+      get :payslip_index
+      get :asset_liability
+      get :fee_collection
+      get :fees_submission_index
+      get :fees_student_structure_search
       get :automatic_transactions
+      get :fees_create
       post :donation
       get :donors
       get :expense_create

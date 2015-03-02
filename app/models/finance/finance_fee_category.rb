@@ -94,7 +94,7 @@ class FinanceFeeCategory < ActiveRecord::Base
   end
 
   def self.common_active
-    where("finance_fee_categories.is_master = ? AND finance_fee_categories.is_deleted = ?", true, false).joins("INNER JOIN batches on finance_fee_categories.batch_id = batches.id AND batches.is_active = #{true} AND batches.is_deleted = #{false}").group('finance_fee_categories.name')
+    where("finance_fee_categories.is_master = ? AND finance_fee_categories.is_deleted = ?", true, false).joins("INNER JOIN batches on finance_fee_categories.batch_id = batches.id AND batches.is_active = #{true} AND batches.is_deleted = #{false}")#.group('finance_fee_categories.name')
     # self.find(:all , :conditions => ["finance_fee_categories.is_master = '#{1}' and finance_fee_categories.is_deleted = '#{false}'"], :joins=>"INNER JOIN batches on finance_fee_categories.batch_id = batches.id AND batches.is_active = 1 AND batches.is_deleted = 0 ",:group => :name)
   end
 
