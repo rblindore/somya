@@ -20,15 +20,13 @@
   = t('edit_master_category_for_fee')
   %span
 #grading-levels-form
-  - form_remote_for @finance_fee_category,
-  - :url=>{:action=>'master_category_update',
-  - :id => @finance_fee_category.id}  do |f|
+  = form_for @finance_fee_category, url: {action: :master_category_update, id: @finance_fee_category.id}, remote: true  do |f|
     #form-errors
     .label-field-pair
-      .label-container= f.label :"#{t('name')}"
+      .label-container= f.label t('name')
       .input-container= f.text_field :name
     .label-field-pair
-      .label-container= f.label :"#{t('description')}"
+      .label-container= f.label t('description')
       .input-container= f.text_field :description
     .label-field-pair
       .label-container
@@ -37,7 +35,7 @@
           \:
       .input-container
         - unless @finance_fee_category.batch.nil?
-          = f.text_field :batch, :value => @finance_fee_category.batch.full_name, :disabled => true
+          = f.text_field :batch, value: @finance_fee_category.batch.full_name, disabled: true
         - else
-          = f.text_field :batch, :value => "#{t('all')}", :disabled => true
-    = submit_tag "► #{t('save')}",:class=>'submit_button'
+          = f.text_field :batch, value: t('all'), disabled: true
+    = submit_tag "► #{t('save')}", class: :submit_button

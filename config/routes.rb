@@ -524,6 +524,10 @@ Fedena::Application.routes.draw do
       post :expense_edit
       delete :delete_transaction
       get :income_details
+      get :master_category_particulars
+      delete :master_category_delete
+      get :master_category_edit
+      post :master_category_update
     end
   end
   resources :weekday, only: [:index, :create] do

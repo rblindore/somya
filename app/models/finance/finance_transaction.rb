@@ -53,10 +53,8 @@ class FinanceTransaction < ActiveRecord::Base
     end
     fixed_categories = FinanceTransactionCategory.find(:all,:conditions=>{:name=>cat_names})
     fixed_cat_ids = fixed_categories.collect(&:id)
-    fixed_transactions = FinanceTransaction.find(:all ,
-      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id IN (#{fixed_cat_ids.join(",")})"])
-    other_transactions = FinanceTransaction.find(:all ,
-      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})"])
+    fixed_transactions = FinanceTransaction.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id IN (#{fixed_cat_ids.join(",")})")
+    other_transactions = FinanceTransaction.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})")
     #    transactions_fees = FinanceTransaction.find(:all,
     #      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id ='#{fee_id}'"])
     #    donations = FinanceTransaction.find(:all,
@@ -119,8 +117,7 @@ class FinanceTransaction < ActiveRecord::Base
   def self.total_fees(start_date,end_date)
     fee_id = FinanceTransactionCategory.find_by_name("Fee").id
     fees = 0
-    fees = FinanceTransaction.find(:all,
-      :conditions => ["transaction_date >= '#{start_date.to_date}' and transaction_date <= '#{end_date.to_date}'and category_id ='#{fee_id}'"]).map{|ft| ft.amount}.sum
+    fees = FinanceTransaction.where("transaction_date >= '#{start_date.to_date}' and transaction_date <= '#{end_date.to_date}'and category_id ='#{fee_id}'").map{|ft| ft.amount}.sum
   end
 
   def self.total_other_trans(start_date,end_date)
@@ -128,9 +125,9 @@ class FinanceTransaction < ActiveRecord::Base
     FedenaPlugin::FINANCE_CATEGORY.each do |category|
       cat_names << "#{category[:category_name]}"
     end
-    fixed_cat_ids = FinanceTransactionCategory.find(:all,:conditions=>{:name=>cat_names}).collect(&:id)
+    fixed_cat_ids = FinanceTransactionCategory.where(name: cat_names).collect(&:id)
     fees = 0
-    transactions = FinanceTransaction.find(:all, :conditions => ["created_at >= '#{start_date}' and created_at <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})"])
+    transactions = FinanceTransaction.where("created_at >= '#{start_date}' and created_at <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})")
     transactions_income = transactions.reject{|x| !x.category.is_income? }.compact
     transactions_expense = transactions.reject{|x| x.category.is_income? }.compact
     income = 0
@@ -148,8 +145,8 @@ class FinanceTransaction < ActiveRecord::Base
     donation_id = FinanceTransactionCategory.find_by_name("Donation").id
     donations_income =0
     donations_expenses =0
-    donations = FinanceTransaction.find(:all,:conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id = 0 and category_id ='#{donation_id}'"])
-    trigger = FinanceTransaction.find(:all,:conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id != 0 and category_id ='#{donation_id}'"])
+    donations = FinanceTransaction.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id = 0 and category_id ='#{donation_id}'")
+    trigger = FinanceTransaction.where("transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' and master_transaction_id != 0 and category_id ='#{donation_id}'")
     donations.each do |d|
       if d.category.is_income?
         donations_income+=d.amount
