@@ -275,7 +275,7 @@ class Batch < ActiveRecord::Base
   def generate_batch_reports
     grading_type = self.grading_type
     students = self.students
-    grouped_exams = self.exam_groups.reject{|e| !GroupedExam.exists?( batch_id: self.id, exam_group_id: e.id)
+    grouped_exams = self.exam_groups.reject{|e| !GroupedExam.exists?( batch_id: self.id, exam_group_id: e.id)}
     unless grouped_exams.empty?
       subjects = self.subjects.where(is_deleted: false)
       unless students.empty?
@@ -371,7 +371,7 @@ class Batch < ActiveRecord::Base
           max_marks = exam_mark[3].sum
           tot_score = 0
           percent = 0
-          unless max_marks.to_f==0
+          unless max_marks.to_f == 0
             if grading_type.nil? or self.normal_enabled?
               tot_score = (((score.to_f)/max_marks.to_f)*100)
               percent = (((score.to_f)/max_marks.to_f)*100)*((exam_group.weightage.to_f)/100)
@@ -386,20 +386,20 @@ class Batch < ActiveRecord::Base
           else
             GroupedExamReport.create(batch_id: self.id, student_id: student_id, marks: tot_score, score_type: "e", exam_group_id: exam_group.id)
           end
-          exam_flag=0
+          exam_flag = 0
           exam_totals.each do|total|
-            if total[0]==student_id
+            if total[0] == student_id
               total[1] << percent.to_f
-              exam_flag=1
+              exam_flag = 1
             end
           end
-          unless exam_flag==1
+          unless exam_flag == 1
             exam_totals << [student_id,[percent.to_f]]
           end
         end
         exam_totals.each do|exam_total|
-          student_id=exam_total[0]
-          total=exam_total[1].sum.to_f
+          student_id = exam_total[0]
+          total = exam_total[1].sum.to_f
           prev_total_score = GroupedExamReport.where(student_id: student_id, batch_id: self.id, score_type: "c")
           unless prev_total_score.nil?
             prev_total_score.update_attributes(marks: total)
@@ -616,11 +616,11 @@ class Batch < ActiveRecord::Base
         report_hash[f.id]={}
         f.assessment_scores.scoped.where("exam_id IS NOT NULL AND batch_id = ?",id).group_by(&:exam_id).each do |k1,v1|
           report_hash[f.id][k1]={}
-          v1.group_by(&:student_id).each{|k2,v2| report_hash[f.id][k1][k2]=(v2.sum(&:grade_points)/v2.count.to_f)}
+          v1.group_by(&:student_id).each{|k2,v2| report_hash[f.id][k1][k2] = (v2.sum(&:grade_points)/v2.count.to_f)}
         end
         report_hash[f.id].each do |k1,v1|
           v1.each do |k2,v2|
-            f.cce_reports.build(:student_id=>k2, :grade_string=>v2,:exam_id=>k1, :batch_id=> id)
+            f.cce_reports.build(student_id: k2, grade_string: v2, exam_id: k1, batch_id: id)
           end
         end
         f.save
@@ -629,7 +629,7 @@ class Batch < ActiveRecord::Base
   end
 
   def delete_scholastic_reports
-    CceReport.delete_all(["batch_id = ? AND exam_id > 0", id])
+    CceReport.where("batch_id = #{id} AND exam_id > 0").delete_all
   end
 
   def generate_cce_reports
@@ -662,14 +662,14 @@ class Batch < ActiveRecord::Base
     end
     prev_record = Settings.find_by_config_key("job/Batch/#{self.job_type}")
     if prev_record.present?
-      prev_record.update_attributes(:config_value=>Time.now)
+      prev_record.update_attributes(config_value: Time.now)
     else
-      Settings.create(:config_key=>"job/Batch/#{self.job_type}", :config_value=>Time.now)
+      Settings.create( config_key: "job/Batch/#{self.job_type}", config_value: Time.now)
     end
   end
 
   def delete_student_cce_report_cache
-    students.all(:select=>"id, batch_id").each do |s|
+    students.select("id, batch_id").each do |s|
       s.delete_individual_cce_report_cache
     end
   end
@@ -681,6 +681,4 @@ class Batch < ActiveRecord::Base
   def user_is_authorized?(u)
     employees.collect(&:user_id).include? u.id
   end
-
-
 end

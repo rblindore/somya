@@ -1,2 +1,0 @@
-page.replace_html 'modal-box', :partial => 'master_category_edit_form'
-page << "Modalbox.show($('modal-box'),  {title: ''});"

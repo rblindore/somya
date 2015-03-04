@@ -33,22 +33,22 @@
       %tr{:class => "tr-#{cycle("odd","even")}"}
         %td.col-1= i+1
         %td.col-4
-          = link_to  fees.name, :action => 'master_category_particulars',:id => fees.id
+          = link_to fees.name, {action: :master_category_particulars, id: fees.id}
         %td.col-7
           - unless fees.batch.nil?
             = shorten_string(fees.batch.full_name,50)
           - else
             = t('all')
-        %td.col-7= I18n.l(fees.created_at,:format=>"%m-%d-%Y")
+        %td.col-7= I18n.l(fees.created_at, format: "%m-%d-%Y")
         %td.col-7
           .options
             - unless fees.check_fee_collection == false
               %span.small
-                = link_to_remote t('delete_text'),:confirm=>"#{t('delete_confirm_msg')}", :url => { :action => 'master_category_delete',:id => fees.id}
+                = link_to t('delete_text'), { action: :master_category_delete, id: fees.id}, confirm: t('delete_confirm_msg'), remote: true, method: :delete
             - else
               %span.small-strike= t('delete_text')
             %span.small
-              = link_to_remote t('edit_text'), :url => { :action => 'master_category_edit',:id => fees.id}
+              = link_to t('edit_text'), { action: :master_category_edit, id: fees.id}, remote: true
 - else
   %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
     %tr.tr-head

@@ -1172,16 +1172,17 @@ class FinanceController < ApplicationController
   end
 
   def fee_collection_batch_update
-    @fee_category = FinanceFeeCategory.find_all_by_name(params[:id], :conditions=>['is_deleted is false'])
-    @fee_category.reject!{|x| x.batch.students.blank? or x.batch.is_deleted? or x.fee_particulars.blank?}
-    render :update do |page|
-      page.replace_html "batchs" ,:partial => "fee_collection_batchs"
-    end
+    @fee_category = FinanceFeeCategory.where(name: params[:id], is_deleted: false)
+    @fee_category.to_a.reject!{|x| x.batch.students.blank? or x.batch.is_deleted? or x.fee_particulars.blank?}
+    # render :update do |page|
+    #   page.replace_html "batchs" ,:partial => "fee_collection_batchs"
+    # end
   end
 
   def fee_collection_new
     @fee_categories = FinanceFeeCategory.common_active
     @finance_fee_collection = FinanceFeeCollection.new
+    render layout: 'application'
   end
 
   def fee_collection_create
@@ -1189,8 +1190,8 @@ class FinanceController < ApplicationController
     @fee_categories = FinanceFeeCategory.common_active
     unless params[:finance_fee_collection].nil?
       fee_category_name = params[:finance_fee_collection][:fee_category_id]
-      @fee_category = FinanceFeeCategory.find_all_by_name(fee_category_name, :conditions=>['is_deleted is false'])
-      @fee_category.reject!{|x| x.batch.students.blank? or x.batch.is_deleted? or x.fee_particulars.blank?}
+      @fee_category = FinanceFeeCategory.where(name: fee_category_name, is_deleted: false)
+      @fee_category.to_a.reject!{|x| x.batch.students.blank? or x.batch.is_deleted? or x.fee_particulars.blank?}
     end
     category =[]
     @finance_fee_collection = FinanceFeeCollection.new
@@ -1249,7 +1250,7 @@ class FinanceController < ApplicationController
             :batch_id => nil
           )
         end
-        @finance_fee_collection.errors.add_to_base("#{t('fees_category_cant_be_blank')}")
+        @finance_fee_collection.errors.add(:base, t('fees_category_cant_be_blank'))
       end
 
       if @error.nil?
@@ -1265,6 +1266,10 @@ class FinanceController < ApplicationController
 
   def fee_collection_view
     @batchs = Batch.active
+  end
+
+  def fee_collection
+    render layout: 'application'
   end
 
   def fee_collection_dates_batch
