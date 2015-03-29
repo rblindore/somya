@@ -18,7 +18,14 @@
 
 // require_tree .
 
-$(document).on('ready, dom:loaded', function(){
+// This are the list of those js which listed in aaplication layout file.
+//= require scripts/nicetitle
+//= require droplicious
+//= require builder
+//= require modalbox
+//= require fedena_plugin
+
+$(document).on('ready dom:loaded', function(){
   $('.datepicker').datepicker();
 
   $('object').each(function(obj){
