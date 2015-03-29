@@ -554,7 +554,7 @@ Fedena::Application.routes.draw do
       get :master_category_particulars
       delete :master_category_delete
       get :master_category_edit
-      post :master_category_update
+      patch :master_category_update
       get :income_details_pdf
       delete :category_delete
       get :category_edit
@@ -580,7 +580,6 @@ Fedena::Application.routes.draw do
       delete :delete_asset
       get :each_asset_view
       get :master_category_edit
-      put :master_category_update
       get :master_category_particulars
       get :master_category_particulars_edit
       post :master_category_particulars_update

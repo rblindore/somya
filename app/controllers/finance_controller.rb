@@ -733,16 +733,11 @@ class FinanceController < ApplicationController
 
   def master_category_update
     @finance_fee_category = FinanceFeeCategory.find(params[:id])
-    render :update do |page|
-      if @finance_fee_category.update_attributes(params[:finance_fee_category])
-        @master_categories = FinanceFeeCategory.find(:all, :conditions =>["is_deleted = '#{false}' and is_master = 1 and batch_id = #{@finance_fee_category.batch_id}"])
-        page.replace_html 'form-errors', :text => ''
-        page << "Modalbox.hide();"
-        page.replace_html 'categories', :partial => 'master_category_list'
-        page.replace_html 'flash_box', :text => "<p class='flash-msg'>#{t('flash_msg13')}</p>"
-      else
-        page.replace_html 'form-errors', :partial => 'class_timings/errors', :object => @finance_fee_category
-        page.visual_effect(:highlight, 'form-errors')
+    respond_to do |format|
+      format.js do
+        if @finance_fee_category.update_attributes(finance_fee_category)
+          @master_categories = FinanceFeeCategory.where(is_deleted: false, is_master: true, batch_id: @finance_fee_category.batch_id)
+        end
       end
     end
   end
