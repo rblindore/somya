@@ -26,19 +26,16 @@
       %link{:href => "#{current_school_detail.logo.url}", :rel => "icon", :type => "#{current_school_detail.logo.content_type}"}/
       %link{:href => "#{current_school_detail.logo.url}", :rel => "shortcut icon", :type => "#{current_school_detail.logo.content_type}"}/
     = stylesheet_link_tag(*get_stylesheets, media: :all)
-    = javascript_include_tag 'application'
-    = javascript_include_tag 'scripts/nicetitle', 'droplicious'
-    = javascript_include_tag 'builder'
-    = javascript_include_tag 'modalbox'
+    = javascript_include_tag :application
     - FedenaPlugin::REGISTERED_HOOKS[:application_layout_header].each do |mod|
-      = render :partial=>mod.camelize.constantize.send("application_layout_header")
+      = render partial: mod.camelize.constantize.send("application_layout_header")
     = javascript_include_tag "calendar_date_select/locale/#{I18n.locale}.js" unless I18n.locale==:en
-    = javascript_include_tag 'fedena_plugin.js'
     = yield :head
-    :javascript
-      jQuery(document).on("dom:loaded", function() {
-        render_generic_hook(#{render_generic_hook})
-      });
+    / need to uncomment line render 'layouts/autosuggest_menu' :line 56
+    / :javascript
+    /   $(document).on("ready dom:loaded", function() {
+    /     render_generic_hook(#{render_generic_hook})
+    /   });
     = csrf_meta_tags
     #header_bg
       #header
@@ -56,7 +53,7 @@
         #outer-main-menu
           = main_menu
         #outer-autosuggest-menu
-          = render :partial => "layouts/autosuggest_menu"
+          / = render :partial => "layouts/autosuggest_menu"
     #content_wrapper
       #side_bar
         #sidebar_news_area

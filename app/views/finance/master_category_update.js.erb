@@ -1,0 +1,10 @@
+console.log('GAFSDHGSD');
+<% if @finance_fee_category.errors.any? %>
+  $('#form-errors').html(<%= escape_javascript(render 'class_timings/errors', object: @finance_fee_category )%>)
+    // #     page.visual_effect(:highlight, 'form-errors')
+<% else %>
+  $('#form-errors').html('');
+  $('#modal-box').modalBox('close');
+  $('#categories').html(<%= escape_javascript(render 'master_category_list') %>);
+  $('#flash_box').append(<%=escape_javascript("<p class='flash-msg'>#t('flash_msg13')}</p>" )%>)
+<% end %>

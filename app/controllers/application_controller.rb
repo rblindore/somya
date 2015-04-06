@@ -181,7 +181,7 @@ class ApplicationController < ActionController::Base
   end
 
   def protect_other_student_data
-    if current_user.student? or current_user.parent?
+    if current_user.student? or current_user.parent? or current_user.admin?
       student = current_user.student_record if current_user.student?
       student = current_user.parent_record if current_user.parent?
       #      render :text =>student.id and return
