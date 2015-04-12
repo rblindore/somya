@@ -1,0 +1,32 @@
+<% case params[:user_type] %>
+<% when 'Admin' %>
+  <% @users = User.active.where(admin: true).order('first_name ASC') %>
+  $('#users').html("<%= escape_javascript(render partial: 'users')%>");
+  $('#employee_user').html('');
+  $('#student_user').html('');
+<% when 'Employee' %>
+  <% hr = Settings.find_by_config_value("HR") %>
+  <% unless hr.nil? %>
+    $('#employee_user').html("<%= escape_javascript(render partial: 'employee_user') %>");
+    $('#users').html('');
+    $('#student_user').html('');
+  <% else %>
+    <% @users = User.active.find_all_by_employee(1) %>
+    $('#users').html("<%= escape_javascript(render partial: 'users')%>");
+    $('#employee_user').html('');
+    $('#student_user').html('');
+  <% end %>
+<% when 'Student' %>
+  $('#student_user').html("<%= escape_javascript(render partial: 'student_user')%>");
+  $('#users').html('');
+  $('#employee_user').html('');
+<% when "Parent" %>
+  $('#student_user').html("<%= escape_javascript(render partial: 'parent_user')%>");
+  $('#users').html('');
+  $('#employee_user').html('');
+<% when '' %>
+  <% @users = "" %>
+  $('#users').html("<%= escape_javascript(render partial: 'users')%>");
+  $('#employee_user').html('');
+  $('#student_user').html('');
+<% end %>
