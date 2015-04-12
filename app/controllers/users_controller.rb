@@ -31,48 +31,7 @@ class UsersController < ApplicationController
   end
 
   def list_user
-    case params[:user_type]
-    when 'Admin'
-      @users = User.active.where(admin: true).order('first_name ASC')
-      render(:update) do |page|
-        page.replace_html 'users', partial: 'users'
-        page.replace_html 'employee_user', text: ''
-        page.replace_html 'student_user', text:''
-      end
-    when 'Employee'
-      render(:update) do |page|
-        hr = Settings.find_by_config_value("HR")
-        unless hr.nil?
-          page.replace_html 'employee_user', partial: 'employee_user'
-          page.replace_html 'users', text: ''
-          page.replace_html 'student_user', text: ''
-        else
-          @users = User.active.find_all_by_employee(1)
-          page.replace_html 'users', partial: 'users'
-          page.replace_html 'employee_user', text: ''
-          page.replace_html 'student_user', text: ''
-        end
-      end
-    when 'Student'
-      render(:update) do |page|
-        page.replace_html 'student_user', partial: 'student_user'
-        page.replace_html 'users', text: ''
-        page.replace_html 'employee_user', text: ''
-      end
-    when "Parent"
-      render(:update) do |page|
-        page.replace_html 'student_user', partial: 'parent_user'
-        page.replace_html 'users', text: ''
-        page.replace_html 'employee_user', text: ''
-      end
-    when ''
-      @users = ""
-      render(:update) do |page|
-        page.replace_html 'users', partial: 'users'
-        page.replace_html 'employee_user', text: ''
-        page.replace_html 'student_user', text: ''
-      end
-    end
+
   end
 
   def list_employee_user
@@ -80,7 +39,6 @@ class UsersController < ApplicationController
     @employee = Employee.where(employee_department_id: emp_dept).order('first_name ASC')
     @users = @employee.collect { |employee| employee.user}
     @users.delete(nil)
-    render(:update) {|page| page.replace_html 'users', partial: 'users'}
   end
 
   def list_student_user
@@ -88,7 +46,6 @@ class UsersController < ApplicationController
     @student = Student.where(batch_id: batch.id, is_active: true).order('first_name ASC')
     @users = @student.collect { |student| student.user}
     @users.delete(nil)
-    render(:update) {|page| page.replace_html 'users', :partial=> 'users'}
   end
 
   def list_parent_user

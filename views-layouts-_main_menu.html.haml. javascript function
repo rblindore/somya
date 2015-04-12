@@ -1,0 +1,23 @@
+function load_menu_from_plugins(){
+  <haml_silent> FedenaPlugin::AVAILABLE_MODULES.each do |mod|
+  </haml_silent><haml_block><haml_silent>   unless mod[:more_menu].blank?
+  </haml_silent><haml_block><haml_silent>     sub_menu_flag = 0
+  </haml_silent><haml_silent>     unless mod[:sub_menus].blank?
+  </haml_silent><haml_block><haml_silent>       mod[:sub_menus].each do|mnu|
+  </haml_silent><haml_block><haml_silent>         if can_access_request?(mnu[:action].to_sym, mnu[:controller].to_sym) and mnu[:target_id]==mod[:name]
+  </haml_silent><haml_block><haml_silent>           sub_menu_flag = 1
+  </haml_silent></haml_block></haml_block></haml_block><haml_silent>     arrow = sub_menu_flag==1 ? &quot;&lt;span class=right-arrow&gt;\#{arrow_dir}&lt;/span&gt;&quot; : &quot;&quot;
+  </haml_silent><haml_silent>     if mod[:more_menu][:target_id].present?
+  </haml_silent><haml_block><haml_silent>       if can_access_request?(mod[:more_menu][:action].to_sym,mod[:more_menu][:controller].to_sym)
+  </haml_silent><haml_block><haml_silent>         if sub_menu_flag==1
+  </haml_silent><haml_block>          $('#{mod[:more_menu][:target_id]}').insert({bottom: '<li>#{link_to "\#{t(mod[:more_menu][:title]).gsub("'","&#39;")}\#{arrow}", :controller => "\#{mod[:more_menu][:controller]}", :action => "\#{mod[:more_menu][:action]}"}<ul class="level-2" id="#{mod[:name]}"></ul></li>'})
+  </haml_block><haml_silent>         else
+  </haml_silent><haml_block>          $('#{mod[:more_menu][:target_id]}').insert({bottom: '<li>#{link_to "\#{t(mod[:more_menu][:title]).gsub("'","&#39;")}\#{arrow}",:controller => "\#{mod[:more_menu][:controller]}", :action=>"\#{mod[:more_menu][:action]}"}</li>'})
+  </haml_block></haml_block><haml_silent>       unless mod[:sub_menus].blank?
+  </haml_silent><haml_block><haml_silent>         mod[:sub_menus].each do |submenu|
+  </haml_silent><haml_block><haml_silent>           if submenu[:target_id].present?
+  </haml_silent><haml_block>            if ($('#{submenu[:target_id]}')!=null)
+                {
+                  $('#{submenu[:target_id]}').insert({bottom: '<li>#{link_to "\#{t(submenu[:title]).gsub("'","&#39;")}",:controller => "\#{submenu[:controller]}", :action=>"\#{submenu[:action]}"  if can_access_request? "\#{submenu[:action]}".to_sym,"\#{submenu[:controller]}".to_sym}</li>'})
+                }
+  </haml_block></haml_block></haml_block></haml_block></haml_block></haml_block>}

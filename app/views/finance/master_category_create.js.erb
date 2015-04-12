@@ -1,7 +1,7 @@
 <%- if @error.blank? %>
-  jQuery('#form-errors').html('');
-  jQuery('#flash_box').html("<%=j content_tag :p, t('master_category_created_sucessfully'), class: 'flash-msg' %>")
-  jQuery('#modal-box').modalBox('close');
+  $('#form-errors').html('');
+  $('#flash_box').html("<%=j content_tag :p, t('master_category_created_sucessfully'), class: 'flash-msg' %>")
+  $('#modal-box').modalBox('close');
 <%- else %>
-	jQuery('#form-errors').html("<%=j render 'errors', errors: @finance_fee_category %>")
+	$('#form-errors').html("<%=j render 'errors', errors: @finance_fee_category %>")
 <% end %>

@@ -248,6 +248,8 @@ Fedena::Application.routes.draw do
       get :search_user_ajax
       get :list_user
       delete :logout
+      get :list_employee_user
+      get :list_student_user
     end
     member do
       get :profile

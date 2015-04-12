@@ -170,44 +170,20 @@
             - unless @modules.include?("Finance")
               - if permitted_to? :payslip_approve, :employee
                 %li= link_to t('one_click_aprove_payslip'), :controller=>"employee", :action=>"payslip_approve"
-      - if permitted_to? :index, :finance
+      - if permitted_to? :index, :finances
         %li
-          = link_to "#{t('finance_text')} <span class='right-arrow'>#{arrow_dir}</span>".html_safe , :controller => "finance", :action=>"index"
+          = link_to "#{t('finance_text')} <span class='right-arrow'>#{arrow_dir}</span>".html_safe , :controller => :finances, :action=>"index"
           %ul#finance_menu.level-2
             %li
-              = link_to t('fees_text'), :controller => "finance", :action => "fees_index"
+              = link_to t('fees_text'), :controller => :finances, :action => "fees_index"
             %li
-              = link_to t('category'), :controller => "finance", :action => "categories"
+              = link_to t('category'), :controller => :finances, :action => "categories"
             %li
-              = link_to t('transactions'), :controller => "finance", :action => "transactions"
-            %li= link_to t('donations'), :controller => "finance", :action => "donation"
-            %li= link_to t('automatic_transactions'), :controller => "finance", :action => "automatic_transactions"
+              = link_to t('transactions'), :controller => :finances, :action => "transactions"
+            %li= link_to t('donations'), :controller => :finances, :action => "donation"
+            %li= link_to t('automatic_transactions'), :controller => :finances, :action => "automatic_transactions"
             - if @modules.include?("HR")
-              %li= link_to t('payslip_text'), :controller => "finance", :action => "payslip_index"
-            %li= link_to t('asset_liability_management'), :controller => "finance", :action => "asset_liability"
+              %li= link_to t('payslip_text'), :controller => :finances, :action => "payslip_index"
+            %li= link_to t('asset_liability_management'), :controller => :finances, :action => "asset_liability"
       - if @current_user.admin?
         %li= link_to t('user_text') , controller: :users, action: :index
-:javascript
-  function load_menu_from_plugins(){
-  <haml_silent> FedenaPlugin::AVAILABLE_MODULES.each do |mod|  
-  </haml_silent><haml_block><haml_silent>   unless mod[:more_menu].blank? 
-  </haml_silent><haml_block><haml_silent>     sub_menu_flag = 0 
-  </haml_silent><haml_silent>     unless mod[:sub_menus].blank? 
-  </haml_silent><haml_block><haml_silent>       mod[:sub_menus].each do|mnu| 
-  </haml_silent><haml_block><haml_silent>         if can_access_request?(mnu[:action].to_sym, mnu[:controller].to_sym) and mnu[:target_id]==mod[:name]
-  </haml_silent><haml_block><haml_silent>           sub_menu_flag = 1 
-  </haml_silent></haml_block></haml_block></haml_block><haml_silent>     arrow = sub_menu_flag==1 ? &quot;&lt;span class=right-arrow&gt;\#{arrow_dir}&lt;/span&gt;&quot; : &quot;&quot; 
-  </haml_silent><haml_silent>     if mod[:more_menu][:target_id].present? 
-  </haml_silent><haml_block><haml_silent>       if can_access_request?(mod[:more_menu][:action].to_sym,mod[:more_menu][:controller].to_sym) 
-  </haml_silent><haml_block><haml_silent>         if sub_menu_flag==1 
-  </haml_silent><haml_block>          $('#{mod[:more_menu][:target_id]}').insert({bottom: '<li>#{link_to "\#{t(mod[:more_menu][:title]).gsub("'","&#39;")}\#{arrow}", :controller => "\#{mod[:more_menu][:controller]}", :action => "\#{mod[:more_menu][:action]}"}<ul class="level-2" id="#{mod[:name]}"></ul></li>'})
-  </haml_block><haml_silent>         else 
-  </haml_silent><haml_block>          $('#{mod[:more_menu][:target_id]}').insert({bottom: '<li>#{link_to "\#{t(mod[:more_menu][:title]).gsub("'","&#39;")}\#{arrow}",:controller => "\#{mod[:more_menu][:controller]}", :action=>"\#{mod[:more_menu][:action]}"}</li>'})
-  </haml_block></haml_block><haml_silent>       unless mod[:sub_menus].blank? 
-  </haml_silent><haml_block><haml_silent>         mod[:sub_menus].each do |submenu| 
-  </haml_silent><haml_block><haml_silent>           if submenu[:target_id].present? 
-  </haml_silent><haml_block>            if ($('#{submenu[:target_id]}')!=null)
-                {
-                  $('#{submenu[:target_id]}').insert({bottom: '<li>#{link_to "\#{t(submenu[:title]).gsub("'","&#39;")}",:controller => "\#{submenu[:controller]}", :action=>"\#{submenu[:action]}"  if can_access_request? "\#{submenu[:action]}".to_sym,"\#{submenu[:controller]}".to_sym}</li>'})
-                }
-  </haml_block></haml_block></haml_block></haml_block></haml_block></haml_block>}
