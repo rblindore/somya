@@ -25,13 +25,15 @@
         .category-edit= link_to "#{t('edit_text')}", {:action => "edit_category", :id=>c.id}
         .category-edit= link_to "#{t('delete_text')}", {:action => "delete_category", :id=>c.id}, :confirm => "#{t('delete_confirm_msg')}"
         - unless c.status == false
-          .category-edit= link_to_remote "#{t('inactivate')}", :url => {:action => "inactivate_category", :id => c.id}, |
+          .category-edit= link_to "#{t('inactivate')}", :url => {:action => "inactivate_category", :id => c.id}, |
               :confirm=>"#{t('inactivate_confirm')}",                                                       |
-              :update => "category-list"                                                                    |
+              :update => "category-list",                                                                   |
+              :remote => true                                                                               |
         - else
-          .category-edit= link_to_remote "#{t('activate')}", :url => {:action => "activate_category", :id => c.id}, |
+          .category-edit= link_to "#{t('activate')}", :url => {:action => "activate_category", :id => c.id}, |
               :confirm=>"#{t('activate_confirm')}",                                                     |
-              :update => "category-list"                                                                |
+              :update => "category-list",                                                               |
+              :remote => true                                                                           |
   - else
     %p.flash-msg= t('earnings_msg')
 %ul.category-list
@@ -43,12 +45,14 @@
         .category-edit= link_to "#{t('edit_text')}", {:action => "edit_category", :id=>c.id}
         .category-edit= link_to "#{t('delete_text')}", {:action => "delete_category", :id=>c.id}, :confirm => "#{t('delete_confirm_msg')}"
         - unless c.status == false
-          .category-edit= link_to_remote "#{t('inactivate')}", :url => {:action => "inactivate_category", :id => c.id}, |
+          .category-edit= link_to "#{t('inactivate')}", :url => {:action => "inactivate_category", :id => c.id}, |
               :confirm=>"#{t('inactivate_confirm')}",                                                       |
-              :update => "category-list"                                                                    |
+              :update => "category-list",                                                                   |
+              :remote => true                                                                               |
         - else
-          .category-edit= link_to_remote "#{t('activate')}", :url => {:action => "activate_category", :id => c.id}, |
+          .category-edit= link_to "#{t('activate')}", :url => {:action => "activate_category", :id => c.id}, |
               :confirm=>"#{t('activate_confirm')}",                                                     |
-              :update => "category-list"                                                                |
+              :update => "category-list",                                                               |
+              :remote => true                                                                           |
   - else
     %p.flash-msg= t('deduction_msg')

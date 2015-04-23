@@ -423,6 +423,37 @@ Fedena::Application.routes.draw do
       get :advanced_search
       get :view_all
       get :payslip_approve
+      get :add_category
+      post :add_category
+      get :add_position
+      post :add_position
+      get :add_department
+      post :add_department
+      get :add_grade
+      post :add_grade
+      get :add_bank_details
+      post :add_bank_details
+      get :add_additional_details
+      post :add_additional_details
+      get :edit_category
+      post :edit_category
+      get :delete_category
+      get :edit_position
+      post :edit_position
+      get :delete_position
+      get :edit_department
+      post :edit_department
+      get :delete_department
+      get :edit_grade
+      post :edit_grade
+      get :delete_grade
+      get :edit_bank_details
+      post :edit_bank_details
+      get :delete_bank_details
+      get :edit_additional_details
+      patch :edit_additional_details
+      get :delete_additional_details
+      
     end
   end
   resources :sms, only: :index do
@@ -639,6 +670,7 @@ Fedena::Application.routes.draw do
       get :inactivate_category
       get :edit_category
       post :edit_category
+      get :delete_category
     end
   end
 

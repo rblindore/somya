@@ -25,22 +25,24 @@ class PayrollController < ApplicationController
   def add_category
     @categories = PayrollCategory.where(is_deduction: false).order("name ASC")
     @deductionable_categories = PayrollCategory.where(is_deduction: true).order("name ASC")
-    @category = PayrollCategory.new(params[:category])
+    @category = PayrollCategory.new(payroll_category_params)
     if request.post? and @category.save
       flash[:notice]= t('payroll.flash1')
       redirect_to action: "add_category", layout: 'application'
+    else
+      render layout: 'application'
     end
-    render layout: 'application'
   end
 
   def edit_category
     @categories = PayrollCategory.order("name ASC")
     @category = PayrollCategory.find(params[:id])
-    if request.post? and @category.update_attributes(params[:category])
+    if request.post? and @category.update_attributes(payroll_category_params)
       flash[:notice] = t('payroll.flash2')
       redirect_to action: :add_category, layout: 'application'
+    else
+      render layout: 'application'
     end
-    render layout: 'application'
   end
 
   def activate_category
@@ -132,5 +134,9 @@ class PayrollController < ApplicationController
     def set_instace_variables
       @independent_categories = PayrollCategory.where(payroll_category_id: nil, status: true)
       @dependent_categories = PayrollCategory.where(status: true).where.not(payroll_category_id: "'\'")
+    end
+    
+    def payroll_category_params
+      params.require(:category).permit(:name, :is_deduction, :status) if params[:category]
     end
 end
