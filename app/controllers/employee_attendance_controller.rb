@@ -29,37 +29,37 @@ class EmployeeAttendanceController < ApplicationController
   def add_leave_types
     @leave_types = EmployeeLeaveType.where(status: 1).order("name ASC")
     @inactive_leave_types = EmployeeLeaveType.where(status: 0).order("name ASC")
-    @leave_type = EmployeeLeaveType.new(params[:leave_type])
+    @leave_type = EmployeeLeaveType.new(leave_type_params)
     @employee = Employee.all
     if request.post? and @leave_type.save
       @employee.each do |e|
         EmployeeLeave.create(employee_id: e.id, employee_leave_type_id: @leave_type.id, leave_count: @leave_type.max_leave_count)
       end
-            flash[:notice] = t('flash1')
+            flash[:notice] = t('employee_attendance.flash1')
       redirect_to action: :add_leave_types
     end
   end
 
   def edit_leave_types
     @leave_type = EmployeeLeaveType.find(params[:id])
-    if request.post? and @leave_type.update_attributes(params[:leave_type])
-            flash[:notice] = t('flash2')
+    if request.post? and @leave_type.update_attributes(leave_type_params)
+            flash[:notice] = t('employee_attendance.flash2')
       redirect_to action: :add_leave_types
     end
   end
 
   def delete_leave_types
     @leave_type = EmployeeLeaveType.find(params[:id])
-    @attendance = EmployeeAttendance.find_all_by_employee_leave_type_id(@leave_type.id)
-    @leave_count = EmployeeLeave.find_all_by_employee_leave_type_id(@leave_type.id)
+    @attendance = EmployeeAttendance.where(:employee_leave_type_id => @leave_type.id)
+    @leave_count = EmployeeLeave.where(:employee_leave_type_id => @leave_type.id)
     if @attendance.blank?
       @leave_type.delete
       @leave_count.each do |e|
         e.delete
       end
-            flash[:notice] = t('flash3')
+            flash[:notice] = t('employee_attendance.flash3')
     else
-            flash[:notice] = "#{t('flash_msg12')}"
+            flash[:notice] = "#{t('employee_attendance.flash_msg12')}"
     end
     redirect_to action: :add_leave_types
 
@@ -490,5 +490,9 @@ class EmployeeAttendanceController < ApplicationController
     #        respond_to do |format|
     #            format.pdf { render :layout => false }
     #        end
+  end
+  
+  def leave_type_params
+    params.require(:leave_type).permit(:name, :code, :max_leave_count,:status, :carry_forward) if params[:leave_type]
   end
 end
