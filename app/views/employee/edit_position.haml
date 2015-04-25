@@ -23,7 +23,7 @@
   #app-back-button
     = back_button
 #page-yield
-  - form_for :position do |c|
+  = form_for :position, url: {:id => @position.id } do |c|
     - unless flash[:notice].nil?
       %p.flash-msg
         = flash[:notice]
