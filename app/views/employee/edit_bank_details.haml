@@ -26,7 +26,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  - form_for :bank_details do |c|
+  = form_for :bank_details, url: {:id => @bank_details.id} do |c|
     = error_messages_for 'bank_details'
     #form-content
       .label-field-pair

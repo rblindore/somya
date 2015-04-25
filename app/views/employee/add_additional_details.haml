@@ -37,7 +37,7 @@
     - unless flash[:notice].nil?
       %p.flash-msg
         = flash[:notice]
-    = form_for @additional_field, :url=>{:action=>(@additional_field.new_record? ? "add_additional_details" : "edit_additional_details")} do |c|
+    = form_for @additional_field, :url=>{:action=>(@additional_field.new_record? ? "add_additional_details" : "edit_additional_details"), :id => @additional_field.id} do |c|
       = error_messages_for 'additional_field'
       #form-content
         .label-field-pair
@@ -57,7 +57,7 @@
             = c.check_box :is_mandatory
         .label-field-pair
           .label-container
-            = c.label :input_type,"#{t('input_method')}"
+            - c.label :input_type,"#{t('input_method')}"
           .text-input-bg
             = c.select :input_type, [["TextBox","text"],["Select Box","belongs_to"],["CheckBox","has_many"]] ,{},:class=>"input-type-select"
         .custom{:style => "display: none"}
