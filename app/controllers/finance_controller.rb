@@ -812,7 +812,6 @@ class FinanceController < ApplicationController
   def fees_particulars_create
     @error = false
     finance_fee_categories = FinanceFeeCategory.where(id: params[:finance_fee_particular][:finance_fee_category_ids])
-    # finance_fee_categories = FinanceFeeCategory.find_all_by_id(params[:finance_fee_particular][:finance_fee_category_ids].reject{|cat| cat.empty?}.map{|cat| cat.to_i}) unless params[:finance_fee_particular][:finance_fee_category_ids].blank?
     unless finance_fee_categories.blank?
       batches = finance_fee_categories.map{|ffc| ffc.batch}
       posted_params = params[:finance_fee_particular]
@@ -892,14 +891,14 @@ class FinanceController < ApplicationController
           rejected_admission_no = admission_no.select{|adm| !all_students.include? adm}
           unless (rejected_admission_no.empty?)
             @error = true
-            @finance_fee_particular.errors.add_to_base("#{rejected_admission_no.join(',')} #{t('does_not_belong_to_batch')} #{batches.map{|batch| batch.full_name}.join(',')}")
+            @finance_fee_particular.errors.add(:base, "#{rejected_admission_no.join(',')} #{t('does_not_belong_to_batch')} #{batches.map{|batch| batch.full_name}.join(',')}")
           end
           selected_admission_no = all_admission_no.select{|adm| ffc.batch.students.all.map{|stu| stu.admission_no}.include? adm}
           selected_admission_no.each do |a|
             s = Student.find_by_admission_no(a)
             if s.nil?
               @error = true
-              @finance_fee_particular.errors.add_to_base("#{a} #{t('does_not_exist')}")
+              @finance_fee_particular.errors.add(:base, "#{a} #{t('does_not_exist')}")
             end
           end
           unless @error
@@ -1454,11 +1453,11 @@ class FinanceController < ApplicationController
         @paid_fees = FinanceTransaction.find(:all,:conditions=>"FIND_IN_SET(id,\"#{tid}\")")
       else
         @paid_fees = FinanceTransaction.find(:all,:conditions=>"FIND_IN_SET(id,\"#{@financefee.transaction_id}\")")
-        @financefee.errors.add_to_base("#{t('flash19')}")
+        @financefee.errors.add(:base, "#{t('flash19')}")
       end
     else
       @paid_fees = FinanceTransaction.find(:all,:conditions=>"FIND_IN_SET(id,\"#{@financefee.transaction_id}\")")
-      @financefee.errors.add_to_base("#{t('flash23')}")
+      @financefee.errors.add(:base, "#{t('flash23')}")
     end
     render :update do |page|
       page.replace_html "student", :partial => "student_fees_submission"
@@ -1517,7 +1516,7 @@ class FinanceController < ApplicationController
       unless params[:fine][:fee].to_f < 0
         @fine = (params[:fine][:fee])
       else
-        @financefee.errors.add_to_base("#{t('flash24')}")
+        @financefee.errors.add(:base, "#{t('flash24')}")
       end
       @fee_category = FinanceFeeCategory.find(@fee_collection.fee_category_id,:conditions => ["is_deleted IS NOT NULL"])
       @fee_particulars = @date.fees_particulars(@student)
@@ -2381,7 +2380,7 @@ class FinanceController < ApplicationController
     unless params[:fee_collection].blank?
       params[:fee_collection][:category_ids].each do |c|
         @fee_category = FinanceFeeCategory.find(c)
-        @fee_discount = BatchFeeDiscount.new(params[:fee_discount])
+        @fee_discount = BatchFeeDiscount.new(fee_discount_params)
         @fee_discount.finance_fee_category_id = c
         @fee_discount.receiver_id =  @fee_category.batch_id
         unless @fee_discount.save
@@ -2389,8 +2388,8 @@ class FinanceController < ApplicationController
         end
       end
     else
-      @fee_discount = BatchFeeDiscount.new(params[:fee_discount])
-      @fee_discount.errors.add_to_base("#{t('fees_category_cant_be_blank')}")
+      @fee_discount = BatchFeeDiscount.new(fee_discount_params)
+      @fee_discount.errors.add(:base, t('fees_category_cant_be_blank'))
       @error = true
     end
 
@@ -2400,23 +2399,23 @@ class FinanceController < ApplicationController
     unless params[:fee_collection].blank?
       params[:fee_collection][:category_ids].each do |c|
         @fee_category = FinanceFeeCategory.find(c)
-        @fee_discount = StudentCategoryFeeDiscount.new(params[:fee_discount])
+        @fee_discount = StudentCategoryFeeDiscount.new(fee_discount_params)
         @fee_discount.finance_fee_category_id = c
         unless @fee_discount.save
           @error = true
         end
       end
     else
-      @fee_discount = StudentCategoryFeeDiscount.new(params[:fee_discount])
-      @fee_discount.errors.add_to_base("#{t('batch_cant_be_blank')}")
+      @fee_discount = StudentCategoryFeeDiscount.new(fee_discount_params)
+      @fee_discount.errors.add(:base, "#{t('batch_cant_be_blank')}")
       @error = true
     end
   end
 
   def student_wise_fee_discount_create
     @error = false
-    @fee_discount = StudentFeeDiscount.new(params[:fee_discount])
-    unless (params[:fee_discount][:finance_fee_category_id]).blank?
+    @fee_discount = StudentFeeDiscount.new(fee_discount_params)
+    unless (fee_discount_params[:finance_fee_category_id]).blank?
       @fee_category = FinanceFeeCategory.find(@fee_discount.finance_fee_category_id)
       unless (params[:students]).blank?
         admission_no = (params[:students]).split(",")
@@ -2425,21 +2424,21 @@ class FinanceController < ApplicationController
           unless s.nil?
             if FeeDiscount.find_by_type_and_receiver_id('StudentFeeDiscount',s.id,:conditions=>"finance_fee_category_id = #{@fee_category.id}").present?
               @error = true
-              @fee_discount.errors.add_to_base("#{t('flash20')} - #{a}")
+              @fee_discount.errors.add(:base, "#{t('flash20')} - #{a}")
             end
             unless (s.batch_id == @fee_category.batch_id)
               @error = true
-              @fee_discount.errors.add_to_base("#{a} #{t('does_not_belong_to_batch')} #{@fee_category.batch.full_name}")
+              @fee_discount.errors.add(:base, "#{a} #{t('does_not_belong_to_batch')} #{@fee_category.batch.full_name}")
             end
           else
             @error = true
-            @fee_discount.errors.add_to_base("#{a} #{t('is_invalid_admission_no')}")
+            @fee_discount.errors.add(:base, "#{a} #{t('is_invalid_admission_no')}")
           end
         end
         unless @error
           admission_no.each do |a|
             s = Student.find_by_admission_no(a)
-            @fee_discount = StudentFeeDiscount.new(params[:fee_discount])
+            @fee_discount = StudentFeeDiscount.new(fee_discount_params)
             @fee_discount.receiver_id = s.id
             unless @fee_discount.save
               @error = true
@@ -2477,7 +2476,7 @@ class FinanceController < ApplicationController
 
   def update_fee_discount
     @fee_discount = FeeDiscount.find(params[:id])
-    unless @fee_discount.update_attributes(params[:fee_discount])
+    unless @fee_discount.update_attributes(fee_discount_params)
       @error = true
     else
       @fee_category = @fee_discount.finance_fee_category
@@ -2524,6 +2523,10 @@ class FinanceController < ApplicationController
   private
     def finance_fee_category_params
       params.require(:finance_fee_category).permit(:name, :description)
+    end
+
+    def fee_discount_params
+      params.require(:fee_discount).permit(:name, :discount, :is_amount)
     end
 
 end
