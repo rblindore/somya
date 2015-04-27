@@ -34,9 +34,9 @@
           = lt.name
           \:
         - unless leave_count.reset_date.nil?
-          - @report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(@employee.id, lt.id, :conditions=> ["attendance_date >= '#{leave_count.reset_date}'"])
+          - @report = EmployeeAttendance.where('employee_id = ? and employee_leave_type_id = ? and attendance_date >= ?', @employee.id, lt.id, leave_count.reset_date)
         - else
-          - @report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(@employee.id, lt.id)
+          - @report = EmployeeAttendance.where('employee_id = ? and employee_leave_type_id = ?', @employee.id, lt.id)
         - if @report == []
           %div{:class => "date-#{cycle('odd', 'even')}"}
             = t('no_leaves_taken')

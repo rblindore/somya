@@ -23,7 +23,7 @@
   #app-back-button
     = back_button
 #page-yield
-  - form_for :grade do |c|
+  = form_for :grade, url: {:id => @grade.id} do |c|
     - unless flash[:notice].nil?
       %p.flash-msg
         = flash[:notice]
