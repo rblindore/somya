@@ -24,8 +24,7 @@
         %span :
         = c.amount
       .del-button
-        = link_to_remote image_tag("  buttons/delete-new.png", :alt=>'Delete', :border => 0), :url => { :action => "remove_new_paylist_category", :id => c.id, :id3=>CGI::unescape(@salary_date) }, |
-          :update => "list-payslip-category", :confirm=>"#{t('delete_confirm_msg')}"                                                                                                                |
+        = link_to image_tag("buttons/delete-new.png", :alt=>'Delete', :border => 0), { :action => "remove_new_paylist_category", :id => c.id, :id3=>CGI::unescape(@salary_date) }, :update => "list-payslip-category", :confirm=>"#{t('delete_confirm_msg')}", :remote => true
   - @individual.each do |c|
     %li.new_category
       .name= c.name
@@ -33,5 +32,4 @@
         %span :
         = c.amount
       .del-button
-        = link_to_remote image_tag("  buttons/delete-new.png", :alt=>'Delete', :border => 0), :url => { :action => "remove_new_paylist_category", :id => c.id, :id3 =>CGI::unescape(@salary_date) }, |
-          :update => "list-payslip-category", :confirm=>"#{t('delete_confirm_msg')}"                                                                                                                 |
+        = link_to image_tag("buttons/delete-new.png", :alt=>'Delete', :border => 0),  { :action => "remove_new_paylist_category", :id => c.id, :id3 =>CGI::unescape(@salary_date) }, :update => "list-payslip-category", :confirm=>"#{t('delete_confirm_msg')}" , :remote => true

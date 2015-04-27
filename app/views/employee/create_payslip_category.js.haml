@@ -1,0 +1,4 @@
+- if @created_category.save
+  $('#add-payslip-category-link').html("#{escape_javascript render 'payslip_category_list', :locals => {:emp_id => @employee.id, :salary_date=>@salary_date}}")
+- else
+  $('#payslip-category-form').html("#{escape_javascript render 'payslip_category_form' ")

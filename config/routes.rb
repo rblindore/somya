@@ -465,7 +465,27 @@ Fedena::Application.routes.draw do
       get :edit_additional_details
       patch :edit_additional_details
       get :delete_additional_details
-      
+      get :update_positions
+      get :update_employees
+      get :admission2
+      post :admission2
+      get :admission3
+      post :admission3
+      get :admission3_1
+      post :admission3_1
+      get :edit_privilege
+      post :edit_privilege
+      get :admission4
+      get :select_department_employee
+      get :rejected_payslip
+      get :update_employee_select_list
+      get :create_monthly_payslip
+      post :create_monthly_payslip
+      get :add_payslip_category
+      post :add_payslip_category
+      get :create_payslip_category
+      post :create_payslip_category
+      get :remove_new_paylist_category
     end
   end
   resources :sms, only: :index do
