@@ -16,9 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
-- form_remote_for :fee_discount, :url=>{:action=>"student_wise_fee_discount_create"} do |form|
+- form_remote_for :fee_discount, url: { action: :student_wise_fee_discount_create } do |form|
   .label-field-pair
-    %label{:for => "reason"}
+    %label{ for: "reason"}
       = t('name')
     .text-input-bg= form.text_field :name
   .label-field-pair
@@ -26,8 +26,7 @@
       = t('select_a_course')
       \:
     .text-input-bg
-      = select("","", @courses.map{|c|[c.full_name,c.id]},{:prompt => "#{t('select_a_course')}"},                |
-        {:onChange => "#{remote_function(:url => {:action => "load_discount_batch"}, :with => "'id='+value")}"}) |
+      = select("","", @courses.map{|c|[c.full_name,c.id]}, {prompt: t('select_a_course')}, { { onchange: "onchangeRequest(this, '#{url_for(action: :load_discount_batch, id: 'paramid')}')"}
   #batch-box
   #fee-category-box
   .label-field-pair

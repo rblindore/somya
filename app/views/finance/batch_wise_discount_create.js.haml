@@ -1,0 +1,9 @@
+- unless @error.nil?
+  $('#form-errors').html('#{escape_javascript render partial: 'errors', object: @fee_discount }')
+  // page.visual_effect(:highlight, 'form-errors')
+- else
+  $('#form-errors').html("<p class='flash-msg'>#{t('fee_discount_succesfully_created')} </p>")
+  $('#form-box').html('')
+  $('#flash_box').html('')
+
+  // #  page << "Modalbox.hide();"

@@ -71,6 +71,18 @@ Fedena::Application.routes.draw do
       get :add_leave_types
       get :report
       get :manual_reset
+      get :add_leave_types
+      post :add_leave_types
+      get :edit_leave_types
+      post :edit_leave_types
+      get :delete_leave_types
+      get :update_attendance_report
+      get :emp_attendance
+      get :leave_history
+      get :employee_attendance_pdf
+      get :leave_reset_settings
+      get :employee_leave_reset_all
+      get :employee_leave_reset_by_employee
     end
   end
 

@@ -27,7 +27,7 @@
       = t('fee_category')
       \:
     .text-input-bg
-      = select("","", @fee_categories.map { |item| [item.name, item.name] }, { prompt: t('select_category') }, { onchange: "onchangeRequest(this, '#{url_for(action: :fee_collection_batch_update, id: 'paramid')}')"})
+      = select("","", @fee_categories.map { |item| [item.name, item.name] }, { prompt: t('select_category') }, { onchange: "onChangeRequest(this, '#{url_for(action: :fee_collection_batch_update, id: 'paramid')}')"})
   #batchs
   .label-field-pair
     %label{ for: :reason}

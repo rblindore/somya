@@ -27,7 +27,7 @@
     %p.flash-msg
       = flash[:notice]
   .box
-    = form_for :leave_type do |c|
+    = form_for(:leave_type, :url => {:id => @leave_type.id}) do |c|
       = error_messages_for 'leave_type'
       #form-content
         .label-field-pair

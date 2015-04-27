@@ -35,7 +35,7 @@ $(document).on('ready dom:loaded', function(){
     obj.appendChild(a);
   });
 
-  load_menu_from_plugins();
+  // load_menuo_from_plugins();
 });
 
 function onChangeRequest(obj, url){
@@ -46,7 +46,7 @@ function onChangeRequest(obj, url){
 
 
 function ajaxRequest(url){
-  jQuery.ajax({
+  $.ajax({
     url: url,
     type: 'GET',
     dataType: 'script',
@@ -74,13 +74,13 @@ function redirectTo(obj, url){
 
 
 function toggleEffect(eId){
-  jQuery('#' + eId).toggle();
+  $('#' + eId).toggle();
 }
 
 function selectAll(class_name){
-  jQuery('div.' + class_name + ' > input').prop('checked', true)
+  $('div.' + class_name + ' > input').prop('checked', true)
 }
 
 function selectNone(class_name){
-  jQuery('div.' + class_name + ' > input').prop('checked', false)
+  $('div.' + class_name + ' > input').prop('checked', false)
 }
