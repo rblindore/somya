@@ -1,0 +1,8 @@
+- if @error
+	$('#form-errors').html('')
+  $('#particulars').html('#{escape_javascript render partial: 'fees_particulars_list'}')
+  / page << "Modalbox.hide();"
+  $('#flash_box').html("<p class='flash-msg'>#{t('particulars_created_successfully')}</p>")
+- else
+	$('#form-errors').html('#{escape_javascript render partial: 'errors', object: @finance_fee_particulars}')
+  / page.visual_effect(:highlight, 'form-errors')

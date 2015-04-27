@@ -1,1 +1,0 @@
-page.replace_html 'particulars', :partial => 'additional_particulars_list'
