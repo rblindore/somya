@@ -43,7 +43,7 @@ class MonthlyPayslip < ActiveRecord::Base
     payslips = ""
     individual_payslip_category = ""
     unless dept_id =="All"
-      active_employees_in_dept = Employee.find(:all,:select=>"id",:conditions=>"employee_department_id = #{dept_id}")
+      active_employees_in_dept = Employee.select(:id).where(:employee_department_id => dept_id)
       archived_employees_in_dept = ArchivedEmployee.select(:former_id).where(employee_department_id: dept_id)
       all_employees_in_dept = active_employees_in_dept.collect(&:id) + archived_employees_in_dept.collect{|a| a.former_id.to_i}
       payslips = self.where(salary_date: salary_date.to_date, employee_id: all_employees_in_dept).order("payroll_category_id ASC").includes(:payroll_category)

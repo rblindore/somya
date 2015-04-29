@@ -64,12 +64,8 @@
               %span :
               = b.bank_info
     #pdf-info
-      - @monthly_payslips = MonthlyPayslip.find_all_by_salary_date(@salary_date,
-      - :conditions=> "employee_id =#{@employee.id}",
-      - :order=> "payroll_category_id ASC")
-      - @individual_payslip_category = IndividualPayslipCategory.find_all_by_salary_date(@salary_date,
-      - :conditions=>"employee_id =#{@employee.id}",
-      - :order=>"id ASC")
+      - @monthly_payslips = MonthlyPayslip.where('salary_date = ? and employee_id = ?', @salary_date, @employee.id).order("payroll_category_id ASC")
+      - @individual_payslip_category = IndividualPayslipCategory.where('salary_date = ? and employee_id = ?', @salary_date, @employee.id).order("id ASC")
       - @individual_category_non_deductionable = 0
       - @individual_category_deductionable = 0
       - @individual_payslip_category.each do |pc|

@@ -1406,7 +1406,7 @@ class EmployeeController < ApplicationController
   end
 
   def view_employee_payslip
-    @monthly_payslips = MonthlyPayslip.where("employee_id=? AND salary_date = ?",params[:id],params[:salary_date],:include=>:payroll_category)
+    @monthly_payslips = MonthlyPayslip.where("employee_id=? AND salary_date = ?",params[:id],params[:salary_date]).includes(:payroll_category)
     @individual_payslips =  IndividualPayslipCategory.where("employee_id=? AND salary_date = ?",params[:id],params[:salary_date])
     @salary  = Employee.calculate_salary(@monthly_payslips, @individual_payslips)
   end
@@ -1498,26 +1498,22 @@ class EmployeeController < ApplicationController
     #    end
   end
   def employee_individual_payslip_pdf
-    @employee = Employee.find(:first,:conditions=>"id=#{params[:id]}")
+    @employee = Employee.find(params[:id])
     if @employee.blank?
-      @employee = ArchivedEmployee.find(:first,:conditions=>"former_id=#{params[:id]}")
+      @employee = ArchivedEmployee.find_by_former_id(params[:id])
       @employee.id = @employee.former_id
     end
-    @bank_details = EmployeeBankDetail.find_all_by_employee_id(@employee.id)
-    @employee ||= ArchivedEmployee.find(:first,:conditions=>"former_id=#{params[:id]}")
+    @bank_details = EmployeeBankDetail.where(:employee_id => @employee.id)
+    @employee ||= ArchivedEmployee.find_by_former_id(params[:id])
     @department = EmployeeDepartment.find(@employee.employee_department_id).name
     @currency_type = Settings.find_by_config_key("CurrencyType").config_value
     @category = EmployeeCategory.find(@employee.employee_category_id).name
     @grade = EmployeeGrade.find(@employee.employee_grade_id).name unless @employee.employee_grade_id.nil?
     @position = EmployeePosition.find(@employee.employee_position_id).name
     @salary_date = Date.parse(params[:id2])
-    @monthly_payslips = MonthlyPayslip.find_all_by_salary_date(@salary_date,
-      :conditions=> "employee_id =#{params[:id]}",
-      :order=> "payroll_category_id ASC")
+    @monthly_payslips = MonthlyPayslip.where('salary_date = ? and employee_id = ?', @salary_date, params[:id]).order("payroll_category_id ASC")
 
-    @individual_payslip_category = IndividualPayslipCategory.find_all_by_salary_date(@salary_date,
-      :conditions=>"employee_id =#{params[:id]}",
-      :order=>"id ASC")
+    @individual_payslip_category = IndividualPayslipCategory.where('salary_date = ? and employee_id = ?', @salary_date, params[:id]).order("id ASC")
     @individual_category_non_deductionable = 0
     @individual_category_deductionable = 0
     @individual_payslip_category.each do |pc|

@@ -503,6 +503,7 @@ Fedena::Application.routes.draw do
       get :delete
       post :department_payslip
       get :view_employee_payslip
+      get :employee_individual_payslip_pdf
     end
   end
   resources :sms, only: :index do
