@@ -38,7 +38,7 @@
       .link-heading= link_to "#{t('rejected_employee')}", {:controller=>"employee", :action=>"rejected_payslip"}
       .link-descr= t('link_desc4')
     .link-box
-      .link-heading= link_to "#{t('one_click_payslip')}",:update=>"message-div",:before => "Element.show('loader')",:success => "Element.hide('loader')",:url=>{:controller=>"employee", :action=>"payslip_date_select", :remote => true}
+      .link-heading= link_to "#{t('one_click_payslip')}",:update=>"message-div",:before => "Element.show('loader')",:success => "Element.hide('loader')", :controller=>"employee", :action=>"payslip_date_select", :remote => true
       .link-descr= t('link_desc2')
     .link-box
       .link-heading= link_to "#{t('one_click_payslip_revert')}",:update=>"message-div", :before => "Element.show('loader')",:success => "Element.hide('loader')", :url=>{:controller=>"employee", :action=>"payslip_revert_date_select", :remote => true},:confirm=>"#{t('revert_confirm')}"

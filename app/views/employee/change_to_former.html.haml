@@ -34,7 +34,7 @@
   - else
     #remove-student
       %p= t('paragraph')
-      = form_for :remove do |f|
+      = form_for(:remove, :url => {:id => @employee.id}) do |f|
         .label-field-pair
           %label{:for => "remove_descr"}= t('reason_for_leaving')
           .text-input-bg= f.text_field :status_description

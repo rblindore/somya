@@ -19,7 +19,7 @@
 - current_username = @current_user.username
 - profile_employee_no = @employee.employee_number
 #content-header
-  = image_tag("  HR/show_hr.png")
+  = image_tag("HR/show_hr.png")
   %h1= t('employee_profile')
   %h3= t('details')
   #app-back-button
@@ -31,20 +31,20 @@
         = t('profile_text')
         ▼
       %ul#box_one.scriptaculously{:style => "display:none;"}
-        %li= link_to_remote "#{t('general')}", :url => {:action => "profile_general", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('personal')}", :url => {:action => "profile_personal", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('address')}", :url => {:action => "profile_address", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('contact')}", :url => {:action => "profile_contact", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('bank_info')}", :url => {:action => "profile_bank_details", :id => @employee.id}, :update => "profile-infos"
-        %li= link_to_remote "#{t('additional_info')}", :url => {:action => "profile_additional_details", :id => @employee.id}, :update => "profile-infos"
+        %li= link_to "#{t('general')}", :url => {:action => "profile_general", :id => @employee.id}, :update => "profile-infos", :remote => true
+        %li= link_to "#{t('personal')}", :url => {:action => "profile_personal", :id => @employee.id}, :update => "profile-infos", :remote => true
+        %li= link_to "#{t('address')}", :url => {:action => "profile_address", :id => @employee.id}, :update => "profile-infos", :remote => true
+        %li= link_to "#{t('contact')}", :url => {:action => "profile_contact", :id => @employee.id}, :update => "profile-infos", :remote => true
+        %li= link_to "#{t('bank_info')}", :url => {:action => "profile_bank_details", :id => @employee.id}, :update => "profile-infos", :remote => true
+        %li= link_to "#{t('additional_info')}", :url => {:action => "profile_additional_details", :id => @employee.id}, :update => "profile-infos", :remote => true
     - if current_username == profile_employee_no
       %li
         %a#link_two.drops{:href => "#"}
           = t('salary')
           ▼
         %ul#box_two.scriptaculously{:style => "display:none;"}
-          %li= link_to_remote "#{t('payroll_text')}", :url => {:action => "profile_payroll_details", :id => @employee.id}, :update => "profile-infos"
-          %li= link_to_remote "#{t('payslip_text')}", :url => {:action => "view_payslip", :id => @employee.id}, :update => "profile-infos"
+          %li= link_to "#{t('payroll_text')}", :url => {:action => "profile_payroll_details", :id => @employee.id}, :update => "profile-infos", :remote => true
+          %li= link_to "#{t('payslip_text')}", :url => {:action => "view_payslip", :id => @employee.id}, :update => "profile-infos", :remote => true
     - else
       - if permitted_to? :payslip, :employee
         %li
@@ -52,16 +52,16 @@
             = t('salary')
             ▼
           %ul#box_two.scriptaculously{:style => "display:none;"}
-            %li= link_to_remote "#{t('payroll_text')}", :url => {:action => "profile_payroll_details", :id => @employee.id}, :update => "profile-infos"
-            %li= link_to_remote "#{t('payslip_text')}", :url => {:action => "view_payslip", :id => @employee.id}, :update => "profile-infos"
+            %li= link_to "#{t('payroll_text')}", :url => {:action => "profile_payroll_details", :id => @employee.id}, :update => "profile-infos", :remote => true
+            %li= link_to "#{t('payslip_text')}", :url => {:action => "view_payslip", :id => @employee.id}, :update => "profile-infos", :remote => true
     - if current_username == profile_employee_no
       %li
         %a#link_three.drops{:href => "#"}
           = t('leaves')
           ▼
         %ul#box_three.scriptaculously{:style => "display:none;"}
-          %li= link_to_remote "#{t('attendance')}", :url => {:action => "view_attendance", :id => @employee.id}, :update => "profile-infos"
-          %li= link_to        "#{t('leaves')}", :controller=>"employee_attendance", :action=>"leaves", :id=>@employee.id
+          %li= link_to "#{t('attendance')}", :url => {:action => "view_attendance", :id => @employee.id}, :update => "profile-infos", :remote => true
+          %li= link_to "#{t('leaves')}", :controller=>"employee_attendance", :action=>"leaves", :id=>@employee.id
     - else
       - if permitted_to? :employee_attendance, :employee
         %li

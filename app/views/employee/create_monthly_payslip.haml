@@ -65,6 +65,6 @@
       .extender
   #individual-payslip-categories
     #individual-payslip-categories-list
-      = render :partial => "payslip_category_list", :locals => {:emp_id => @employee.id, :salary_date=>''}
+      = render :partial => "payslip_category_list", :locals => {:emp_id => @employee.id, :salary_date=>@salary_date}
       / div id="payslip-category-form"> </div
   .extender

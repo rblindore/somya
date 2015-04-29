@@ -34,7 +34,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for :employee,:id => @employee.id do |a|
+  = form_for(:employee,:url => {:id => @employee.id}) do |a|
     = error_messages_for  'employee'
     #admission1_form
       #necessary-field-notification
@@ -51,7 +51,7 @@
       %hr.label-underline/
       .label-field-pair
         %label{:for => "employee_joining_date"}= t('joining_date')
-        .text-input-bg= calendar_date_select_tag 'employee[joining_date]', I18n.l(@employee.joining_date,:format=>:default),:popup => "force" , |
+        .text-input-bg= date_select 'employee[joining_date]', I18n.l(@employee.joining_date,:format=>:default),:popup => "force" , |
             :year_range => 25.years.ago..0.years.from_now                                                                           |
       %hr.label-underline/
       .label-field-pair
@@ -75,6 +75,11 @@
         .text-input-bg= a.text_field :email
       %hr.label-underline/
       .label-field-pair
+        %label{:for => "employee_date_of_birth"}= t('date_of_birth')
+        .text-input-bg= date_select 'employee[date_of_birth]', I18n.l(@employee.date_of_birth,:format=>:default),:popup => "force" , |
+            :year_range => 25.years.ago..0.years.from_now                                                                           |
+      %hr.label-underline/
+      .label-field-pair
         %label{:for => "employee_department"}
           = t('department')
           %span.necessary-field *
@@ -84,9 +89,7 @@
         %label{:for => "employee_category"}
           = t('category')
           %span.necessary-field *
-        .text-input-bg= select :employee, :employee_category_id, @categories.map { |s| [s.name, s.id] },                              |
-            {:prompt => "#{t('select')}"},                                                                                |
-            {:onChange => "#{remote_function(:url => {:action => "update_positions"}, :with => "'category_id='+value")}"} |
+        .text-input-bg= select :employee, :employee_category_id, @categories.map { |s| [s.name, s.id] }, {:prompt => "#{t('select')}"},{:onChange => "onChangeRequest(this, '#{url_for(action: :update_positions, category_id: 'paramid')}')"}
       %hr.label-underline/
       .label-field-pair
         %label{:for => "employee_position"}

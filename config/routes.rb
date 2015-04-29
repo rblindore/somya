@@ -486,6 +486,23 @@ Fedena::Application.routes.draw do
       get :create_payslip_category
       post :create_payslip_category
       get :remove_new_paylist_category
+      get :update_rejected_employee_list
+      get :payslip_date_select
+      get :view_rejected_payslip
+      get :update_rejected_payslip
+      get :edit_rejected_payslip
+      post :edit_rejected_payslip
+      get :profile
+      get :remove
+      get :change_reporting_manager
+      get :edit1
+      post :edit1
+      get :profile_pdf
+      get :change_to_former
+      post :change_to_former
+      get :delete
+      post :department_payslip
+      get :view_employee_payslip
     end
   end
   resources :sms, only: :index do
