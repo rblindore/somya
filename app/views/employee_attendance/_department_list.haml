@@ -24,9 +24,9 @@
   #list
     .sel-list
       = t('select')
-      \: #{link_to t('all'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });"},
-      \#{link_to t('none'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });"}
-    = form_for :employee,:url=>{:action=>'update_department_leave_reset'} do |form|
+      \: #{link_to t('all'), 'javascript:void(0);', onclick: "$('.batches_box').each(function() {this.checked = true; });"},
+      \#{link_to t('none'), 'javascript:void(0);', onclick: "$('.batches_box').each(function() { this.checked = false; });"}
+    = form_for :employee,url: {:action=>'update_department_leave_reset'} do |form|
       - @employees.each do |b|
         %div{:class => "name_list#{cycle('odd', 'even')}"}
           %li
@@ -34,4 +34,4 @@
               = check_box_tag "employee_id[]", b.id,true,:class=>'batches_box'
               .att_list_names= b.full_name
       .user_submit_button1
-        = form.submit  "asd", :name => "commit", :value => "► #{t('reset')}"
+        = submit_tag "► #{t('reset')}"

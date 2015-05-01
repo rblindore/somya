@@ -81,8 +81,15 @@ Fedena::Application.routes.draw do
       get :leave_history
       get :employee_attendance_pdf
       get :leave_reset_settings
+      post :leave_reset_settings
       get :employee_leave_reset_all
       get :employee_leave_reset_by_employee
+      get :update_leave_history
+      post :update_leave_history
+      get :update_employee_leave_reset_all
+      get :list_department_leave_reset
+      get :update_department_leave_reset
+      post :update_department_leave_reset
     end
   end
 
