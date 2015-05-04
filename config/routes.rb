@@ -81,8 +81,15 @@ Fedena::Application.routes.draw do
       get :leave_history
       get :employee_attendance_pdf
       get :leave_reset_settings
+      post :leave_reset_settings
       get :employee_leave_reset_all
       get :employee_leave_reset_by_employee
+      get :update_leave_history
+      post :update_leave_history
+      get :update_employee_leave_reset_all
+      get :list_department_leave_reset
+      get :update_department_leave_reset
+      post :update_department_leave_reset
     end
   end
 
@@ -465,7 +472,45 @@ Fedena::Application.routes.draw do
       get :edit_additional_details
       patch :edit_additional_details
       get :delete_additional_details
-      
+      get :update_positions
+      get :update_employees
+      get :admission2
+      post :admission2
+      get :admission3
+      post :admission3
+      get :admission3_1
+      post :admission3_1
+      get :edit_privilege
+      post :edit_privilege
+      get :admission4
+      get :select_department_employee
+      get :rejected_payslip
+      get :update_employee_select_list
+      get :create_monthly_payslip
+      post :create_monthly_payslip
+      get :add_payslip_category
+      post :add_payslip_category
+      get :create_payslip_category
+      post :create_payslip_category
+      get :remove_new_paylist_category
+      get :update_rejected_employee_list
+      get :payslip_date_select
+      get :view_rejected_payslip
+      get :update_rejected_payslip
+      get :edit_rejected_payslip
+      post :edit_rejected_payslip
+      get :profile
+      get :remove
+      get :change_reporting_manager
+      get :edit1
+      post :edit1
+      get :profile_pdf
+      get :change_to_former
+      post :change_to_former
+      get :delete
+      post :department_payslip
+      get :view_employee_payslip
+      get :employee_individual_payslip_pdf
     end
   end
   resources :sms, only: :index do

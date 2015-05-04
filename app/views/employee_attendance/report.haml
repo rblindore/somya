@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("attendence/attendence.png")
   %h1= t('employee_attendance_text')
@@ -34,8 +35,5 @@
   = form_for :employee_department do |s|
     .label-field-pair
       %label{:for => "employee_department_select"}= t('select_the_department')
-      .text-input-bg= select :employee_department, :department_id, @departments.map {|c| [c.name, c.id]}, |
-          {:prompt => "#{t('select_a_department')}"},                                         |
-          {:onChange => "#{remote_function(:url => {:action => "update_attendance_report"},   |
-          :with => "'department_id='+value")}"}                                               |
+      .text-input-bg= select :employee_department, :department_id, @departments.map {|c| [c.name, c.id]}, {:prompt => "#{t('select_a_department')}"}, {:onChange => "onChangeRequest(this, '#{url_for(action: :update_attendance_report, department_id: 'paramid')}') "} 
   #attendance_report

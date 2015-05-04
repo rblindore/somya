@@ -26,9 +26,9 @@
     = stylesheet_link_tag  @direction+"_layouts/pdf"
     = wicked_pdf_javascript_include_tag 'cache/javascripts/all'
     = javascript_include_tag :all
-    %link{:href => "#{RAILS_ROOT}/public/stylesheets/#{@direction}_layouts/pdf.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "#{RAILS_ROOT}/public/stylesheets/#{get_pdf_stylesheets}.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "#{RAILS_ROOT}/public/stylesheets/#{@direction}_styles/ui.all.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "#{Rails.root.to_s}/public/stylesheets/#{@direction}_layouts/pdf.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "#{Rails.root.to_s}/public/stylesheets/#{get_pdf_stylesheets}.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "#{Rails.root.to_s}/public/stylesheets/#{@direction}_styles/ui.all.css", :media => "all", :rel => "stylesheet", :type => "text/css"}/
     %script{:type => "text/css"}
       :cdata
         \.page {

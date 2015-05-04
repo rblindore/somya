@@ -31,10 +31,10 @@
     = form_for :period ,:url=>{:action=>'update_leave_history', :id=>@employee.id}, remote: true do |f|
       .label-field-pair
         %label{:for => "reason"}= t('start_date')
-        .text-input-bg= calendar_date_select_tag 'period[start_date]', I18n.l(1.month.ago.to_date,:format=>:default) ,:popup=>:force
+        .text-input-bg= date_select 'period[start_date]', I18n.l(1.month.ago.to_date,:format=>:default) ,:popup=>:force
       .label-field-pair
         %label{:for => "reason"}= t('end_date')
-        .text-input-bg= calendar_date_select_tag 'period[end_date]', I18n.l(Date.today,:format=>:default) ,:popup=>:force
+        .text-input-bg= date_select 'period[end_date]', I18n.l(Date.today,:format=>:default) ,:popup=>:force
       #submit-button
         = submit_tag "►#{t('go')}",:class=>'submit_button'
   #attendance-report

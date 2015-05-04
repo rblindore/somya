@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("HR/show_hr.png")
   %h1= t('monthly_payslip')
@@ -44,31 +45,26 @@
     #errorExplanation.errorExplanation
       = flash[:warn_notice]
   #form-content
-    = form_for :manage_payroll do |s|
+    = form_for(:manage_payroll, :url => {:id => @employee.id} ) do |s|
       .payslip-field-pair
         %label{:for => "salary_date"}= t('salary_date')
         .payslip-input-bg
-          = calendar_date_select_tag 'salary_date', I18n.l(Date.today,:format=>:default),   |
-            :year_range => 2.years.ago..0.years.from_now , :readonly=>true, :popup=>"force" |
+          = date_select 'salarydate', I18n.l(Date.today,:format=>:default),:year_range => 2.years.ago..0.years.from_now
       - @independent_categories.each do |c|
         - val = EmployeeSalaryStructure.find_by_employee_id_and_payroll_category_id(@employee, c)
         .payslip-field-pair
           %label{:for => "payroll_category_name"}= c.name
-          .payslip-input-bg= s.text_field :amount, :index => c.id, :value => (val.nil? ? 0 : val.amount),                             |
-                :onChange=> "#{remote_function(:url  => {:controller=>"payroll",:action => "update_dependent_fields"}, |
-              :with => "'amount='+ value + '&cat_id=' + #{c.id}")}"                                                    |
+          .payslip-input-bg= s.text_field :amount, :index => c.id, :value => (val.nil? ? 0 : val.amount), :onChange=> "onChangeRequest(this, '#{url_for(:controller=>"payroll",:action => "update_dependent_fields" , :cat_id => c.id)};)"
       - @dependent_categories.each do |c|
         - val = EmployeeSalaryStructure.find_by_employee_id_and_payroll_category_id(@employee, c)
         .payslip-field-pair
           %label{:for => "payroll_category_name"}= c.name
-          .payslip-input-bg= s.text_field :amount, :index => c.id, :value => (val.nil? ? 0 : val.amount),                             |
-                :onChange=> "#{remote_function(:url  => {:controller=>"payroll",:action => "update_dependent_fields"}, |
-              :with => "'amount='+ value + '&cat_id=' + #{c.id}")}"                                                    |
+          .payslip-input-bg= s.text_field :amount, :index => c.id, :value => (val.nil? ? 0 : val.amount),:onChange=> "onChangeRequest(this, '#{url_for(:controller=>"payroll",:action => "update_dependent_fields" , :cat_id => c.id)};)"
       #submit-button
         = submit_tag("► #{t('create_text')}")
       .extender
   #individual-payslip-categories
     #individual-payslip-categories-list
-      = render :partial => "payslip_category_list", :locals => {:emp_id => @employee.id, :salary_date=>''}
+      = render :partial => "payslip_category_list", :locals => {:emp_id => @employee.id, :salary_date=>@salary_date}
       / div id="payslip-category-form"> </div
   .extender

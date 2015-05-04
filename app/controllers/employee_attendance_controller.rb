@@ -73,9 +73,10 @@ class EmployeeAttendanceController < ApplicationController
     @last_reset = Settings.find_by_config_key('LastAutoLeaveReset')
     @fin_start_date = Settings.find_by_config_key('FinancialYearStartDate')
     if request.post?
+      start_date = Date.civil(*params[:configuration][:financial_year_start_date].sort.map(&:last).map(&:to_i))
       @auto_reset.update_attributes(config_value: params[:configuration][:automatic_leave_reset])
       @reset_period.update_attributes(config_value: params[:configuration][:leave_reset_period])
-      @last_reset.update_attributes(config_value: params[:configuration][:financial_year_start_date])
+      @last_reset.update_attributes(config_value: start_date)
       flash[:notice] = t('flash_msg8')
     end
   end
@@ -102,9 +103,6 @@ class EmployeeAttendanceController < ApplicationController
         end
       end
     end
-    render :update do |page|
-            page.replace_html "main-reset-box", text: "<p class='flash-msg'>#{t('leave_count_reset_sucessfull')}</p>"
-    end
   end
 
   def employee_leave_reset_by_department
@@ -115,57 +113,44 @@ class EmployeeAttendanceController < ApplicationController
   def list_department_leave_reset
     @leave_types = EmployeeLeaveType.where(status: true)
     if params[:department_id].blank?
-      render :update do |page|
-        page.replace_html "department-list", text: ""
-      end
       return
     end
     @employees = Employee.where(employee_department_id: params[:department_id])
-    render :update do |page|
-      page.replace_html "department-list", partial: 'department_list'
-    end
   end
 
   def update_department_leave_reset
     @employee = params[:employee_id]
-    @employee.each do |e|
-      @leave_count = EmployeeLeave.where(employee_id: e)
-      @leave_count.each do |c|
+    if !@employee.nil?
+      @employee.each do |e|
+        @leave_count = EmployeeLeave.where(employee_id: e)
+        @leave_count.each do |c|
         #attendance = EmployeeAttendance.find_all_by_employee_id(e, :conditions=> "employee_leave_type_id = '#{c.employee_leave_type_id }' and attendance_date >= '#{Date.today.strftime('%Y-%m-%d')}'" )
-        @leave_type = EmployeeLeaveType.find_by_id(c.employee_leave_type_id)
-        if @leave_type.status
-          default_leave_count = @leave_type.max_leave_count
-          if @leave_type.carry_forward
-            leave_taken = c.leave_taken
-            available_leave = c.leave_count
-            if leave_taken <= available_leave
-              balance_leave = available_leave - leave_taken
-              available_leave = balance_leave.to_f
-              available_leave += default_leave_count.to_f
-              leave_taken = 0
-             # unless attendance.blank?
-             #   attendance.each do |a|
-             #     if a.is_half_day
-             #       leave_taken += (0.5).to_f
-
-             #     else
-             #       leave_taken += (1).to_f
-
-             #     end
-             #   end
-             # end
-              c.update_attributes(leave_taken: leave_taken, leave_count: available_leave, reset_date: Date.today)
+          @leave_type = EmployeeLeaveType.find_by_id(c.employee_leave_type_id)
+          if @leave_type.status
+            default_leave_count = @leave_type.max_leave_count
+            if @leave_type.carry_forward
+              leave_taken = c.leave_taken
+              available_leave = c.leave_count
+              if leave_taken <= available_leave
+                balance_leave = available_leave - leave_taken
+                available_leave = balance_leave.to_f
+                available_leave += default_leave_count.to_f
+                leave_taken = 0
+                c.update_attributes(leave_taken: leave_taken, leave_count: available_leave, reset_date: Date.today)
+              else
+                c.update_attributes(leave_taken: 0, leave_count: default_leave_count.to_f, reset_date: Date.today)
+              end
             else
               c.update_attributes(leave_taken: 0, leave_count: default_leave_count.to_f, reset_date: Date.today)
             end
-          else
-            c.update_attributes(leave_taken: 0, leave_count: default_leave_count.to_f, reset_date: Date.today)
           end
         end
-
       end
+      flash[:notice] = t('employee_attendance.flash12')
+    else
+      flash[:notice] = t('employee_attendance.flash13')
     end
-    redirect_to employee_leave_reset_by_department_employee_attendance_path, notice: t('flash12')
+      redirect_to :action => 'employee_leave_reset_by_department'
   end
 
 

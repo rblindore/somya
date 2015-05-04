@@ -347,22 +347,22 @@ class EmployeeController < ApplicationController
   end
 
   def edit1
-    @categories = EmployeeCategory.find(:all,:order => "name asc", :conditions => "status = true")
-    @positions = EmployeePosition.find(:all)
-    @grades = EmployeeGrade.find(:all,:order => "name asc", :conditions => "status = true")
-    @departments = EmployeeDepartment.find(:all,:order => "name asc", :conditions => "status = true")
+    @categories = EmployeeCategory.where("status = true").order("name asc")
+    @positions = EmployeePosition.all
+    @grades = EmployeeGrade.where("status = true").order("name asc")
+    @departments = EmployeeDepartment.where("status = true").order("name asc")
     @employee = Employee.find(params[:id])
     @employee_user = @employee.user
     if request.post?
       if  params[:employee][:employee_number].downcase != 'admin' or @employee_user.admin
-        if @employee.update_attributes(params[:employee])
+        if @employee.update_attributes(employee_params)
           if params[:employee][:status] == "true"
             Employee.update(@employee.id, :status => true)
           else
             Employee.update(@employee.id, :status => false)
           end
 
-          flash[:notice] = "#{t('flash15')}  #{@employee.first_name} #{t('flash17')}"
+          flash[:notice] = "#{t('employee.flash15')}  #{@employee.first_name} #{t('employee.flash17')}"
           redirect_to :controller =>"employee" ,:action => "profile", :id => @employee.id
         end
       else
@@ -585,10 +585,10 @@ class EmployeeController < ApplicationController
   end
 
   def change_reporting_manager
-    @departments = EmployeeDepartment.find(:all)
-    @categories  = EmployeeCategory.find(:all)
-    @positions   = EmployeePosition.find(:all)
-    @grades      = EmployeeGrade.find(:all)
+    @departments = EmployeeDepartment.all
+    @categories  = EmployeeCategory.all
+    @positions   = EmployeePosition.all
+    @grades      = EmployeeGrade.all
     @emp = Employee.find(params[:id])
     @reporting_manager = Employee.find(@emp.reporting_manager_id).first_name unless @emp.reporting_manager_id.nil?
     if request.post?
@@ -657,7 +657,7 @@ class EmployeeController < ApplicationController
 
     @current_user = current_user
     @employee = Employee.find(params[:id])
-    @new_reminder_count = Reminder.find_all_by_recipient(@current_user.id, :conditions=>"is_read = false")
+    @new_reminder_count = Reminder.where('recipient = ? and is_read is ? ', @current_user.id, false)
     @gender = "Male"
     @gender = "Female" if @employee.gender == "f"
     @status = "Active"
@@ -764,8 +764,8 @@ class EmployeeController < ApplicationController
     @total_months = month
     @home_country = Country.find(@employee.home_country_id).name unless @employee.home_country_id.nil?
     @office_country = Country.find(@employee.office_country_id).name unless @employee.office_country_id.nil?
-    @bank_details = EmployeeBankDetail.find_all_by_employee_id(@employee.id)
-    @additional_details = EmployeeAdditionalDetail.find_all_by_employee_id(@employee.id)
+    @bank_details = EmployeeBankDetail.where(:employee_id => @employee.id)
+    @additional_details = EmployeeAdditionalDetail.where(:employee_id => @employee.id)
     render :pdf => 'profile_pdf'
 
 
@@ -795,7 +795,6 @@ class EmployeeController < ApplicationController
   def add_payslip_category
     @employee = Employee.find(params[:emp_id])
     @salary_date = (params[:salary_date])
-    render :partial => "payslip_category_form"
   end
 
   def create_payslip_category
@@ -815,9 +814,9 @@ class EmployeeController < ApplicationController
         IndividualPayslipCategory.update(@created_category.id, :include_every_month=>params[:include_every_month])
       end
 
-      @new_payslip_category = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
-      @individual = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,@salary_date)
-      render :partial => "payslip_category_list",:locals => {:emp_id => @employee.id, :salary_date=>@salary_date}
+      @new_payslip_category = IndividualPayslipCategory.where('employee_id = ? and salary_date = ?', @employee.id,nil)
+      @individual = IndividualPayslipCategory.where('employee_id = ? and salary_date = ?', @employee.id,@salary_date) unless @salary_date.nil?
+      redirect_to :action => 'create_monthly_payslip' , :id => @employee.id
     else
       render :partial => "payslip_category_form"
     end
@@ -828,8 +827,8 @@ class EmployeeController < ApplicationController
     employee = removal_category.employee_id
     @salary_date = params[:id3]
     removal_category.destroy
-    @new_payslip_category = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(employee,nil)
-    @individual = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(employee,@salary_date, :conditions=>"") unless params[:id3]==''
+    @new_payslip_category = IndividualPayslipCategory.where('employee_id = ? and salary_date is ?', employee,nil)
+    @individual = IndividualPayslipCategory.where('employee_id = ? and salary_date = ?',employee,@salary_date) unless params[:id3].nil?
     @individual ||= []
     render :partial => "list_payslip_category"
   end
@@ -838,19 +837,18 @@ class EmployeeController < ApplicationController
     @new_payslip_category == []
     @salary_date = ''
     @employee = Employee.find(params[:id])
-    @independent_categories = PayrollCategory.find_all_by_payroll_category_id_and_status(nil, true)
-    @dependent_categories = PayrollCategory.find_all_by_status(true, :conditions=>"payroll_category_id != \'\'")
-    @employee_additional_categories = IndividualPayslipCategory.find_all_by_employee_id(@employee.id, :conditions=>"include_every_month = true")
-    @new_payslip_category = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
-    @individual = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,Date.today)
+    @independent_categories = PayrollCategory.where('payroll_category_id is ? and status = ?', nil, true)
+    @dependent_categories = PayrollCategory.where("status = ? and payroll_category_id is not NULL ", true)
+    @employee_additional_categories = IndividualPayslipCategory.where('employee_id = ? and include_every_month = ?', @employee.id, true)
+    @new_payslip_category = IndividualPayslipCategory.where('employee_id = ? and salary_date is ? ', @employee.id,nil)
+    @individual = IndividualPayslipCategory.where('employee_id = ? and salary_date = ? ', @employee.id,Date.today)
     @user = current_user
     if request.post?
-      salary_date = Date.parse(params[:salary_date])
+      salary_date = Date.civil(*params[:salarydate].sort.map(&:last).map(&:to_i))
       unless salary_date.to_date < @employee.joining_date.to_date
         start_date = salary_date - ((salary_date.day - 1).days)
         end_date = start_date + 1.month
-        payslip_exists = MonthlyPayslip.find_all_by_employee_id(@employee.id,
-          :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
+        payslip_exists = MonthlyPayslip.where("employee_id = ? and salary_date >= ? and salary_date < ?",  @employee.id, start_date, end_date)
         if payslip_exists == []
           params[:manage_payroll].each_pair do |k, v|
             row_id = EmployeeSalaryStructure.find_by_employee_id_and_payroll_category_id(@employee, k)
@@ -863,19 +861,19 @@ class EmployeeController < ApplicationController
                 :payroll_category_id => k,:amount => v['amount'])
             end
           end
-          individual_payslip_category = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
+          individual_payslip_category = IndividualPayslipCategory.where('employee_id = ? and salary_date = ?', @employee.id,nil)
           individual_payslip_category.each do |c|
             IndividualPayslipCategory.update(c.id, :salary_date=>start_date)
           end
-          flash[:notice] = "#{@employee.first_name} #{t('flash27')} #{params[:salary_date]}"
+          flash[:notice] = "#{@employee.first_name} #{t('employee.flash27')} #{salary_date}"
         else #else for if payslip_exists == []
-          individual_payslips_generated = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
+          individual_payslips_generated = IndividualPayslipCategory.where('employee_id = ? and salary_date = ? ', @employee.id,nil)
           unless individual_payslips_generated.nil?
             individual_payslips_generated.each do|i|
               i.delete
             end
           end
-          flash[:notice] = "#{@employee.first_name} #{t('flash28')} #{params[:salary_date]}"
+          flash[:notice] = "#{@employee.first_name} #{t('employee.flash28')} #{salary_date}"
         end
         privilege = Privilege.find_by_name("FinanceControl")
         finance_manager_ids = privilege.user_ids
@@ -887,7 +885,7 @@ class EmployeeController < ApplicationController
             :body=>body ))
         redirect_to :controller => "employee", :action => "select_department_employee"
       else
-        flash[:warn_notice] = "#{t('flash45')} #{params[:salary_date]}"
+        flash[:warn_notice] = "#{t('flash45')} #{salary_date}"
       end
     end
 
@@ -1023,19 +1021,19 @@ class EmployeeController < ApplicationController
 
   def select_department
     @subject = Subject.find(params[:subject_id])
-    @assigned_employee = EmployeesSubject.find_all_by_subject_id(@subject.id)
-    @departments = EmployeeDepartment.find(:all, :conditions =>{:status=>true})
-    render :update do |page|
-      page.replace_html 'department-select', :partial => 'select_department'
-    end
+    @assigned_employee = EmployeesSubject.where(:subject_id => @subject.id)
+    @departments = EmployeeDepartment.where(:status => true)
+#     render :update do |page|
+#       page.replace_html 'department-select', :partial => 'select_department'
+#     end
   end
 
   def update_employees
     @subject = Subject.find(params[:subject_id])
-    @employees = Employee.find_all_by_employee_department_id(params[:department_id], :conditions =>{:status=>true})
-    render :update do |page|
-      page.replace_html 'employee-list', :partial => 'employee_list'
-    end
+    @employees = Employee.where('employee_department_id = ? and status = ? ', params[:department_id], true)
+#     render :update do |page|
+#       page.replace_html 'employee-list', :partial => 'employee_list'
+#     end
   end
 
   def assign_employee
@@ -1116,39 +1114,29 @@ class EmployeeController < ApplicationController
 
   def update_rejected_employee_list
     department_id = params[:department_id]
-    #@employees = Employee.find_all_by_employee_department_id(department_id)
-    @employees = MonthlyPayslip.find(:all, :conditions =>"is_rejected is true", :group=>'employee_id', :joins=>"INNER JOIN employees on monthly_payslips.employee_id = employees.id")
-    @employees.reject!{|x| x.employee.employee_department_id != department_id.to_i}
-
-    render :update do |page|
-      page.replace_html 'employees_select_list', :partial => 'rejected_employee_select_list', :object => @employees
-    end
+    @employees = MonthlyPayslip.where('is_rejected is true', :group=>'employee_id' ).joins("inner join employees on monthly_payslips.employee_id = employees.id").where('employees.employee_department_id = ?',  department_id)
   end
 
   def edit_rejected_payslip
     @salary_date = params[:id2]
     @employee = Employee.find(params[:id])
-    @monthly_payslips = MonthlyPayslip.find_all_by_salary_date(@salary_date,
-      :conditions=> "employee_id =#{params[:id]}",
-      :order=> "payroll_category_id ASC")
-    @individual = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,@salary_date)
-    @independent_categories = PayrollCategory.find_all_by_payroll_category_id_and_status(nil, true)
-    @dependent_categories = PayrollCategory.find_all_by_status(true, :conditions=>"payroll_category_id != \'\'")
-    @employee_additional_categories = IndividualPayslipCategory.find_all_by_employee_id(@employee.id, :conditions=>"include_every_month = true")
-    @new_payslip_category = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
+    @monthly_payslips = MonthlyPayslip.where('salary_date = ? and employee_id = ?', @salary_date, params[:id]).order("payroll_category_id ASC")
+    @individual = IndividualPayslipCategory.where('employee_id = ? and salary_date = ?', @employee.id,@salary_date)
+    @independent_categories = PayrollCategory.where('payroll_category_id is ? and status = ?',nil, true)
+    @dependent_categories = PayrollCategory.where('status = ? and payroll_category_id is not ?',true,  nil)
+    @employee_additional_categories = IndividualPayslipCategory.where("employee_id = ? and include_every_month = ? ",@employee.id,  true)
+    @new_payslip_category = IndividualPayslipCategory.where("employee_id = ? and salary_date is ?", @employee.id,nil)
     @user = current_user
 
 
     if request.post?
-      salary_date = Date.parse(params[:salary_date])
+      salary_date = Date.civil(*params[:salarydate].sort.map(&:last).map(&:to_i))
       start_date = salary_date - ((salary_date.day - 1).days)
       end_date = start_date + 1.month
-      payslip_exists = MonthlyPayslip.find_all_by_employee_id(@employee.id,
-        :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
+      payslip_exists = MonthlyPayslip.where('employee_id = ? and salary_date >= ? and salary_date < ?', @employee.id, start_date, end_date)
       payslip_exists.each do |p|
         p.delete
       end
-
       params[:manage_payroll].each_pair do |k, v|
         row_id = EmployeeSalaryStructure.find_by_employee_id_and_payroll_category_id(@employee, k)
         category_name = PayrollCategory.find(k).name
@@ -1160,7 +1148,7 @@ class EmployeeController < ApplicationController
             :payroll_category_id => k,:amount => v['amount'])
         end
       end
-      individual_payslip_category = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
+      individual_payslip_category = IndividualPayslipCategory.where('employee_id = ? and salary_date = ?',@employee.id,nil)
       individual_payslip_category.each do |c|
         IndividualPayslipCategory.update(c.id, :salary_date=>start_date)
       end
@@ -1172,7 +1160,7 @@ class EmployeeController < ApplicationController
           :recipient_ids => available_user_ids,
           :subject=>subject,
           :body=>body ))
-      flash[:notice] = "#{@employee.first_name} #{t('flash27')} #{params[:salary_date]}"
+      flash[:notice] = "#{@employee.first_name} #{t('employee.flash27')} #{salary_date}"
       redirect_to :controller => "employee", :action => "profile", :id=> @employee.id
 
     end
@@ -1183,18 +1171,14 @@ class EmployeeController < ApplicationController
     @currency_type = Settings.find_by_config_key("CurrencyType").config_value
 
     if params[:salary_date] == ""
-      render :update do |page|
-        page.replace_html "payslip_view", :text => ""
-      end
+#       render :update do |page|
+#         page.replace_html "payslip_view", :text => ""
+#       end
       return
     end
-    @monthly_payslips = MonthlyPayslip.find_all_by_salary_date(@salary_date,
-      :conditions=> "employee_id =#{params[:emp_id]}",
-      :order=> "payroll_category_id ASC")
+    @monthly_payslips = MonthlyPayslip.where('salary_date = ? and employee_id = ?',@salary_date, params[:emp_id]).order("payroll_category_id ASC")
 
-    @individual_payslip_category = IndividualPayslipCategory.find_all_by_salary_date(@salary_date,
-      :conditions=>"employee_id =#{params[:emp_id]}",
-      :order=>"id ASC")
+    @individual_payslip_category = IndividualPayslipCategory.where(' salary_date = ? and employee_id = ?',@salary_date, params[:emp_id]).order("id ASC")
     @individual_category_non_deductionable = 0
     @individual_category_deductionable = 0
     @individual_payslip_category.each do |pc|
@@ -1230,23 +1214,23 @@ class EmployeeController < ApplicationController
 
     @net_amount = @net_non_deductionable_amount - @net_deductionable_amount
 
-    render :update do |page|
-      page.replace_html 'rejected_payslip', :partial => 'rejected_payslip'
-    end
+#     render :update do |page|
+# #       page.replace_html 'rejected_payslip', :partial => 'rejected_payslip'
+#     end
   end
   def view_rejected_payslip
 
-    @payslips = MonthlyPayslip.find_all_by_employee_id(params[:id], :conditions =>"is_rejected is true", :group=>'salary_date')
+    @payslips =  MonthlyPayslip.where("employee_id = #{params[:id]} and is_rejected is true ", :group => 'salary_date')
     @emp = Employee.find(params[:id])
   end
 
   def update_employee_select_list
     department_id = params[:department_id]
-    @employees = Employee.find_all_by_employee_department_id(department_id)
+    @employees = Employee.where(:employee_department_id => department_id)
     @employees = @employees.sort_by { |u1| [u1.full_name.to_s.downcase ] } if @employees.present?
-    render :update do |page|
-      page.replace_html 'employees_select_list', :partial => 'employee_select_list', :object => @employees
-    end
+#     render :update do |page|
+#       page.replace_html 'employees_select_list', :partial => 'employee_select_list', :object => @employees
+#     end
   end
 
   def payslip_date_select
@@ -1406,8 +1390,8 @@ class EmployeeController < ApplicationController
   end
 
   def department_payslip
-    @departments = EmployeeDepartment.find(:all, :conditions=>"status = true", :order=> "name ASC")
-    @salary_dates = MonthlyPayslip.find(:all,:select => "distinct salary_date")
+    @departments = EmployeeDepartment.where(:status => true).order("name ASC")
+    @salary_dates = MonthlyPayslip.select("distinct salary_date")
     if request.post?
       post_data = params[:payslip]
       unless post_data.blank?
@@ -1422,8 +1406,8 @@ class EmployeeController < ApplicationController
   end
 
   def view_employee_payslip
-    @monthly_payslips = MonthlyPayslip.find(:all,:conditions=>["employee_id=? AND salary_date = ?",params[:id],params[:salary_date]],:include=>:payroll_category)
-    @individual_payslips =  IndividualPayslipCategory.find(:all,:conditions=>["employee_id=? AND salary_date = ?",params[:id],params[:salary_date]])
+    @monthly_payslips = MonthlyPayslip.where("employee_id=? AND salary_date = ?",params[:id],params[:salary_date]).includes(:payroll_category)
+    @individual_payslips =  IndividualPayslipCategory.where("employee_id=? AND salary_date = ?",params[:id],params[:salary_date])
     @salary  = Employee.calculate_salary(@monthly_payslips, @individual_payslips)
   end
 
@@ -1514,26 +1498,22 @@ class EmployeeController < ApplicationController
     #    end
   end
   def employee_individual_payslip_pdf
-    @employee = Employee.find(:first,:conditions=>"id=#{params[:id]}")
+    @employee = Employee.find(params[:id])
     if @employee.blank?
-      @employee = ArchivedEmployee.find(:first,:conditions=>"former_id=#{params[:id]}")
+      @employee = ArchivedEmployee.find_by_former_id(params[:id])
       @employee.id = @employee.former_id
     end
-    @bank_details = EmployeeBankDetail.find_all_by_employee_id(@employee.id)
-    @employee ||= ArchivedEmployee.find(:first,:conditions=>"former_id=#{params[:id]}")
+    @bank_details = EmployeeBankDetail.where(:employee_id => @employee.id)
+    @employee ||= ArchivedEmployee.find_by_former_id(params[:id])
     @department = EmployeeDepartment.find(@employee.employee_department_id).name
     @currency_type = Settings.find_by_config_key("CurrencyType").config_value
     @category = EmployeeCategory.find(@employee.employee_category_id).name
     @grade = EmployeeGrade.find(@employee.employee_grade_id).name unless @employee.employee_grade_id.nil?
     @position = EmployeePosition.find(@employee.employee_position_id).name
     @salary_date = Date.parse(params[:id2])
-    @monthly_payslips = MonthlyPayslip.find_all_by_salary_date(@salary_date,
-      :conditions=> "employee_id =#{params[:id]}",
-      :order=> "payroll_category_id ASC")
+    @monthly_payslips = MonthlyPayslip.where('salary_date = ? and employee_id = ?', @salary_date, params[:id]).order("payroll_category_id ASC")
 
-    @individual_payslip_category = IndividualPayslipCategory.find_all_by_salary_date(@salary_date,
-      :conditions=>"employee_id =#{params[:id]}",
-      :order=>"id ASC")
+    @individual_payslip_category = IndividualPayslipCategory.where('salary_date = ? and employee_id = ?', @salary_date, params[:id]).order("id ASC")
     @individual_category_non_deductionable = 0
     @individual_category_deductionable = 0
     @individual_payslip_category.each do |pc|
@@ -1686,7 +1666,7 @@ class EmployeeController < ApplicationController
 
   def remove
     @employee = Employee.find(params[:id])
-    associate_employee = Employee.find(:all, :conditions=>["reporting_manager_id=#{@employee.id}"])
+    associate_employee = Employee.where(:reporting_manager_id => @employee.id)
     unless associate_employee.blank?
       flash[:notice] = t('flash35')
       redirect_to :action=>'remove_subordinate_employee', :id=>@employee.id
@@ -1725,10 +1705,10 @@ class EmployeeController < ApplicationController
       employee_subject=EmployeesSubject.destroy_all(:employee_id=>employee.id)
       employee.user.destroy
       employee.destroy
-      flash[:notice] = "#{t('flash46')}#{employee.employee_number}."
+      flash[:notice] = "#{t('employee.flash46')}#{employee.employee_number}."
       redirect_to :controller => 'user', :action => 'dashboard'
     else
-      flash[:notice] = "#{t('flash44')}"
+      flash[:notice] = "#{t('employee.flash44')}"
       redirect_to  :action => 'remove' ,:id=>employee.id
     end
   end
@@ -1813,5 +1793,9 @@ class EmployeeController < ApplicationController
   def additional_field_params
     params.require(:additional_field).permit(:name, :status) if params[:additional_field]
   end
-    
+  
+  def employee_params
+    params.require(:employee).permit(:email, :employee_category_id, :employee_number, :first_name, :middle_name, :last_name, :gender, :employee_position_id,
+    :employee_department_id, :employee_category_id, :employee_grade_id,  :nationality_id,:joining_date, :date_of_birth, :job_title, :qualification, :experience_detail, :experience_year, :experience_month, :marital_status, :children_count, :father_name, :mother_name, :husband_name, :blood_group) if params[:employee]
+  end  
 end

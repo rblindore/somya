@@ -1,0 +1,7 @@
+- case params[:select_value]
+  - when "category"
+    $('#student').html('#{escape_javascript render partial: 'student_category_particulars'}')
+  - when "student"
+    $("#student").html('#{escape_javascript render partial: "student_admission_particulars"}')
+  - when "all"
+    $("#student").html('')

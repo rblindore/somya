@@ -16,9 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 %br/
-- form_remote_tag   :url => {:action => 'create_payslip_category'},
-- :update => "individual-payslip-categories-list" do
+= form_tag :action => 'create_payslip_category', :remote => true, :multipart => true, :emp_id => @employee.id , :salary_date => @salary_date do 
   = hidden_field_tag :employee_id, @employee.id
   = hidden_field_tag :salary_date, @salary_date
   = error_messages_for "created_category",:header_message =>nil
@@ -34,5 +34,9 @@
     %label{:for => "category_amount"}= t('is_deduction')
     .text-input-bg
       = check_box_tag :is_deduction
+  .label-field-pair
+    %label{:for => "category_amount"}= t('include_every_month')
+    .text-input-bg
+      = check_box_tag :include_every_month
   #new-category-submit-button
     = submit_tag("► #{t('create_text')}")

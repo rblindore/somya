@@ -16,8 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
-  = image_tag("  HR/show_hr.png")
+  = image_tag("HR/show_hr.png")
   %h1= t('rejected_payslip')
   %h3= t('department_wise_payslip')
   #app-back-button
@@ -31,9 +32,6 @@
   .drop-down-box
     %label{:for => "category_prefix"}= t('select_a_department')
     .text-input-bg
-      = select :individual_payslip, :department_id, @departments.map { |s| [s.name, s.id] },   |
-        {:prompt => "#{ t('select_a_department')}"},                                           |
-        {:onChange => "#{remote_function(:url => {:action => "update_rejected_employee_list"}, |
-        :with => "'department_id='+value")}"}                                                  |
+      = select :individual_payslip, :department_id, @departments.map { |s| [s.name, s.id] },{:prompt => "#{ t('select_a_department')}"}, onChange: "onChangeRequest(this, '#{url_for(action: :update_rejected_employee_list, department_id: 'paramid')}')" 
   .extender
   #employees_select_list
