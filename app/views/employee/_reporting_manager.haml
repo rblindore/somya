@@ -16,18 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
-%ul#department-list
-  - unless @employees.empty?
-    %li.heading
-      = t('assign_new')
-      \:
-    - @employees.each do |e|
-      %li{:class => "list#{cycle('even', 'odd')}"}
-        .department-name= e.full_name
-        - @emp_sub_assoc = EmployeesSubject.find_by_employee_id_and_subject_id(e.id,@subject.id)
-        - if @emp_sub_assoc.nil?
-          .remove= link_to "#{t('assign')}", {:action => "assign_employee", :id => e.id, :id1=>@subject.id}, :update => "department-select", :remote => true
-        - else
-          .remove= link_to "#{t('delete_text')}", {:action => "remove_employee", :id => e.id, :id1=>@subject.id}, :update => "department-select", :remote => true
+%ul
+  - unless @employee.blank?
+    %li.heading= t('employee_name')
+    = select_tag 'employee[reporting_manager_id]', options_for_select(@employee.map{|b| [b.first_name,b.id]}),:prompt => "#{t('select_reporting_manager')}", :onChange => 'update_reporting_manager(this)';
   - else
-    %p.flash-msg= t('no_employee_found')
+    %p.flash-msg= t('employee.flash43')

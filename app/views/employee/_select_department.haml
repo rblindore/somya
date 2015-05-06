@@ -31,12 +31,12 @@
           = @employee.first_name
           = @employee.last_name
           = "(#{EmployeeDepartment.find(@employee.employee_department_id).name})"
-        .remove= link_to_remote "#{t('delete_text')}", :url => {:action => "remove_employee", :id => e.employee_id, :id1=>e.subject_id}, :update => "department-select"
+        .remove= link_to "#{t('delete_text')}", {:action => "remove_employee", :id => e.employee_id, :id1=>e.subject_id}, :update => "department-select", :remote => true
   - else
     %p.flash-msg= t('no_employee_assigned')
-.label-field-pair
-  %label{:for => "department_name"}= t('department')
-  .text-input-bg
-    = select :subject_assignment, :department_id, @departments.map { |s| [s.name, s.id] },{:prompt => "#{t('select_a_department')}"},{onChange: "onChangeRequest(this, '#{url_for(action: :update_employees, department_id: 'paramid', subject_id: @subject.id)}')"}
+  .label-field-pair
+    %label{:for => "department_name"}= t('department')
+    .text-input-bg
+      = select :subject_assignment, :department_id, @departments.map { |s| [s.name, s.id] },{:prompt => "#{t('select_a_department')}"},{onChange: "onChangeRequest(this, '#{url_for(action: :update_employees, department_id: 'paramid', subject_id: @subject.id)}')"}
 #employee-list
 .extender

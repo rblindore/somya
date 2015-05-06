@@ -26,7 +26,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for :employee_additional_details do |a|
+  = form_for(:employee_additional_details, :url => {:id => @employee.id}) do |a|
     = error_messages_for 'employee'
     - i=0
     = hidden_field_tag :edit_request, params[:edit_request]

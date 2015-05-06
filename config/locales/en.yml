@@ -1065,6 +1065,7 @@ en: # locale
   employee_admission_form: "Employee admissions form"
   employee_subject_association: "Employee Subject Association"
   assign_an_employee: "Assign an employee with one or more subjects"
+  assign_employee: "Assign an employee succefully"
   step_1: "Step - 1"
   last_employee_number: "Employee number of last employee is"
   upload_user_signature: "Upload User Signature"

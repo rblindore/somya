@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("HR/show_hr.png")
   %h1= t('employee_subject')
@@ -27,9 +28,7 @@
     .label-field-pair
       %label{:for => "course_name"}= t('course_text')
       .text-input-bg
-        = select :subject_assignment, :batch_id, @batches.map {|b| [b.full_name, b.id]},                                         |
-          {prompt: t('select_a_batch')},                                                                                         |
-          {onChange: "#{remote_function(url: {:action => "update_subjects", batch_id: "value"}, :with => "'batch_id='+value")}"} |
+        = select :subject_assignment, :batch_id, @batches.map {|b| [b.full_name, b.id]}, {prompt: t('select_a_batch')},{ onChange: "onChangeRequest(this, '#{url_for(action: :update_subjects, batch_id: 'paramid')}')" }
     #subjects1
       = render partial: 'subjects', object: @subjects
   #department-select
