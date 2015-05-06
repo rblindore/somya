@@ -535,6 +535,7 @@ Fedena::Application.routes.draw do
 
   resources :finance, only: :index do
     collection do
+      get :monthly_report
       get :transactions
       get :payslip_index
       get :asset_liability

@@ -19,7 +19,7 @@
 class BatchTransfersController < ApplicationController
   before_filter :login_required
   filter_access_to :all
-   
+
   def index
     @batches = Batch.active
   end
@@ -55,7 +55,7 @@ class BatchTransfersController < ApplicationController
         redirect_to :controller => 'batch_transfers'
       else
         @batches = Batch.active - @batch.to_a
-        @batch.errors.add_to_base("#{t('select_a_batch_to_continue')}")
+        @batch.errors.add(:base, t('select_a_batch_to_continue'))
         render :template=> "batch_transfers/show"
       end
     else

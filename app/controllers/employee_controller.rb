@@ -490,11 +490,11 @@ class EmployeeController < ApplicationController
       mandatory_fields = AdditionalField.find(:all, :conditions=>{:is_mandatory=>true, :status=>true})
       mandatory_fields.each do|m|
         unless params[:employee_additional_details][m.id.to_s.to_sym].present?
-          @employee.errors.add_to_base("#{m.name} must contain atleast one selected option.")
+          @employee.errors.add(:base, "#{m.name} must contain atleast one selected option.")
           @error=true
         else
           if params[:employee_additional_details][m.id.to_s.to_sym][:additional_info]==""
-            @employee.errors.add_to_base("#{m.name} cannot be blank.")
+            @employee.errors.add(:base, "#{m.name} cannot be blank.")
             @error=true
           end
         end
@@ -1768,34 +1768,34 @@ class EmployeeController < ApplicationController
     redirect_to :action => "hr"
 
   end
-  
+
   def employee_category_params
      params.require(:category).permit(:name, :prefix, :status) if params[:category]
   end
-  
+
   def employee_position_params
     params.require(:position).permit(:name, :employee_category_id, :status) if params[:position]
   end
- 
+
   def employee_department_params
     params.require(:department).permit(:name, :code, :status) if params[:department]
   end
-  
+
   def employee_grade_params
     params.require(:grade).permit(:name, :priority, :status) if params[:grade]
   end
-  
+
   def bank_field_params
     params.require(:bank_field).permit(:name, :status) if params[:bank_field]
     params.require(:bank_details).permit(:name, :status) if params[:bank_details]
   end
-  
+
   def additional_field_params
     params.require(:additional_field).permit(:name, :status) if params[:additional_field]
   end
-  
+
   def employee_params
     params.require(:employee).permit(:email, :employee_category_id, :employee_number, :first_name, :middle_name, :last_name, :gender, :employee_position_id,
     :employee_department_id, :employee_category_id, :employee_grade_id,  :nationality_id,:joining_date, :date_of_birth, :job_title, :qualification, :experience_detail, :experience_year, :experience_month, :marital_status, :children_count, :father_name, :mother_name, :husband_name, :blood_group) if params[:employee]
-  end  
+  end
 end

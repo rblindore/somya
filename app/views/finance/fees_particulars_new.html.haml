@@ -42,8 +42,8 @@
               = t('select_a_category')
               \:
               %b.sel-list
-                = select_all
-                = select_none
+                = select_all('each_category')
+                = select_none('each_category')
           .categories
             - @fees_categories.each do |c|
               .each_category

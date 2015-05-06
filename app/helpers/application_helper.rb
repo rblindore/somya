@@ -177,13 +177,13 @@ module ApplicationHelper
   end
 
   # This method generate link for all select button
-  def select_all
-    link_to t('all'), 'javascript:void(0);', onclick: "selectAll('each_batch')"
+  def select_all(class_name)
+    link_to t('all'), 'javascript:void(0);', onclick: "selectAll('#{class_name}')"
   end
 
   # This method generate link for de-select all
-  def select_none
-    link_to t('none'), 'javascript:void(0);', onclick: "selectNone('each_batch')"
+  def select_none(class_name)
+    link_to t('none'), 'javascript:void(0);', onclick: "selectNone('#{class_name}')"
   end
 
 end

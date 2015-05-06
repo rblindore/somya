@@ -118,7 +118,7 @@ class CoursesController < ApplicationController
       end
     else
       if params[:batch_ids].blank?
-        @batch_group.errors.add_to_base "Atleast one batch must be selected."
+        @batch_group.errors.add(:base,  "Atleast one batch must be selected.")
       end
       render(:update) do|page|
         page.replace_html 'errors', :partial=>'form_errors'
@@ -166,7 +166,7 @@ class CoursesController < ApplicationController
         end
       end
     else
-      @batch_group.errors.add_to_base("Atleat one Batch must be selected.")
+      @batch_group.errors.add(:base, "Atleat one Batch must be selected.")
       render(:update) do|page|
         page.replace_html 'errors', :partial=>'form_errors'
         page.replace_html 'flash', :text=>""
