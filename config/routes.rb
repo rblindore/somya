@@ -338,8 +338,33 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :calendar, only: :index
-  resources :event, only: :index
+  resources :calendar, only: :index do
+    collection do
+      get :new_calendar
+      get :show_holiday_event_tooltip
+      get :event_delete
+      get :show_event_tooltip
+    end
+  end
+  resources :event do
+    collection do
+      get :index
+      post :index
+      get :show
+      get :select_course
+      get :confirm_event
+      get :cancel_event
+      get :course_event
+      post :course_event
+      get :remove_batch
+      get :select_employee_department
+      get :department_event
+      post :department_event
+      get :remove_department
+      get :edit_event
+      post :edit_event
+    end
+  end 
 
   resources :exam, only: :index do
     collection do

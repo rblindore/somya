@@ -16,6 +16,8 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+
 #calendar-legend
   #legend-entry
     #legend-symbol
@@ -37,11 +39,11 @@
 #head-month
   .header
     .prev
-      = link_to_remote "◄", url_for(controller: :calendar, action: :new_calendar, new_month: (@show_month.month - 1), passed_date: @show_month), remote: true
+      = link_to "◄", {controller: :calendar, action: :new_calendar, new_month: (@show_month.month - 1), passed_date: @show_month}, remote: true
     .month
       = I18n.l(@show_month, format: :month_year)
     .next
-      = link_to_remote "►", url_for(controller: :calendar, action: :new_calendar, new_month: (@show_month.month+1), passed_date: @show_month ), remote: true
+      = link_to "►", {controller: :calendar, action: :new_calendar, new_month: (@show_month.month+1), passed_date: @show_month }, remote: true
     .extender
 %table#calendar-table{align: "center", width: "100%"}
   %tbody
@@ -64,17 +66,14 @@
                     %span= dt
                   .link-group
                     - if @events.include?("#{@show_month.year}-#{@show_month.month}-#{dt}".to_date)
-                      = link_to_remote("<div class='calendar-legend' style='background:#000000;'></div>", { url: 'javascrpt:void(0);'}, { onmouseover: "ajaxRequest('#{url_for(action: :show_event_tooltip, id: Date.parse('#{@show_month.year}-#{@show_month.month}-#{dt}'))}')"})                                                                                                                                                                          |
+                      = link_to("<div class='calendar-legend' style='background:#000000;'></div>".html_safe, { url: 'javascrpt:void(0);', :remote => true}, 
+                      {:onmouseover => "onChangeRequest(this, '#{url_for(action: :show_event_tooltip, id: Date.parse("#{@show_month.year}-#{@show_month.month}-#{dt}") )}')", :class=>"event"})
                     - if @holiday_event.include?("#{@show_month.year}-#{@show_month.month}-#{dt}".to_date)
-                      = link_to_remote("<div class='calendar-legend' style='background:#00b400;'></div>", {:url => {:action => "#"}}, {:onmouseover =>remote_function(                                                     |
-                          :url => { :action => :show_holiday_event_tooltip, :id=>Date.parse("#{@show_month.year}-#{@show_month.month}-#{dt}") },:before => "Element.show('loader')",:success => "Element.hide('loader')"), |
-                        :class=>"event"})                                                                                                                                                                                  |
+                      = link_to("<div class='calendar-legend' style='background:#00b400;'></div>".html_safe,  { url: 'javascrpt:void(0);', :remote => true}, {:onmouseover => "onChangeRequest(this, '#{url_for(action: :show_holiday_event_tooltip, id: Date.parse("#{@show_month.year}-#{@show_month.month}-#{dt}") )}')", :class=>"event"})
                     - if @notifications['student_batch_exam'].include?("#{@show_month.year}-#{@show_month.month}-#{dt}".to_date)
-                      = link_to_remote("<div class='calendar-legend' style='background:#0C6C92;'></div>", {:url => {:action => "#"}} , {:onmouseover =>remote_function(                                                 |
-                          :url => { :action => :show_exam_event_tooltip, :id=>Date.parse("#{@show_month.year}-#{@show_month.month}-#{dt}") },:before => "Element.show('loader')",:success => "Element.hide('loader')"), |
-                        :class=>"event"})                                                                                                                                                                               |
+                      = link_to("<div class='calendar-legend' style='background:#0C6C92;'></div>".html_safe, {:url => {:action => "#"}, :remote => true} , 
+                        {:onmouseover => "onChangeRequest(this, '#{url_for(action: :show_exam_event_tooltip, id: Date.parse("#{@show_month.year}-#{@show_month.month}-#{dt}") )}')", :class=>"event"})
                     - if @notifications['finance_due'].include?("#{@show_month.year}-#{@show_month.month}-#{dt}".to_date)
-                      = link_to_remote("<div class='calendar-legend' style='background:#b40000;'></div>", {:url => {:action => "#"}} , {:onmouseover =>remote_function(                                          |
-                          :url => { :action => :show_due_tooltip, :id=>Date.parse("#{@show_month.year}-#{@show_month.month}-#{dt}") },:before => "Element.show('loader')",:success => "Element.hide('loader')"), |
-                        :class=>"event"})                                                                                                                                                                        |
+                      = link_to("<div class='calendar-legend' style='background:#b40000;'></div>".html_safe, {:url => {:action => "#"}, :remote => true} ,
+                        {:onmouseover => "onChangeRequest(this, '#{url_for(action: :show_due_tooltip, id: Date.parse("#{@show_month.year}-#{@show_month.month}-#{dt}") )}')", :class=>"event"})
 #modal-box{:style => "display:none;"}
