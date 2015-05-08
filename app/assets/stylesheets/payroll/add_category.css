@@ -114,7 +114,7 @@
     width:250px;
 }
 #errorExplanation1 {
-    background: url("/images/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
+    background: url("/assets/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
     border-radius: 10px 10px 10px 10px;
     height: auto;
     margin: 20px auto;

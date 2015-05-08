@@ -143,7 +143,7 @@
 }
 
 #error-box {
-    background: #ffdedf url(/images/_global/error.png) no-repeat 10px 14px;
+    background: #ffdedf url(/assets/_global/error.png) no-repeat 10px 14px;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     height : auto;

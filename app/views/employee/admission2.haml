@@ -26,7 +26,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for :employee do |a|
+  = form_for(:employee, :url => {:id => @employee.id}) do |a|
     = error_messages_for 'employee'
     #form-contents
       %span.span-sub-heading= t('home_address')

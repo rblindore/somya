@@ -46,9 +46,9 @@
         - if @discount_edit
           %td.col-1
             .edit
-              = link_to_remote "#{t('edit_text')}", :url => {:action => 'edit_fee_discount', :id => f.id}
-              | 
-            .delete= link_to_remote "#{t('delete_text')}",:confirm=>"#{t('delete_confirm_msg')}",:url => {:action => 'delete_fee_discount', :id => f.id}
+            = link_to t('edit_text'), { action: :edit_fee_discount, id: f.id}, remote: true
+            .delete
+              = link_to t('delete_text'), { action: :delete_fee_discount, id: f.id}, data: {confirm: t('delete_confirm_msg')}
 - else
   %p.flash-msg
     = t('no_discount_found')

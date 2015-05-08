@@ -33,8 +33,7 @@
         .payroll-field-pair
           %label{:for => "payroll_category_name"}= c.name
           .payroll-input-bg= s.text_field :amount, :index => c.id,                                           |
-              :onChange=> "#{remote_function(:url  => {:action => "update_dependent_fields"}, |
-              :with => "'amount='+ value + '&cat_id=' + #{c.id}")}"                           |
+              :onChange=> "onChangeRequest(this, '#{url_for(action: :update_dependent_fields, amount: 'paramid', cat_id: c.id)}'"
       - @dependent_categories.each do |c|
         .payroll-field-pair
           %label{:for => "payroll_category_name"}= c.name

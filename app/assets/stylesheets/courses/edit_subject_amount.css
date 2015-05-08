@@ -117,7 +117,7 @@ h3{
     background:  #373B3F;
 }
 .errorExplanation {
-    background: url("/images/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
+    background: url("/assets/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
     border-radius: 10px 10px 10px 10px;
     -moz-border-radius: 10px 10px 10px 10px;
     -webkit-border-radius: 10px 10px 10px 10px;

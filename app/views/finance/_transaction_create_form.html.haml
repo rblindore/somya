@@ -46,7 +46,7 @@
         = t('date_text')
         \:
       .text-field-bg
-        = date_select_tag 'finance_transaction[transaction_date]', @finance_transaction.transaction_date.blank? ?  I18n.l(Date.today,:format=>:default): @finance_transaction.transaction_date, :year_range => 5.years.ago..0.years.ago ,:popup=>:force
+        / = date_select_tag 'finance_transaction[transaction_date]', @finance_transaction.transaction_date.blank? ?  I18n.l(Date.today,:format=>:default): @finance_transaction.transaction_date, :year_range => 5.years.ago..0.years.ago ,:popup=>:force
     .label-field-pair
       %label{:for => "category"}
         = t('category')

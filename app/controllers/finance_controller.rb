@@ -84,7 +84,7 @@ class FinanceController < ApplicationController
   def expense_create
     @finance_transaction = FinanceTransaction.new
     @categories = FinanceTransactionCategory.expense_categories
-    if @categories.empty?
+    if @categories.blank?
       flash[:notice] = t('finance.flash2')
     end
     if request.post?
@@ -94,6 +94,8 @@ class FinanceController < ApplicationController
       else
         render action: :expense_create, layout: 'application'
       end
+    else
+      render layout: 'application'
     end
   end
 
@@ -807,8 +809,8 @@ class FinanceController < ApplicationController
     finance_fee_categories = FinanceFeeCategory.where(id: params[:finance_fee_particular][:finance_fee_category_ids])
     unless finance_fee_categories.blank?
       batches = finance_fee_categories.map{|ffc| ffc.batch}
-      posted_params = params[:finance_fee_particular]
-      posted_admission_no = params[:finance_fee_particular][:admission_no]
+      posted_params = finance_fee_particular_params
+      posted_admission_no = posted_params[:admission_no]
       posted_params.delete("finance_fee_category_ids")
       finance_fee_categories.each do |ffc|
         @finance_fee_particular = ffc.fee_particulars.new(posted_params)
@@ -848,9 +850,9 @@ class FinanceController < ApplicationController
       if @error.blank?
         flash[:notice] = t('particulars_created_successfully')
       else
-        @fees_categories = FinanceFeeCategory.where(is_deleted: false, is_master: true)
-        @fees_categories.reject!{|f|f.batch.is_deleted or !f.batch.is_active }
-        render action: :fees_particulars_new
+        @fees_categories = FinanceFeeCategory.joins(:batch).where(is_deleted: false, is_master: true).where("batches.is_deleted = #{true} OR batches.is_active = #{true}")
+        # @fees_categories.reject!{|f|f.batch.is_deleted or !f.batch.is_active }
+        render action: :fees_particulars_new, layout: 'application'
         return
       end
     else
@@ -2461,6 +2463,10 @@ class FinanceController < ApplicationController
     render layout: 'application'
   end
 
+  def transactions
+    render layout: 'application'
+  end
+
   private
     def finance_fee_category_params
       params.require(:finance_fee_category).permit(:name, :description)
@@ -2468,6 +2474,10 @@ class FinanceController < ApplicationController
 
     def fee_discount_params
       params.require(:fee_discount).permit(:name, :discount, :is_amount)
+    end
+
+    def finance_fee_particular_params
+      params.require(:finance_fee_particular).permit(:name, :description, :amount, :admission_no, finance_fee_category_ids: [])
     end
 
 end

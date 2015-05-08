@@ -26,7 +26,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for :employee_additional_details do |a|
+  = form_for(:employee_additional_details, :url => {:id => @employee.id}) do |a|
     = error_messages_for 'employee'
     - i=0
     = hidden_field_tag :edit_request, params[:edit_request]
@@ -62,8 +62,8 @@
             .fee_category_scroll
               .sel-list
                 = t('select')
-                = select_all
-                = select_none
+                = select_all('each_batch')
+                = select_none('each_batch')
               - additional.additional_field_options.each do |k|
                 .each_batch
                   = check_box_tag "employee_additional_details[#{additional.id}][additional_info][]", k.field_option,(!(input_val.nil?) and input_val.include?(k.field_option)), :class=>"batches_box check#{i}"

@@ -439,6 +439,7 @@ Fedena::Application.routes.draw do
       get :search
       get :department_payslip
       get :admission1
+      post :admission1
       get :advanced_search
       get :view_all
       get :payslip_approve
@@ -483,6 +484,7 @@ Fedena::Application.routes.draw do
       get :edit_privilege
       post :edit_privilege
       get :admission4
+      post :admission4
       get :select_department_employee
       get :rejected_payslip
       get :update_employee_select_list
@@ -511,6 +513,10 @@ Fedena::Application.routes.draw do
       post :department_payslip
       get :view_employee_payslip
       get :employee_individual_payslip_pdf
+      get :update_reporting_manager_name
+      get :select_reporting_manager
+      get :assign_employee
+      get :remove_employee
     end
   end
   resources :sms, only: :index do
@@ -535,6 +541,7 @@ Fedena::Application.routes.draw do
 
   resources :finance, only: :index do
     collection do
+      get :monthly_report
       get :transactions
       get :payslip_index
       get :asset_liability
