@@ -850,9 +850,9 @@ class FinanceController < ApplicationController
       if @error.blank?
         flash[:notice] = t('particulars_created_successfully')
       else
-        @fees_categories = FinanceFeeCategory.where(is_deleted: false, is_master: true)
-        @fees_categories.reject!{|f|f.batch.is_deleted or !f.batch.is_active }
-        render action: :fees_particulars_new
+        @fees_categories = FinanceFeeCategory.joins(:batch).where(is_deleted: false, is_master: true).where("batches.is_deleted = #{true} OR batches.is_active = #{true}")
+        # @fees_categories.reject!{|f|f.batch.is_deleted or !f.batch.is_active }
+        render action: :fees_particulars_new, layout: 'application'
         return
       end
     else
@@ -2477,7 +2477,7 @@ class FinanceController < ApplicationController
     end
 
     def finance_fee_particular_params
-      params.require(:finance_fee_particular).permit(:name, :description, :amount, finance_fee_category_ids: [])
+      params.require(:finance_fee_particular).permit(:name, :description, :amount, :admission_no, finance_fee_category_ids: [])
     end
 
 end

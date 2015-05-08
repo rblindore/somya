@@ -22,8 +22,8 @@
         \:
     .fee_category_scroll
       .sel-list
-        = select_all
-        = select_none
+        = select_all('each_batch')
+        = select_none('each_batch')
       - @fee_category.each do |f|
         .each_batch
           - checked = true

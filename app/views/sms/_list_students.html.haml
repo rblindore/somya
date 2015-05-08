@@ -19,10 +19,10 @@
 #list
   .sel-list
     = t('select')
-    = select_all
-    = select_none
+    = select_all('each_list')
+    = select_none('each_list')
   - @students.each do |student|
-    %div{:class => "name_list#{cycle('odd', 'even')}"}
+    %div{:class => "name_list#{cycle('odd', 'even')} each_list"}
       %li
         %label
           = check_box_tag "send_sms[student_ids][]", student.id, false,:class=>'right'

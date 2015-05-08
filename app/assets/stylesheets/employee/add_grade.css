@@ -116,7 +116,7 @@
 
 
 .errorExplanation {
-    background: url("/images/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
+    background: url("/assets/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
     height: auto;
     margin: 20px auto 20px 164px;
     padding: 10px 0 20px 20px;
@@ -124,7 +124,7 @@
 }
 
 #errorExplanation1 {
-    background: url("/images/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
+    background: url("/assets/_global/error.png") no-repeat scroll 10px 14px #FFDEDF;
     height: auto;
     margin: 20px auto 20px 164px;
     padding: 10px 0 20px 20px;

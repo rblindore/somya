@@ -36,8 +36,8 @@
       .batches
         .sel-list
           = t('select')
-          = select_all
-          = select_none
+          = select_all('each_batch')
+          = select_none('each_batch')
         - @batches.each do |f|
           .each_batch
             = check_box_tag "finance_fee_category[batch_id][]", f.id

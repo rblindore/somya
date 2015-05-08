@@ -1,5 +1,5 @@
 - if ["batch_wise", "category_wise", "student_wise"].include?(params[:type])
-  $("#form-box").html('#{escape_javascript( render "#{params[:type]}_discount_form")}')
+  $("#form-box").html('#{escape_javascript( render partial: "#{params[:type]}_discount_form")}')
   $('#form-errors').html("")
 - else
   $("#form-box").html("")

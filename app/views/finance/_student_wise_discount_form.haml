@@ -16,35 +16,40 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
-- form_remote_for :fee_discount, url: { action: :student_wise_fee_discount_create } do |form|
+= form_remote_for :fee_discount, url: { action: :student_wise_fee_discount_create } do |form|
   .label-field-pair
     %label{ for: "reason"}
       = t('name')
-    .text-input-bg= form.text_field :name
+    .text-input-bg
+      = form.text_field :name
   .label-field-pair
     %label
       = t('select_a_course')
       \:
     .text-input-bg
-      = select("","", @courses.map{|c|[c.full_name,c.id]}, {prompt: t('select_a_course')}, { { onchange: "onchangeRequest(this, '#{url_for(action: :load_discount_batch, id: 'paramid')}')"}
+      = select("","", @courses.map{|c|[c.full_name,c.id]}, { prompt: t('select_a_course')}, { { onchange: "onchangeRequest(this, '#{url_for(action: :load_discount_batch, id: 'paramid')}')"}
   #batch-box
   #fee-category-box
   .label-field-pair
-    %label{:for => "reason"}
+    %label{for: :reason}
       = t('admission_number')
-    .text-input-bg= text_field_tag "students"
+    .text-input-bg
+      = text_field_tag "students"
   .label-field-pair
-    %label{:for => "discount"}
+    %label{ for: :discount}
       = t('discount')
       (%)
-    .text-input-bg= form.text_field :discount
+    .text-input-bg
+      = form.text_field :discount
   .label_field_pair
-    %label.label_for_student_gender{:for => "is_amount"}= t('discount_type')
+    %label.label_for_student_gender{ for: :is_amount }
+      = t('discount_type')
     .student_gender_value
-      %label.label_for_gender{:for => "is_amount_true"}
+      %label.label_for_gender{for: :is_amount_true}
         = t('percentage')
-      = form.radio_button  :is_amount, false, :checked => "checked"
-      %label.label_for_gender{:for => "is_amount_false"}= t('amount')
+      = form.radio_button :is_amount, false, checked: :checked
+      %label.label_for_gender{for: :is_amount_false}
+        = t('amount')
       = form.radio_button  :is_amount, true
   #submit-button
     = form.submit "► #{t('create_text')}"
