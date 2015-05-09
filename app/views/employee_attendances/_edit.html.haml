@@ -16,11 +16,14 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= csrf_meta_tag
 %label.head_label
   = t('edit_attendance_for')
   %span= @employee.first_name
+#form-errors
 #ajax-edit
-  - form_remote_for @attendance do |f|
+  = form_for(@attendance, :remote=> true, url: {action: "update"}) do |f|
     %br/
     .label-field-pair
       %label{:for => "leave_type"}= t('leave_type')
@@ -33,9 +36,6 @@
         = f.check_box :is_half_day
         = t('half_day')
     .extender
-    = f.submit "#{t('submit')}", :class => 'submit-button', :confirm => "#{t('delete_confirm_msg')}"
-  #delete-button= link_to_remote("#{t('delete_text')}",          |
-      :url => employee_attendance_path(@attendance), |
-      :method =>'delete',                            |
-      :confirm => "#{t('delete_confirm_msg')}")      |
-  #form-errors
+    = f.submit "#{t('submit')}", :class => 'submit-button'
+  #delete-button= link_to("#{t('delete_text')}", {:controller =>'employee_attendances', :action => 'delete_attendance', :id=> @attendance, :method => 'delete', :remote => true}, :confirm=> "#{t('delete_confirm_msg')}")
+  

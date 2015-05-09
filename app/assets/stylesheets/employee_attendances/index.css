@@ -4,6 +4,12 @@
     -webkit-border-radius:8px;
     margin-top:20px;
 }
+
+#modal-box{
+background: #C3D9FF;
+width: 300;
+height: auto;
+}
 .box-1{
     width: 948px;
     padding:16px;

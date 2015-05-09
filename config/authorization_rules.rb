@@ -1228,7 +1228,8 @@ authorization do
       :create,
       :edit,
       :update,
-      :destroy
+      :destroy,
+      :show_dept
 
     ]
     has_permission_on [:employee_attendance],
@@ -1497,7 +1498,9 @@ authorization do
       :create,
       :edit,
       :update,
-      :destroy
+      :destroy,
+      :show_dept,
+      :delete_attendance
     ]
     has_permission_on [:grading_levels],
       :to => [

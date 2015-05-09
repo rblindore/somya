@@ -1,0 +1,5 @@
+- if @attendance.errors.nil?
+  $("#form-errors").html("#{escape_javascript ''}")
+  $("#attendance-employee-#{@employee.id}-day-#{@date}").html("#{escape_javascript render 'attendance_cell'}").modelBox.remove();
+- else
+  $("#form-errors").html("#{escape_javascript render 'errors', :object => @attendance}").modelBox.remove();

@@ -95,6 +95,10 @@ Fedena::Application.routes.draw do
 
   resources :employee_attendances do
     collection do
+      get :index
+      get :show_dept
+      get :delete_attendance
+      
     end
   end
 
