@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= stylesheet_link_tag("employee_attendance/employee_attendance_pdf.css")
 #page-yield
   .hor_line
   %h2= t('employee_attendance_report')
@@ -36,9 +37,9 @@
         - @leave_types.each do |lt|
           - leave_count = EmployeeLeave.find_by_employee_leave_type_id_and_employee_id(lt.id, @employee.id)
           - unless leave_count.reset_date.nil?
-            - @report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(@employee.id, lt.id, :conditions=> ["attendance_date >= '#{leave_count.reset_date}'"])
+            - @report = EmployeeAttendance.where('employee_id = ? and employee_leave_type_id = ? and attendance_date >= ? ',@employee.id, lt.id, leave_count.reset_date)
           - else
-            - @report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(@employee.id, lt.id)
+            - @report = EmployeeAttendance.where("employee_id = ? and employee_leave_type_id = ?", @employee.id, lt.id)
           - if @report == []
             %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
               %td.col-pdf= lt.name

@@ -16,8 +16,11 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= stylesheet_link_tag("employee_attendance/leave_history.css")
+= csrf_meta_tag
 #content-header
-  = image_tag("  attendence/attendence.png")
+  = image_tag("attendence/attendence.png")
   %h1= t('employee_attendance_text')
   %h3= t('leave_history')
   #app-back-button

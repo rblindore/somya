@@ -37,9 +37,9 @@
         - leave_count = EmployeeLeave.find_by_employee_leave_type_id_and_employee_id(lt1.id, e.id)
         %td.col-5
           - unless leave_count.reset_date.nil?
-            - report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(e.id, lt1.id, :conditions=> ["attendance_date >= '#{leave_count.reset_date}'"])
+            - report = EmployeeAttendance.where('employee_id = ? and employee_leave_type_id = ? and attendance_date >= ?',e.id, lt1.id, leave_count.reset_date)
           - else
-            - report = EmployeeAttendance.find_all_by_employee_id_and_employee_leave_type_id(e.id, lt1.id)
+            - report = EmployeeAttendance.where('employee_id = ? and employee_leave_type_id = ?',e.id, lt1.id)
           - count = 0
           - unless report.nil?
             - report.each do |d|
