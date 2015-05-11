@@ -168,41 +168,33 @@ class EmployeeAttendanceController < ApplicationController
     other_conditions += " AND employee_position_id = '#{params[:employee_position_id]}'" unless params[:employee_position_id] == ""
     other_conditions += " AND employee_grade_id = '#{params[:employee_grade_id]}'" unless params[:employee_grade_id] == ""
     unless params[:query].length < 3
-      @employee = Employee.find(:all,
-        :conditions => ["(first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
-                       OR employee_number LIKE ? OR (concat(first_name, \" \", last_name) LIKE ?))" + other_conditions,
-                       "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
-                       "#{params[:query]}", "#{params[:query]}"],
-        :order => "first_name asc") unless params[:query] == ''
+      @employee = Employee.where("(first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
+                       OR employee_number = ?)  #{other_conditions}",
+          "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
+          "#{params[:query]}",).order("employee_department_id asc,first_name asc") unless params[:query].blank?
     else
-      @employee = Employee.find(:all,
-        :conditions => ["employee_number = ? "+ other_conditions, "#{params[:query]}%"],
-        :order => "first_name asc") unless params[:query] == ''
+      @employee = Employee.where("employee_number = ? "+ other_conditions, "#{params[:query]}%").order("first_name asc") unless params[:query] == ''
     end
     render :layout => false
   end
 
   def employee_view_all
-    @departments = EmployeeDepartment.find(:all)
+    @departments = EmployeeDepartment.all
   end
 
   def employees_list
     department_id = params[:department_id]
-    @employees = Employee.find_all_by_employee_department_id(department_id,:order=>'first_name ASC')
-
-    render :update do |page|
-      page.replace_html 'employee_list', :partial => 'employee_view_all_list', :object => @employees
-    end
+    @employees = Employee.where(:employee_department_id => department_id).order('first_name ASC')
   end
 
   def employee_leave_details
     @employee = Employee.find_by_id(params[:id])
-    @leave_count = EmployeeLeave.find_all_by_employee_id(@employee.id)
+    @leave_count = EmployeeLeave.where(:employee_id => @employee.id)
   end
 
   def employee_wise_leave_reset
     @employee = Employee.find_by_id(params[:id])
-    @leave_count = EmployeeLeave.find_all_by_employee_id(@employee.id)
+    @leave_count = EmployeeLeave.where(:employee_id => @employee.id)
     @leave_count.each do |e|
       #attendance = EmployeeAttendance.find_all_by_employee_id(@employee.id, :conditions=> "employee_leave_type_id = '#{e.employee_leave_type_id }' and attendance_date >= '#{Date.today.strftime('%Y-%m-%d')}'" )
       @leave_type = EmployeeLeaveType.find_by_id(e.employee_leave_type_id)
@@ -229,10 +221,7 @@ class EmployeeAttendanceController < ApplicationController
         end
       end
     end
-    render :update do |page|
-            flash.now[:notice]= "#{t('flash_msg12')}"
-      page.replace_html "list", :partial => 'employee_reset_sucess'
-    end
+    flash.now[:notice]= "#{t('flash_msg12')}"
   end
 
 

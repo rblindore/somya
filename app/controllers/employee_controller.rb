@@ -603,8 +603,11 @@ class EmployeeController < ApplicationController
   end
 
   def update_reporting_manager_name
-    @employee = Employee.find_by_first_name(params[:employee_reporting_manager_id])
-#     render :text => employee.first_name + ' ' + employee.last_name unless employee.nil? 
+    @employee = Employee.where("(first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
+                       OR employee_number = ?)",
+          "#{params[:employee_reporting_manager_id]}%","#{params[:employee_reporting_manager_id]}%","#{params[:employee_reporting_manager_id]}%",
+          "#{params[:employee_reporting_manager_id]}").first
+
   end
 
   def search
@@ -621,16 +624,12 @@ class EmployeeController < ApplicationController
     other_conditions += " AND employee_position_id = '#{params[:employee_position_id]}'" unless params[:employee_position_id] == ""
     other_conditions += " AND employee_grade_id = '#{params[:employee_grade_id]}'" unless params[:employee_grade_id] == ""
     if params[:query].length>= 3
-      @employee = Employee.find(:all,
-        :conditions => ["(first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
-                       OR employee_number = ? OR (concat(first_name, \" \", last_name) LIKE ? ))"+ other_conditions,
+        @employee = Employee.where("(first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
+                       OR employee_number = ?)  #{other_conditions}",
           "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
-          "#{params[:query]}", "#{params[:query]}" ],
-        :order => "employee_department_id asc,first_name asc",:include=>"employee_department") unless params[:query] == ''
+          "#{params[:query]}",).order("employee_department_id asc,first_name asc") unless params[:query].blank?
     else
-      @employee = Employee.find(:all,
-        :conditions => ["(employee_number = ? )"+ other_conditions, "#{params[:query]}"],
-        :order => "employee_department_id asc,first_name asc",:include=>"employee_department") unless params[:query] == ''
+      @employee = Employee.where("employee_number = ? "+ other_conditions, "#{params[:query]}%").order("first_name asc") unless params[:query] == ''
     end
     render :layout => false
   end
@@ -775,11 +774,7 @@ class EmployeeController < ApplicationController
 
   def employees_list
     department_id = params[:department_id]
-    @employees = Employee.find_all_by_employee_department_id(department_id,:order=>'first_name ASC')
-
-    render :update do |page|
-      page.replace_html 'employee_list', :partial => 'employee_view_all_list', :object => @employees
-    end
+    @employees = Employee.where(:employee_department_id => department_id).order('first_name ASC')
   end
 
   def show
@@ -1667,11 +1662,11 @@ class EmployeeController < ApplicationController
 
   def remove_subordinate_employee
     @current_manager = Employee.find(params[:id])
-    @associate_employee = Employee.find(:all, :conditions=>["reporting_manager_id=#{@current_manager.id}"])
-    @departments = EmployeeDepartment.find(:all)
-    @categories  = EmployeeCategory.find(:all)
-    @positions   = EmployeePosition.find(:all)
-    @grades      = EmployeeGrade.find(:all)
+    @associate_employee = Employee.where(:reporting_manager_id => @current_manager.id)
+    @departments = EmployeeDepartment.all
+    @categories  = EmployeeCategory.all
+    @positions   = EmployeePosition.all
+    @grades      = EmployeeGrade.all
     if request.post?
       @associate_employee.each do |e|
         Employee.update(e, :reporting_manager_id => params[:employee][:reporting_manager_id])

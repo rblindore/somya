@@ -16,21 +16,24 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
-= javascript_include_tag :application
-#content-header
-  = image_tag("HR/show_hr.png")
-  %h1= t('view_all')
-  %h3= t('view_all')
-  #app-back-button
-    = back_button
-#page-yield
-  .label-field-pair
-    %label
-      = t('select_department')
-      \:
-    .text-input-bg
-      = select :subject_assignment, :department_id, @departments.map { |s| [s.name, s.id] }, |
-        {:prompt => "#{t('select_department')}"},                                            |
-        {:onChange => "onChangeRequest(this, '#{url_for(action: :employees_list, department_id: 'paramid')}')"}
-  .extender
-  #employee_list
+%table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
+  - unless @employee.blank?
+    %tr.tr-head
+      %td
+        = t('sl_no')
+      %td
+        = t('employee_name')
+      %td
+        = t('employee_id')
+      %td
+        = t('employee_department')
+    %tr.tr-blank
+    - @employee.each_with_index do |emp1, i|
+      %tr{:class => "tr-#{cycle('odd', 'even')}"}
+        %td.col-1= i+1
+        %td.col-4= link_to emp1.full_name, :action => "employee_leave_details", :id => emp1.id
+        %td.col-3= emp1.employee_number
+        %td.col-4= emp1.employee_department.name
+  - else
+    %tr{:class => "tr-#{cycle('odd', 'even')}"}
+      %td.col-2= t('no_employee_found')

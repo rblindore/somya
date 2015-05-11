@@ -90,6 +90,11 @@ Fedena::Application.routes.draw do
       get :list_department_leave_reset
       get :update_department_leave_reset
       post :update_department_leave_reset
+      get :employee_view_all
+      get :employee_search_ajax
+      get :employee_leave_details
+      get :employee_wise_leave_reset
+      get :employees_list
     end
   end
 
@@ -533,6 +538,7 @@ Fedena::Application.routes.draw do
       get :profile
       get :remove
       get :change_reporting_manager
+      post :change_reporting_manager
       get :edit1
       post :edit1
       get :profile_pdf
@@ -546,6 +552,9 @@ Fedena::Application.routes.draw do
       get :select_reporting_manager
       get :assign_employee
       get :remove_employee
+      get :employees_list
+      get :search_ajax
+      get :remove_subordinate_employee
     end
   end
   resources :sms, only: :index do

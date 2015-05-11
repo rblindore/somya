@@ -23,7 +23,18 @@
   #app-back-button
     = back_button
 :javascript
-  function update_reporting_manager(id) { $('employee_reporting_manager_id').value = id; }
+   function update_reporting_manager(id) { document.getElementById('employee_reporting_manager_id').value = id.value; }
+   function get_reporting_manager_id() { var query = document.getElementById('query').value;
+                                        var dept = document.getElementById('employee_department_id').value;
+                                        var cat = document.getElementById('employee_category_id').value;
+                                        var position = document.getElementById('employee_position_id').value;
+                                        var grade = document.getElementById('employee_grade_id').value;
+                                        $.ajax({ type: "GET",   
+                                                url: "select_reporting_manager",
+                                                data: { query: query, employee_department_id: dept, employee_category_id: cat, employee_position_id: position, employee_grade_id: grade} ,
+                                               
+                                       });
+                                       }
 #page-yield
   %p.flash-msg
     = t('below_listed_employees')
@@ -60,20 +71,10 @@
           :id => "loader",             |
           :style => "display: none;" ) |
         .extender
-      = observe_fields ['employee_reporting_manager_id'], |
-        :frequency => 0.1,                                |
-        :update => 'changed-manager-name',                |
-        :url=> {:action=>'update_reporting_manager_name'} |
       #advanced-options
-        .employee-search-options= select :employee, :department_id, @departments.map {|s| [s.name, s.id]}, :prompt => "#{t('select_department')}"
-        .employee-search-options= select :employee, :category_id,   @categories.map {|s| [s.name, s.id]},  :prompt => "#{t('select_category')}"
-        .employee-search-options= select :employee, :position_id,   @positions.map {|s| [s.name, s.id]},   :prompt => "#{t('select_position')}"
-        .employee-search-options= select :employee, :grade_id,      @grades.map {|s| [s.name, s.id]},      :prompt => "#{t('select_grade')}"
+        .employee-search-options= select :employee, :department_id, @departments.map { |s| [s.name, s.id] },{:prompt => "#{t('select_a_department')}"},{onChange: "get_reporting_manager_id();"}
+        .employee-search-options= select :employee, :category_id, @categories.map { |s| [s.name, s.id] },{:prompt => "#{t('select_category')}"},{onChange: "get_reporting_manager_id();"}
+        .employee-search-options= select :employee, :position_id, @positions.map { |s| [s.name, s.id] },{:prompt => "#{t('select_position')}"},{onChange: "get_reporting_manager_id();"}
+        .employee-search-options= select :employee, :grade_id, @grades.map { |s| [s.name, s.id] },{:prompt => "#{t('select_grade')}"},{onChange: "get_reporting_manager_id();"}
         .extender
-    = observe_fields ['query', 'employee_department_id','employee_category_id', 'employee_position_id', 'employee_grade_id'], |
-      :frequency => 0.1,                                                                                                      |
-      :update => 'information',                                                                                               |
-      :before => "Element.show('loader')",                                                                                    |
-      :success => "Element.hide('loader')",                                                                                   |
-      :url => {:action => 'select_reporting_manager'}                                                                         |
   #information
