@@ -555,6 +555,11 @@ Fedena::Application.routes.draw do
       get :employees_list
       get :search_ajax
       get :remove_subordinate_employee
+      get :one_click_payslip_generation
+      post :one_click_payslip_generation
+      get :payslip_revert_date_select
+      get :one_click_payslip_revert
+      post :one_click_payslip_revert
     end
   end
   resources :sms, only: :index do

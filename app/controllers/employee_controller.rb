@@ -1221,7 +1221,7 @@ class EmployeeController < ApplicationController
   end
 
   def payslip_date_select
-    render :partial=>"one_click_payslip_date"
+#     render :partial=>"one_click_payslip_date"
   end
 
   def one_click_payslip_generation
@@ -1231,10 +1231,10 @@ class EmployeeController < ApplicationController
     finance = Settings.find_by_config_value("Finance")
     subject = "#{t('payslip_generated')}"
     body = "#{t('message_body')}"
-    salary_date = Date.parse(params[:salary_date])
+    salary_date = Date.civil(*params[:salary_date].sort.map(&:last).map(&:to_i))
     start_date = salary_date - ((salary_date.day - 1).days)
     end_date = start_date + 1.month
-    employees = Employee.find(:all)
+    employees = Employee.all
     unless(finance_manager.nil? and finance.nil?)
       finance_manager_ids = Privilege.find_by_name('FinanceControl').user_ids
       Delayed::Job.enqueue(DelayedReminderJob.new( :sender_id  => @user.id,
@@ -1242,10 +1242,9 @@ class EmployeeController < ApplicationController
           :subject=>subject,
           :body=>body ))
       employees.each do|e|
-        payslip_exists = MonthlyPayslip.find_all_by_employee_id(e.id,
-          :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
+        payslip_exists = MonthlyPayslip.where("employee_id = ? and salary_date >= ? and salary_date < ?", e.id, start_date, end_date)
         if payslip_exists == []
-          salary_structure = EmployeeSalaryStructure.find_all_by_employee_id(e.id)
+          salary_structure = EmployeeSalaryStructure.where(:employee_id => e.id)
           unless salary_structure == []
             salary_structure.each do |ss|
               MonthlyPayslip.create(:salary_date=>start_date,
@@ -1273,12 +1272,11 @@ class EmployeeController < ApplicationController
         end
       end
     end
-    render :text => "<p>#{t('salary_slip_for_month')}: #{salary_date.strftime("%B")}.<br/><b>#{t('note')}:</b> #{t('employees_salary_generated_manually')}</p>"
+    @text = "#{t('salary_slip_for_month')}: #{salary_date.strftime("%B")}.\n\n #{t('note')}:  #{t('employees_salary_generated_manually')}"
   end
 
   def payslip_revert_date_select
-    @salary_dates = MonthlyPayslip.find(:all, :select => "distinct salary_date")
-    render :partial=>"one_click_payslip_revert_date"
+    @salary_dates = MonthlyPayslip.select("distinct salary_date")
   end
 
   def one_click_payslip_revert
@@ -1286,19 +1284,16 @@ class EmployeeController < ApplicationController
       salary_date = Date.parse(params[:one_click_payslip][:salary_date])
       start_date = salary_date - ((salary_date.day - 1).days)
       end_date = start_date + 1.month
-      employees = Employee.find(:all)
+      employees = Employee.all
       employees.each do|e|
-        payslip_record = MonthlyPayslip.find_all_by_employee_id(e.id,
-          :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
+        payslip_record = MonthlyPayslip.where("employee_id = ? and salary_date >= ? and salary_date < ? ", e.id, start_date, end_date)
         payslip_record.each do |pr|
           pr.destroy unless pr.is_approved
         end
-        payslip_record = MonthlyPayslip.find_all_by_employee_id(e.id,
-          :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
+        payslip_record = MonthlyPayslip.where("employee_id = ? and salary_date >= ? and salary_date < ?", e.id, start_date, end_date)
 
         if payslip_record.empty?
-          individual_payslip_record = IndividualPayslipCategory.find_all_by_employee_id(e.id,
-            :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
+          individual_payslip_record = IndividualPayslipCategory.where("employee_id = ? and salary_date >= ? and salary_date < ? ", e.id, start_date, end_date)
           unless individual_payslip_record.nil?
             individual_payslip_record.each do|ipr|
               ipr.destroy
@@ -1306,9 +1301,9 @@ class EmployeeController < ApplicationController
           end
         end
       end
-      render :text=> "<p>#{t('salary_slip_reverted')}: #{salary_date.strftime("%B")}.</p>"
+      @text = "<p>#{t('salary_slip_reverted')}: #{salary_date.strftime("%B")}.</p>".html_safe
     else
-      render :text=>"<p>#{t('please_select_month')}</p>"
+      @text = "<p>#{t('please_select_month')}</p>".html_safe
     end
   end
 
