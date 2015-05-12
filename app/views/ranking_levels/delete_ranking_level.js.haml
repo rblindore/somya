@@ -1,0 +1,9 @@
+- if @status
+  - text = "<p class='flash-msg'>#{t('ranking_levels.flash3')}</p>".html_safe
+  $('#category-list').html("#{escape_javascript render 'ranking_levels'}")
+  $('#errors').html("#{escape_javascript render 'rank_errors'}")
+  $('#rank_form').html("#{escape_javascript render 'rank_form'}")
+  $('#flash').html("#{escape_javascript  text}")
+- else
+  $('#errors').html("#{escape_javascript render 'rank_errors'}")
+  $('#flash').html("#{escape_javascript ''}")

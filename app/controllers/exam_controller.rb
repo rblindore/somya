@@ -1225,15 +1225,8 @@ class ExamController < ApplicationController
   end
 
   def list_inactive_batches
-    unless params[:course_id]==""
-      @batches = Batch.find(:all, :conditions=>{:course_id=>params[:course_id],:is_active=>false,:is_deleted=>false})
-      render(:update) do|page|
-        page.replace_html "inactive_batches", :partial=>"inactive_batches"
-      end
-    else
-      render(:update) do|page|
-        page.replace_html "inactive_batches", :text=>""
-      end
+    unless params[:course_id].blank?
+      @batches = Batch.where("course_id = ? and is_active = ? and is_deleted = ? ", params[:course_id],false,false)
     end
   end
 
@@ -1362,11 +1355,6 @@ class ExamController < ApplicationController
 
   def update_batch
     @batch = Batch.where( course_id: params[:course_name], is_deleted: false, is_active: true)
-
-    render(:update) do |page|
-      page.replace_html 'update_batch', :partial=>'update_batch'
-    end
-
   end
 
 

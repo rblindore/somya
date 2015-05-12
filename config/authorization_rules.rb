@@ -156,7 +156,8 @@ authorization do
       :update,
       :new,
       :create,
-      :destroy
+      :destroy,
+      :show_level
 
     ]
     has_permission_on [:ranking_levels],
@@ -1510,7 +1511,8 @@ authorization do
       :update,
       :new,
       :create,
-      :destroy
+      :destroy,
+      :show_level
 
     ]
     has_permission_on [:ranking_levels],

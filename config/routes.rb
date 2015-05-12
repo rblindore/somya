@@ -2,7 +2,7 @@ Fedena::Application.routes.draw do
 
   resources :grading_levels do
     collection do
-      get :show
+      get :show_level
     end
   end
 
@@ -31,7 +31,15 @@ Fedena::Application.routes.draw do
   end
 
   resources :class_designations, only: :index do
-    get :load_class_designations, on: :collection
+    collection do
+      get :load_class_designations
+      get :create_class_designation
+      post :create_class_designation
+      get :edit_class_designation
+      get :delete_class_designation
+      get :update_class_designation
+      post :update_class_designation
+    end
   end
 
   resources :exam_reports, only: :index do

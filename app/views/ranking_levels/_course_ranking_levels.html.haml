@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #rank_form
   = form_for :ranking_level,:url=>{:action=>"create_ranking_level", :course_id=>@course.id}, remote: true do |c|
     #form-content
@@ -50,7 +51,7 @@
       .extender
       #submit-button
         = submit_tag("► #{t('create_text')}")
-        = link_to_remote " ► Cancel",                                                                         |
-          :url=>{ :action => "ranking_level_cancel", :course_id=>@course.id},:html=>{ :class=> 'user_button'} |
+        = link_to " ► Cancel",                                                                         |
+          { :action => "ranking_level_cancel", :course_id=>@course.id},:html=>{ :class=> 'user_button'},  :remote => true
 #category-list
   = render :partial=>"ranking_levels"

@@ -28,6 +28,13 @@
     background:  #373B3F;
 }
 
+
+#modal-box{
+background: #C3D9FF;
+width: 300;
+height: auto;
+}
+
 .add_grade a {
     color:black;
     font-weight: bold;

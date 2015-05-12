@@ -19,10 +19,10 @@
 class GradingLevelsController < ApplicationController
   before_filter :login_required
   filter_access_to :all
+  skip_before_filter  :verify_authenticity_token
   def index
     @batches = Batch.active
     @grading_levels = GradingLevel.default
-    render layout: 'application'
   end
 
   def new
@@ -33,28 +33,18 @@ class GradingLevelsController < ApplicationController
     else
       @credit = Settings.cce_enabled? || Settings.get_config_value('CWA')=='1' || Settings.get_config_value('GPA')=='1'
     end
-    respond_to do |format|
-      format.js { render :action => 'new' }
-    end
   end
 
   def create
-    @grading_level = GradingLevel.new(params[:grading_level])
+    @grading_level = GradingLevel.new(grading_level_params)
     @batch = Batch.find params[:grading_level][:batch_id] unless params[:grading_level][:batch_id].empty?
-    respond_to do |format|
       if @grading_level.save
         @grading_level.batch.nil? ?
           @grading_levels = GradingLevel.default :
           @grading_levels = GradingLevel.for_batch(@grading_level.batch_id)
-        #flash[:notice] = 'Grading level was successfully created.'
-        format.html { redirect_to grading_level_url(@grading_level) }
-        format.js { render :action => 'create' }
       else
         @error = true
-        format.html { render :action => "new" }
-        format.js { render :action => 'create' }
       end
-    end
   end
 
   def edit
@@ -65,16 +55,11 @@ class GradingLevelsController < ApplicationController
     else
       @credit = Settings.get_config_value('CCE')=='1' || Settings.get_config_value('CWA')=='1' || Settings.get_config_value('GPA')=='1'
     end
-    respond_to do |format|
-      format.html { }
-      format.js { render :action => 'edit' }
-    end
   end
 
   def update
     @grading_level = GradingLevel.find params[:id]
-    respond_to do |format|
-      if @grading_level.update_attributes(params[:grading_level])
+      if @grading_level.update_attributes(grading_level_params)
         if @grading_level.batch.nil?
           @grading_levels = GradingLevel.default
         else
@@ -82,14 +67,9 @@ class GradingLevelsController < ApplicationController
           @grading_levels = GradingLevel.for_batch(@grading_level.batch_id)
         end
         #flash[:notice] = 'Grading level update successfully.'
-        format.html { redirect_to grading_level_url(@grading_level) }
-        format.js { render :action => 'update' }
       else
         @error = true
-        format.html { render :action => "new" }
-        format.js { render :action => 'create' }
       end
-    end
   end
 
   def destroy
@@ -100,17 +80,19 @@ class GradingLevelsController < ApplicationController
     end
   end
 
-  def show
+  def show_level
     @batch = nil
-    if params[:batch_id] == ''
+    if params[:batch_id].blank?
       @grading_levels = GradingLevel.default
     else
       @grading_levels = GradingLevel.for_batch(params[:batch_id])
-      @batch = Batch.find params[:batch_id] unless params[:batch_id] == ''
+      @batch = Batch.find params[:batch_id] unless params[:batch_id].blank?
     end
-    respond_to do |format|
-      format.js { render :action => 'show' }
-    end
+    
+  end
+  
+  def grading_level_params
+    params.require(:grading_level).permit(:name, :batch_id, :min_score, :order, :is_deleted, :credit_points, :description) if params[:grading_level]
   end
 
 end

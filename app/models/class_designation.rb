@@ -32,7 +32,7 @@ class ClassDesignation < ActiveRecord::Base
 
   HUMANIZED_COLUMNS = {:cgpa => "CGPA"}
 
-  def self.human_attribute_name(attribute)
-    HUMANIZED_COLUMNS[attribute.to_sym] || super
-  end
+#   def self.human_attribute_name(attribute)
+#     HUMANIZED_COLUMNS[attribute.to_sym] || super
+#   end
 end

@@ -1,0 +1,6 @@
+- unless params[:course_id].blank?
+  $("#course_ranking_levels").html("#{escape_javascript render 'course_ranking_levels'}")
+  $("#flash").html("#{escape_javascript ''}")
+- else
+  $("#course_ranking_levels").html("#{escape_javascript ''}")
+  $("#flash").html("#{escape_javascript ''}")

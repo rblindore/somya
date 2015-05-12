@@ -26,70 +26,36 @@ class ClassDesignationsController < ApplicationController
   end
 
   def load_class_designations
-    unless params[:course_id]==""
+    unless params[:course_id].blank?
       @course = Course.find(params[:course_id])
-      @class_designations = ClassDesignation.find(:all,:conditions=>{:course_id=>@course.id})
+      @class_designations = ClassDesignation.where(:course_id => @course.id)
       @class_designation = ClassDesignation.new
-      render(:update) do|page|
-        page.replace_html "course_class_designations", :partial=>"course_class_designations"
-        page.replace_html 'flash', :text=>""
-      end
-    else
-      render(:update) do|page|
-        page.replace_html "course_class_designations", :text=>""
-        page.replace_html 'flash', :text=>""
-      end
     end
   end
 
   def create_class_designation
     @course = Course.find(params[:course_id])
-    @class_designation = ClassDesignation.new(params[:class_designation])
+    @class_designation = ClassDesignation.new(class_designation_params)
     @class_designation.course_id = @course.id
     if @class_designation.save
       @class_designation = ClassDesignation.new
       @class_designations = @course.class_designations.all
-      render(:update) do|page|
-        page.replace_html "category-list", :partial=>"class_designations"
-        page.replace_html 'flash', :text=>"<p class='flash-msg'>#{t('class_designations.flash1')}</p>"
-        page.replace_html 'errors', :partial=>"form_errors"
-        page.replace_html 'class_form', :partial=>"class_form"
-      end
-    else
-      render(:update) do|page|
-        page.replace_html 'errors', :partial=>'form_errors'
-        page.replace_html 'flash', :text=>""
-      end
+      @status = true
     end
   end
 
   def edit_class_designation
     @class_designation = ClassDesignation.find(params[:id])
     @course = @class_designation.course
-    render(:update) do|page|
-      page.replace_html "class_form", :partial=>"class_edit_form"
-      page.replace_html 'errors', :partial=>'form_errors'
-      page.replace_html 'flash', :text=>""
-    end
   end
 
   def update_class_designation
     @class_designation = ClassDesignation.find(params[:id])
     @course = @class_designation.course
-    if @class_designation.update_attributes(params[:class_designation])
+    if @class_designation.update_attributes(class_designation_params)
       @class_designation = ClassDesignation.new
       @class_designations = @course.class_designations.all
-      render(:update) do|page|
-        page.replace_html "category-list", :partial=>"class_designations"
-        page.replace_html 'flash', :text=>"<p class='flash-msg'> #{t('class_designations.flash2')}</p>"
-        page.replace_html 'errors', :partial=>"form_errors"
-        page.replace_html 'class_form', :partial=>"class_form"
-      end
-    else
-      render(:update) do|page|
-        page.replace_html 'errors', :partial=>'form_errors'
-        page.replace_html 'flash', :text=>""
-      end
+      @status = true
     end
   end
 
@@ -99,13 +65,12 @@ class ClassDesignationsController < ApplicationController
     @class_designation.destroy
     @class_designation = ClassDesignation.new
     @class_designations = @course.class_designations.all
-    render(:update) do|page|
-      page.replace_html "category-list", :partial=>"class_designations"
-      page.replace_html 'flash', :text=>"<p class='flash-msg'>#{t('class_designations.flash3')}</p>"
-      page.replace_html 'errors', :partial=>"form_errors"
-      page.replace_html 'class_form', :partial=>"class_form"
-    end
     
+    
+  end
+  
+  def class_designation_params
+    params.require(:class_designation).permit(:name,:cgpa,:marks, :course_id) if params[:class_designation]
   end
 
 end
