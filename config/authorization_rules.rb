@@ -2508,7 +2508,18 @@ authorization do
     has_permission_on [:attendance_reports], :to => [:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf]
     
   end
+  
+  
+  role :admin do
+    has_permission_on [:students], :to => [:admission1, :admission2, :admission3, :previous_data, :admission4, :profile, :previous_subject, :save_previous_subject, :delete_previous_subject, :reports, :index, :guardians, :add_guardian,
+                                           :admission3_1, :email, :remove, :change_to_former, :delete, :destroy, :edit, :profile_pdf
+                                          ]
+  end
 
+  role :guest do 
+    has_permission_on [:students], :to => [:save_previous_subject, :change_to_former]
+  end
+  
   role :subject_exam do
     has_permission_on [:exam],
       :to => [

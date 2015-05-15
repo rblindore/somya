@@ -24,8 +24,8 @@
   .fee_category_scroll
     .sel-list
       = t('select')
-      \: #{link_to t('all'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });"},
-      \#{link_to t('none'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });"}
+      \:#{link_to t('all'), 'javascript:void(0);', onclick: "$('.batches_box').each(function() {this.checked = true; });"},
+      \#{link_to t('none'), 'javascript:void(0);', onclick: "$('.batches_box').each(function() { this.checked = false; });"}
     - @batches.each do |d|
       .each_batch
         = check_box_tag "report[batch_ids][]", d.id,false,:class=>'batches_box'

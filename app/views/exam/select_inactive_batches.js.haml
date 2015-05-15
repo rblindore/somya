@@ -1,0 +1,5 @@
+- if @batches.empty?
+  - text = "<p class='flash-msg'>#{t('exam.flash12')}</p>".html_safe
+  $("#select_inactive_batches").html("#{escape_javascript text}")
+- else
+  $("#select_inactive_batches").html("#{escape_javascript render 'inactive_batch_list'}")

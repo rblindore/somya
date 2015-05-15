@@ -138,11 +138,11 @@ class Batch < ActiveRecord::Base
 
   def find_working_days(start_date,end_date)
     start=[]
-    start<<self.start_date.to_date
-    start<<start_date.to_date
+    start<< self.start_date.to_date
+    start<< start_date.to_date
     stop=[]
-    stop<<self.end_date.to_date
-    stop<<end_date.to_date
+    stop<< self.end_date.to_date
+    stop<< end_date.to_date
     all_days=start.max..stop.min
     weekdays=Weekday.weekday_by_day(self.id).keys
     holidays=return_holidays(start_date,end_date)
@@ -154,11 +154,11 @@ class Batch < ActiveRecord::Base
 
   def working_days(date)
     start=[]
-    start<<self.start_date.to_date
-    start<<date.beginning_of_month.to_date
+    start<< self.start_date.to_date
+    start<< date.beginning_of_month.to_date
     stop=[]
-    stop<<self.end_date.to_date
-    stop<<date.end_of_month.to_date
+    stop<< self.end_date.to_date
+    stop<< date.end_of_month.to_date
     all_days=start.max..stop.min
     weekdays=Weekday.weekday_by_day(self.id).keys
     holidays=holiday_event_dates

@@ -1,3 +1,4 @@
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #
@@ -40,6 +41,8 @@ class StudentsController < ApplicationController
   end
 
   def admission1
+    params[:student][:admission_date] = Date.civil(*params[:student][:admission_date].sort.map(&:last).map(&:to_i)) if params[:student]
+    params[:student][:date_of_birth] = Date.civil(*params[:student][:date_of_birth].sort.map(&:last).map(&:to_i)) if params[:student]
     @student = Student.new(student_params) rescue Student.new
     @selected_value = Settings.default_country
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
@@ -71,16 +74,17 @@ class StudentsController < ApplicationController
             Delayed::Job.enqueue(SmsManager.new(message,recipients))
           end
         end
-        redirect_to admission2_student_path(@student), notice: t('flash8')
+	     flash[:notice] = "#{t('student.flash8')}"
+        redirect_to:action => "admission2", :id => @student
       end
     end
   end
 
   def admission2
-    @student = Student.find params[:id], :include => [:guardians]
-    @guardian = Guardian.new params[:guardian]
+    @student = Student.where(:id => params[:id]).includes(:guardians).first
+    @guardian = Guardian.new(guardian_params)
     if request.post? and @guardian.save
-      redirect_to admission2_student_path(@student)
+      redirect_to:action => "admission2", :id => @student
     end
   end
 
@@ -88,7 +92,7 @@ class StudentsController < ApplicationController
     @student = Student.find(params[:id])
     @parents = @student.guardians
     if @parents.empty?
-      redirect_to previous_data_student(@student)
+      redirect_to :action => "previous_data", :id => @student.id
     end
     return if params[:immediate_contact].nil?
     if request.post?
@@ -113,7 +117,7 @@ class StudentsController < ApplicationController
     @student = Student.find(params[:id])
     @parents = @student.guardians
     if @parents.empty?
-      redirect_to admission4_student_path(@student)
+      redirect_to :action => :admission4, :id => @student
     end
     return if params[:immediate_contact].nil?
     if request.post?
@@ -126,7 +130,7 @@ class StudentsController < ApplicationController
           guardian = Guardian.find(@student.immediate_contact_id)
           recipients.push guardian.mobile_phone unless guardian.mobile_phone.nil?
         end
-        unless recipients.empty?
+        unless recipients.blank?
           Delayed::Job.enqueue(SmsManager.new(message,recipients))
         end
       end
@@ -136,8 +140,8 @@ class StudentsController < ApplicationController
 
   def previous_data
     @student = Student.find(params[:id])
-    @previous_data = StudentPreviousData.new params[:student_previous_details]
-    @previous_subject = StudentPreviousSubjectMark.find_all_by_student_id(@student)
+    @previous_data = StudentPreviousData.new student_previous_details_params
+    @previous_subject = StudentPreviousSubjectMark.where(:student_id => @student)
     if request.post?
       @previous_data.save
       redirect_to :action => "admission4", :id => @student.id
@@ -159,14 +163,12 @@ class StudentsController < ApplicationController
   def previous_subject
     @student = Student.find(params[:id])
     @student_previous_subject_details=StudentPreviousSubjectMark.new
-    render(:update) do |page|
-      page.replace_html 'subject', :partial=>"previous_subject"
-    end
   end
 
   def save_previous_subject
-    @student_previous_subject_details = StudentPreviousSubjectMark.new params[:student_previous_subject_details]
+    @student_previous_subject_details = StudentPreviousSubjectMark.new student_previous_subject_details_params
     @student_previous_subject_details.save
+    @previous_subject = StudentPreviousSubjectMark.where(:student_id => @student)
     #@all_previous_subject = StudentPreviousSubjectMark.find(:all,:conditions=>"student_id = #{@previous_subject.student_id}")
   end
 
@@ -174,17 +176,17 @@ class StudentsController < ApplicationController
     @previous_subject = StudentPreviousSubjectMark.find(params[:id])
     @student =Student.find(@previous_subject.student_id)
     if@previous_subject.delete
-      @previous_subject=StudentPreviousSubjectMark.find_all_by_student_id(@student.id)
+      @previous_subject=StudentPreviousSubjectMark.where(:student_id => @student.id)
     end
     #@all_previous_subject = StudentPreviousSubjectMark.find(:all,:conditions=>"student_id = #{@previous_subject.student_id}")
   end
 
   def admission4
     @student = Student.find(params[:id])
-    @student_additional_details = StudentAdditionalDetail.find_all_by_student_id(@student.id)
+    @student_additional_details = StudentAdditionalDetail.where(:student_id => @student.id)
     @additional_fields = StudentAdditionalField.where(status: true).order("priority ASC")
     if @additional_fields.empty?
-      redirect_to profile_student_path(@student), notice: "#{t('flash9')} #{@student.first_name} #{@student.last_name}."
+      redirect_to profile_student_path(@student), notice: "#{t('student.flash9')} #{@student.first_name} #{@student.last_name}."
     end
     if request.post?
       @error=false
@@ -320,9 +322,6 @@ class StudentsController < ApplicationController
     @dependency = @student.former_dependency
     if request.post?
       @student.archive_student(params[:remove][:status_description])
-      render :update do |page|
-        page.replace_html 'remove-student', :partial => 'student_tc_generate'
-      end
     end
   end
 
@@ -355,10 +354,10 @@ class StudentsController < ApplicationController
       end
       student.user.destroy
       student.destroy
-      flash[:notice] = "#{t('flash10')}. #{student.admission_no}."
-      redirect_to :controller => 'user', :action => 'dashboard'
+      flash[:notice] = "#{t('student.flash10')}. #{student.admission_no}."
+      redirect_to :controller => 'users', :action => 'dashboard'
     else
-      flash[:warn_notice] = "#{t('flash15')}"
+      flash[:warn_notice] = "#{t('student.flash15')}"
       redirect_to  :action => 'remove', :id=>student.id
     end
   end
@@ -379,7 +378,7 @@ class StudentsController < ApplicationController
             else
               @student_user.update_attributes(:username=> @student.admission_no,:first_name=> @student.first_name , :last_name=> @student.last_name, :email=> @student.email, :role=>'Student')
             end
-            redirect_to profile_student_path(@student.id), notice: t('flash3')
+            redirect_to profile_student_path(@student.id), notice: t('student.flash3')
           end
         else
           redirect_to edit_student_path(@student), notice: t('flash_msg11')
@@ -431,12 +430,12 @@ class StudentsController < ApplicationController
         recipient_list << @student.email unless @student.email == ""
         recipient_list << @student.immediate_contact.email unless (@student.immediate_contact.nil? or @student.immediate_contact.email=="")
       end
-      unless recipient_list.empty?
-        FedenaMailer::deliver_email(sender, recipient_list, params['email']['subject'], params['email']['message'])
-        flash[:notice] = "#{t('flash12')} #{recipient_list.join(', ')}"
-        redirect_to :controller => 'student', :action => 'profile', :id => @student.id
+      unless recipient_list.blank?
+        FedenaMailer::email(sender, recipient_list, params['email']['subject'], params['email']['message'])
+        flash[:notice] = "#{t('student.flash12')} #{recipient_list.join(', ')}"
+        redirect_to :controller => 'students', :action => 'profile', :id => @student.id
       else
-        @student.errors.add_to_base("#{t('flash20')}")
+        flash[:errors] =  ("#{t('student.flash20')}")
       end
     end
   end
@@ -484,16 +483,16 @@ class StudentsController < ApplicationController
 
   def reports
     @batch = @student.batch
-    @grouped_exams = GroupedExam.find_all_by_batch_id(@batch.id)
-    @normal_subjects = Subject.find_all_by_batch_id(@batch.id,:conditions=>"no_exams = false AND elective_group_id IS NULL AND is_deleted = false")
-    @student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>{:batch_id=>@batch.id})
+    @grouped_exams = GroupedExam.where(:batch_id => @batch.id)
+    @normal_subjects = Subject.where("batch_id = ? and no_exams = ? AND elective_group_id IS ? AND is_deleted = ?", @batch.id, false, nil, false)
+    @student_electives = StudentsSubject.where("student_id = ? and batch_id = ?", @student.id, @batch.id)
     @elective_subjects = []
     @student_electives.each do |e|
       @elective_subjects.push Subject.find(e.subject_id)
     end
     @subjects = @normal_subjects+@elective_subjects
     @exam_groups = @batch.exam_groups
-    @exam_groups.reject!{|e| e.result_published==false}
+    @exam_groups.to_a.reject!{|e| e.result_published==false}
     @old_batches = @student.graduated_batches
   end
 
@@ -538,11 +537,11 @@ class StudentsController < ApplicationController
   end
 
   def add_guardian
-    @parent_info = Guardian.new(params[:parent_detail])
+    @parent_info = Guardian.new(guardian_params)
     @countries = Country.all
     if request.post? and @parent_info.save
-      flash[:notice] = "#{t('flash5')} #{@parent_info.ward.full_name}"
-      redirect_to admission3_1_student_path(id: @parent_info.ward_id)
+      flash[:notice] = "#{t('student.flash5')} #{@parent_info.ward.full_name}"
+      redirect_to :action => "admission3_1", :id => @parent_info.ward_id
     end
   end
 
@@ -566,7 +565,7 @@ class StudentsController < ApplicationController
     @current_user = current_user
     @student = Student.find(params[:id])
     @address = @student.address_line1.to_s + ' ' + @student.address_line2.to_s
-    @additional_fields = StudentAdditionalField.all(:conditions=>"status = true")
+    @additional_fields = StudentAdditionalField.where(:status => true)
     @sms_module = Settings.available_modules
     @sms_setting = SmsSetting.new
     @previous_data = StudentPreviousData.find_by_student_id(@student.id)
@@ -1375,5 +1374,19 @@ class StudentsController < ApplicationController
     # This method set permit the user params
     def student_additional_field_params
       params.require(:student_additional_field).permit(:name, :status, :is_mandatory, :input_type)
+    end
+    
+    def guardian_params
+      params[:guardian] = params[:parent_detail] if params[:parent_detail]
+      params.require(:guardian).permit(:ward_id, :first_name, :last_name, :relation, :email, :office_phone1, :office_phone2, :mobile_phone, :office_address_line1, :office_address_line2, :city, :state, :country_id, :dob, :occupation, :income, :education, :user_id) if params[:guardian]
+#       params.require(:parent_detail).permit(:ward_id, :first_name, :last_name, :relation, :email, :office_phone1, :office_phone2, :mobile_phone, :office_address_line1, :office_address_line2, :city, :state, :country_id, :dob, :occupation, :income, :education, :user_id) if params[:parent_detail]
+    end
+    
+    def student_previous_details_params
+      params.require(:student_previous_details).permit(:student_id, :institution, :year, :course, :total_mark) if params[:student_previous_details]
+    end
+    
+    def student_previous_subject_details_params
+      params.require(:student_previous_subject_details).permit(:student_id, :subject, :mark) if params[:student_previous_subject_details]
     end
 end

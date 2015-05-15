@@ -20,6 +20,11 @@
   %img{:src => "  admission/admission_page_logo.jpg"}/
   %h1= t('admission')
   %h3= t('parent_guardian_details_step2')
+:javascript
+  function add_another_guardian(){
+  $('parents').hide();
+  $('admission1_form').show();
+  }
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg
@@ -35,17 +40,15 @@
             = p.full_name
             \- #{p.relation}
         #add-more-parent
-          = link_to_function "► #{t('add_another_guardian')}", :class => "user_button" do |page| |
-              page.visual_effect :toggle_slide, "admission1_form"                                |
-              page.hide "parents"                                                                |
-            end                                                                                  |
+          = link_to "► #{t('add_another_guardian')}", "#", :class => "user_button", :onclick => "add_another_guardian();"
         #skip
           = link_to "► #{t('finish')}", {:controller => "students", :action => "admission3", :id => @student.id }, :class => "user_button"
         :javascript
           Event.observe(window, 'load', function() { $('admission1_form').hide(); });
-  = form_for :guardian do |f|
-    = f.error_messages :header_message => nil
-    - if f.error_messages.present?
+  = form_for(:guardian, :url => {:id => @student.id}) do |f|
+    - @guardian.errors.full_messages.each do |msg|
+      = msg
+    - if @guardian.errors.full_messages.present?
       :javascript
         Event.observe(window, 'load', function() { $('parents').hide(); });
         Event.observe(window, 'load', function() { $('admission1_form').show(); });
@@ -78,8 +81,8 @@
         %hr.label-underline/
         .label-field-pair
           %label{:for => "parent_detail_dob"}= t("date_of_birth")
-          .text-input-bg= calendar_date_select_tag 'guardian[dob]', nil,                              |
-              :year_range => 60.years.ago..20.years.ago, :readonly=>true, :popup=>"force" |
+          .text-input-bg= date_select 'guardian[dob]', nil,                              |
+              :start_year => Date.today.year - 60, :readonly=>true, :popup=>"force" |
         %hr.label-underline/
         .label-field-pair
           %label{:for => "parent_detail_education"}= t('education')

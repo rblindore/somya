@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("admission/admission_page_logo.jpg")
   %h1= t('admission')
@@ -27,7 +28,7 @@
     %p.flash-msg
       = flash[:notice]
   = error_messages_for 'previous_data'
-  = form_for :student_previous_details do |a|
+  = form_for(:student_previous_details, :url => {:id => @student.id}) do |a|
     %span.span-sub-heading= t('previous_educational_details')
     %hr.sub-heading/
     #form-contents
@@ -60,8 +61,8 @@
             .val
               %span :
               = p.mark
-            .delete= link_to_remote image_tag("  buttons/delete-new.png", :border => 0), |
-                :url => {:action => "delete_previous_subject", :id => p.id},        |
+            .delete= link_to image_tag("buttons/delete-new.png", :border => 0), |
+                {:action => "delete_previous_subject", :id => p.id}, :remote => true,        |
                 :update => "added_subjects"                                         |
-    = link_to_remote "#{t('add_subject')}", :url=>{:controller=>"students",:action=>"previous_subject", :id=>@student.id}
+    = link_to "#{t('add_subject')}", {:controller=>"students",:action=>"previous_subject", :id=>@student.id}, :remote => true
     #subject

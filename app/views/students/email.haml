@@ -37,8 +37,8 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for :email do |f|
-    = error_messages_for 'student', :header_message => nil
+  = form_for(:email, :url => {:id => @student.id}) do |f|
+    = flash[:errors]
     .label-field-pair
       %label{:for => "email_subject"}= t('subject')
       - subject = ""

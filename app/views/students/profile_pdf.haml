@@ -112,12 +112,12 @@
     - unless  @additional_fields.empty?
       - @additional_fields.each_with_index do |field,i|
         - if (i+1)%28 == 0
-  %table#pdf-table.section{:cellspacing => "0", :width => "100%"}
-    %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
-      %td.col-pdf= field.name
-      %td.col-pdf
-        - detail = StudentAdditionalDetail.find_by_additional_field_id_and_student_id(field.id,@student.id)
-        = detail.additional_info unless detail.nil?
-    %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
-      %td.col-pdf= t('previous_institution')
-      %td.col-pdf= @previous_data.institution unless @previous_data.nil?
+          %table#pdf-table.section{:cellspacing => "0", :width => "100%"}
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= field.name
+              %td.col-pdf
+                - detail = StudentAdditionalDetail.find_by_additional_field_id_and_student_id(field.id,@student.id)
+                = detail.additional_info unless detail.nil?
+            %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+              %td.col-pdf= t('previous_institution')
+              %td.col-pdf= @previous_data.institution unless @previous_data.nil?

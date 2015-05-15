@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 .label-field-pair
   %label{:for => "student_course"}
     = t('select_exam_group')
@@ -25,10 +26,7 @@
     = select :course, :exam_group_id,                                              |
       @exam_groups.map {|b| [b.name, b.id]},                                       |
       {:prompt => "Select an Exam Group"},                                         |
-      {:onChange => "#{remote_function(:url => {:action => "previous_exam_marks"}, |
-      :with => "'exam_group_id='+ value",                                          |
-      :before => "Element.show('loader2')",                                        |
-      :success => "Element.hide('loader2')"                                        |
-      )}"}                                                                         |
+      {:onChange => "onChangeRequest(this, '#{url_for(action: :previous_exam_marks, exam_group_id: 'paramid')}')"}
+
 #previous_exam_marks
 .extender

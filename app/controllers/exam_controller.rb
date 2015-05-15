@@ -163,32 +163,23 @@ class ExamController < ApplicationController
 
   def list_batch_groups
     unless params[:course_id]==""
-      @batch_groups = BatchGroup.find_all_by_course_id(params[:course_id])
+      @batch_groups = BatchGroup.where(:course_id => params[:course_id])
       if @batch_groups.empty?
-        render(:update) do|page|
-          page.replace_html "batch_group_list", :text=>""
-        end
       else
-        render(:update) do|page|
-          page.replace_html "batch_group_list", :partial=>"select_batch_group"
-        end
       end
     else
-      render(:update) do|page|
-        page.replace_html "batch_group_list", :text=>""
-      end
     end
   end
 
   def generate_previous_reports
     if request.post?
       unless params[:report][:batch_ids].blank?
-        @batches = Batch.find_all_by_id(params[:report][:batch_ids])
+        @batches = Batch.where(:id => params[:report][:batch_ids])
         @batches.each do|batch|
           batch.job_type = "2"
           Delayed::Job.enqueue(batch)
         end
-        flash[:notice]="Report generation in queue for batches #{@batches.collect(&:full_name).join(", ")}. <a href='/scheduled_jobs/Batch/2'>Click Here</a> to view the scheduled job."
+        flash[:notice]="Report generation in queue for batches #{@batches.collect(&:full_name).join(", ")}. <a href='/scheduled_jobs/Batch/2'>Click Here</a> to view the scheduled job.".html_safe
       else
         flash[:notice]="#{t('flash11')}"
         return
@@ -198,20 +189,8 @@ class ExamController < ApplicationController
 
   def select_inactive_batches
     unless params[:course_id]==""
-      @batches = Batch.find(:all, :conditions=>{:course_id=>params[:course_id],:is_active=>false,:is_deleted=>:false})
-      if @batches.empty?
-        render(:update) do|page|
-          page.replace_html "select_inactive_batches", :text=>"<p class='flash-msg'>#{t('exam.flash12')}</p>"
-        end
-      else
-        render(:update) do|page|
-          page.replace_html "select_inactive_batches", :partial=>"inactive_batch_list"
-        end
-      end
-    else
-      render(:update) do|page|
-        page.replace_html "select_inactive_batches", :text=>""
-      end
+      @batches = Batch.where(:course_id =>params[:course_id],:is_active=>false,:is_deleted=>:false)
+      
     end
   end
 
@@ -233,7 +212,7 @@ class ExamController < ApplicationController
           batch.job_type = "1"
           Delayed::Job.enqueue(batch)
         end
-        flash[:notice]="Report generation in queue for batches #{@batches.collect(&:full_name).join(", ")}. <a href='/scheduled_jobs/Batch/1'>Click Here</a> to view the scheduled job."
+        flash[:notice]="Report generation in queue for batches #{@batches.collect(&:full_name).join(", ")}. <a href='/scheduled_jobs/Batch/1'>Click Here</a> to view the scheduled job.".html_safe
       else
         flash[:notice]="#{t('flash11')}"
         return
@@ -248,10 +227,7 @@ class ExamController < ApplicationController
 
   def list_exam_types
     batch = Batch.find(params[:batch_id])
-    @exam_groups = ExamGroup.find_all_by_batch_id(batch.id)
-    render(:update) do |page|
-      page.replace_html 'exam-group-select', :partial=>'exam_group_select'
-    end
+    @exam_groups = ExamGroup.where(:batch_id => batch.id)
   end
 
   def generated_report
@@ -269,14 +245,14 @@ class ExamController < ApplicationController
     if params[:student].nil?
       @exam_group = ExamGroup.find(params[:exam_report][:exam_group_id])
       @batch = @exam_group.batch
-      @students=@batch.students.by_first_name
+      @students = @batch.students.by_first_name
       @student = @students.first  unless @students.empty?
       if @student.nil?
         flash[:notice] = "#{t('flash_student_notice')}"
         redirect_to :action => 'exam_wise_report' and return
       end
-      general_subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>"elective_group_id IS NULL")
-      student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>"batch_id = #{@batch.id}")
+      general_subjects = Subject.where("batch_id = ? and elective_group_id is ? ", @batch.id, nil)
+      student_electives = StudentsSubject.where("student_id = ? and batch_id = ?", @student.id,@batch.id)
       elective_subjects = []
       student_electives.each do |elect|
         elective_subjects.push Subject.find(elect.subject_id)
@@ -293,8 +269,8 @@ class ExamController < ApplicationController
       @exam_group = ExamGroup.find(params[:exam_group])
       @student = Student.find_by_id(params[:student])
       @batch = @student.batch
-      general_subjects = Subject.find_all_by_batch_id(@student.batch.id, :conditions=>"elective_group_id IS NULL")
-      student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>"batch_id = #{@student.batch.id}")
+      general_subjects = Subject.where("batch_id = ? and elective_group_id IS ? ", @student.batch.id, nil)
+      student_electives = StudentsSubject.where("student_id = ? and batch_id = ? ", @student.id, @student.batch.id)
       elective_subjects = []
       student_electives.each do |elect|
         elective_subjects.push Subject.find(elect.subject_id)
@@ -346,10 +322,7 @@ class ExamController < ApplicationController
   end
 
   def list_batch_subjects
-    @subjects = Subject.find_all_by_batch_id(params[:batch_id],:conditions=>"is_deleted=false AND no_exams=false")
-    render(:update) do |page|
-      page.replace_html 'subject-select', :partial=>'rank_subject_select'
-    end
+    @subjects = Subject.where("batch_id = ? and is_deleted = ? AND no_exams = ? ", params[:batch_id], false, false)
   end
 
   def student_subject_rank
@@ -386,19 +359,16 @@ class ExamController < ApplicationController
   end
 
   def list_subjects
-    @subjects = Subject.find_all_by_batch_id(params[:batch_id],:conditions=>"is_deleted=false AND no_exams=false")
-    render(:update) do |page|
-      page.replace_html 'subject-select', :partial=>'subject_select'
-    end
+    @subjects = Subject.where('batch_id = ? and is_deleted = ? and no_exams = ?', params[:batch_id], false, false)
   end
 
   def generated_report2
     #subject-wise-report-for-batch
-    unless params[:exam_report][:subject_id] == ""
+    unless params[:exam_report][:subject_id].blank?
       @subject = Subject.find(params[:exam_report][:subject_id])
       @batch = @subject.batch
       @students = @batch.students
-      @exam_groups = ExamGroup.find(:all,:conditions=>{:batch_id=>@batch.id})
+      @exam_groups = ExamGroup.where(:batch_id=>@batch.id)
     else
       flash[:notice] = "#{t('flash4')}"
       redirect_to :action=>'subject_wise_report'
@@ -878,9 +848,9 @@ class ExamController < ApplicationController
     else
       @batch = Batch.find(params[:transcript][:batch_id])
       if params[:flag].present? and params[:flag]=="1"
-        @students = Student.find_all_by_id(params[:student_id])
-        if @students.empty?
-          @students = ArchivedStudent.find_all_by_former_id(params[:student_id])
+        @students = Student.where(:id => params[:student_id])
+        if @students.blank?
+          @students = ArchivedStudent.where(:former_id => params[:student_id])
           @students.each do|student|
             student.id=student.former_id
           end
@@ -889,7 +859,7 @@ class ExamController < ApplicationController
       else
         @students = @batch.students.by_first_name
       end
-      unless @students.empty?
+      unless @students.blank?
         unless !params[:student_id].present? or params[:student_id].nil?
           @student = Student.find_by_id(params[:student_id])
           if @student.nil?
@@ -900,9 +870,9 @@ class ExamController < ApplicationController
           @student = @students.first
         end
         @grade_type = @batch.grading_type
-        batch_ids = BatchStudent.find_all_by_student_id(@student.id).map{|b| b.batch_id}
+        batch_ids = BatchStudent.where(:student_id => @student.id).map{|b| b.batch_id}
         batch_ids << @batch.id
-        @batches = Batch.find_all_by_id(batch_ids)
+        @batches = Batch.where(:id => batch_ids)
       else
         flash[:notice] = "No Students in this Batch."
         redirect_to :action=>"transcript" and return
@@ -918,9 +888,9 @@ class ExamController < ApplicationController
     end
     @batch = @student.batch
     @grade_type = @batch.grading_type
-    batch_ids = BatchStudent.find_all_by_student_id(@student.id).map{|b| b.batch_id}
+    batch_ids = BatchStudent.where(:student_id => @student.id).map{|b| b.batch_id}
     batch_ids << @batch.id
-    @batches = Batch.find_all_by_id(batch_ids)
+    @batches = Batch.where(:id => batch_ids)
     render :pdf=>"student_transcript_pdf"
   end
 
@@ -1005,18 +975,15 @@ class ExamController < ApplicationController
     @student = Student.find(params[:student])
     @batch = @student.batch
     @subject = Subject.find(params[:subject])
-    @exam_groups = ExamGroup.find(:all,:conditions=>{:batch_id=>@batch.id})
-    @exam_groups.reject!{|e| e.result_published==false}
+    @exam_groups = ExamGroup.where(:batch_id => @batch.id)
+    @exam_groups.to_a.reject!{|e| e.result_published==false}
     @graph = open_flash_chart_object(770, 350,
       "/exam/graph_for_generated_report3?subject=#{@subject.id}&student=#{@student.id}")
   end
 
   def final_report_type
     batch = Batch.find(params[:batch_id])
-    @grouped_exams = GroupedExam.find_all_by_batch_id(batch.id)
-    render(:update) do |page|
-      page.replace_html 'report_type',:partial=>'report_type'
-    end
+    @grouped_exams = GroupedExam.where(:batch_id => batch.id)
   end
 
   def generated_report4
@@ -1043,17 +1010,17 @@ class ExamController < ApplicationController
         redirect_to :action=>'grouped_exam_report' and return
       end
       if @type == 'grouped'
-        @grouped_exams = GroupedExam.find_all_by_batch_id(@batch.id)
+        @grouped_exams = GroupedExam.where(:batch_id => @batch.id)
         @exam_groups = []
         @grouped_exams.each do |x|
           @exam_groups.push ExamGroup.find(x.exam_group_id)
         end
       else
-        @exam_groups = ExamGroup.find_all_by_batch_id(@batch.id)
+        @exam_groups = ExamGroup.where(:batch_id => @batch.id)
         @exam_groups.reject!{|e| e.result_published==false}
       end
-      general_subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>"elective_group_id IS NULL AND is_deleted=false")
-      student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>"batch_id = #{@batch.id}")
+      general_subjects = Subject.where("batch_id = ? and elective_group_id IS ? AND is_deleted = ?", @batch.id, nil, false)
+      student_electives = StudentsSubject.where("student_id = ? and batch_id = ?", @student.id,@batch.id)
       elective_subjects = []
       student_electives.each do |elect|
         elective_subjects.push Subject.find(elect.subject_id)
@@ -1070,17 +1037,17 @@ class ExamController < ApplicationController
       end
       @type  = params[:type]
       if params[:type] == 'grouped'
-        @grouped_exams = GroupedExam.find_all_by_batch_id(@batch.id)
+        @grouped_exams = GroupedExam.where(:batch_id => @batch.id)
         @exam_groups = []
         @grouped_exams.each do |x|
           @exam_groups.push ExamGroup.find(x.exam_group_id)
         end
       else
-        @exam_groups = ExamGroup.find_all_by_batch_id(@batch.id)
+        @exam_groups = ExamGroup.where(:batch_id => @batch.id)
         @exam_groups.reject!{|e| e.result_published==false}
       end
-      general_subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>"elective_group_id IS NULL AND is_deleted=false")
-      student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>"batch_id = #{@batch.id}")
+      general_subjects = Subject.where("batch_id = ? and elective_group_id IS ? AND is_deleted= ?", @batch.id, nil, false)
+      student_electives = StudentsSubject.where("student_id = ? and batch_id = ?", @student.id, @batch.id)
       elective_subjects = []
       student_electives.each do |elect|
         elective_subjects.push Subject.find(elect.subject_id)
@@ -1092,7 +1059,7 @@ class ExamController < ApplicationController
           page.replace_html   'grouped_exam_report', :partial=>"grouped_exam_report"
         end
       else
-        @students = Student.find_all_by_id(params[:student])
+        @students = Student.where(:id => params[:student])
       end
     end
 
@@ -1105,24 +1072,24 @@ class ExamController < ApplicationController
       @batch = Batch.find(params[:exam_report][:batch_id])
       @student = @batch.students.first
       if @type == 'grouped'
-        @grouped_exams = GroupedExam.find_all_by_batch_id(@batch.id)
+        @grouped_exams = GroupedExam.where(:batch_id => @batch.id)
         @exam_groups = []
         @grouped_exams.each do |x|
           @exam_groups.push ExamGroup.find(x.exam_group_id)
         end
       else
-        @exam_groups = ExamGroup.find_all_by_batch_id(@batch.id)
+        @exam_groups = ExamGroup.where(:batch_id => @batch.id)
         @exam_groups.reject!{|e| e.result_published==false}
       end
-      general_subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>"elective_group_id IS NULL and is_deleted=false")
-      student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>"batch_id = #{@batch.id}")
+      general_subjects = Subject.where("batch_id = ? and elective_group_id IS ? and is_deleted = ? ", @batch.id, nil, false)
+      student_electives = StudentsSubject.where("student_id = ? and batch_id = ? ", @student.id, @batch.id)
       elective_subjects = []
       student_electives.each do |elect|
         elective_subjects.push Subject.find(elect.subject_id,:conditions => {:is_deleted => false})
       end
       @subjects = general_subjects + elective_subjects
-      @subjects.reject!{|s| s.no_exams==true}
-      exams = Exam.find_all_by_exam_group_id(@exam_groups.collect(&:id))
+      @subjects.to_a.reject!{|s| s.no_exams==true}
+      exams = Exam.where(:exam_group_id => @exam_groups).collect(&:id)
       subject_ids = exams.collect(&:subject_id)
       @subjects.reject!{|sub| !(subject_ids.include?(sub.id))}
     else
@@ -1130,26 +1097,26 @@ class ExamController < ApplicationController
       @batch = Batch.find_by_id(params[:batch_id])
       @type  = params[:type]
       if params[:type] == 'grouped'
-        @grouped_exams = GroupedExam.find_all_by_batch_id(@batch.id)
+        @grouped_exams = GroupedExam.where(:batch_id => @batch.id)
         @exam_groups = []
         @grouped_exams.each do |x|
           @exam_groups.push ExamGroup.find(x.exam_group_id)
         end
       else
-        @exam_groups = ExamGroup.find_all_by_batch_id(@batch.id)
+        @exam_groups = ExamGroup.where(:batch_id => @batch.id)
         @exam_groups.reject!{|e| e.result_published==false}
       end
-      general_subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>"elective_group_id IS NULL")
-      student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>"batch_id = #{@batch.id}")
+      general_subjects = Subject.where("batch_id = ? and elective_group_id IS ?", @batch.id, nil)
+      student_electives = StudentsSubject.where("student_id = ? and batch_id = ? ", @student.id, @batch.id)
       elective_subjects = []
       student_electives.each do |elect|
         elective_subjects.push Subject.find(elect.subject_id)
       end
       @subjects = general_subjects + elective_subjects
-      @subjects.reject!{|s| s.no_exams==true}
-      exams = Exam.find_all_by_exam_group_id(@exam_groups.collect(&:id))
+      @subjects.to_a.reject!{|s| s.no_exams==true}
+      exams = Exam.where(:exam_group_id => @exam_groups).collect(&:id)
       subject_ids = exams.collect(&:subject_id)
-      @subjects.reject!{|sub| !(subject_ids.include?(sub.id))}
+      @subjects.to_a.reject!{|sub| !(subject_ids.include?(sub.id))}
     end
     render :pdf => 'generated_report4_pdf',
       :orientation => 'Landscape'
@@ -1164,13 +1131,13 @@ class ExamController < ApplicationController
     @batch = Batch.find(params[:batch])
     @students = @batch.students.by_first_name
     if @type == 'grouped'
-      @grouped_exams = GroupedExam.find_all_by_batch_id(@batch.id)
+      @grouped_exams = GroupedExam.where(:batch_id => @batch.id)
       @exam_groups = []
       @grouped_exams.each do |x|
         @exam_groups.push ExamGroup.find(x.exam_group_id)
       end
     else
-      @exam_groups = ExamGroup.find_all_by_batch_id(@batch.id)
+      @exam_groups = ExamGroup.where(:batch_id => @batch.id)
       @exam_groups.reject!{|e| e.result_published==false}
     end
     render :pdf => 'combined_grouped_exam_report_pdf'
@@ -1232,28 +1199,14 @@ class ExamController < ApplicationController
 
   def list_inactive_exam_groups
     unless params[:batch_id]==""
-      @exam_groups = ExamGroup.find(:all, :conditions=>{:batch_id=>params[:batch_id]})
-      @exam_groups.reject!{|e| !GroupedExam.exists?(:exam_group_id=>e.id,:batch_id=>params[:batch_id])}
-      render(:update) do|page|
-        page.replace_html "inactive_exam_groups", :partial=>"inactive_exam_groups"
-      end
-    else
-      render(:update) do|page|
-        page.replace_html "inactive_exam_groups", :text=>""
-      end
+      @exam_groups = ExamGroup.where(:batch_id=>params[:batch_id])
+      @exam_groups.to_a.reject!{|e| !GroupedExam.exists?(:exam_group_id=>e.id,:batch_id=>params[:batch_id])}
     end
   end
 
   def previous_exam_marks
     unless params[:exam_goup_id]==""
-      @exam_group = ExamGroup.find(params[:exam_group_id], :include => :exams)
-      render(:update) do|page|
-        page.replace_html "previous_exam_marks", :partial=>"previous_exam_marks"
-      end
-    else
-      render(:update) do|page|
-        page.replace_html "previous_exam_marks", :text=>""
-      end
+      @exam_group = ExamGroup.where(:id => params[:exam_group_id]).includes(:exams).first
     end
   end
 

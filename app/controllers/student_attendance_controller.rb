@@ -29,9 +29,9 @@ class StudentAttendanceController < ApplicationController
     @config = Settings.find_by_config_key('StudentAttendanceType')
     @student = Student.find(params[:id])
     @batch = Batch.find(@student.batch_id)
-    @subjects = Subject.find_all_by_batch_id(@batch.id,:conditions=>'is_deleted = false')
+    @subjects = Subject.where("batch_id = ? and is_deleted = ?", @batch.id,false)
     @electives = @subjects.map{|x|x unless x.elective_group_id.nil?}.compact
-    @electives.reject! { |z| z.students.include?(@student)  }
+    @electives.to_a.reject! { |z| z.students.include?(@student)  }
     @subjects -= @electives
 
     if request.post?
@@ -43,21 +43,21 @@ class StudentAttendanceController < ApplicationController
           unless params[:advance_search][:subject_id].empty?
             @academic_days=@batch.subject_hours(@start_date, @end_date, params[:advance_search][:subject_id]).values.flatten.compact.count
             @subject=Subject.find(params[:advance_search][:subject_id])
-            @student_leaves = SubjectLeave.find(:all,:conditions =>{:subject_id=>@subject.id,:student_id=>@student.id,:month_date => @start_date..@end_date})
+            @student_leaves = SubjectLeave.where(:subject_id=>@subject.id,:student_id=>@student.id,:month_date => @start_date..@end_date)
           else
             @academic_days=@batch.subject_hours(@start_date, @end_date, 0).values.flatten.compact.count
-            @student_leaves = SubjectLeave.find(:all,  :conditions =>{:student_id=>@student.id,:month_date => @start_date..@end_date})
+            @student_leaves = SubjectLeave.where(:student_id=>@student.id,:month_date => @start_date..@end_date)
           end
           @leaves= @student_leaves.count
           @leaves||=0
           @attendance = (@academic_days - @leaves)
           @percent = (@attendance.to_f/@academic_days)*100 unless @academic_days == 0
         else
-          @student_leaves = Attendance.find(:all,  :conditions =>{:batch_id=>@batch.id,:student_id=>@student.id,:month_date => @start_date..@end_date})
+          @student_leaves = Attendance.where(:batch_id=>@batch.id,:student_id=>@student.id,:month_date => @start_date..@end_date)
           @academic_days=@batch.academic_days.select{|v| v<=@end_date}.count
-          leaves_forenoon=Attendance.count(:all,:conditions=>{:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>false,:month_date => @start_date..@end_date})
-          leaves_afternoon=Attendance.count(:all,:conditions=>{:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>false,:afternoon=>true,:month_date => @start_date..@end_date})
-          leaves_full=Attendance.count(:all,:conditions=>{:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>true,:month_date => @start_date..@end_date})
+          leaves_forenoon=Attendance.count(:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>false,:month_date => @start_date..@end_date)
+          leaves_afternoon=Attendance.count(:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>false,:afternoon=>true,:month_date => @start_date..@end_date)
+          leaves_full=Attendance.count(:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>true,:month_date => @start_date..@end_date)
           @leaves=leaves_full.to_f+(0.5*(leaves_forenoon.to_f+leaves_afternoon.to_f))
           @attendance = (@academic_days - @leaves)
           @percent = (@attendance.to_f/@academic_days)*100 unless @academic_days == 0
@@ -76,21 +76,21 @@ class StudentAttendanceController < ApplicationController
           unless params[:advance_search][:subject_id].empty?
             @academic_days=@batch.subject_hours(@start_date, @end_date, params[:advance_search][:subject_id]).values.flatten.compact.count
             @subject=Subject.find(params[:advance_search][:subject_id])
-            @student_leaves = SubjectLeave.find(:all,:conditions =>{:subject_id=>@subject.id,:student_id=>@student.id,:month_date => @start_date..@end_date})
+            @student_leaves = SubjectLeave.where(:subject_id=>@subject.id,:student_id=>@student.id,:month_date => @start_date..@end_date)
           else
             @academic_days=@batch.subject_hours(@start_date, @end_date, 0).values.flatten.compact.count
-            @student_leaves = SubjectLeave.find(:all,  :conditions =>{:student_id=>@student.id,:month_date => @start_date..@end_date})
+            @student_leaves = SubjectLeave.where(:student_id=>@student.id,:month_date => @start_date..@end_date)
           end
           @leaves= @student_leaves.count
           @leaves||=0
           @attendance = (@academic_days - @leaves)
           @percent = (@attendance.to_f/@academic_days)*100 unless @academic_days == 0
         else
-          @student_leaves = Attendance.find(:all,  :conditions =>{:batch_id=>@batch.id,:student_id=>@student.id,:month_date => @start_date..@end_date})
+          @student_leaves = Attendance.where(:batch_id=>@batch.id,:student_id=>@student.id,:month_date => @start_date..@end_date)
           @academic_days=@batch.working_days(@start_date.to_date).select{|v| v<=@end_date}.count
-          leaves_forenoon=Attendance.count(:all,:conditions=>{:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>false,:month_date => @start_date..@end_date})
-          leaves_afternoon=Attendance.count(:all,:conditions=>{:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>false,:afternoon=>true,:month_date => @start_date..@end_date})
-          leaves_full=Attendance.count(:all,:conditions=>{:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>true,:month_date => @start_date..@end_date})
+          leaves_forenoon=Attendance.count(:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>false,:month_date => @start_date..@end_date)
+          leaves_afternoon=Attendance.count(:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>false,:afternoon=>true,:month_date => @start_date..@end_date)
+          leaves_full=Attendance.count(:batch_id=>@batch.id,:student_id=>@student.id,:forenoon=>true,:afternoon=>true,:month_date => @start_date..@end_date)
           @leaves=leaves_full.to_f+(0.5*(leaves_forenoon.to_f+leaves_afternoon.to_f))
           @attendance = (@academic_days - @leaves)
           @percent = (@attendance.to_f/@academic_days)*100 unless @academic_days == 0

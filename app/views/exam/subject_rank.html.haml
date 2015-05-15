@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("examination/show_exam.png")
   %h1= t('exams_text')
@@ -36,12 +37,8 @@
       .text-input-bg
         = select :rank_report, :batch_id,                                                            |
           @batches.map {|b| [b.full_name, b.id]},                                                    |
-          {prompt: t('select_a_batch')},                                                             |
-          {onChange: "#{remote_function(url: list_batch_subjects_exam_index_path(batch_id: "value"), |
-          with: "'batch_id='+value",                                                                 |
-          before: "Element.show('loader')",                                                          |
-          success: "Element.hide('loader')"                                                          |
-          )}"}                                                                                       |
+          {:prompt => t('select_a_batch')},                                                             |
+          {:onChange => "onChangeRequest(this, '#{url_for(action: :list_batch_subjects, batch_id: 'paramid')}')"}
       %div
         #subject-select.text-input-bg
           = select :rank_report, :subject_id, @subjects.map{|subject| [subject.name,subject.id]},prompt: t('select_subject')

@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= csrf_meta_tag
 %span.span-sub-heading= t('subject_details')
 = form_for :student_previous_subject_details, url: { action: :save_previous_subject}, remote: true do |s|
   = s.hidden_field :student_id, :value => @student.id

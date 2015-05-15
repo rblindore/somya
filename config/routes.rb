@@ -51,6 +51,7 @@ Fedena::Application.routes.draw do
       get :list_inactivated_batches
       post :final_archived_report_type
       post :archived_batches_exam_report
+      get :final_archived_report_type
     end
   end
 
@@ -346,6 +347,33 @@ Fedena::Application.routes.draw do
       post :categories
       get :add_additional_details
       post :add_additional_details
+      get :admission2
+      post :admission2
+      get :admission3 
+      post :admission3
+      get :previous_data
+      post :previous_data
+      get :admission4
+      get :previous_subject
+      get :save_previous_subject
+      post :save_previous_subject
+      get :delete_previous_subject
+      get :email
+      post :email
+      get :remove
+      get :add_guardian
+      post :add_guardian
+      get :admission3_1
+      post :admission3_1
+      get :edit
+      post :edit
+      get :profile_pdf
+      get :edit_guardian
+      get :del_guardian
+      get :change_to_former
+      post :change_to_former
+      get :delete
+      get :destroy
     end
     member do
       get :profile
@@ -388,11 +416,13 @@ Fedena::Application.routes.draw do
       get :settings
       get :create_exam
       get :generate_reports
+      post :generate_reports
       get :report_center
       get :previous_batch_exams
       get :update_batch
       get :list_inactive_batches
       get :generate_previous_reports
+      post :generate_previous_reports
       get :list_batch_groups
       get :select_inactive_batches
       get :exam_wise_report
@@ -425,6 +455,17 @@ Fedena::Application.routes.draw do
       post :student_transcript_exam
       get :load_levels
       post :student_combined_report
+      get :grouping
+      get :list_inactive_exam_groups
+      get :previous_exam_marks
+      get :publish
+      get :generated_report
+      get :generated_report2
+      get :generated_report3
+      get :generated_report4
+      get :combined_grouped_exam_report_pdf
+      get :generated_report4_pdf
+      get :student_transcript_pdf
     end
   end
 
@@ -458,6 +499,9 @@ Fedena::Application.routes.draw do
   resources :student_attendance, only: :index do
     collection do
       get :advance_search
+      get :student
+      post :student
+      get :month
     end
   end
 

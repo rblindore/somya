@@ -86,13 +86,13 @@ class Subject < ActiveRecord::Base
   end
 
   def no_exam_for_batch(batch_id)
-    grouped_exams = GroupedExam.find_all_by_batch_id(batch_id).collect(&:exam_group_id)
+    grouped_exams = GroupedExam.where(:batch_id => batch_id).collect(&:exam_group_id)
     return exam_not_created(grouped_exams)
   end
 
   def exam_not_created(exam_group_ids)
-    exams = Exam.find_all_by_exam_group_id_and_subject_id(exam_group_ids,self.id)
-    if exams.empty?
+    exams = Exam.where("exam_group_id = ? and subject_id = ? ", exam_group_ids,self.id)
+    if exams.blank?
       return true
     else
       return false

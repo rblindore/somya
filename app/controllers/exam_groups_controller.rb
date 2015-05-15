@@ -109,7 +109,7 @@ class ExamGroupsController < ApplicationController
   end
 
   def show
-    @exam_group = ExamGroup.find(params[:id], :include => :exams)
+    @exam_group = ExamGroup.where(:id => params[:id]).includes(:exams).first
     if @current_user.employee?
       @user_privileges = @current_user.privileges
       @employee_subjects= @current_user.employee_record.subjects.map { |n| n.id}
@@ -122,7 +122,7 @@ class ExamGroupsController < ApplicationController
 
   private
   def initial_queries
-    @batch = Batch.find params[:batch_id], :include => :course unless params[:batch_id].nil?
+    @batch = Batch.where(:id => params[:batch_id]).includes(:course).first unless params[:batch_id].nil?
     @course = @batch.course unless @batch.nil?
   end
 
