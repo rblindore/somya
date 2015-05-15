@@ -337,6 +337,7 @@ Fedena::Application.routes.draw do
 
   resources :students, only: :index do
     collection do
+      get :index
       get :admission1
       post :admission1
       get :view_all

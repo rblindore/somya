@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("student_details/student_details_logo.jpg")
   %h1
@@ -34,14 +35,5 @@
     .text-input-bg= select :course, :course_id,                                                      |
         @batches.map {|b| [b.full_name, b.id]},                                          |
         {:prompt => "#{t('select_a_batch')}"},                                           |
-        {:onChange => "#{remote_function(:url => {:action => "list_students_by_course"}, |
-        :with => "'batch_id='+value",                                                    |
-        :before => "Element.show('loader')",                                             |
-        :success => "Element.hide('loader')"                                             |
-        )}"}                                                                             |
-    = image_tag("loader.gif",     |
-      :align => "absmiddle",      |
-      :border => 0,               |
-      :id => "loader",            |
-      :style =>"display: none;" ) |
+        {:onChange => "onChangeRequest(this, '#{url_for(action: :list_students_by_course, batch_id: 'paramid')}')"}
   #students

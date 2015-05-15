@@ -1,4 +1,3 @@
-
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #
@@ -27,8 +26,7 @@ class StudentsController < ApplicationController
     :delete, :edit, :add_guardian, :email, :remove, :reports, :profile,
     :guardians, :academic_pdf,:show_previous_details,:fees,:fee_details
   ]
-
-
+  
   def academic_report_all
     @user = current_user
     @prev_student = @student.previous_student
@@ -498,11 +496,12 @@ class StudentsController < ApplicationController
 
   def search_ajax
     if params[:option] == "active"
+      @active  = true
       if params[:query].length>= 3
         @students = Student.where("first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
-                            OR admission_no = ? OR (concat(first_name, \" \", last_name) LIKE ? ) ",
+                            OR admission_no = ? ",
             "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
-            "#{params[:query]}", "#{params[:query]}").order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
+            "#{params[:query]}").order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
       else
         @students = Student.where("admission_no = ? " , params[:query]).
           order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
@@ -510,18 +509,14 @@ class StudentsController < ApplicationController
       render :layout => false
     else
       if params[:query].length>= 3
-        @archived_students = ArchivedStudent.find(:all,
-          :conditions => ["first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
-                            OR admission_no = ? OR (concat(first_name, \" \", last_name) LIKE ? ) ",
+        @archived_students = ArchivedStudent.where("first_name LIKE ? OR middle_name LIKE ? OR last_name LIKE ?
+                            OR admission_no = ?  ",
             "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
-            "#{params[:query]}", "#{params[:query]}" ],
-          :order => "batch_id asc,first_name asc",:include =>  [{:batch=>:course}]) unless params[:query] == ''
+            "#{params[:query]}").order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
       else
-        @archived_students = ArchivedStudent.find(:all,
-          :conditions => ["admission_no = ? " , params[:query]],
-          :order => "batch_id asc,first_name asc",:include =>  [{:batch=>:course}]) unless params[:query] == ''
+        @archived_students = ArchivedStudent.find("admission_no = ? " , params[:query]).order("batch_id asc,first_name asc").includes([{:batch=>:course}]) unless params[:query] == ''
       end
-      render :partial => "search_ajax"
+#       render :partial => "search_ajax"
     end
   end
 
@@ -546,8 +541,7 @@ class StudentsController < ApplicationController
   end
 
   def list_students_by_course
-    @students = Student.find_all_by_batch_id(params[:batch_id], :order => 'first_name ASC')
-    render(:update) { |page| page.replace_html 'students', :partial => 'students_by_course' }
+    @students = Student.where(:batch_id => params[:batch_id]).order('first_name ASC')
   end
 
   def profile

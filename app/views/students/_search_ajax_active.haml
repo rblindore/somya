@@ -31,7 +31,7 @@
     - @students.each_with_index do |student, i|
       %tr{:class => "tr-#{cycle('odd', 'even')}"}
         %td.col-1= i+1
-        %td.col-4= link_to student.full_name, :controller => 'student', :action => 'profile', :id => student.id
+        %td.col-4= link_to student.full_name, :controller => 'students', :action => 'profile', :id => student.id
         %td.col-4= student.batch.full_name
         %td.col-1= student.admission_no
   - else

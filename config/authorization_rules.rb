@@ -2512,7 +2512,7 @@ authorization do
   
   role :admin do
     has_permission_on [:students], :to => [:admission1, :admission2, :admission3, :previous_data, :admission4, :profile, :previous_subject, :save_previous_subject, :delete_previous_subject, :reports, :index, :guardians, :add_guardian,
-                                           :admission3_1, :email, :remove, :change_to_former, :delete, :destroy, :edit, :profile_pdf
+                                           :admission3_1, :email, :remove, :change_to_former, :delete, :destroy, :edit, :profile_pdf, :view_all, :list_students_by_course, :advanced_search, :search_ajax
                                           ]
   end
 

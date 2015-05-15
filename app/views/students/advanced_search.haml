@@ -47,11 +47,7 @@
         .text-input-bg
           = select :advv_search, :course_id, Course.active.map{|c| [c.course_name+" "+c.section_name, c.id]}, |
             {:prompt=>"#{t('select_a_course')}"},                                                             |
-            {:onChange => "#{remote_function(:url => {:action => "list_batches"},                             |
-            :with => "'course_id='+value",                                                                    |
-            :before => "Element.show('loader')",                                                              |
-            :success => "Element.hide('loader')"                                                              |
-            )}"}                                                                                              |
+            {:onChange => "onChangeRequest(this, '#{url_for(action: :list_batches, course_id: 'paramid')}')"}
       #course_batches.label-field-pair
         %label{:for => "student_batch"}= t('batch')
         .text-input-bg
@@ -82,11 +78,8 @@
         %label{:for => "student_grade"}= t('admission_date')
         .text-input-bg
           = select :advv_search,:doa_option,[["#{t('equal_to')}","Equal to"],["#{t('less_than')}","Less than"],["#{t('greater_than')}","Greater than"]],{:prompt=>"#{t('option')}"}, |
-            {:onChange => "#{remote_function(:url => {:action => "list_doa_year"},                                                                                                   |
-            :with=>"'doa_option='+value",                                                                                                                                            |
-            :before => "Element.show('loader')",                                                                                                                                     |
-            :success => "Element.hide('loader')"                                                                                                                                     |
-            )}"}                                                                                                                                                                     |
+            {:onChange => "onChangeRequest(this, '#{url_for(action: :list_doa_year, doa_option: 'paramid')}')"}
+
           = image_tag("loader.gif",     |
             :align => "absmiddle",      |
             :border => 0,               |
@@ -99,12 +92,7 @@
         %label{:for => "student_birth_date"}= t('birth_date')
         .text-input-bg
           = select :advv_search,:dob_option,[["#{t('equal_to')}","Equal to"],["#{t('less_than')}","Less than"],["#{t('greater_than')}","Greater than"]],{:prompt=>"#{t('option')}"}, |
-            {:onChange => "#{remote_function(:url => {:action => "list_dob_year"},                                                                                                   |
-            :with=>"'dob_option='+value",                                                                                                                                            |
-            :before => "Element.show('loader')",                                                                                                                                     |
-            :success => "Element.hide('loader')",                                                                                                                                    |
-            :class=>'small-box'                                                                                                                                                      |
-            )}"}                                                                                                                                                                     |
+            {:onChange => "onChangeRequest(this, '#{url_for(action: :list_dob_year, dob_option: 'paramid')}')"}
           = image_tag("loader.gif",     |
             :align => "absmiddle",      |
             :border => 0,               |

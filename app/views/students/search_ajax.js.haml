@@ -1,0 +1,4 @@
+- if @active
+  $("#information").html("#{escape_javascript render 'search_ajax_active'}")
+- else
+  $("#information").html("#{escape_javascript render 'search_ajax'}")
