@@ -57,7 +57,8 @@ Fedena::Application.routes.draw do
 
   resources :class_timings, except: :show do
     collection do
-      get :show
+      get :index
+      get :show_class_timing
     end
   end
 
@@ -284,13 +285,24 @@ Fedena::Application.routes.draw do
       get :all
       get :search_user_ajax
       get :list_user
+      get :logout
       delete :logout
       get :list_employee_user
       get :list_student_user
+      get :user_change_password
+      post :user_change_password
+      get :edit_privilege
+      post :edit_privilege
+      get :list_parent_user
+      get :search_user_ajax
+      get :create_user
+      post :create_user
+      get :delete
     end
     member do
       get :profile
       get :change_password
+      post :change_password
       get :first_login_change_password
     end
   end
@@ -472,7 +484,9 @@ Fedena::Application.routes.draw do
 
   resources :timetables, only: :index do
     collection do
+      get :index
       get :work_allotment
+      post :work_allotment
       get :new_timetable
       post :new_timetable
       get :edit_master
@@ -481,6 +495,9 @@ Fedena::Application.routes.draw do
       get :timetable
       get :update_timetable_view
       get :update_teacher_tt
+      get :update_timetable
+      post :update_timetable
+      get :destroy
     end
     member do
       get :update_student_tt

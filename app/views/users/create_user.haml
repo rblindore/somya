@@ -27,7 +27,8 @@
     %p.flash-msg
       = flash[:notice]
   = form_for :user do |f|
-    = f.error_messages
+    - @user.errors.full_messages.each do |msg|
+      = msg
     #create_user_form
       #necessary-field-notification
         = t('legend1')

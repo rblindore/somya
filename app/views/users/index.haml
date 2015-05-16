@@ -25,7 +25,7 @@
 #inner-tab-menu
   %ul
     %li= link_to t('view_all'), action: :all
-    %li= link_to t('add_new'), action: :create
+    %li= link_to t('add_new'), action: :create_user
 #page-yield
   #search-area
     - unless flash[:notice].nil?
@@ -36,21 +36,14 @@
         %label{:for => "query"}
           = t('search_user')
           = image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )
-        = text_field_tag "query", params[:query], autocomplete:  'off'
+        = text_field_tag "query", params[:query], autocomplete:  'off', onChange: "search_user_ajax();"
   :javascript
     function search_user_ajax(){
-          if ($('query').value.include("%")) return;
-          onChangeRequest($('query'), '#{url_for(action: :search_user_ajax, query: "paramid")}' );
-    <haml_silent>
-
-
-
-
-
-    </haml_silent>    }
-
-        jQuery(document).on("page:load ready", function() {
-          new Form.Element.Observer('query', 1, search_user_ajax);
-        });
+      var query = document.getElementById('query').value;
+      $.ajax({ type: "GET",
+        url: "users/search_user_ajax",
+        data: { query: query} , 
+      });
+     }
   #user_information
   .extender

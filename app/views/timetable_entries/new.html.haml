@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 :javascript
   var selected_divs = new Array();
 
@@ -38,17 +39,12 @@
     }
 
     function make_ajax_calls(tte_id, emp_sub_id){
-      if (selected_divs.length == 0) {
-  #{remote_function(:update => "timetable",
-    :url => {:action => "update_multiple_timetable_entries2"},
-    :with => "'emp_sub_id=' + emp_sub_id + '&tte_ids=' + tte_id + '&timetable_id=' + \#{@timetable.id}", :success => "clear_selected_divs()")}
-      }
-      else if (selected_divs.length == 1) {
-  #{remote_function(:update => "timetable",
-    :url => {:action => "update_multiple_timetable_entries2"},
-    :with => "'emp_sub_id=' + emp_sub_id + '&tte_ids=' + tte_id + '&timetable_id=' + \#{@timetable.id}", :success => "clear_selected_divs()")}
-        if (selected_divs[0] == tte_id) selected_divs.pop();
-      }
+      if (selected_divs.length == 0 || selected_div.length == 1) {
+            $.ajax({ type: "GET",   
+               url: "update_multiple_timetable_entries2",
+               data: { "'emp_sub_id=' + emp_sub_id + '&tte_ids=' + tte_id + '&timetable_id=' + \#{@timetable.id}", :success => "clear_selected_divs()"} ,
+            });
+                                       
       else {
         var exists_in_list = 0;
         for (x in selected_divs)
@@ -56,15 +52,17 @@
             exists_in_list = 1;
         if (exists_in_list) {
           tte_list = selected_divs.join(',');
-  #{remote_function(:update => "timetable",
-    :url => {:action => "update_multiple_timetable_entries2"},
-    :with => "'emp_sub_id=' + emp_sub_id + '&tte_ids=' + tte_list + '&timetable_id=' + \#{@timetable.id}", :success => "clear_selected_divs()")}
+  $.ajax({ type: "GET",   
+               url: "update_multiple_timetable_entries2",
+               data: { "'emp_sub_id=' + emp_sub_id + '&tte_ids=' + tte_id + '&timetable_id=' + \#{@timetable.id}", :success => "clear_selected_divs()"} ,
+            });
           selected_divs = [];
         }
         else
-  #{remote_function(:update => "timetable",
-    :url => {:action => "update_multiple_timetable_entries2"},
-    :with => "'emp_sub_id=' + emp_sub_id + '&tte_ids=' + tte_id + '&timetable_id=' + \#{@timetable.id}", :success => "clear_selected_divs()")}
+  $.ajax({ type: "GET",   
+               url: "update_multiple_timetable_entries2",
+               data: { "'emp_sub_id=' + emp_sub_id + '&tte_ids=' + tte_id + '&timetable_id=' + \#{@timetable.id}", :success => "clear_selected_divs()"} ,
+            });
         }
       }
 #content-header
@@ -72,7 +70,7 @@
   %h1= t('timetable_text')
   %h3= t('create_timetable')
   #app-back-button
-    = back_button, border: 0)
+    = back_button
 #inner-tab-menu
   %ul
     - if (permitted_to? :subject_assignment,:employee)
@@ -91,15 +89,11 @@
         = select :batch, :id,                                                |
           @batches.map {|b| [b.full_name, b.id] },                           |
           {:prompt => t('select_a_batch')},                                  |
-          {:onchange => "#{remote_function(                                  |
-          :url => { :action => 'new_entry' },                                |
-          :with => "'batch_id='+value + '&timetable_id=' +#{@timetable.id}", |
-          :before => "Element.show('loader')",                               |
-          :success => "Element.hide('loader')"  )}"}                         |
+          {onChange: "onChangeRequest(this, '#{url_for(action: :new_entry, batch_id: 'paramid', timetable_id: @timetable.id)}')"}
     #render_area
       %div
         - if params[:edit].present?
-          - form_remote_for @timetable,:url=>{:controller=>:timetable,:action=>:update} do |f|
+          = form_for @timetable,:url=>{:controller=>:timetable,:action=>:update}, :remote => true do |f|
             = f.hidden_field :tt_id,:value=>@timetable.id
             .label-field-pair
               %label{:for => "start_date"}= t('start_date')

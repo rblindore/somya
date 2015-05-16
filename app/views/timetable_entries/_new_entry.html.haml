@@ -57,14 +57,7 @@
                               = @tte.subject.name unless @tte.subject.nil?
                               .emp-name= @tte.employee.full_name unless @tte.employee.nil?
                       .employee
-                        = link_to_remote image_tag("  buttons/delete-new.png", :border => 0), |
-                          :url => {:action => "delete_employee2", :id => @tte.id},            |
-                          :complete => "clear_selected_divs();",                              |
-                          :confirm=>t("remove_entry_confirm"),                                |
-                          :before => "Element.show('loader')",                                |
-                          :success => "Element.hide('loader')",                               |
-                          :update => "timetable" \                                            |
-                          unless @tte.subject.nil?                                            |
+                        = link_to image_tag ("buttons/delete-new.png"), {:action => "delete_employee2", :id => @tte.id}, :complete => "clear_selected_divs();", :confirm=>t("remove_entry_confirm"), :before => "Element.show('loader')", :success => "Element.hide('loader')", :update => "timetable", :remote => true
                         - unless @tte.subject.nil?
                           - unless @tte.subject.elective_group_id.nil?
                             = t('elective')

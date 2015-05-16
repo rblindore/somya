@@ -1,4 +1,10 @@
 
+
+#modal-box{
+background: #C3D9FF;
+width: 300;
+height: auto;
+}
 #form-content {
     border : 1px solid #becffb;
     background-color : #f8f8f8;

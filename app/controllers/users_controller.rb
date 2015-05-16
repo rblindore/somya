@@ -43,14 +43,14 @@ class UsersController < ApplicationController
 
   def list_student_user
     batch = params[:batch_id]
-    @student = Student.where(batch_id: batch.id, is_active: true).order('first_name ASC')
+    @student = Student.where(batch_id: batch, is_active: true).order('first_name ASC')
     @users = @student.collect { |student| student.user}
     @users.delete(nil)
   end
 
   def list_parent_user
     batch = params[:batch_id]
-    @guardian = Guardian.find(:all, :select=>'guardians.*',:joins=>'INNER JOIN students ON students.id = guardians.ward_id', :conditions => 'students.batch_id = ' + batch + ' AND is_active=1',:order =>'first_name ASC')
+    @guardian = Guardian.select('guardians.*').joins('INNER JOIN students ON students.id = guardians.ward_id').where('students.batch_id = ? AND students.is_active = ? ' , batch, true).order('first_name ASC')
     users = @guardian.collect { |g| g.user}
     users.compact!
     @users  = users.paginate(:page=>params[:page],:per_page=>20)
@@ -65,17 +65,17 @@ class UsersController < ApplicationController
         if params[:user][:new_password] == params[:user][:confirm_password]
           @user.password = params[:user][:new_password]
           if @user.update_attributes(password: @user.password, role: @user.role_name)
-            redirect_to url_for(controller: controller_name, action: :dashboard), notice: t('flash9')
+            redirect_to url_for(controller: controller_name, action: :dashboard), notice: t('user.flash9')
           else
             flash[:warn_notice] = "<p>#{@user.errors.full_messages}</p>"
             render layout: 'application'
           end
         else
-          flash[:warn_notice] = "<p>#{t('flash10')}</p>"
+          flash[:warn_notice] = "<p>#{t('user.flash10')}</p>"
           render layout: 'application'
         end
       else
-        flash[:warn_notice] = "<p>#{t('flash11')}</p>"
+        flash[:warn_notice] = "<p>#{t('user.flash11')}</p>"
         render layout: 'application'
       end
     else
@@ -88,18 +88,18 @@ class UsersController < ApplicationController
 
     if request.post?
       if params[:user][:new_password]=='' and params[:user][:confirm_password]==''
-        flash[:warn_notice]= "<p>#{t('flash6')}</p>"
+        flash[:warn_notice]= "<p>#{t('user.flash6')}</p>"
       else
         if params[:user][:new_password] == params[:user][:confirm_password]
           @user.password = params[:user][:new_password]
           if @user.update_attributes(:password => @user.password,:role => @user.role_name)
-            flash[:notice]= "#{t('flash7')}"
-            redirect_to :action=>"edit", :id=>@user.username
+            flash[:notice]= "#{t('user.flash7')}"
+            redirect_to :action => "profile", :id=>@user.username
           else
             render :user_change_password
           end
         else
-          flash[:warn_notice] =  "<p>#{t('flash10')}</p>"
+          flash[:warn_notice] =  "<p>#{t('user.flash10')}</p>"
         end
       end
 
@@ -107,30 +107,30 @@ class UsersController < ApplicationController
     end
   end
 
-  def create
+  def create_user
     @config = Settings.available_modules
 
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
     if request.post?
-
+     @user.role = "Admin"
       if @user.save
-        flash[:notice] = "#{t('flash17')}"
-        redirect_to :controller => 'user', :action => 'edit', :id => @user.username
+        flash[:notice] = "#{t('user.flash17')}"
+        redirect_to :controller => 'users', :action => 'edit', :id => @user.username
       else
-        flash[:notice] = "#{t('flash16')}"
+        flash[:notice] = "#{t('user.flash16')}"
       end
 
     end
   end
 
   def delete
-    @user = User.active.find_by_username(params[:id],:conditions=>"admin = 1")
+    @user = User.active.where("username = ? and admin = ? ", params[:id], true).first
     unless @user.nil?
       if @user.employee_record.nil?
-        flash[:notice] = "#{t('flash12')}" if @user.destroy
+        flash[:notice] = "#{t('user.flash12')}" if @user.destroy
       end
     end
-    redirect_to :controller => 'user'
+    redirect_to :controller => 'users'
   end
 
   def dashboard
@@ -154,12 +154,12 @@ class UsersController < ApplicationController
   def edit
     @user = User.active.find_by_username(params[:id])
     @current_user = current_user
-    if request.post? and @user.update_attributes(params[:user])
-      flash[:notice] = "#{t('flash13')}"
-      redirect_to :controller => 'user', :action => 'profile', :id => @user.username
-    end
+     if request.post? and @user.update_attributes(params[:user])
+       flash[:notice] = "#{t('flash13')}"
+       redirect_to :controller => 'user', :action => 'profile', :id => @user.username
+     end
   end
-
+  
   def forgot_password
     #    flash[:notice]="You do not have permission to access forgot password!"
     #    redirect_to :action=>"login"
@@ -173,13 +173,13 @@ class UsersController < ApplicationController
           user.save(validate: false)
           url = "#{request.protocol}#{request.host_with_port}"
           UserNotifier.forgot_password(user,url).deliver
-          redirect_to url_for(action: :index), notice: t('flash18')
+          redirect_to url_for(action: :index), notice: t('user.flash18')
         else
-          flash[:notice] = t('flash20')
+          flash[:notice] = t('user.flash20')
           render layout: 'forgotpw'
         end
       else
-        flash[:notice] = "#{t('flash19')} #{params[:reset_password][:username]}"
+        flash[:notice] = "#{t('user.flash19')} #{params[:reset_password][:username]}"
         render layout: 'forgotpw'
       end
     else
@@ -277,20 +277,12 @@ class UsersController < ApplicationController
 
   def search_user_ajax
     unless params[:query].nil? or params[:query].empty? or params[:query] == ' '
-      #      if params[:query].length>= 3
-      #        @user = User.first_name_or_last_name_or_username_begins_with params[:query].split
-      @user = User.active.find(:all,
-        :conditions => "(first_name LIKE \"#{params[:query]}%\"
-                       OR last_name LIKE \"#{params[:query]}%\"
-                       OR (concat(first_name, \" \", last_name) LIKE \"#{params[:query]}%\")
-                       OR username LIKE  \"#{params[:query]}\")",
-        :order => "first_name asc") unless params[:query] == ''
-      #      else
-      #        @user = User.first_name_or_last_name_or_username_equals params[:query].split
-      #      end
-      #      @user = @user.sort_by { |u1| [u1.role_name,u1.full_name] } unless @user.nil?
+      @user = User.active.where("(first_name LIKE ?  OR last_name LIKE ?
+                        or username like ?)",
+          "#{params[:query]}%","#{params[:query]}%",
+          "#{params[:query]}",).order("first_name asc") unless params[:query].blank?
     else
-      @user = ''
+      @user = nil
     end
     render :layout => false
   end
@@ -324,14 +316,15 @@ class UsersController < ApplicationController
     @finance = Settings.find_by_config_value("Finance")
     @sms_setting = SmsSetting.application_sms_status
     @hr = Settings.find_by_config_value("HR")
-    @privilege_tags=PrivilegeTag.find(:all,:order=>"priority ASC")
+    @privilege_tags=PrivilegeTag.all.order("priority ASC")
     @user_privileges=@user.privileges
     if request.post?
       new_privileges = params[:user][:privilege_ids] if params[:user]
       new_privileges ||= []
-      @user.privileges = Privilege.find_all_by_id(new_privileges)
+      @user.privileges = Privilege.where(:id => new_privileges)
+      @user.save
       @user.clear_menu_cache
-      flash[:notice] = t('flash15')
+      flash[:notice] = t('user.flash15')
       redirect_to :action => 'profile',:id => @user.username
     end
   end
@@ -360,7 +353,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:username, :password)
+      params.require(:user).permit(:username, :password, :firstname, :lastname, :email) if params[:user]
     end
 end
 

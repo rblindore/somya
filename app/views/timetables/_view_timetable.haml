@@ -71,9 +71,9 @@
                     .employee
                       - if @timetable[d.id][ct.id].employee.present?
                         = @timetable[d.id][ct.id].employee.first_name
-                  - else
-                    .subject
-                    .employee
+                      - else
+                        .subject
+                        .employee
           / timetable_td
       / timetable_tr
 = link_to " ► #{t('pdf_report')}",                                                                                                  |

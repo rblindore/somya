@@ -31,8 +31,8 @@
     - @user.each_with_index do |u, i|
       %tr{:class => "tr-#{cycle('odd', 'even')}"}
         %td.col-1= i+1
-        %td.col-2= link_to u.full_name, :controller => 'user', :action => 'profile', :id => u.username
-        %td.col-4= link_to u.username, :controller => 'user', :action => 'profile', :id => u.username
+        %td.col-2= link_to u.full_name, :controller => 'users', :action => 'profile', :id => u.username
+        %td.col-4= link_to u.username, :controller => 'users', :action => 'profile', :id => u.username
         %td.col-4= u.role_name
   - else
     %tr{:class => "tr-#{cycle('odd', 'even')}"}

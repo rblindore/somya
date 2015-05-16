@@ -97,7 +97,7 @@ class Batch < ActiveRecord::Base
   end
 
   def has_own_weekday
-    Weekday.find_all_by_batch_id(self.id,:conditions=>{:is_deleted=>false}).present?
+    Weekday.where("batch_id = ? and is_deleted = ?", self.id, false).present?
   end
 
   def allow_exam_acess(user)

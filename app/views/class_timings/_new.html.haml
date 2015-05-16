@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= csrf_meta_tag
 %label.head_label
   = t('add_new_class_timing_for')
   %span
@@ -24,8 +25,7 @@
     - else
       = @batch.full_name
 #ajax-create
-  - form_remote_for :class_timing,
-  - :url => { :action => 'create'} do |f|
+  = form_for :class_timing, :url => { :action => 'create'}, :remote => true do |f|
     - batch_id = (@batch.nil? ? nil : @batch.id)
     = f.hidden_field :batch_id, :value => batch_id
     #form-errors

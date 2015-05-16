@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= csrf_meta_tag
 %label.head_label
   = t('edit_class_timing_for')
   %span
@@ -24,7 +25,7 @@
     - else
       = @batch.full_name
 #ajax-edit
-  - form_remote_for @class_timing do |f|
+  = form_for @class_timing, :remote => true do |f|
     #form-errors
     .label-field-pair
       %label{:for => "name"}= t('name')

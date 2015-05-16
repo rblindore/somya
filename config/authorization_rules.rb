@@ -734,7 +734,7 @@ authorization do
 
   role :manage_timetable do
     
-    has_permission_on [:class_timings], :to => [:index, :edit, :destroy, :show, :new, :create, :update]
+    has_permission_on [:class_timings], :to => [:index, :edit, :destroy, :show, :new, :create, :update, :show_class_timing]
     has_permission_on [:weekday], :to => [:index, :week, :create]
     has_permission_on [:timetable],
       :to => [:index,
@@ -1390,7 +1390,7 @@ authorization do
     ]
     has_permission_on [:sms],  :to => [:index, :settings, :update_general_sms_settings, :students, :list_students, :batches, :sms_all, :employees, :list_employees, :departments, :all, :show_sms_messages, :show_sms_logs]
     has_permission_on [:sms_settings],  :to => [:index, :update_general_sms_settings]
-    has_permission_on [:class_timings],  :to => [:index, :edit, :destroy, :show, :new, :create, :update]
+    has_permission_on [:class_timings],  :to => [:index, :edit, :destroy, :show, :new, :create, :update, :show_class_timing]
     has_permission_on [:attendance_reports], :to => [:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf]
     has_permission_on [:student_attendance], :to => [:index, :student, :month]
     has_permission_on [:configuration], :to => [:index,:settings,:permissions, :add_weekly_holidays, :delete]
@@ -2518,6 +2518,11 @@ authorization do
 
   role :guest do 
     has_permission_on [:students], :to => [:save_previous_subject, :change_to_former]
+  end
+  
+  role :admin do
+    has_permission_on [:timetables], :to => [:index, :work_allotment, :new_timetable, :edit_master, :view, :update_timetable_view, :teachers_timetable, :timetable,
+                                             :update_timetable]
   end
   
   role :subject_exam do

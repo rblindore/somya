@@ -88,7 +88,7 @@
             = link_to t('create_timetable'), new_timetable_timetables_path, title: t('create_timetable')
         - if permitted_to? :edit_master,:timetable
           %li
-            = link_to t('edit_timetable'), controller: :timetable, action: :edit_master
+            = link_to t('edit_timetable'), controller: :timetables, action: :edit_master
         - if permitted_to? :index,:class_timings
           %li
             = link_to t('set_class_timings'), controller: :class_timings, action: :index
@@ -97,18 +97,18 @@
             = link_to t('set_weekdays'), controller: :weekday, action: :index
         - if permitted_to? :view,:timetable
           %li
-            = link_to t('view_timetable'), controller: :timetable, action: :view
+            = link_to t('view_timetable'), controller: :timetables, action: :view
         - if permitted_to? :view,:timetable
           %li
-            = link_to t('teacher_timetable'), controller: :timetable, action: :teachers_timetable
+            = link_to t('teacher_timetable'), controller: :timetables, action: :teachers_timetable
         %li
-          = link_to "#{t('institutional')} #{t('timetable_text')}", controller: :timetable, action: :timetable
+          = link_to "#{t('institutional')} #{t('timetable_text')}", controller: :timetables, action: :timetable
         - if permitted_to? :edit,:timetable
           %li
             = link_to "#{t('create_text')} #{t('weekdays_text')}", controller: :weekday, action: :index
         - if permitted_to? :work_allotment,:timetable
           %li
-            = link_to t('work_allotment'), controller: :timetable, action: :work_allotment
+            = link_to t('work_allotment'), controller: :timetables, action: :work_allotment
   - if @current_user.admin?
     - FedenaPlugin::AVAILABLE_MODULES.each do |mod|
       - unless mod[:top_bar].blank?

@@ -16,6 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= csrf_meta_tag
+= stylesheet_link_tag("class_timings/index.css")
 #content-header
   = image_tag("show_timetable.png")
   %h1= t('timetable_text')
@@ -32,10 +35,10 @@
       = t('select_a_batch')
       \:
     .text-input-bg
-      = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { prompt: t('common')}, { onchange: "onChangeRequest(this, '#{url_for(action: :show, batch_id: 'paramid')}')" }
+      = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { prompt: t('common')}, { onchange: "onChangeRequest(this, '#{url_for(action: :show_class_timing, batch_id: 'paramid')}')" }
       = image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )
   #class-timings-list= render "show_batch_timing"
-  #modal-box{style: "display:none;"}
+  #modal-box
   .extender
  
  

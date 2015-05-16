@@ -17,7 +17,7 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  = link_to image_tag("show_timetable.png"), controller: :timetable
+  = link_to image_tag("show_timetable.png"), controller: :timetables
   %h1= t('timetable_text')
   %h3= t('work_allotment')
   #app-back-button
@@ -43,7 +43,7 @@
           %li{:class => "list#{cycle('odd','even')}"}
             .category-subject-name= "#{subj.name}"
             .category-employee-options
-              = select_tag   "employee_subjects[#{subj.id}]", options_for_select([[t('select_employee'),""]]+@employees.map{|em| [em.full_name,em.id]},subj.employees.first.try(:id))
+              = select_tag   "employee_subjects[#{subj.id}]", options_for_select([t('select_employee'),@employees.map{|em| [em.id,em.name]},subj.employees.first.try(:id)])
             .category-employee-names= "#{subj.employees.collect(&:full_name).join(',')}"
     = f.submit "► #{t('update')}",:class=>:submit_button
   %ul#teacher_status.category-list

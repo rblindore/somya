@@ -27,20 +27,22 @@ class TimetablesController < ApplicationController
     if request.post?
       @timetable = Timetable.new(timetable_params)
       @error = false
+      @timetable_errors = []
       previous = Timetable.where("end_date >= ? AND start_date <= ?",@timetable.start_date,@timetable.start_date)
       unless previous.empty?
         @error = true
-        @timetable.errors.add_to_base('start_date_overlap')
+	
+        @timetable_errors << 'start_date_overlap'
       end
       conflicts = Timetable.where("end_date >= ? AND start_date <= ?",@timetable.end_date,@timetable.end_date)
       unless conflicts.empty?
         @error = true
-        @timetable.errors.add_to_base('end_date_overlap')
+        @timetable_errors << 'end_date_overlap'
       end
       fully_overlapping = Timetable.where("end_date <= ? AND start_date >= ?",@timetable.end_date,@timetable.start_date)
       unless fully_overlapping.empty?
         @error = true
-        @timetable.errors.add_to_base('timetable_in_between_given_dates')
+        @timetable_errors << 'timetable_in_between_given_dates'
       end
       #      unless @timetable.start_date>=Date.today
       #        @error=true
@@ -48,7 +50,7 @@ class TimetablesController < ApplicationController
       #      end
       if @timetable.start_date > @timetable.end_date
         @error = true
-        @timetable.errors.add_to_base('start_date_is_lower_than_end_date')
+        @timetable_errors << 'start_date_is_lower_than_end_date'
       end
       unless @error
         if @timetable.save
@@ -59,7 +61,7 @@ class TimetablesController < ApplicationController
           render action: :new_timetable
         end
       else
-        flash[:warn_notice] = @timetable.errors.full_messages unless @timetable.errors.empty?
+        flash[:warn_notice] = @timetable_errors unless @timetable_errors.blank?
         render action: :new_timetable
       end
     end
@@ -74,6 +76,7 @@ class TimetablesController < ApplicationController
     if (@timetable.start_date > Date.today and @timetable.end_date > Date.today)
       @removable=true
     end
+    @timetable_errors = []
     if request.post?
       @tt = Timetable.find(params[:id])
       @error = false
@@ -82,7 +85,7 @@ class TimetablesController < ApplicationController
         unless Date::valid_date?(date_start[0],date_start[1],date_start[2]).nil?
           new_start = Date.civil(date_start[0],date_start[1],date_start[2])
         else
-          @timetable.errors.add_to_base('start_date_is_invalid')
+          @timetable_errors << 'start_date_is_invalid'
           @error = true
           new_start = @tt.start_date
         end
@@ -94,7 +97,7 @@ class TimetablesController < ApplicationController
         unless Date::valid_date?(date_end[0],date_end[1],date_end[2]).nil?
           new_end = Date.civil(date_end[0],date_end[1],date_end[2])
         else
-          @timetable.errors.add_to_base('end_date_is_invalid')
+          @timetable_errors << 'end_date_is_invalid'
           @error = true
           new_end = @tt.end_date
         end
@@ -103,26 +106,26 @@ class TimetablesController < ApplicationController
       end
       if new_end < new_start
         @error = true
-        @timetable.errors.add_to_base('start_date_is_lower_than_end_date')
+        @timetable_errors << 'start_date_is_lower_than_end_date'
       end
       if new_end < Date.today
         @error = true
-        @timetable.errors.add_to_base('end_date_is_lower_than_today')
+        @timetable_errors << 'end_date_is_lower_than_today'
       end
       #      @end_conflicts=Timetable.find(:all,:conditions=>["start_date <= ? AND id != ?",new_end,@tt.id])
       @end_conflicts = Timetable.where("start_date <= ? AND end_date >= ? AND id != ?",new_end,new_start,@tt.id)
       unless @end_conflicts.empty?
         @error = true
-        @timetable.errors.add_to_base('end_date_overlap')
+        @timetable_errors << 'end_date_overlap'
       end
       fully_overlapping = Timetable.where("end_date <= ? AND start_date >= ?",@timetable.end_date,@timetable.start_date)
       unless fully_overlapping.empty?
         @error = true
-        @timetable.errors.add_to_base('timetable_in_between_given_dates')
+        @timetable_errors << 'timetable_in_between_given_dates'
       end
       unless @current
         if new_start <= Date.today
-          @timetable.errors.add_to_base('start_date_is_lower_than_today')
+          @timetable_errors << 'start_date_is_lower_than_today'
           @error = true
         end
       end
@@ -157,13 +160,13 @@ class TimetablesController < ApplicationController
             flash[:notice] = t('timetable_updated')
             redirect_to controller: :timetable, action: :edit_master
           else
-            @timetable.errors.add_to_base("timetable_update_failure")
+            @timetable_errors << "timetable_update_failure"
             @error = true
             flash[:notice] = t('timetable_update_failure')
           end
         end
       else
-        flash[:warn_notice] = @timetable.errors.full_messages unless @timetable.errors.empty?
+        flash[:warn_notice] = @timetable_errors unless @timetable_errors.blank?
         #        redirect_to :controller=>"timetables",:action => "update_timetable",:id=>@timetable.id
         render action: :update_timetable#,:id=>@timetable.id
       end
@@ -258,18 +261,12 @@ class TimetablesController < ApplicationController
 
   def update_timetable_view
     if  (params[:course_id].blank? || params[:timetable_id].blank?)
-      render :update do |page|
-        page.replace_html "timetable_view", text: ""
-      end
       return
     end
     @batch = Batch.find(params[:course_id])
     @tt = Timetable.find(params[:timetable_id])
     @timetable = TimetableEntry.where(batch_id: @batch.id, timetable_id: @tt.id)
     if @timetable.empty?
-      render :update do |page|
-        page.replace_html "timetable_view", text: ""
-      end
       return
     end
     @weekday = ["#{t('sun')}", "#{t('mon')}", "#{t('tue')}", "#{t('wed')}", "#{t('thu')}", "#{t('fri')}", "#{t('sat')}"]
@@ -285,10 +282,6 @@ class TimetablesController < ApplicationController
     @timetable= Hash.new { |h, k| h[k] = Hash.new(&h.default_proc)}
     @timetable_entries.each do |tte|
       @timetable[tte.weekday_id][tte.class_timing_id] = tte
-    end
-
-    render :update do |page|
-      page.replace_html "timetable_view", partial: "view_timetable"
     end
   end
 
@@ -476,9 +469,6 @@ class TimetablesController < ApplicationController
     @batches = Batch.active
     unless params[:next].nil?
       @today = params[:next].to_date
-      render (:update) do |page|
-        page.replace_html "timetable", partial: 'table'
-      end
     else
       @today = @local_tzone_time.to_date
     end

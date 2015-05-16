@@ -42,17 +42,11 @@ class TimetableEntriesController < ApplicationController
   def new_entry
     @timetable=Timetable.find(params[:timetable_id])
     if params[:batch_id] == ""
-      render :update do |page|
-        page.replace_html "render_area", :text => ""
-      end
       return
     end
     @batch = Batch.find(params[:batch_id])
     tte_from_batch_and_tt(@timetable.id)
     #    @weekday = ["#{t('sun')}", "#{t('mon')}", "#{t('tue')}", "#{t('wed')}", "#{t('thu')}", "#{t('fri')}", "#{t('sat')}"]
-    render :update do |page|
-      page.replace_html "render_area", :partial => "new_entry"
-    end
   end
 
   def update_employees
@@ -194,13 +188,13 @@ class TimetableEntriesController < ApplicationController
     if @weekday.empty?
       @weekday = Weekday.default
     end
-    timetable_entries=TimetableEntry.find(:all,:conditions=>{:batch_id=>@batch.id,:timetable_id=>@tt.id},:include=>[:subject,:employee])
+    timetable_entries=TimetableEntry.where(:batch_id=>@batch.id,:timetable_id=>@tt.id).includes(:subject,:employee)
     @timetable= Hash.new { |h, k| h[k] = Hash.new(&h.default_proc)}
     timetable_entries.each do |tte|
       @timetable[tte.weekday_id][tte.class_timing_id]=tte
     end
-    @subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>["elective_group_id IS NULL AND is_deleted = false"])
-    @ele_subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>["elective_group_id IS NOT NULL AND is_deleted = false"], :group => "elective_group_id")
+    @subjects = Subject.where("batch_id = ? and elective_group_id IS ? AND is_deleted = ?", @batch.id, nil, false)
+    @ele_subjects = Subject.where("batch_id = ? and elective_group_id IS not ? AND is_deleted = ?", @batch.id, nil, false).group("elective_group_id")
   end
 
 end
