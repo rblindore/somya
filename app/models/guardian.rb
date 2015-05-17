@@ -63,7 +63,7 @@ class Guardian < ActiveRecord::Base
 
 
   def self.shift_user(student)
-    self.find_all_by_ward_id(student.id).each do |g|
+    self.where(:ward_id => student.id).each do |g|
       parent_user = g.user
       parent_user.soft_delete if parent_user.present? and (parent_user.is_deleted==false)
     end

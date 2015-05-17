@@ -17,7 +17,7 @@
 - #specific language governing permissions and limitations
 - #under the License.
 .linker
-  = link_to t('add'), { action: :new, id: @batch }, remote: true
+  = link_to t('add'), { :action =>  :new, :id => @batch }, :remote => true
 - unless @class_timings.empty?
   %table#class-timings-list{:width => "100%"}
     %tr.tr-head
@@ -32,16 +32,10 @@
         %td.col-3= class_timing.end_time.strftime("%I:%M %p") unless class_timing.end_time.nil?
         %td.col-3
           %small
-            = link_to_remote("#{t('edit_text')}",                              |
-              :url => edit_class_timing_path(class_timing), :method => 'get' ) |
-            |
-            - @tt = PeriodEntry.find_all_by_class_timing_id(class_timing.id )
+            = link_to("#{t('edit_text')}", {:action => :edit, :id => class_timing.id}, :method => 'get' , :remote => true)	
+            - @tt = PeriodEntry.where(:class_timing_id => class_timing.id )
             - if @tt.empty?
-              = link_to_remote(t('delete_text'),           |
-                url: class_timing_path(class_timing),      |
-                method: :delete,                           |
-                confirm: t('confirm_msg'),                 |
-                update: "class-timing-#{class_timing.id}") |
+              = link_to(t('delete_text'), {:action => :destroy, :id => class_timing.id}, method: :delete, confirm: t('confirm_msg'),update: "class-timing-#{class_timing.id}",remote: true)
             - else
               %s= t('delete_text')
 - else

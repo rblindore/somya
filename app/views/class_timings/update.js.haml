@@ -1,0 +1,7 @@
+- if @error.nil?
+  - text = "<p class='flash-msg'>#{t('flash_msg30')}</p>".html_safe
+  $("#form-errors").html("#{escape_javascript ''}")
+  $("#class-timings-list").html("#{escape_javascript render 'show_batch_timing'}")
+  $("#flash_box").html("#{escape_javascript text}")
+- else
+  $("#form-errors").html("#{escape_javascript render 'errors', :object => @class_timing}")

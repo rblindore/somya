@@ -27,7 +27,8 @@ module Fedena
     config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
     config.autoload_paths << Rails.root.join('app', 'models', 'hr')
     config.autoload_paths << Rails.root.join('app', 'models', 'finance')
-    config.autoload_paths << Rails.root.join('app', 'models', 'student.rb')
+#     config.autoload_paths << Rails.root.join('app', 'models', 'student.rb')
+        config.autoload_paths += %W(#{Rails.root.join('app', 'models', 'student.rb')})
 
     # Line added to fix circular dependency error while loading student
     config.middleware.delete Rack::Lock

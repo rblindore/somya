@@ -21,6 +21,6 @@
   .val
     %span :
     = @student_previous_subject_details.mark
-  .delete= link_to_remote image_tag("  buttons/delete-new.png", :border => 0),                          |
-      :url => {:action => "delete_previous_subject", :id => @student_previous_subject_details.id}, |
+  .delete= link_to image_tag("buttons/delete-new.png", :border => 0),                          |
+      {:action => "delete_previous_subject", :id => @student_previous_subject_details.id}, :remote => true, |
       :update => "added_subjects"                                                                  |

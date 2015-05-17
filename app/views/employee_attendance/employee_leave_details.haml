@@ -16,6 +16,8 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= stylesheet_link_tag("employee_attendance/employee_leave_details.css")
+= javascript_include_tag :application
 #content-header
   = image_tag("  HR/leave-new.png")
   %h1= t('reset_employee_leaves')
@@ -51,4 +53,4 @@
             - else
               %td.col-3 -
     %div
-      = link_to_remote "►  #{t('reset_leave')}",:html=> {:class=>'user_button'} ,:url=>{:action=>'employee_wise_leave_reset', :id => @employee.id }
+      = link_to "►  #{t('reset_leave')}" ,{:action=>'employee_wise_leave_reset', :id => @employee.id , :remote => true}, {:class=>'user_button'}

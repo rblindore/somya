@@ -16,13 +16,15 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= javascript_include_tag :modalbox
 .header
   .prev
-    = link_to_remote "◄", :url=>{:controller=>"employee_attendances", :action=>"show",:dept_id=>@dept.id, :next=>(@today-1.month)}
+    = link_to "◄", {:controller=>"employee_attendances", :action=>"show_dept",:dept_id=>@dept.id, :next=>(@today-1.month), :remote => true}
   .month
     = I18n.l(@today,:format=>:month_year)
   .next
-    = link_to_remote "►", :url=>{:controller=>"employee_attendances", :action=>"show",:dept_id=>@dept.id, :next=>(@today+1.month)}
+    = link_to "►", {:controller=>"employee_attendances", :action=>"show_dept",:dept_id=>@dept.id, :next=>(@today+1.month), :remote => true}
   .extender
 .box-1
   %table#register-table{:align => "center", :width => "100%"}
@@ -51,14 +53,15 @@
           - @absent = EmployeeAttendance.find_by_employee_id_and_attendance_date(employee.id, date)
           - if current_day.strftime("%a %d %y") == date.strftime("%a %d %y")
             %td.td-mark.active{:id => "attendance-employee-#{employee.id}-day-#{date}"}
+          - else
+            %td.td-mark{:id => "attendance-employee-#{employee.id}-day-#{date}"}
+              - unless @absent.nil?
+                = link_to('X', {:controller =>'employee_attendances', :action => 'edit', :id=> @absent, :remote => true}, :class=> 'absent themed_text')
               - else
-                %td.td-mark{:id => "attendance-employee-#{employee.id}-day-#{date}"}
-                  - unless @absent.nil?
-                    = link_to_remote('X', {:url => edit_employee_attendance_path(@absent), :method => 'get'}, :class=> 'absent themed_text')
-                  - else
-                    = link_to_remote('O', { :url => {:controller =>'employee_attendances', :action => 'new', :id=> date, :id2 =>employee.id}}, :class => 'present')
-                  .date
-                    %span.themed_text
-                      = I18n.l(date,:format=>"%a %d")
-                      %div
-                        = employee.full_name
+                = link_to('O', {:controller =>'employee_attendances', :action => 'new', :id=> date, :id2 =>employee.id, :remote=> true}, :class => 'present')
+              .date
+                %span.themed_text
+                  = I18n.l(date,:format=>"%a %d")
+                  %div
+                    = employee.full_name
+#modal-box

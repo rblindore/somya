@@ -25,7 +25,7 @@
     %p.flash-msg
       = flash[:notice]
   %p.flash-msg= t('select_one_of_the_guardians')
-  = form_for :immediate_contact do |f|
+  = form_for(:immediate_contact, :url => {:id => @student.id}) do |f|
     %ul#parents-list
       - @parents.each do |p|
         %li{:class => "list#{cycle('odd', 'even')}"}

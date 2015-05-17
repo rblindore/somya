@@ -39,7 +39,7 @@ class CalendarController < ApplicationController
     @notifications = Hash.new{|h,k| h[k]=Array.new}
     first_day = @show_month.beginning_of_month
     last_day =  @show_month.end_of_month
-    @events = Event.find(:all,:conditions => ["(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day])
+    @events = Event.where("(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day)
     load_notifications
 
   end
@@ -59,12 +59,8 @@ class CalendarController < ApplicationController
     @notifications = Hash.new{|h,k| h[k]=Array.new}
     first_day = @show_month.beginning_of_month
     last_day =  @show_month.end_of_month
-    @events = Event.find(:all,:conditions => ["(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day])
+    @events = Event.where("(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day)
     load_notifications
-    render :update do |page|
-      page.replace_html 'calendar', :partial => 'month',:object => @show_month
-      page.replace_html :tooltip_header, :text => ''
-    end
   end
 
  
@@ -75,8 +71,8 @@ class CalendarController < ApplicationController
     first_day = @date.beginning_of_month.to_time
     last_day = @date.end_of_month.to_time
 
-    common_event = Event.find_all_by_is_common_and_is_holiday(true,false, :conditions => ["(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day])
-    non_common_events = Event.find_all_by_is_common_and_is_holiday_and_is_exam_and_is_due(false,false,false,false, :conditions => ["(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day])
+    common_event = Event.where("is_common = ? and is_holiday = ? and (start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", true, false,  first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day)
+    non_common_events = Event.where("is_common = ? and is_holiday = ? and is_exam = ? and is_due = ? and (start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ",false,false,false,false, first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day)
     @common_event_array = []
     common_event.each do |h|
       if h.start_date.to_date == h.end_date.to_date
@@ -112,7 +108,7 @@ class CalendarController < ApplicationController
       department = user_employee.employee_department
       @employee_dept_not_common_event_array = []
       non_common_events.each do |h|
-        employee_dept_event = EmployeeDepartmentEvent.find_by_employee_department_id(department.id, :conditions=>"event_id = #{h.id}")
+        employee_dept_event = EmployeeDepartmentEvent.find_by_employee_department_id_and_event_id(department.id, h.id)
         if h.start_date.to_date == h.end_date.to_date
           if h.start_date.to_date == @date
             @employee_dept_not_common_event_array.push(h) unless employee_dept_event.nil?
@@ -129,7 +125,7 @@ class CalendarController < ApplicationController
     elsif @user.admin == true
       @employee_dept_not_common_event_array = []
       non_common_events.each do |h|
-        employee_dept_event = EmployeeDepartmentEvent.find(:all, :conditions=>"event_id = #{h.id}")
+        employee_dept_event = EmployeeDepartmentEvent.where("event_id = #{h.id}")
         if h.start_date.to_date == h.end_date.to_date
           if h.start_date.to_date == @date
             @employee_dept_not_common_event_array.push(h) unless employee_dept_event.nil?
@@ -152,8 +148,8 @@ class CalendarController < ApplicationController
     first_day = @date.beginning_of_month.to_time
     last_day = @date.end_of_month.to_time
 
-    common_holiday_event = Event.find_all_by_is_common_and_is_holiday(true,true, :conditions => ["(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day])
-    non_common_holiday_events = Event.find_all_by_is_common_and_is_holiday(false,true, :conditions => ["(start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day])
+    common_holiday_event = Event.where('is_common = ? and is_holiday = ? and (start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?)', true, true,  first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day)
+    non_common_holiday_events = Event.where("is_common = ? and is_holiday = ? and (start_date >= ? and end_date <= ?) or (start_date <= ? and end_date <= ?)  or (start_date>=? and end_date>=?) or (start_date<=? and end_date>=?) ", false, true, first_day, last_day, first_day,last_day, first_day,last_day,first_day,last_day)
     @common_holiday_event_array = []
     common_holiday_event.each do |h|
       if h.start_date.to_date == h.end_date.to_date
@@ -189,7 +185,7 @@ class CalendarController < ApplicationController
       department = user_employee.employee_department unless user_employee.nil?
       @employee_dept_not_common_holiday_event_array = []
       non_common_holiday_events.each do |h|
-        employee_dept_holiday_event = EmployeeDepartmentEvent.find_by_employee_department_id(department.id, :conditions=>"event_id = #{h.id}")
+        employee_dept_holiday_event = EmployeeDepartmentEvent.find_by_employee_department_id_and_event_id(department.id, h.id)
         if h.start_date.to_date == h.end_date.to_date
           if h.start_date.to_date == @date
             @employee_dept_not_common_holiday_event_array.push(h) unless employee_dept_holiday_event.nil?
@@ -206,7 +202,7 @@ class CalendarController < ApplicationController
     elsif  @user.admin == true
       @employee_dept_not_common_holiday_event_array = []
       non_common_holiday_events.each do |h|
-        employee_dept_holiday_event = EmployeeDepartmentEvent.find(:all, :conditions=>"event_id = #{h.id}")
+        employee_dept_holiday_event = EmployeeDepartmentEvent.where("event_id = #{h.id}")
         if h.start_date.to_date == h.end_date.to_date
           if h.start_date.to_date == @date
             @employee_dept_not_common_holiday_event_array.push(h) unless employee_dept_holiday_event.nil?
@@ -362,7 +358,7 @@ class CalendarController < ApplicationController
         build_student_events_hash(e,'student_batch_not_common_holiday',@user.student_record.batch_id,@show_month) if @user.student?
         build_employee_events_hash(e,'employee_dept_not_common_holiday',@user.employee_record.employee_department_id,@show_month) if @user.employee?
         if @user.admin?
-          employee_dept_holiday_event = EmployeeDepartmentEvent.find(:all, :conditions=>"event_id = #{e.id}")
+          employee_dept_holiday_event = EmployeeDepartmentEvent.where(:event_id => e.id)
           if e.start_date.to_date == e.end_date.to_date
             @notifications['employee_dept_not_common_holiday'].push e.start_date.to_date unless  employee_dept_holiday_event.nil?
           else

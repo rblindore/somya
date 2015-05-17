@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 .dept-select
   - unless @department_event.empty?
     %span.title
@@ -28,9 +29,9 @@
             = EmployeeDepartment.find(d.employee_department_id).name
           .category-edit
             = link_to "#{t('remove')}", :controller=>"event",:action=>"remove_department", :id=>d
-    = link_to_remote "#{t('select_more_department')}", :url=>{:controller=>"event", :action=>"select_employee_department", :id=>params[:id]}, :html=>{:class=>"themed_text"}
+    = link_to "#{t('select_more_department')}", {:controller=>"event", :action=>"select_employee_department", :id=>params[:id]}, :html=>{:class=>"themed_text"}, :remote => true
   - else
     %span.title
       = t('no_department_selected')
       \:
-    = link_to_remote "#{t('select_department')}", :url=>{:controller=>"event", :action=>"select_employee_department", :id=>params[:id]}, :html=>{:class=>"themed_text"}
+    = link_to "#{t('select_department')}", {:controller=>"event", :action=>"select_employee_department", :id=>params[:id]}, :html=>{:class=>"themed_text"}, :remote => true

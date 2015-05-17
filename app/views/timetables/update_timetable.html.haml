@@ -35,7 +35,7 @@
         = link_to t('delete_text'),{ :action => 'destroy', :id => @timetable.id }, :class => 'delete-button', :confirm => t('delete_timetable')
 - if (@timetable && @timetable.errors.present?)
   #errorExplanation.errorExplanation
-    - @timetable.errors.each do |e|
+    - @timetable_errors.each do |e|
       %p
         = t("#{e}")
 #page-yield
@@ -43,7 +43,7 @@
     - unless flash[:notice].nil?
       %p.flash-msg
         = flash[:notice]
-    = form_for @timetable, url: {controller: :timetables, action: :update_timetable} do |f|
+    = form_for @timetable, url: {controller: :timetables, action: :update_timetable, :id => @timetable.id} do |f|
       %input{:name => "_method", :type => "hidden", :value => "post"}/
       .label-field-pair
         %label{:for => "start_date"}= t('start_date')

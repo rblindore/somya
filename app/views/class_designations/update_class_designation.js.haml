@@ -1,0 +1,9 @@
+- if @status
+  - text = "<p class='flash-msg'>#{t('class_designations.flash2')}</p>".html_safe
+  $("#category-list").html("#{escape_javascript render 'class_designations'}")
+  $("#flash").html("#{escape_javascript text}")
+  $("#errors").html("#{escape_javascript render 'form_errors'}")
+  $("#class_form").html("#{escape_javascript render 'class_form'}")
+- else
+  $("#errors").html("#{escape_javascript render 'form_errors'}")
+  $("#flash").html("#{escape_javascript ''}")

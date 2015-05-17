@@ -1,0 +1,6 @@
+- unless @student_previous_subject_details.errors.full_messages.present?
+  $("#subject").html("#{escape_javascript ''}")
+  $("#added-subjects").html("#{escape_javascript render 'previous_subject_added'}")
+- else
+  - @student = Student.find(@student_previous_subject_details.student_id)
+  $("#subject").html("#{escape_javascript render 'previous_subject'}")

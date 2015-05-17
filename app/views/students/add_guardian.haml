@@ -26,7 +26,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg= flash[:notice]
   = error_messages_for 'parent_info'
-  = form_for :parent_detail do |s|
+  = form_for(:parent_detail, :url => {:id => @student.id}) do |s|
     #admission1_form
       .label-field-pair
         %label{:for => "parent_detail_student_id"}= t('student_admission_no')
@@ -51,7 +51,7 @@
       .label-field-pair
         %label{:for => "parent_detail_dob"}= t('date_of_birth')
         .text-input-bg
-          = calendar_date_select_tag 'parent_detail[dob]', nil,:year_range => 60.years.ago..20.years.ago ,:popup=>"force"
+          = date_select 'parent_detail[dob]', nil,:start_year => Date.today.year - 60 ,:popup=>"force"
       .label-field-pair
         %label{:for => "parent_detail_education"}= t('education')
         .text-input-bg= s.text_field :education

@@ -49,5 +49,5 @@
     .extender
     #submit-button
       = submit_tag("►#{t('save')}")
-      = link_to_remote " ► Cancel",                                                                          |
-        :url=> { :action => "ranking_level_cancel", :course_id=>@course.id},:html=>{ :class=> 'user_button'} |
+      = link_to " ► Cancel",                                                                          |
+        { :action => "ranking_level_cancel", :course_id=>@course.id},:html=>{ :class=> 'user_button'}, :remote => true

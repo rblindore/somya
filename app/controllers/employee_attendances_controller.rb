@@ -19,14 +19,13 @@
 class EmployeeAttendancesController < ApplicationController
   before_filter :login_required,:configuration_settings_for_hr
   filter_access_to :all
-  
   def index
-    @departments = EmployeeDepartment.find(:all, :conditions=>"status = true", :order=> "name ASC")
+    @departments = EmployeeDepartment.where("status = true").order("name ASC")
   end
 
-  def show
+  def show_dept
     @dept = EmployeeDepartment.find(params[:dept_id])
-    @employees = Employee.find_all_by_employee_department_id(@dept.id)
+    @employees = Employee.where(:employee_department_id => @dept.id)
     unless params[:next].nil?
       @today = params[:next].to_date
     else
@@ -34,27 +33,21 @@ class EmployeeAttendancesController < ApplicationController
     end
     @start_date = @today.beginning_of_month
     @end_date = @today.end_of_month
-    respond_to do |format|
-      format.js {render :action => 'show'}
-    end
   end
 
   def new
     @attendance = EmployeeAttendance.new
     @employee = Employee.find(params[:id2])
     @date = params[:id]
-    @leave_types = EmployeeLeaveType.find(:all, :conditions=>"status = true", :order=>"name ASC")
+    @leave_types = EmployeeLeaveType.where(:status => true).order("name ASC")
 
-    respond_to do |format|
-      format.js {render :action => 'new'}
-    end
   end
 
   def create
-    @attendance = EmployeeAttendance.new(params[:employee_attendance])
+    @attendance = EmployeeAttendance.new(employee_attendance_params)
     @employee = Employee.find(params[:employee_attendance][:employee_id])
     @date = params[:employee_attendance][:attendance_date]
-    @reset_count = EmployeeLeave.find_by_employee_id(@attendance.employee_id, :conditions=> "employee_leave_type_id = '#{@attendance.employee_leave_type_id}'")
+    @reset_count = EmployeeLeave.find_by_employee_id_and_employee_leave_type_id(@attendance.employee_id, @attendance.employee_leave_type_id)
     if @attendance.save
       leaves_taken = @reset_count.leave_taken
       if @attendance.is_half_day
@@ -64,9 +57,6 @@ class EmployeeAttendancesController < ApplicationController
         leave = leaves_taken.to_f+(1)
         @reset_count.update_attributes(:leave_taken => leave)
       end
-      respond_to do |format|
-        format.js {render :action => 'create'}
-      end
     else
       @error = true
     end
@@ -75,15 +65,12 @@ class EmployeeAttendancesController < ApplicationController
   def edit
     @attendance = EmployeeAttendance.find(params[:id])
     @employee = Employee.find(@attendance.employee_id)
-    @leave_types = EmployeeLeaveType.find(:all, :conditions=>"status = true", :order=>"name ASC")
-    respond_to do |format|
-      format.js {render :action => 'edit'}
-    end
+    @leave_types = EmployeeLeaveType.where(:status => true).order("name ASC")
   end
 
   def update
     @attendance = EmployeeAttendance.find params[:id]
-    @reset_count = EmployeeLeave.find_by_employee_id(@attendance.employee_id, :conditions=> "employee_leave_type_id = '#{@attendance.employee_leave_type_id}'")
+    @reset_count = EmployeeLeave.find_by_employee_id_and_employee_leave_type_id(@attendance.employee_id, @attendance.employee_leave_type_id)
     leaves_taken = @reset_count.leave_taken
     day_status = @attendance.is_half_day
     leave_type = EmployeeLeaveType.find_by_id(@attendance.employee_leave_type_id)
@@ -92,9 +79,8 @@ class EmployeeAttendancesController < ApplicationController
     else
       half_day = false
     end
-    respond_to do |format|
-      if @attendance.update_attributes(params[:employee_attendance])
-        if @attendance.employee_leave_type_id == leave_type.id
+    if @attendance.update_attributes(employee_attendance_params) || @attendance.save
+      if @attendance.employee_leave_type_id == leave_type.id
           unless day_status == @attendance.is_half_day
             if half_day
               leave = leaves_taken.to_f+(0.5)
@@ -110,7 +96,7 @@ class EmployeeAttendancesController < ApplicationController
             leave = leaves_taken.to_f-(1.0)
           end
           @reset_count.update_attributes(:leave_taken => leave)
-          @new_reset_count = EmployeeLeave.find_by_employee_id(@attendance.employee_id, :conditions=> "employee_leave_type_id = '#{@attendance.employee_leave_type_id}'")
+          @new_reset_count = EmployeeLeave.find_by_employee_id_and_employee_leave_type_id(@attendance.employee_id, @attendance.employee_leave_type_id)
           leaves_taken = @new_reset_count.leave_taken
           if @attendance.is_half_day
             leave = leaves_taken.to_f+(0.5)
@@ -120,16 +106,17 @@ class EmployeeAttendancesController < ApplicationController
             @new_reset_count.update_attributes(:leave_taken => leave)
           end
         end
-        @employee = Employee.find(@attendance.employee_id)
-        @date = @attendance.attendance_date
+        
+      else
+	@error = true
       end
-      format.js {render :action => 'update'}
-    end
+      @employee = Employee.find(@attendance.employee_id)
+        @date = @attendance.attendance_date
   end
 
-  def destroy
+  def delete_attendance
     @attendance = EmployeeAttendance.find(params[:id])
-    @reset_count = EmployeeLeave.find_by_employee_id(@attendance.employee_id, :conditions=> "employee_leave_type_id = '#{@attendance.employee_leave_type_id}'")
+    @reset_count = EmployeeLeave.find_by_employee_id_and_employee_leave_type_id(@attendance.employee_id, @attendance.employee_leave_type_id)
     leaves_taken = @reset_count.leave_taken
     if @attendance.is_half_day
       leave = leaves_taken.to_f-(0.5)
@@ -138,10 +125,15 @@ class EmployeeAttendancesController < ApplicationController
     end
     @attendance.delete
     @reset_count.update_attributes(:leave_taken => leave)
-    respond_to do |format|
+#     respond_to do |format|
       @employee = Employee.find(@attendance.employee_id)
       @date = @attendance.attendance_date
-      format.js {render :action => 'update'}
-    end
+#       format.js {render :action => 'update'}
+#     end
+#       flash[:notice] = ""
+  end
+  
+  def employee_attendance_params
+    params.require(:employee_attendance).permit(:attendance_date, :employee_id, :employee_leave_type_id, :reason, :is_half_day) if params[:employee_attendance]
   end
 end

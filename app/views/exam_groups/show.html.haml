@@ -45,7 +45,7 @@
         %h4
           %div{:id => "<haml_loud"}
             "exam_group_name_\#{@exam_group.id}_edit"&gt;
-            \#{in_place_editor_field :exam_group, :name}
+            \#{in_place_editor_field :exam_group, :name, {}, {:cols => 1}}
       - else
         %h4
           %span= @exam_group.name

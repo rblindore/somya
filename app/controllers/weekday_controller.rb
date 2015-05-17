@@ -36,9 +36,6 @@ class WeekdayController < ApplicationController
       @weekdays = Weekday.for_batch(params[:batch_id])
       @b  = Batch.find params[:batch_id]
     end
-    render :update do |page|
-      page.replace_html "weekdays", :partial => "weekdays"
-    end
   end
 
   
@@ -49,7 +46,7 @@ class WeekdayController < ApplicationController
     if request.post?
       new_weekdays = params[:weekdays]||[]
       batch = params[:weekday][:batch_id].present? ?  params[:weekday][:batch_id] : nil
-      old = Weekday.find(:all,:conditions=>{:batch_id=>batch,:is_deleted=>false})
+      old = Weekday.where(:batch_id=>batch,:is_deleted=>false)
       batch_id = params[:weekday][:batch_id].present? ?  params[:weekday][:batch_id] : 0
       old_weekdays = old.map{|w| w.weekday}
       flash[:notice]  = ""
@@ -57,7 +54,7 @@ class WeekdayController < ApplicationController
         Weekday.add_day(batch_id, new)
       end
       (old_weekdays-new_weekdays).each do |week|
-        weekday = Weekday.find_by_weekday(week.to_s,:conditions=>{:batch_id=>batch})
+        weekday = Weekday.where("weekday = ? and batch_id  = ?", week.to_s, batch).first
         weekday.deactivate
       end
       flash[:notice] = "#{t('weekdays_modified')}"

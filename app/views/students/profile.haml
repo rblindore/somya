@@ -31,11 +31,9 @@
     - if permitted_to? :email,:student
       - @config = Settings.find_by_config_key('NetworkState').config_value
       - if @config == 'Online'
-        %li= link_to "#{t('send_email')}", :controller => "students", |
-            :action => "email", :id => @student.id                   |
+        %li= link_to "#{t('send_email')}", :controller => "students",:action => "email", :id => @student.id
     - if permitted_to? :remove, :student or permitted_to? :admission1, :student
-      %li= link_to "#{t('delete_text')}", :controller => 'student', |
-          :action => 'remove', :id => @student.id                  |
+      %li= link_to "#{t('delete_text')}", :controller => 'students', :action => 'remove', :id => @student.id
     %li
       %a#link_one.drops{:href => "#"}
         = t('more')
@@ -144,18 +142,18 @@
       %tr.even.left
         %td= t('contact_message')
         %td.right
-          = link_to @immediate_contact.full_name, :controller => "student", :action => "guardians", :id => @student.id \ |
-            unless @immediate_contact.nil?                                                                               |
+          - unless @immediate_contact.nil?
+            = link_to @immediate_contact.full_name, :controller => "students", :action => "guardians", :id => @student.id
           = "(" + @immediate_contact.mobile_phone + ")" if @immediate_contact and !@immediate_contact.mobile_phone.empty?
           - if @current_user.admin?
             - unless @immediate_contact.nil?
               %span
-                (#{link_to "#{t('change_contact')}", :controller => 'student', :action => 'admission3_1', :id => @student.id})
+                (#{link_to "#{t('change_contact')}", :controller => 'students', :action => 'admission3_1', :id => @student.id})
             - else
               - if permitted_to? :add_guardian,:student
                 %span
                   = t('no_guardian')
-                  (#{link_to "#{t('add_guardian')}",:controller => 'student',:action => 'add_guardian', :id => @student.id} / #{link_to "#{t('choose_from_existing')}",:controller => 'student',:action => 'admission3_1', :id => @student.id})
+                  (#{link_to "#{t('add_guardian')}",:controller => 'students',:action => 'add_guardian', :id => @student.id} / #{link_to "#{t('choose_from_existing')}",:controller => 'students',:action => 'admission3_1', :id => @student.id})
               - else
                 %span= t('no_guardian')
       - unless  @additional_fields.empty?
@@ -197,13 +195,9 @@
               %td.right= t('no_previous_data')
     - if @current_user.admin?
       .buttons
-        = link_to " ► #{t('edit_text')}",                                                              |
-          { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button" |
-        = link_to " ► #{t('pdf_report')}",                                                                                      |
-          {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button' |
+        = link_to " ► #{t('edit_text')}", { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button"
+        = link_to " ► #{t('pdf_report')}", {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button'
     - elsif permitted_to? :edit, :student
       .buttons
-        = link_to " ► #{t('edit_text')}",                                                              |
-          { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button" |
-        = link_to " ► #{t('pdf_report')}",                                                                                      |
-          {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button' |
+        = link_to " ► #{t('edit_text')}", { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button"
+        = link_to " ► #{t('pdf_report')}", {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button'

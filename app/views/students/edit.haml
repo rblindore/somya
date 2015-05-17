@@ -26,7 +26,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for :student, :url => {:action => 'edit'}, :html => {:multipart => true} do |s|
+  = form_for(:student, :url => {:action => 'edit', :id => @student.id}, :html => {:multipart => true}) do |s|
     = error_messages_for 'student'
     #admission1-form
       #necessary-field-notification
@@ -44,8 +44,8 @@
             = t('admission_date')
             %span.necessary-field *
           .text-input-bg
-            = calendar_date_select_tag 'student[admission_date]', I18n.l(@student.admission_date,:format=>:default), |
-              :year_range => 15.years.ago..5.years.from_now,:popup => "force"                                        |
+            = date_select 'student[admission_date]', I18n.l(@student.admission_date,:format=>:default), |
+              :start_year => Date.today.year - 15,:popup => "force"                                        |
         .extender
       %span.span-sub-heading= t('personal_details')
       %hr.sub-heading/
@@ -75,8 +75,8 @@
             = t('date_of_birth')
             %span.necessary-field *
           .text-input-bg
-            = calendar_date_select_tag 'student[date_of_birth]',                                                                            |
-              I18n.l(@student.date_of_birth,:format=>:default), :year_range => 40.years.ago..0.years.ago ,:readonly=>true,:popup => "force" |
+            = date_select 'student[date_of_birth]',                                                                            |
+              I18n.l(@student.date_of_birth,:format=>:default), :start_year => Date.today.year- 40 ,:readonly=>true,:popup => "force" |
         %hr.label-underline/
         .label-field-pair-gender
           %label.label-gender-edit{:for => "master_student_gender"}= t('gender')

@@ -1,1 +1,0 @@
-page.replace_html 'class-timings-list', partial: 'show_batch_timing'

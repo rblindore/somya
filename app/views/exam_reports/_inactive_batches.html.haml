@@ -18,6 +18,6 @@
 - #under the License.
 = select :exam_report, :batch_id,                                                                                           |
   @batches.map {|b| [b.full_name, b.id]},                                                                                   |
-  {:prompt => "#{t('select_a_batch')}"},{:onChange => "#{remote_function(:url => {:action => "final_archived_report_type"}, |
-  :with => "'batch_id='+value"                                                                                              |
-  )}"}                                                                                                                      |
+  {:prompt => "#{t('select_a_batch')}"},
+  {:onChange => "onChangeRequest(this, '#{url_for(action: :final_archived_report_type, batch_id: 'paramid')}')"}
+

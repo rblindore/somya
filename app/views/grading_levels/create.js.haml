@@ -1,0 +1,7 @@
+- if @error.nil?
+  - text = "<p class='flash-msg'>#{t('flash_msg26')}</p>".html_safe
+  $("#form-errors").html("#{escape_javascript ''}")
+  $("#grading-levels").html("#{escape_javascript render 'grading_levels'}")
+  $("#flash_box").html("#{escape_javascript text}")
+- else
+  $("#form-errors").html("#{escape_javascript render 'errors', :object => @grading_level}")

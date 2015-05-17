@@ -19,10 +19,9 @@
 .add_grade
   = link_to t('add_grades'), { action: :new, id: @batch }, remote: true
 - if @batch.present?
-- @credit = @batch.gpa_enabled? || @batch.cce_enabled?
+  - @credit = @batch.gpa_enabled? || @batch.cce_enabled?
 - else
-- @credit = Settings.cce_enabled? || Settings.get_config_value('CWA')=='1' || Settings.get_config_value('GPA')=='1'
-- end
+  - @credit = Settings.cce_enabled? || Settings.get_config_value('CWA')=='1' || Settings.get_config_value('GPA')=='1'
 - unless @grading_levels.empty?
   %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
     %tr.tr-head
@@ -41,8 +40,8 @@
         %td.col-2= grade.description.present? ? grade.description : "-"
         %td.col-1
           %small
-            = link_to_remote(t('edit_text'),                             |
-              :url => edit_grading_level_path(grade), :method => 'get' ) |
-            | #{link_to(t('delete_text'), grading_level_path(grade), method: :DELETE, confirm: t('delete_confirm_msg'), update: "grading-level-#{grade.id}")}
+            = link_to(t('edit_text'),                             |
+              {action: :edit, id: grade.id}, :method => 'get' , :remote => true) |
+            | #{link_to(t('delete_text'), {action: :destroy, id: grade.id}, method: :DELETE, :remote => true)}
 - else
   %h4= t('set_in_common')

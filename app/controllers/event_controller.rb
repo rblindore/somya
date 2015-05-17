@@ -21,7 +21,9 @@ class EventController < ApplicationController
   filter_access_to :all
   
   def index
-    @events = Event.new(params[:events])
+    params[:events][:start_date] = Date.civil(*params[:events][:start_date].sort.map(&:last).map(&:to_i)) if params[:events]
+    params[:events][:end_date] = Date.civil(*params[:events][:end_date].sort.map(&:last).map(&:to_i)) if params[:events]
+    @events = Event.new(event_params)
     if params[:id].nil?
       @date = Time.now
     else
@@ -43,8 +45,8 @@ class EventController < ApplicationController
         #        redirect_to :action=>"show", :id=>@events.id
         #      end
       else
-        @start_date = params[:events][:start_date].to_date
-        @end_date = params[:events][:end_date].to_date
+        @start_date = params[:events][:start_date]
+        @end_date = params[:events][:end_date]
       end
     end
   end
@@ -56,9 +58,6 @@ class EventController < ApplicationController
   def select_course
     @event_id = params[:id]
     @batches = Batch.active
-    render :update do |page|
-      page.replace_html 'select-option', :partial => 'select_course'
-    end
   end
 
   def course_event
@@ -84,7 +83,7 @@ class EventController < ApplicationController
       end
     end
 
-    flash[:notice] = "#{t('flash1')}"
+    flash[:notice] = "#{t('event.flash1')}"
     redirect_to :action=>"show", :id => event.id
   end
 
@@ -97,10 +96,10 @@ class EventController < ApplicationController
 
   def select_employee_department
     @event_id = params[:id]
-    @employee_department = EmployeeDepartment.find(:all, :conditions=>"status = true")
-    render :update do |page|
-      page.replace_html 'select-options', :partial => 'select_employee_department'
-    end
+    @employee_department = EmployeeDepartment.where("status = true")
+#     render :update do |page|
+#       page.replace_html 'select-options', :partial => 'select_employee_department'
+#     end
   end
 
   def department_event
@@ -121,7 +120,7 @@ class EventController < ApplicationController
         end
       end
     end
-    flash[:notice] = "#{t('flash2')}"
+    flash[:notice] = "#{t('event.flash2')}"
     redirect_to :action=>"show", :id=>event.id
   end
 
@@ -137,10 +136,10 @@ class EventController < ApplicationController
     @command = params[:cmd]
     event_start_date = "#{@event.start_date.year}-#{@event.start_date.month}-#{@event.start_date.day}".to_date
     event_end_date = "#{@event.end_date.year}-#{@event.end_date.month}-#{@event.end_date.day}".to_date
-    @other_events = Event.find(:all, :conditions=>"id != #{@event.id}")
+    @other_events = Event.where("id != #{@event.id}")
     if @event.is_common ==false
-      @batch_events = BatchEvent.find(:all, :conditions=>"event_id = #{@event.id}")
-      @department_event = EmployeeDepartmentEvent.find(:all, :conditions=>"event_id = #{@event.id}")
+      @batch_events = BatchEvent.where("event_id = #{@event.id}")
+      @department_event = EmployeeDepartmentEvent.where("event_id = #{@event.id}")
     end
   end
 
@@ -151,14 +150,14 @@ class EventController < ApplicationController
     reminder_recipient_ids = []
     if event.is_common == true
       if event.is_holiday == true
-        @pe = PeriodEntry.find(:all, :conditions=>"month_date BETWEEN '" + event.start_date.strftime("%Y-%m-%d") + "' AND '" +  event.end_date.strftime("%Y-%m-%d") +"'")
+        @pe = PeriodEntry.where("month_date BETWEEN '" + event.start_date.strftime("%Y-%m-%d") + "' AND '" +  event.end_date.strftime("%Y-%m-%d") +"'")
         unless @pe.nil?
           @pe.each do |p|
             p.delete
           end
         end
       end
-      @users = User.active.find(:all)
+      @users = User.active.all
       reminder_recipient_ids << @users.map(&:id)
       sms_setting = SmsSetting.new()
       if sms_setting.application_sms_active and sms_setting.event_news_sms_active
@@ -194,18 +193,18 @@ class EventController < ApplicationController
     else
       recipients = []
       sms_setting = SmsSetting.new()
-      batch_event = BatchEvent.find_all_by_event_id(event.id)
+      batch_event = BatchEvent.where(:event_id => event.id)
       unless batch_event.empty?
         batch_event.each do |b|
           if event.is_holiday == true
-            @pe = PeriodEntry.find_all_by_batch_id(b.id, :conditions=>"month_date BETWEEN '" + event.start_date.strftime("%Y-%m-%d") + "' AND '" +  event.end_date.strftime("%Y-%m-%d") +"'")
+            @pe = PeriodEntry.where("batch_id = #{b.id} and month_date BETWEEN '" + event.start_date.strftime("%Y-%m-%d") + "' AND '" +  event.end_date.strftime("%Y-%m-%d") +"'")
             unless @pe.nil?
               @pe.each do |p|
                 p.delete
               end
             end
           end
-          @batch_students = Student.find(:all, :conditions=>"batch_id = #{b.batch_id}")
+          @batch_students = Student.where("batch_id = #{b.batch_id}")
           @batch_students.each do |s|
             reminder_recipient_ids << s.user_id
             if sms_setting.application_sms_active and sms_setting.event_news_sms_active
@@ -224,10 +223,10 @@ class EventController < ApplicationController
           end
         end
       end
-      department_event = EmployeeDepartmentEvent.find_all_by_event_id(event.id)
+      department_event = EmployeeDepartmentEvent.where(:event_id => event.id)
       unless department_event.empty?
         department_event.each do |d|
-          @dept_emp = Employee.find(:all, :conditions=>"employee_department_id = #{d.employee_department_id}")
+          @dept_emp = Employee.where("employee_department_id = #{d.employee_department_id}")
           @dept_emp.each do |e|
             reminder_recipient_ids << e.user_id
             if sms_setting.application_sms_active and sms_setting.event_news_sms_active
@@ -252,21 +251,25 @@ class EventController < ApplicationController
 
   def cancel_event
     event = Event.find(params[:id])
-    batch_event = BatchEvent.find(:all, :conditions=>"event_id = #{params[:id]}")
-    dept_event = EmployeeDepartmentEvent.find(:all, :conditions=>"event_id = #{params[:id]}")
+    batch_event = BatchEvent.where("event_id = #{params[:id]}")
+    dept_event = EmployeeDepartmentEvent.where("event_id = #{params[:id]}")
     event.destroy
     
     batch_event.each { |x| x.destroy } unless batch_event.nil?
     dept_event.each { |x| x.destroy } unless dept_event.nil?
-    flash[:notice] ="#{t('flash3')}"
+    flash[:notice] ="#{t('event.flash3')}"
     redirect_to :action=>"index"
   end
 
   def edit_event
-    @event = Event.find_by_id(params[:id])
-    if request.post? and @event.update_attributes(params[:event])
-      redirect_to :action=>"show", :id=>@event.id, :cmd=>'edit'
+    @events = Event.find_by_id(params[:id])
+    if request.post? && @events.update_attributes(event_params)
+      redirect_to :action=>"show", :id=>@events.id, :cmd=>'edit'
     end
+  end
+  
+  def event_params
+    params.require(:events).permit(:title, :description, :start_date, :end_date, :is_common,:is_holiday, :is_exam, :is_due, :origin_id, :origin_type) if params[:events]
   end
 
 end

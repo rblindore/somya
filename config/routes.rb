@@ -2,7 +2,7 @@ Fedena::Application.routes.draw do
 
   resources :grading_levels do
     collection do
-      get :show
+      get :show_level
     end
   end
 
@@ -31,7 +31,15 @@ Fedena::Application.routes.draw do
   end
 
   resources :class_designations, only: :index do
-    get :load_class_designations, on: :collection
+    collection do
+      get :load_class_designations
+      get :create_class_designation
+      post :create_class_designation
+      get :edit_class_designation
+      get :delete_class_designation
+      get :update_class_designation
+      post :update_class_designation
+    end
   end
 
   resources :exam_reports, only: :index do
@@ -43,12 +51,14 @@ Fedena::Application.routes.draw do
       get :list_inactivated_batches
       post :final_archived_report_type
       post :archived_batches_exam_report
+      get :final_archived_report_type
     end
   end
 
   resources :class_timings, except: :show do
     collection do
-      get :show
+      get :index
+      get :show_class_timing
     end
   end
 
@@ -90,11 +100,20 @@ Fedena::Application.routes.draw do
       get :list_department_leave_reset
       get :update_department_leave_reset
       post :update_department_leave_reset
+      get :employee_view_all
+      get :employee_search_ajax
+      get :employee_leave_details
+      get :employee_wise_leave_reset
+      get :employees_list
     end
   end
 
   resources :employee_attendances do
     collection do
+      get :index
+      get :show_dept
+      get :delete_attendance
+      
     end
   end
 
@@ -266,13 +285,24 @@ Fedena::Application.routes.draw do
       get :all
       get :search_user_ajax
       get :list_user
+      get :logout
       delete :logout
       get :list_employee_user
       get :list_student_user
+      get :user_change_password
+      post :user_change_password
+      get :edit_privilege
+      post :edit_privilege
+      get :list_parent_user
+      get :search_user_ajax
+      get :create_user
+      post :create_user
+      get :delete
     end
     member do
       get :profile
       get :change_password
+      post :change_password
       get :first_login_change_password
     end
   end
@@ -319,6 +349,7 @@ Fedena::Application.routes.draw do
 
   resources :students, only: :index do
     collection do
+      get :index
       get :admission1
       post :admission1
       get :view_all
@@ -329,6 +360,33 @@ Fedena::Application.routes.draw do
       post :categories
       get :add_additional_details
       post :add_additional_details
+      get :admission2
+      post :admission2
+      get :admission3 
+      post :admission3
+      get :previous_data
+      post :previous_data
+      get :admission4
+      get :previous_subject
+      get :save_previous_subject
+      post :save_previous_subject
+      get :delete_previous_subject
+      get :email
+      post :email
+      get :remove
+      get :add_guardian
+      post :add_guardian
+      get :admission3_1
+      post :admission3_1
+      get :edit
+      post :edit
+      get :profile_pdf
+      get :edit_guardian
+      get :del_guardian
+      get :change_to_former
+      post :change_to_former
+      get :delete
+      get :destroy
     end
     member do
       get :profile
@@ -338,19 +396,46 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :calendar, only: :index
-  resources :event, only: :index
+  resources :calendar, only: :index do
+    collection do
+      get :new_calendar
+      get :show_holiday_event_tooltip
+      get :event_delete
+      get :show_event_tooltip
+    end
+  end
+  resources :event do
+    collection do
+      get :index
+      post :index
+      get :show
+      get :select_course
+      get :confirm_event
+      get :cancel_event
+      get :course_event
+      post :course_event
+      get :remove_batch
+      get :select_employee_department
+      get :department_event
+      post :department_event
+      get :remove_department
+      get :edit_event
+      post :edit_event
+    end
+  end 
 
   resources :exam, only: :index do
     collection do
       get :settings
       get :create_exam
       get :generate_reports
+      post :generate_reports
       get :report_center
       get :previous_batch_exams
       get :update_batch
       get :list_inactive_batches
       get :generate_previous_reports
+      post :generate_previous_reports
       get :list_batch_groups
       get :select_inactive_batches
       get :exam_wise_report
@@ -383,12 +468,25 @@ Fedena::Application.routes.draw do
       post :student_transcript_exam
       get :load_levels
       post :student_combined_report
+      get :grouping
+      get :list_inactive_exam_groups
+      get :previous_exam_marks
+      get :publish
+      get :generated_report
+      get :generated_report2
+      get :generated_report3
+      get :generated_report4
+      get :combined_grouped_exam_report_pdf
+      get :generated_report4_pdf
+      get :student_transcript_pdf
     end
   end
 
   resources :timetables, only: :index do
     collection do
+      get :index
       get :work_allotment
+      post :work_allotment
       get :new_timetable
       post :new_timetable
       get :edit_master
@@ -397,6 +495,9 @@ Fedena::Application.routes.draw do
       get :timetable
       get :update_timetable_view
       get :update_teacher_tt
+      get :update_timetable
+      post :update_timetable
+      get :destroy
     end
     member do
       get :update_student_tt
@@ -416,6 +517,9 @@ Fedena::Application.routes.draw do
   resources :student_attendance, only: :index do
     collection do
       get :advance_search
+      get :student
+      post :student
+      get :month
     end
   end
 
@@ -504,6 +608,7 @@ Fedena::Application.routes.draw do
       get :profile
       get :remove
       get :change_reporting_manager
+      post :change_reporting_manager
       get :edit1
       post :edit1
       get :profile_pdf
@@ -517,6 +622,14 @@ Fedena::Application.routes.draw do
       get :select_reporting_manager
       get :assign_employee
       get :remove_employee
+      get :employees_list
+      get :search_ajax
+      get :remove_subordinate_employee
+      get :one_click_payslip_generation
+      post :one_click_payslip_generation
+      get :payslip_revert_date_select
+      get :one_click_payslip_revert
+      post :one_click_payslip_revert
     end
   end
   resources :sms, only: :index do

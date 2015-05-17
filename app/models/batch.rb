@@ -97,7 +97,7 @@ class Batch < ActiveRecord::Base
   end
 
   def has_own_weekday
-    Weekday.find_all_by_batch_id(self.id,:conditions=>{:is_deleted=>false}).present?
+    Weekday.where("batch_id = ? and is_deleted = ?", self.id, false).present?
   end
 
   def allow_exam_acess(user)
@@ -138,11 +138,11 @@ class Batch < ActiveRecord::Base
 
   def find_working_days(start_date,end_date)
     start=[]
-    start<<self.start_date.to_date
-    start<<start_date.to_date
+    start<< self.start_date.to_date
+    start<< start_date.to_date
     stop=[]
-    stop<<self.end_date.to_date
-    stop<<end_date.to_date
+    stop<< self.end_date.to_date
+    stop<< end_date.to_date
     all_days=start.max..stop.min
     weekdays=Weekday.weekday_by_day(self.id).keys
     holidays=return_holidays(start_date,end_date)
@@ -154,11 +154,11 @@ class Batch < ActiveRecord::Base
 
   def working_days(date)
     start=[]
-    start<<self.start_date.to_date
-    start<<date.beginning_of_month.to_date
+    start<< self.start_date.to_date
+    start<< date.beginning_of_month.to_date
     stop=[]
-    stop<<self.end_date.to_date
-    stop<<date.end_of_month.to_date
+    stop<< self.end_date.to_date
+    stop<< date.end_of_month.to_date
     all_days=start.max..stop.min
     weekdays=Weekday.weekday_by_day(self.id).keys
     holidays=holiday_event_dates

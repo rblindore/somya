@@ -38,4 +38,4 @@
           %li{:class => "list#{cycle('odd', 'even')}"}
             .department-edit= i+1
             .department-name
-              = link_to "#{I18n.l(tt.start_date, format: "%d %b %Y")}  -  #{I18n.l(tt.end_date, format: "%d %b %Y")}", controller: :timetable, action: :update_timetable, id: tt.id
+              = link_to "#{I18n.l(tt.start_date, format: "%d %b %Y")}  -  #{I18n.l(tt.end_date, format: "%d %b %Y")}", controller: :timetables, action: :update_timetable, id: tt.id

@@ -64,29 +64,21 @@
             %td.col-2
               %small
                 - unless exam_group.is_published
-                  = link_to_remote("#{t('publish_exam_schedule')}",:url=>{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"schedule"}, |
-                    :before => "Element.show('loader')",                                                                                                  |
-                    :success => "Element.hide('loader')")                                                                                                 |
+                  = link_to("#{t('publish_exam_schedule')}",{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"schedule"}, :remote=> true)
                 - else
                   - unless  exam_group.result_published
                     = t('schedule_published')
                     - if @sms_setting.application_sms_active and @sms_setting.exam_result_schedule_sms_active
-                      = link_to_remote "#{t('resend')}",:url=>{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"schedule"}, |
-                        :before => "Element.show('loader')",                                                                                   |
-                        :success => "Element.hide('loader')"                                                                                   |
+                      = link_to "#{t('resend')}",{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"schedule"}, :remote => true
                       = t('sms_notification')
                       \.
                       %br/
-                    = link_to_remote("#{t('publish_exam_result')}",:url=>{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"result"},:confirm=>"#{t('delete_confirm_msg')}", |
-                      :before => "Element.show('loader')",                                                                                                                                     |
-                      :success => "Element.hide('loader')")                                                                                                                                    |
+                    = link_to("#{t('publish_exam_result')}",{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"result"}, :remote => true, :confirm=>"#{t('delete_confirm_msg')}")
                   - else
                     = t('result_published')
                     \.
                     - if @sms_setting.application_sms_active and @sms_setting.exam_result_schedule_sms_active
-                      = link_to_remote "#{t('resend_sms_notification')}",:url=>{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"result"}, |
-                        :before => "Element.show('loader')",                                                                                                  |
-                        :success => "Element.hide('loader')"                                                                                                  |
+                      = link_to "#{t('resend_sms_notification')}",{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"result"}, :remote => true
                 %span{:id => "publish-notice-#{exam_group.id}"}
       - if @batch.cce_enabled?
         - if permitted_to? :observation_groups,  :assessment_scores

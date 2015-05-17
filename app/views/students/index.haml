@@ -16,8 +16,19 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= csrf_meta_tag
 :javascript
   function setOption(optn) {document.getElementById("option").value = optn;}
+  function search_ajax() {
+     var query = document.getElementById('query').value;
+                                        var opt = document.getElementById('option').value;
+                                        $.ajax({ type: "GET",   
+                                                url: "students/search_ajax",
+                                                data: { query: query, option: opt } ,
+                                               
+                                       });
+      }
 #content-header
   = image_tag("student_details/student_details_logo.jpg")
   %h1= t('student_details')
@@ -40,7 +51,7 @@
           :id => "loader",            |
           :style =>"display: none;" ) |
       #search_textbox
-        = text_field_tag("query", params['query'], :autocomplete => 'off')
+        = text_field_tag("query", params['query'], :autocomplete => 'off', :onChange => "search_ajax();")
       .radio_button
         %input#search_present_students_radio{:checked => "checked", :name => "setopt", :onclick => "setOption('active')", :type => "radio"}/
         = t('present_student')
@@ -51,19 +62,4 @@
     %p.flash-msg
       = flash[:notice]
   #view_all
-  :javascript
-    function search_ajax(){
-          if ($('query').value.include("%")) return;
-    #{"\#{remote_function(:url => {:action => "search_ajax"},
-    :with => "'query='+$('query').value + '&option='+$('option').value",
-    :before => "Element.show('loader')",
-    :success => "Element.hide('loader')",
-    :update=>"information"
-    )}"}
-      }
-
-      document.observe("dom:loaded", function() {
-        new Form.Element.Observer('query', 1, search_ajax);
-        new Form.Element.Observer('option', 0.5, search_ajax);
-      });
   #information

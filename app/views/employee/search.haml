@@ -16,8 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
-  = image_tag("  HR/show_hr.png")
+  = image_tag("HR/show_hr.png")
   %h1= t('employee_search')
   %h3= t('employee_details')
   #app-back-button
@@ -38,31 +39,25 @@
             :id => "loader",             |
             :style => "display: none;" ) |
         #search_textbox
-          = text_field_tag("query", params['query'], :autocomplete => 'off')
+          = text_field_tag("query", params['query'], :autocomplete => 'off', :onChange => 'search_ajax();')
           %br/
     .advanced_options
-      .advanced-options-select= select :employee, :department_id, @departments.map {|s| [s.name, s.id]}, :prompt => "#{t('select_department')}"
-      .advanced-options-select= select :employee, :category_id,   @categories.map {|s| [s.name, s.id]},  :prompt => "#{t('select_category')}"
-      .advanced-options-select= select :employee, :position_id,   @positions.map {|s| [s.name, s.id]},   :prompt => "#{t('select_position')}"
-      .advanced-options-select= select :employee, :grade_id,      @grades.map {|s| [s.name, s.id]},      :prompt => "#{t('select_grade')}"
+      .advanced_options= select :employee, :department_id, @departments.map { |s| [s.name, s.id] },{:prompt => "#{t('select_a_department')}"},{onChange: "search_ajax();"}
+      .advanced_options= select :employee, :category_id, @categories.map { |s| [s.name, s.id] },{:prompt => "#{t('select_category')}"},{onChange: "search_ajax();"}
+      .advanced_options= select :employee, :position_id, @positions.map { |s| [s.name, s.id] },{:prompt => "#{t('select_position')}"},{onChange: "search_ajax();"}
+      .advanced_options= select :employee, :grade_id, @grades.map { |s| [s.name, s.id] },{:prompt => "#{t('select_grade')}"},{onChange: "search_ajax();"}
       .extender
   :javascript
-    function search_ajax(){
-     if ($('query').value.include("%")) return;
-    #{"\#{remote_function(:url => {:action => "search_ajax"},
-    :with =>  "'query='+ $('query').value + '&employee_department_id='+$('employee_department_id').value + '&employee_category_id='+$('employee_category_id').value + '&employee_position_id='+$('employee_position_id').value + '&employee_grade_id='+$('employee_grade_id').value",
-    :before => "Element.show('loader')",
-    :success => "Element.hide('loader')",
-    :update=>"information"
-    )}"}
-      }
-
-      document.observe("dom:loaded", function() {
-        new Form.Element.Observer('query', 1, search_ajax);
-        new Form.Element.Observer('employee_department_id', 0.1, search_ajax);
-        new Form.Element.Observer('employee_category_id', 0.1, search_ajax);
-        new Form.Element.Observer('employee_position_id', 0.1, search_ajax);
-        new Form.Element.Observer('employee_grade_id', 0.1, search_ajax);
-      });
+      function search_ajax() { var query = document.getElementById('query').value;
+                                        var dept = document.getElementById('employee_department_id').value;
+                                        var cat = document.getElementById('employee_category_id').value;
+                                        var position = document.getElementById('employee_position_id').value;
+                                        var grade = document.getElementById('employee_grade_id').value;
+                                        $.ajax({ type: "GET",   
+                                                url: "search_ajax",
+                                                data: { query: query, employee_department_id: dept, employee_category_id: cat, employee_position_id: position, employee_grade_id: grade} ,
+                                               
+                                       });
+                                       }
   .extender
   #information

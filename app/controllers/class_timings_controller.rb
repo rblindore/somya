@@ -28,56 +28,37 @@ class ClassTimingsController < ApplicationController
   def new
     @class_timing = ClassTiming.new
     @batch = Batch.find params[:id] if request.xhr? and params[:id]
-    respond_to do |format|
-      format.js { render action: :new }
-    end
   end
 
   def create
-    @class_timing = ClassTiming.new(params[:class_timing])
+    @class_timing = ClassTiming.new(class_timing_params)
     @batch = @class_timing.batch
-    respond_to do |format|
       if @class_timing.save
         @class_timing.batch.nil? ?
           @class_timings = ClassTiming.where(batch_id: nil, is_deleted: false).order('start_time ASC') :
           @class_timings = ClassTiming.for_batch(@class_timing.batch_id)
         #  flash[:notice] = 'Class timing was successfully created.'
-        format.html { redirect_to class_timing_url(@class_timing) }
-        format.js { render action: :create }
       else
         @error = true
-        format.html { render action: :new }
-        format.js { render action: :create }
       end
-    end
   end
 
   def edit
     @class_timing = ClassTiming.find(params[:id])
-    respond_to do |format|
-      format.html { }
-      format.js { render action: :edit }
-    end
   end
 
   def update
     @class_timing = ClassTiming.find params[:id]
-    respond_to do |format|
-      if @class_timing.update_attributes(params[:class_timing])
+      if @class_timing.update_attributes(class_timing_params)
         @class_timings = (@class_timing.batch.nil? ?
           ClassTiming.where(batch_id: nil).order('start_time ASC') : ClassTiming.for_batch(@class_timing.batch_id))
         #     flash[:notice] = 'Class timing updated successfully.'
-        format.html { redirect_to class_timing_url(@class_timing) }
-        format.js { render action: :update }
       else
         @error = true
-        format.html { render action: :new }
-        format.js { render action: :create }
       end
-    end
   end
 
-  def show
+  def show_class_timing
     @batch = nil
     if params[:batch_id].blank?
       @class_timings = ClassTiming.where(batch_id: nil, is_deleted: false)
@@ -85,15 +66,15 @@ class ClassTimingsController < ApplicationController
       @class_timings = ClassTiming.active_for_batch(params[:batch_id])
       @batch = Batch.find params[:batch_id] unless params[:batch_id] == ''
     end
-    respond_to do |format|
-      format.js { render action: :show }
-      format.html
-    end
   end
 
   def destroy
     @class_timing = ClassTiming.find params[:id]
     @class_timing.update_attribute(:is_deleted,true)
+  end
+  
+  def class_timing_params
+    params.require(:class_timing).permit(:batch_id, :name, :start_time, :end_time, :is_break, :is_deleted) if params[:class_timing]
   end
 
 end

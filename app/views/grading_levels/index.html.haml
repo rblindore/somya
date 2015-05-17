@@ -16,6 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= csrf_meta_tag
+= stylesheet_link_tag("grading_levels/index.css")
 #content-header
   = image_tag("examination/show_exam.png")
   %h1= t('exams_text')
@@ -37,9 +40,7 @@
         = t('batch')
         = image_tag("loader.gif", :align => "absmiddle", :border => 0, :id => "loader", :style =>"display: none;" )
       .text-input-bg
-        = select :batch, :id,                                                               |
-          @batches.map {|b| [b.full_name, b.id] },                                          |
-          { prompt: t('common')},                                                           |
-          { onchange:"redirectTo(this, '#{url_for(action: :show, batch_id: 'paramid')}')" } |
+        = select :batch, :id, @batches.active.map {|b| [b.full_name, b.id]}, { prompt: t('common')}, { onChange: "onChangeRequest(this, '#{url_for(action: :show_level, batch_id: 'paramid')}')"}
+
     #grading-levels= render :partial => "grading_levels"
     #modal-box{:style => "display:none;"}

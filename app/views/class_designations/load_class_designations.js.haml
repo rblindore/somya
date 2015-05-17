@@ -1,0 +1,6 @@
+- if @course.blank?
+  $("#course_class_designations").html("#{escape_javascript ''}")
+  $("#flash").html("#{escape_javascript ''}")
+- else
+  $("#course_class_designations").html("#{escape_javascript render 'course_class_designations'}")
+  $("#flash").html("#{escape_javascript ''}")

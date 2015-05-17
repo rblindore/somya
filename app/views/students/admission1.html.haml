@@ -84,7 +84,7 @@
             %span.necessary-field *
           .text-input-bg
             = date_select 'student[date_of_birth]',                                                                   |
-              I18n.l(Date.today-5.years,:format=>:default) , :year_range => 72.years.ago..0.years.ago,:popup=>"force" |
+              I18n.l(Date.today-5.years,:format=>:default) , :start_year => Date.today.year - 50,:popup=>"force" |
         %hr.label-underline/
         .label_field_pair
           %label.label_for_student_gender{:for => "student_gender"}= t('gender')

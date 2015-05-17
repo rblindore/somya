@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 .course-select
   - unless @batch_events.empty?
     %span.title
@@ -27,10 +28,10 @@
           %li{:class => "list#{cycle('odd','even')}"}
             .category-name= Batch.find(c.batch_id).full_name
             .category-edit= link_to "#{t('remove')}", :controller=>"event",:action=>"remove_batch", :id=>c
-    = link_to_remote "#{t('select_more_course')}", :url=>{:controller=>"event", :action=>"select_course", :id=>params[:id]}, :html=>{:class=>"themed_text"}
+    = link_to "#{t('select_more_course')}", {:controller=>"event", :action=>"select_course", :id=>params[:id]}, :html=>{:class=>"themed_text"}, :remote => true
     %br/
   - else
     %span.title
       = t('no_course_selected')
       \:
-    = link_to_remote "#{t('select_a_course')}", :url=>{:controller=>"event", :action=>"select_course", :id=>params[:id]}, :html=>{:class=>"themed_text"}
+    = link_to "#{t('select_a_course')}", {:controller=>"event", :action=>"select_course", :id=>params[:id]}, :html=>{:class=>"themed_text"}, :remote => true

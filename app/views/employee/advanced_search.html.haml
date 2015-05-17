@@ -279,7 +279,7 @@
                     %td.col-4= link_to emp2.first_name + ' ' + emp2.last_name, :controller => 'archived_employee', :action => 'profile', :id => emp2.id
                     %td.col-3= emp2.employee_number
                     %td.col-4= emp2.employee_department.name
-                - else
-                  %tr{:class => "tr-#{cycle('odd', 'even')}"}
-                    %td.col-2= t('no_employee_found')
+              - else
+                %tr{:class => "tr-#{cycle('odd', 'even')}"}
+                %td.col-2= t('no_employee_found')
       .extender

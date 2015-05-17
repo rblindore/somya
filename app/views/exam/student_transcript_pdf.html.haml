@@ -40,8 +40,8 @@
             \: #{@student.batch.course.course_name}
         .hor_line
       #pdf-info
-        - reports = GroupedExamReport.find_all_by_student_id_and_score_type(@student.id,'c')
-        - if reports.empty?
+        - reports = GroupedExamReport.where("student_id = ? and score_type =? ", @student.id,'c')
+        - if reports.blank?
           %p.flash-msg= t('grouped_exam_reports_not_generated')
         - else
           - grades = []
@@ -51,14 +51,14 @@
           - @batches.each do|batch|
             - st_mark = GroupedExamReport.find_by_batch_id_and_student_id_and_score_type(batch.id,@student.id,"c")
             - unless st_mark.nil?
-              - general_subjects = Subject.find_all_by_batch_id(batch.id, :conditions=>"elective_group_id IS NULL AND is_deleted=false")
-              - student_electives = StudentsSubject.find_all_by_student_id(@student.id,:conditions=>"batch_id = #{batch.id}")
+              - general_subjects = Subject.where("batch_id = ? and elective_group_id IS ? AND is_deleted=?", batch.id, nil, false)
+              - student_electives = StudentsSubject.where("student_id = ? and batch_id = ? ", @student.id,batch.id)
               - elective_subjects = []
               - student_electives.each do |elect|
                 - elective_subjects.push Subject.find(elect.subject_id)
               - @subjects = general_subjects + elective_subjects
-              - @subjects.reject!{|s| (s.no_exams==true or s.no_exam_for_batch(batch.id))}
-              - unless @subjects.empty?
+              - @subjects.to_a.reject!{|s| (s.no_exams==true or s.no_exam_for_batch(batch.id))}
+              - unless @subjects.blank?
                 %h3= batch.full_name
                 - total_credits=0
                 %table#pdf-table{:cellspacing => "0", :width => "100%"}
@@ -119,13 +119,13 @@
             - else
               - cgpa = 0
             - if grade_type=="GPA"
-              - designations = ClassDesignation.find(:all,:conditions=>["cgpa <= ? AND course_id = ?",cgpa,@student.batch.course_id],:order=>"cgpa DESC")
+              - designations = ClassDesignation.where("cgpa <= ? AND course_id = ?",cgpa,@student.batch.course_id).order("cgpa DESC")
               %h5{:align => "right"}
                 = t('course_wise_cumulative_grade_point')
                 \=
                 %span.high= "%.2f" %(cgpa)
             - else
-              - designations = ClassDesignation.find(:all,:conditions=>["marks <= ? AND course_id = ?",cgpa,@student.batch.course_id],:order=>"marks DESC")
+              - designations = ClassDesignation.where("marks <= ? AND course_id = ?",cgpa,@student.batch.course_id).order("marks DESC")
               - if grade_type=="CWA"
                 %h5{:align => "right"}
                   = t('course_wise_combined_weighted_average')
@@ -139,4 +139,4 @@
             %h5{:align => "right"}
               = t('class_designations_text')
               \:
-              %span.high= designations.empty? ? "-" : designations.first.name
+              %span.high= designations.blank? ? "-" : designations.first.name

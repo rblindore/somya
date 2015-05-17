@@ -16,19 +16,16 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("HR/show_hr.png")
   %h1= t('reporting_manager')
   %h3= t('change')
   #app-back-button
     = back_button
-:javascript
-  function update_reporting_manager(id) {
-    $('employee_reporting_manager_id').value = id;
-  }
 #page-yield
   #form-content
-    = form_for :employee do |e|
+    = form_for(:employee, :url => {:id => @emp.id}) do |e|
       #current-changed-manager
         #current-manager-outer
           #current-manager
@@ -51,39 +48,31 @@
         #search-label
           = t('search_by_name')
                       :
-        #search-text-box= text_field_tag("query", params['query'], :autocomplete => 'off')
+        #search-text-box= text_field_tag("query", params['query'], :autocomplete => 'off', :onChange => "onChangeRequest(this, '#{url_for(action: :update_reporting_manager_name , employee_reporting_manager_id: 'paramid')}')")
         = image_tag("loader.gif",      |
           :align => "absmiddle",       |
           :border => 0,                |
           :id => "loader",             |
           :style => "display: none;" ) |
         .extender
-      = observe_fields ['employee_reporting_manager_id'], |
-        :frequency => 0.1,                                |
-        :update => 'changed-manager-name',                |
-        :url=> {:action=>'update_reporting_manager_name'} |
+      
       #advanced-options
-        .employee-search-options= select :employee, :department_id, @departments.map {|s| [s.name, s.id]}, :prompt => "#{t('select_department')}"
-        .employee-search-options= select :employee, :category_id,   @categories.map {|s| [s.name, s.id]},  :prompt => "#{t('select_category')}"
-        .employee-search-options= select :employee, :position_id,   @positions.map {|s| [s.name, s.id]},   :prompt => "#{t('select_position')}"
-        .employee-search-options= select :employee, :grade_id,      @grades.map {|s| [s.name, s.id]},      :prompt => "#{t('select_grade')}"
+        .employee-search-options= select :employee, :department_id, @departments.map { |s| [s.name, s.id] },{:prompt => "#{t('select_a_department')}"},{onChange: "get_reporting_manager_id();"}
+        .employee-search-options= select :employee, :category_id, @categories.map { |s| [s.name, s.id] },{:prompt => "#{t('select_category')}"},{onChange: "get_reporting_manager_id();"}
+        .employee-search-options= select :employee, :position_id, @positions.map { |s| [s.name, s.id] },{:prompt => "#{t('select_position')}"},{onChange: "get_reporting_manager_id();"}
+        .employee-search-options= select :employee, :grade_id, @grades.map { |s| [s.name, s.id] },{:prompt => "#{t('select_grade')}"},{onChange: "get_reporting_manager_id();"}
         .extender
     :javascript
-      function search_ajax(){
-            if ($('query').value.include("%")) return;
-      #{"\#{remote_function(:url => {:action => "select_reporting_manager"},
-      :with =>  "'query='+ $('query').value + '&employee_department_id='+$('employee_department_id').value + '&employee_category_id='+$('employee_category_id').value + '&employee_position_id='+$('employee_position_id').value + '&employee_grade_id='+$('employee_grade_id').value",
-      :before => "Element.show('loader')",
-      :success => "Element.hide('loader')",
-      :update=>"information"
-      )}"}
-      }
-
-      document.observe("dom:loaded", function() {
-        new Form.Element.Observer('query', 1, search_ajax);
-        new Form.Element.Observer('employee_department_id', 0.1, search_ajax);
-        new Form.Element.Observer('employee_category_id', 0.1, search_ajax);
-        new Form.Element.Observer('employee_position_id', 0.1, search_ajax);
-        new Form.Element.Observer('employee_grade_id', 0.1, search_ajax);
-      });
+       function update_reporting_manager(id) { document.getElementById('employee_reporting_manager_id').value = id.value; }
+       function get_reporting_manager_id() { var query = document.getElementById('query').value;
+                                        var dept = document.getElementById('employee_department_id').value;
+                                        var cat = document.getElementById('employee_category_id').value;
+                                        var position = document.getElementById('employee_position_id').value;
+                                        var grade = document.getElementById('employee_grade_id').value;
+                                        $.ajax({ type: "GET",   
+                                                url: "select_reporting_manager",
+                                                data: { query: query, employee_department_id: dept, employee_category_id: cat, employee_position_id: position, employee_grade_id: grade} ,
+                                               
+                                       });
+                                       }
   #information
