@@ -16,9 +16,10 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= csrf_meta_tag
 #grading-levels-form
   %h4= @batch.full_name unless @batch.nil?
-  - form_remote_for @subject do |f|
+  = form_for @subject, :remote => true do |f|
     - batch_id = (@batch.nil? ? nil : @batch.id)
     - elective_group_id = (@elective_group.nil? ? nil : @elective_group.id)
     = f.hidden_field :batch_id, :value => batch_id

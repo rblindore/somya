@@ -1860,7 +1860,7 @@ en: # locale
   edit_subject_amount: "Edit "
   discount_type: "Mode"
   flash_period: "period"
-
+  input_method: "Input Method"
 
 
 #  modified timetable and timetable entries

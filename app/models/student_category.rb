@@ -27,7 +27,7 @@ class StudentCategory < ActiveRecord::Base
   scope :active, -> { where(is_deleted: false)}
 
   def empty_students
-    Student.find_all_by_student_category_id(self.id).each do |s|
+    Student.where(:student_category_id => self.id).each do |s|
       s.update_attributes(student_category_id: nil)
     end
 

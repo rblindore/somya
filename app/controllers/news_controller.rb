@@ -34,11 +34,11 @@ class NewsController < ApplicationController
   end
 
   def add_comment
-    @cmnt = current_user.news_comment.build(params[:comment])
+    @cmnt = current_user.news_comments.build(comment_params)
     @cmnt.is_approved = true if @current_user.privileges.include?(Privilege.find_by_name('ManageNews')) || @current_user.admin?
     @config = Settings.find_by_config_key('EnableNewsCommentModeration')
     if @cmnt.save
-      render layout: 'application'
+      @comments = News.find(params[:comment][:news_id]).comments
     else
       redirect_to :back
     end
@@ -106,6 +106,10 @@ class NewsController < ApplicationController
 
     # this method permist rge news attributes.
     def news_params
-      params.require(:news).permit(:title, :content)
+      params.require(:news).permit(:title, :content) if params[:news]
+    end
+    
+    def comment_params
+      params.require(:comment).permit(:content, :news_id, :author_id, :is_approved) if params[:comment]
     end
 end

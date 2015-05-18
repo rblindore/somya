@@ -1,0 +1,7 @@
+- if @error.nil?
+  - text = "<p class='flash-msg'>#{flash[:notice]}</p>".html_safe unless flash[:notice].nil?
+  $("#form-errors").html("#{escape_javascript ''}")
+  $("#subjects").html("#{escape_javascript render 'subjects'}")
+  $("#flash-box").html("#{escape_javascript text}")
+- else
+  $("#form-errors").html("#{escape_javascript render 'errors', :object => @subject}")

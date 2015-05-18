@@ -1,1 +1,0 @@
-page.remove "comment-item-#{@comment.id}"

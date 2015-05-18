@@ -46,9 +46,10 @@
     %label= t('select_a_batch')
     .text-input-bg
       - if @config.config_value == 'Daily'
-        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { prompt: 'Select a batch'}, { onchange: "getjson(this.value);"}
+        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { :prompt => 'Select a batch0'}, { onchange: "getjson(this.value);"}
       - else
-        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { prompt: t('select_a_batch')}, {onchange: "onChangeRequest(this, '#{url_for(action: :list_subject, batch_id: 'paramid')}'"}
+        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { :prompt => t('select_a_batch')}, 
+        {:onchange => "onChangeRequest(this, '#{url_for(action: :list_subject, batch_id: 'paramid')}'"}
     = image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )
   = hidden_field_tag 'time_zone_date',@date_today, id: :time_zone
   #subjects

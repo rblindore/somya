@@ -18,31 +18,29 @@
 - #under the License.
 - unless @batch.nil?
   .add_sub
-    = link_to_remote "#{t('add_normal_subject')}", :url => { :action => 'new', :id => @batch } unless defined? @elective_group
-- unless @subjects.empty?
+    = link_to "#{t('add_normal_subject')}", { :action => 'new', :id => @batch }, :remote => true unless defined? @elective_group
+- unless @subjects.blank?
   %ul#category-list
     - unless params[:subject].nil?
       - if params[:subject][:elective_group_id]==""
         .add_sub
-          = link_to_remote t('add_subject_to_elective_group'), :url => { :controller=>"subjects",:action => 'new', :id => @batch,:id2=> params[:subject][:elective_group_id]} if defined? @elective_group
+          = link_to t('add_subject_to_elective_group'), { :controller=>"subjects",:action => 'new', :id => @batch,:id2=> params[:subject][:elective_group_id]}, :remote => true if defined? @elective_group
     - @subjects.each do |subject|
       %li{:class => "list#{cycle('even','odd')}", :id => "subject-#{subject.id}"}
         .category-name= subject.name
         .opt
           .category-code= subject.code
           .category-edit
-            = link_to_remote(t('edit_text'),                                                             |
-              :url => { :controller=>"subjects",:action => 'edit', :id =>subject,:id2=>@elective_group}, |
-              :method => 'get' )                                                                         |
+            = link_to(t('edit_text'),                                                             |
+              { :controller=>"subjects",:action => 'edit', :id =>subject,:id2=>@elective_group}, |
+              :method => 'get', :remote => true )                                                                         |
           .category-delete
             - @subject_exams= Exam.find_by_subject_id(subject.id)
-            - @subject_timetable = TimetableEntry.find_all_by_subject_id(subject.id)
+            - @subject_timetable = TimetableEntry.where(:subject_id => subject.id)
             - if @subject_exams.blank? and @subject_timetable.blank?
-              = link_to_remote(t('delete_text'),     |
-                :url => subject_path(subject),       |
-                :method => 'delete',                 |
-                :confirm => t('delete_confirm_msg'), |
-                :update => "subject-#{subject.id}")  |
+              = link_to(t('delete_text'),                                                             |
+              { :controller=>"subjects",:action => 'delete_subject', :id =>subject}, |
+               :remote => true )
             - else
               %s= t('delete_text')
           - unless subject.elective_group_id.nil?
@@ -50,13 +48,13 @@
               = link_to "#{ t('assign_student')}", :controller=>"students", :action=>"electives",:id=>@batch,:id2=>subject.id
 - unless @batch.nil?
   .add_sub
-    = link_to "#{t('new_elective_group')}", new_batch_elective_group_path(@batch) unless defined? @elective_group
+    = link_to "#{t('new_elective_group')}", :controller => :elective_groups, :action => :new, :batch_id => @batch unless defined? @elective_group
 - unless @elective_groups.nil?
   - @elective_groups.each do |e|
     - @esubjects = @batch.elective_batch_subject(e.id)
     %h5= e.name
     .add_sub
-      = link_to_remote t('add_subject_to_elective_group'), :url => { :controller=>"subjects",:action => 'new', :id => @batch,:id2=>e}
+      = link_to t('add_subject_to_elective_group'), { :controller=>"subjects",:action => 'new', :id => @batch,:id2=>e}, :remote => true
     %ul#category-list
       - @esubjects.each do |subject|
         %li{:class => "list#{cycle('even','odd')}", :id => "subject-#{subject.id}"}
@@ -64,18 +62,16 @@
           .opt
             .category-code= subject.code
             .category-edit
-              = link_to_remote( t('edit_text'),                                                            |
-                :url => { :controller=>"subjects",:action => 'edit', :id =>subject,:id2=>@elective_group}, |
-                :method => 'get' )                                                                         |
+              = link_to( t('edit_text'),                                                            |
+                { :controller=>"subjects",:action => 'edit', :id =>subject,:id2=>@elective_group}, |
+                :method => 'get' , :remote => true)                                                                         |
             .category-delete
               - @subject_exams= Exam.find_by_subject_id(subject.id)
               - @subject_timetable = TimetableEntry.find_by_subject_id(subject.id)
               - if @subject_exams.nil? and @subject_timetable.nil?
-                = link_to_remote( t('delete_text'),     |
-                  :url => subject_path(subject),        |
-                  :method => 'delete',                  |
-                  :confirm =>  t('delete_confirm_msg'), |
-                  :update => "subject-#{subject.id}")   |
+                = link_to(t('delete_text'),                                                             |
+              { :controller=>"subjects",:action => 'delete_subject', :id =>subject}, |
+               :remote => true )
               - else
                 %s= t('delete_text')
             - unless subject.elective_group_id.nil?

@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("attendence/attendence.png")
   %h1= t('attendance_report')
@@ -32,9 +33,11 @@
       \:
     .text-input-bg
       - if @config.config_value == 'Daily'
-        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, {prompt: t('select_a_batch')}, {onchange: "onChangeRequest(this, '#{url_for(action: :mode, batch_id: 'paramid', subject_id: '')}')"}
+        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, {:prompt => t('select_a_batch')}, 
+        {:onchange => "onChangeRequest(this, '#{url_for(action: :mode, batch_id: 'paramid', subject_id: '')}')"}
       - else
-        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { prompt: t('select_a_batch')}, { onchange: "onChangeRequest(this, '#{url_for(action: :subject, batch_id: 'paramid')}')"}
+        = select :batch, :id, @batches.map {|b| [b.full_name, b.id] }, { :prompt => t('select_a_batch')}, 
+        { :onchange => "onChangeRequest(this, '#{url_for(action: :subject, batch_id: 'paramid')}')"}
       = image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )
       .extender
   #subject

@@ -25,8 +25,8 @@
         %li{:class => "list#{cycle('odd', 'even')}"}
           .category-name
             = c.name
-            %span{:class => "category-up-down #{"inactive" if i==0}"}= link_to_remote "▲",:url=>{:action=>"change_field_priority",:order=>"up",:id=>c.id}
-            %span{:class => "category-up-down #{"inactive" if i+1==@additional_details.count}"}= link_to_remote "▼",:url=>{:action=>"change_field_priority",:order=>"down",:id=>c.id}
+            %span{:class => "category-up-down #{"inactive" if i==0}"}= link_to "▲",{:action=>"change_field_priority",:order=>"up",:id=>c.id}, :remote => true
+            %span{:class => "category-up-down #{"inactive" if i+1==@additional_details.count}"}= link_to "▼",{:action=>"change_field_priority",:order=>"down",:id=>c.id}, :remote => true
           .category-edit= link_to "#{t('edit_text')}", {:action => "edit_additional_details", :id=>c.id}
           .category-edit= link_to "#{t('delete_text')}", {:action => "delete_additional_details", :id=>c.id}, :confirm => "#{t('delete_confirm_msg')}"
     - unless @inactive_additional_details.empty?

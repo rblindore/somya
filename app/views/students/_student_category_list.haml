@@ -16,10 +16,11 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 %ul#category-list
   - @student_categories.each do |c|
     %li{:class => "list#{cycle('odd', 'even')}"}
       .category-name= c.name
       .category-edit
-        = link_to_remote "#{t('edit_text')}", :url => { :action => 'category_edit', :id => c.id }
-      .category-delete= link_to_remote "#{t('delete_text')}", :url => { :action => 'category_delete', :id => c.id } , :confirm =>"#{t('delete_confirm_msg')}"
+        = link_to "#{t('edit_text')}", { :action => 'category_edit', :id => c.id , :remote => true}
+      .category-delete= link_to "#{t('delete_text')}",  { :action => 'category_delete', :id => c.id } , :confirm =>"#{t('delete_confirm_msg')}", :remote => true

@@ -16,8 +16,8 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
-- if cmnt.valid?
-  - if @config && @config.config_value == '1'
+- @comments.each do |cmnt|
+  - if cmnt.valid? && @config && @config.config_value == '1'
     - is_author = (@current_user == cmnt.author)
     - if is_author || @is_moderator  || cmnt.is_approved
       %li{:id => "comment-item-#{cmnt.id}"}

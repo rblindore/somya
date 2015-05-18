@@ -259,8 +259,8 @@ class StudentsController < ApplicationController
       @additional_field = StudentAdditionalField.new(student_additional_field_params)
       @additional_field.priority = priority
       if @additional_field.save
-        flash[:notice] = t('flash1')
-        redirect_to controller: :student, action: :add_additional_details
+        flash[:notice] = t('student.flash1')
+        redirect_to controller: :students, action: :add_additional_details
       end
     end
   end
@@ -280,9 +280,6 @@ class StudentsController < ApplicationController
     @additional_field = StudentAdditionalField.new
     @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
     @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
-    render(:update) do|page|
-      page.replace_html "category-list", :partial=>"additional_fields"
-    end
   end
 
   def edit_additional_details
@@ -293,8 +290,8 @@ class StudentsController < ApplicationController
     if request.get?
       render :action=>'add_additional_details'
     else
-      if @additional_field.update_attributes(params[:student_additional_field])
-        flash[:notice] = "#{t('flash2')}"
+      if @additional_field.update_attributes(student_additional_field_params)
+        flash[:notice] = "#{t('student.flash2')}"
         redirect_to :action => "add_additional_details"
       else
         render :action=>"add_additional_details"
@@ -308,10 +305,10 @@ class StudentsController < ApplicationController
       StudentAdditionalField.find(params[:id]).destroy
       @additional_details = StudentAdditionalField.where(status: true).order("priority ASC")
       @inactive_additional_details = StudentAdditionalField.where(status: false).order("priority ASC")
-      flash[:notice]="#{t('flash13')}"
+      flash[:notice]="#{t('student.flash13')}"
       redirect_to :action => "add_additional_details"
     else
-      flash[:notice]="#{t('flash14')}"
+      flash[:notice]="#{t('student.flash14')}"
       redirect_to :action => "add_additional_details"
     end
   end
@@ -629,9 +626,9 @@ class StudentsController < ApplicationController
 
   def categories
     @student_categories = StudentCategory.active
-    @student_category = StudentCategory.new(params[:student_category])
+    @student_category = StudentCategory.new(student_category_params)
     if request.post? and @student_category.save
-      flash[:notice] = t('flash7')
+      flash[:notice] = t('student.flash7')
       redirect_to :action => 'categories'
     end
   end
@@ -654,6 +651,7 @@ class StudentsController < ApplicationController
     if @student_category.update_attributes(:name => params[:name])
       @student_categories = StudentCategory.active
       @student_category = StudentCategory.new
+      flash[:notice] = t('student.flash3')
     end
   end
 
@@ -1382,5 +1380,9 @@ class StudentsController < ApplicationController
     
     def student_previous_subject_details_params
       params.require(:student_previous_subject_details).permit(:student_id, :subject, :mark) if params[:student_previous_subject_details]
+    end
+    
+    def student_category_params
+      params.require(:student_category).permit(:name, :is_deleted) if params[:student_category]
     end
 end
