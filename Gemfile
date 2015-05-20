@@ -45,7 +45,7 @@ gem 'ruby_parser'
 gem "iconv", "~> 1.0.3"
 gem 'test-unit', '1.2.3'
 gem 'delayed_job'
-gem 'paperclip'
+gem "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
 gem 'thin'
 gem 'haml'
 gem 'will_paginate'

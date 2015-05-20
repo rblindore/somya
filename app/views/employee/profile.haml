@@ -95,7 +95,7 @@
   #employee_profile_heading
     #profile_picture_display
       - if @employee.photo.file?
-        = image_tag @employee.photo.url
+        = image_tag @employee.photo.url(:medium)
       - else
         = image_tag "HR/default_employee.png"
     #employee_main_info

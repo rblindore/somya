@@ -410,6 +410,7 @@ Fedena::Application.routes.draw do
       get :edit_additional_details
       patch :edit_additional_details
       get :delete_additional_details
+      get :show_previous_details
     end
     member do
       get :profile

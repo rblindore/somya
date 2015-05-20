@@ -51,7 +51,7 @@
   #student_profile_heading
     #profile_picture_display
       - if @student.photo.file?
-        = image_tag @student.photo.url
+        = image_tag @student.photo.url(:medium)
       - else
         = image_tag "master_student/profile/default_student.png"
     #student_main_info

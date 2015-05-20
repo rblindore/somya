@@ -188,35 +188,40 @@ class StudentsController < ApplicationController
     end
     if request.post?
       @error=false
+      @errors = []
       mandatory_fields = StudentAdditionalField.where(is_mandatory: true, status: true)
       mandatory_fields.each do|m|
+	unless params[:student_additional_details].blank?
         unless params[:student_additional_details][m.id.to_s.to_sym].present?
-          @student.errors.add_to_base("#{m.name} must contain atleast one selected option.")
+          @errors << "#{m.name} must contain atleast one selected option."
           @error=true
         else
           if params[:student_additional_details][m.id.to_s.to_sym][:additional_info]==""
-            @student.errors.add_to_base("#{m.name} cannot be blank.")
+            @errors << "#{m.name} cannot be blank."
             @error=true
           end
         end
+	end
       end
       unless @error==true
-        params[:student_additional_details].each_pair do |k, v|
-          addl_info = v['additional_info']
-          addl_field = StudentAdditionalField.find_by_id(k)
-          if addl_field.input_type == "has_many"
-            addl_info = addl_info.join(", ")
+	unless params[:student_additional_details].blank?
+          params[:student_additional_details].each_pair do |k, v|
+            addl_info = v['additional_info']
+            addl_field = StudentAdditionalField.find_by_id(k)
+            if addl_field.input_type == "has_many"
+              addl_info = addl_info.join(", ")
+            end
+            prev_record = StudentAdditionalDetail.find_by_student_id_and_additional_field_id(params[:id], k)
+            unless prev_record.nil?
+              prev_record.update_attributes(:additional_info => addl_info)
+            else
+              addl_detail = StudentAdditionalDetail.new(:student_id => params[:id],
+                :additional_field_id => k,:additional_info => addl_info)
+              addl_detail.save if addl_detail.valid?
+            end
           end
-          prev_record = StudentAdditionalDetail.find_by_student_id_and_additional_field_id(params[:id], k)
-          unless prev_record.nil?
-            prev_record.update_attributes(:additional_info => addl_info)
-          else
-            addl_detail = StudentAdditionalDetail.new(:student_id => params[:id],
-              :additional_field_id => k,:additional_info => addl_info)
-            addl_detail.save if addl_detail.valid?
-          end
-        end
-        flash[:notice] = "#{t('flash9')} #{@student.first_name} #{@student.last_name}. #{t('new_admission_link')} <a href='/student/admission1'>Click Here</a>"
+	end
+        flash[:notice] = "#{t('student.flash9')} #{@student.first_name} #{@student.last_name}. #{t('new_admission_link')} <a href='/student/admission1'>Click Here</a>".html_safe
         redirect_to profile_student_path(@student)
       end
     end
@@ -1356,7 +1361,7 @@ class StudentsController < ApplicationController
   private
 
     def student_params
-      params.require(:student).permit(:admission_no, :admission_date, :first_name, :middle_name, :last_name, :batch_id, :date_of_birth, :gender, :blood_group, :birth_place, :nationality_id, :language, :student_category_id, :religion, :address_line1, :address_line2, :city, :state, :pin_code, :country_id, :phone1, :phone2, :email)
+      params.require(:student).permit(:admission_no, :admission_date, :first_name, :middle_name, :last_name, :batch_id, :date_of_birth, :gender, :blood_group, :birth_place, :nationality_id, :language, :student_category_id, :religion, :address_line1, :address_line2, :city, :state, :pin_code, :country_id, :phone1, :phone2, :email, :photo)
     end
 
     def find_student

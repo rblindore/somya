@@ -24,8 +24,10 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for :student_additional_details do |a|
-    = error_messages_for 'student'
+  = form_for(:student_additional_details, :url => {:id =>@student.id}) do |a|
+    - unless @errors.nil?
+      - @errors.each do |err|
+        = err
     - i=0
     #form-contents
       %span.span-sub-heading= t('additional_detail')

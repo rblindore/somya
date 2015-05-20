@@ -1674,7 +1674,7 @@ class EmployeeController < ApplicationController
     @employee = Employee.find(params[:id])
     @dependency = @employee.former_dependency
     if request.post?
-      flash[:notice]= "#{t('flash32')}  #{@employee.employee_number}"
+      flash[:notice]= "#{t('employee.flash32')}  #{@employee.employee_number}"
       EmployeesSubject.destroy_all(:employee_id=>@employee.id)
       @employee.archive_employee(params[:remove][:status_description])
       redirect_to :action => "hr"
@@ -1778,6 +1778,6 @@ class EmployeeController < ApplicationController
 
   def employee_params
     params.require(:employee).permit(:email, :employee_category_id, :employee_number, :first_name, :middle_name, :last_name, :gender, :employee_position_id,
-    :employee_department_id, :employee_category_id, :employee_grade_id,  :nationality_id,:joining_date, :date_of_birth, :job_title, :qualification, :experience_detail, :experience_year, :experience_month, :marital_status, :children_count, :father_name, :mother_name, :husband_name, :blood_group) if params[:employee]
+    :employee_department_id, :employee_category_id, :employee_grade_id,  :nationality_id,:joining_date, :date_of_birth, :job_title, :qualification, :experience_detail, :experience_year, :experience_month, :marital_status, :children_count, :father_name, :mother_name, :husband_name, :blood_group, :photo) if params[:employee]
   end
 end
