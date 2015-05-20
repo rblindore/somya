@@ -42,21 +42,18 @@ class AttendanceReportsController < ApplicationController
     if @current_user.employee? and @allow_access ==true
       role_symb = @current_user.role_symbols
       if role_symb.include?(:student_attendance_view) or role_symb.include?(:student_attendance_register)
-        @subjects= Subject.find(:all,:conditions=>"batch_id = '#{@batch.id}' ")
+        @subjects= Subject.where(:batch_id => @batch.id)
       else
         if @batch.employee_id.to_i==@current_user.employee_record.id
           @subjects= @batch.subjects
         else
-          @subjects= Subject.find(:all,:joins=>"INNER JOIN employees_subjects ON employees_subjects.subject_id = subjects.id AND employee_id = #{@current_user.employee_record.id} AND batch_id = #{@batch.id} ")
+          @subjects= Subject.where(:batch_id => @batch.id).joins("INNER JOIN employees_subjects ON employees_subjects.subject_id = subjects.id AND employees_subjects.employee_id = #{@current_user.employee_record.id}")
         end
       end
     else
-      @subjects = Subject.find_all_by_batch_id(@batch.id,:conditions=>'is_deleted = false')
+      @subjects = Subject.where("batch_id = ? and is_deleted = ? ", @batch.id,false)
     end
 
-    render :update do |page|
-      page.replace_html 'subject', :partial => 'subject'
-    end
   end
 
   def mode
@@ -68,30 +65,18 @@ class AttendanceReportsController < ApplicationController
       else
         @subject = 0
       end
-      render :update do |page|
-        page.replace_html 'mode', :partial => 'mode'
-        page.replace_html 'month', :text => ''
-      end
     else
       if params[:subject_id] ==''
-        render :update do |page|
-          page.replace_html 'mode', :text => ''
-          page.replace_html 'month', :text => ''
-        end
       else
         unless params[:subject_id] == 'all_sub'
           @subject = params[:subject_id]
         else
           @subject = 0
         end
-        render :update do |page|
-          page.replace_html 'mode', :partial => 'mode'
-          page.replace_html 'month', :text => ''
-        end
       end
     end
   end
-  def show
+  def show_mode
     @batch = Batch.find params[:batch_id]
     @start_date = @batch.start_date.to_date
     @end_date = @local_tzone_time.to_date
@@ -124,8 +109,8 @@ class AttendanceReportsController < ApplicationController
           end
         else
           @academic_days=@batch.subject_hours(@start_date, @end_date, 0).values.flatten.compact.count
-          @report = @batch.subject_leaves.find(:all,:conditions =>{:batch_id=>@batch.id,:month_date => @start_date..@end_date})
-          @grouped = @batch.subject_leaves(:all,  :conditions =>{:batch_id=>@batch.id,:month_date => @start_date..@end_date}).group_by(&:student_id)
+          @report = SubjectLeave.where(:batch_id => @batch.id,:month_date => @start_date..@end_date)
+          @grouped = SubjectLeave.where(:batch_id=>@batch.id,:month_date => @start_date..@end_date).group_by(&:student_id)
           @batch.students.each do |s|
             if @grouped[s.id].nil?
               @leaves[s.id]['leave']=0
@@ -136,18 +121,10 @@ class AttendanceReportsController < ApplicationController
             @leaves[s.id]['percent'] = (@leaves[s.id]['total'].to_f/@academic_days)*100 unless @academic_days == 0
           end
         end
-        render :update do |page|
-          page.replace_html 'report', :partial => 'report'
-          page.replace_html 'month', :text => ''
-          page.replace_html 'year', :text => ''
-        end
       else
         @year = @local_tzone_time.to_date.year
         @academic_days=@batch.working_days(@local_tzone_time.to_date).count
         @subject = params[:subject_id]
-        render :update do |page|
-          page.replace_html 'month', :partial => 'month'
-        end
       end
     else
       if @mode == 'Overall'
@@ -160,17 +137,9 @@ class AttendanceReportsController < ApplicationController
           @leaves[student.id]['total']=@academic_days-leaves_full[student.id].to_f-(0.5*(leaves_forenoon[student.id].to_f+leaves_afternoon[student.id].to_f))
           @leaves[student.id]['percent'] = (@leaves[student.id]['total'].to_f/@academic_days)*100 unless @academic_days == 0
         end
-        render :update do |page|
-          page.replace_html 'report', :partial => 'report'
-          page.replace_html 'month', :text => ''
-          page.replace_html 'year', :text => ''
-        end
       else
         @year = @local_tzone_time.to_date.year
         @subject = params[:subject_id]
-        render :update do |page|
-          page.replace_html 'month', :partial => 'month'
-        end
       end
     end
   end
@@ -225,7 +194,7 @@ class AttendanceReportsController < ApplicationController
   def report
     @batch = Batch.find params[:batch_id]
     @month = params[:month]
-    @year = params[:year]
+    @year = params[:years]
     @students = @batch.students.by_first_name
     @config = Settings.find_by_config_key('StudentAttendanceType')
     #    @date = "01-#{@month}-#{@year}"

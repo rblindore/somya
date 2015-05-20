@@ -35,7 +35,7 @@
         .link-descr= t('add_a_new_course_or_batch')
     - if permitted_to? :settings, :configuration
       .link-box
-        .link-heading= link_to t('manage_student_category'), categories_student_index_path
+        .link-heading= link_to t('manage_student_category'), {:controller => :students, :action => :categories}
         .link-descr= t('add_student_category')
     - if permitted_to? :index, :subjects
       .link-box
@@ -47,7 +47,7 @@
         .link-descr= t('set_some_general_configuration')
     - if permitted_to? :settings, :configuration
       .link-box
-        .link-heading= link_to t('add_admission_additional_detail'), add_additional_details_student_index_path
+        .link-heading= link_to t('add_admission_additional_detail'), {:controller => :students, :action => :add_additional_details}
         .link-descr= t('set_some_additional_details')
     - if permitted_to? :index, :sms
       .link-box

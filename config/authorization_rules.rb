@@ -1391,10 +1391,10 @@ authorization do
     has_permission_on [:sms],  :to => [:index, :settings, :update_general_sms_settings, :students, :list_students, :batches, :sms_all, :employees, :list_employees, :departments, :all, :show_sms_messages, :show_sms_logs]
     has_permission_on [:sms_settings],  :to => [:index, :update_general_sms_settings]
     has_permission_on [:class_timings],  :to => [:index, :edit, :destroy, :show, :new, :create, :update, :show_class_timing]
-    has_permission_on [:attendance_reports], :to => [:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf]
+    has_permission_on [:attendance_reports], :to => [:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf, :show_mode]
     has_permission_on [:student_attendance], :to => [:index, :student, :month]
     has_permission_on [:configuration], :to => [:index,:settings,:permissions, :add_weekly_holidays, :delete]
-    has_permission_on [:subjects], :to => [:index, :new, :create,:destroy,:edit,:update, :show]
+    has_permission_on [:subjects], :to => [:index, :new, :create,:destroy,:edit,:update, :show, :show_batch, :delete_subject]
     has_permission_on [:elective_groups],  :to => [:index,:new,:create,:destroy,:edit, :update,:show]
     has_permission_on [:courses],
       :to => [
@@ -2512,12 +2512,15 @@ authorization do
   
   role :admin do
     has_permission_on [:students], :to => [:admission1, :admission2, :admission3, :previous_data, :admission4, :profile, :previous_subject, :save_previous_subject, :delete_previous_subject, :reports, :index, :guardians, :add_guardian,
-                                           :admission3_1, :email, :remove, :change_to_former, :delete, :destroy, :edit, :profile_pdf, :view_all, :list_students_by_course, :advanced_search, :search_ajax
+                                           :admission3_1, :email, :remove, :change_to_former, :delete, :destroy, :edit, :profile_pdf, :view_all, :list_students_by_course, :advanced_search, :search_ajax, :categories, :category_edit, :category_update, :category_delete,
+                                           :add_additional_details, :change_field_priority, :edit_additional_details, :delete_additional_details
                                           ]
   end
 
   role :guest do 
-    has_permission_on [:students], :to => [:save_previous_subject, :change_to_former]
+    has_permission_on [:students], :to => [:save_previous_subject, :change_to_former, :category_update]
+    
+    has_permission_on [:news], :to => [:index, :all]
   end
   
   role :admin do

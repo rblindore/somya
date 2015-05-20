@@ -16,8 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= csrf_meta_tag
 .box
-  = form_remote_tag :url => {:action => 'category_update'}  do |f|
+  = form_tag({:action => 'category_update'}, :remote => true) do |f|
     = error_messages_for 'student_category', :header_message => nil
     .label-field-pair
       %label

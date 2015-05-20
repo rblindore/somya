@@ -26,5 +26,6 @@
     - else
       - dropdown_list << [t('all_subjects'), "all_sub"]
       - dropdown_list +=  @subjects.map {|b| [b.name, b.id] }
-    = select :subject, :id, dropdown_list, { prompt: t('select_a_subject') }, { onchange: "onChangeRequest(this, '#{url_for(action: :mode, subject_id: 'paramid', batch_id: @batch_id)}')"}
+    = select :subject, :id, dropdown_list, { :prompt => t('select_a_subject') }, 
+    { :onchange => "onChangeRequest(this, '#{url_for(action: :mode, subject_id: 'paramid', batch_id: @batch.id)}')"}
 #register

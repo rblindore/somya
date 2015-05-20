@@ -1,0 +1,10 @@
+- if @config.config_value == 'Daily'
+  $("#mode").html("#{escape_javascript render 'mode'}")
+  $("#month").html("#{escape_javascript ''}")
+- else
+  - if @subject_id
+    $("#mode").html("#{escape_javascript ''}")
+    $("#month").html("#{escape_javascript ''}")
+  - else
+    $("#mode").html("#{escape_javascript render 'mode'}")
+    $("#month").html("#{escape_javascript ''}")

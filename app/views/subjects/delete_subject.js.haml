@@ -1,0 +1,4 @@
+- if @error_text.nil?
+  - text = "<p class='flash-msg'>#{flash[:notice]}</p>".html_safe unless flash[:notice].nil?
+  $("#subject-#{@subject.id}").hide();
+  $("#flash-box").html("#{escape_javascript text}")

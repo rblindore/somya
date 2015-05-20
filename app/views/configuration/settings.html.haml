@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("show_settings.png")
   %h1= t('configuration_text')
@@ -44,7 +45,7 @@
       .label-field-pair
         %label{:for => "configuration_student_attendance_type"}= t('student_attendance_type')
         .text-input-bg
-          = select :configuration, :student_attendance_type, [["#{t('daily_text')}", "Daily"], ["#{t('subject_wise_text')}", "SubjectWise"]], |
+          = select :configuration, :student_attendance_type, [["#{t('configuration.daily_text')}", "Daily"], ["#{t('configuration.subject_wise_text')}", "SubjectWise"]], |
             :selected => @config[:student_attendance_type]                                                                                    |
       .label-field-pair
         %label{:for => "configuration_currency_type"}= t('finance_year_start_date')

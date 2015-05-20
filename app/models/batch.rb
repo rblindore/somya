@@ -49,7 +49,7 @@ class Batch < ActiveRecord::Base
   has_and_belongs_to_many :graduated_students, class_name: "Student", join_table: :batch_students
 
   delegate :course_name, :section_name, :code, to: :course, allow_nil: true
-  delegate :grading_type, :cce_enabled?, :observation_groups, :cce_weightages, to: :course
+  delegate :grading_type, :cce_enabled?, :observation_groups, :cce_weightages, to: :course, allow_nil: true
 
   validates_presence_of :name, :start_date, :end_date
 
@@ -114,7 +114,7 @@ class Batch < ActiveRecord::Base
   end
 
   def holiday_event_dates
-    @common_holidays ||= Event.holidays.is_common
+    @common_holidays ||= Event.holidays.where(:is_common => true)
     @batch_holidays=events.holidays
     all_holiday_events = @batch_holidays+@common_holidays
     event_holidays = []
@@ -125,7 +125,7 @@ class Batch < ActiveRecord::Base
   end
 
   def return_holidays(start_date,end_date)
-    @common_holidays ||= Event.holidays.is_common
+    @common_holidays ||= Event.holidays.where(:is_common => true)
     @batch_holidays=self.events(:all,:conditions=>{:is_holiday=>true})
     all_holiday_events = @batch_holidays+@common_holidays
     all_holiday_events.reject!{|h| !(h.start_date>=start_date and h.end_date<=end_date)}

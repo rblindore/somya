@@ -1,0 +1,6 @@
+- if @mode == 'Overall'
+  $("#report").html("#{escape_javascript render 'report'}")
+  $("#month").html("#{escape_javascript ''}")
+  $("#year").html("#{escape_javascript ''}")
+- else
+  $("#month").html("#{escape_javascript render 'month'}")  

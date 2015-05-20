@@ -17,4 +17,4 @@
 - #specific language governing permissions and limitations
 - #under the License.
 .text-input-bg3
-  = select :year, :id, [[t('year'),""],[@year-1,@year-1],[@year,@year], [@year+1,@year+1]], { prompt: t('year')}, { onchange: "onChangeRequest(this, '#{url_for(action: :report, year: 'paramid', batch_id: @batch.id, month: @month, subject_id: @subject)}')"}
+  = select :years, :id, [[t('year'),""],[@year-1,@year-1],[@year,@year], [@year+1,@year+1]], { prompt: t('year')}, { onchange: "onChangeRequest(this, '#{url_for(action: :report, year: 'paramid', batch_id: @batch.id, month: @month, subject_id: @subject)}')"}

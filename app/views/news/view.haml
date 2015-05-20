@@ -43,8 +43,7 @@
     - if @comments.empty?
       = t('no_comments')
   %ul#comments-list
-    - @comments.each do |cmnt|
-      = render "comment", cmnt: cmnt
+    = render "comment"
   %h4#leave-a-comment= t('leave_comment')
   = form_for :comment, id: 'comments-form', url: { action: :add_comment }, remote: true do |f|
     .comment-content

@@ -18,5 +18,5 @@
 - #under the License.
 #error-box
   %ul
-    - errors.errors.each_full do |msg|
+    - @subject.errors.full_messages.each do |msg|
       %li= msg

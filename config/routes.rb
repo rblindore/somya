@@ -64,7 +64,9 @@ Fedena::Application.routes.draw do
 
   resources :subjects do
     collection do
-      get :show
+      get :index
+      get :show_batch
+      get :delete_subject
     end
   end
 
@@ -121,6 +123,10 @@ Fedena::Application.routes.draw do
     collection do
       get :advance_search
       get :mode
+      get :subject
+      get :show_mode
+      get :year
+      get :report
     end
   end
 
@@ -263,6 +269,12 @@ Fedena::Application.routes.draw do
     #batch.resources :additional_exam_groups
     resources :elective_groups, :as => :electives
   end
+  
+  resources :elective_groups do
+    collection do
+      get :new
+    end
+  end
 
   resources :exam_groups do
     resources :exams do
@@ -367,6 +379,7 @@ Fedena::Application.routes.draw do
       get :previous_data
       post :previous_data
       get :admission4
+      post :admission4
       get :previous_subject
       get :save_previous_subject
       post :save_previous_subject
@@ -387,6 +400,16 @@ Fedena::Application.routes.draw do
       post :change_to_former
       get :delete
       get :destroy
+      get :category_edit
+      post :category_edit
+      get :category_delete
+      get :category_update
+      post :category_update
+      get :add_additional_details
+      get :change_field_priority
+      get :edit_additional_details
+      patch :edit_additional_details
+      get :delete_additional_details
     end
     member do
       get :profile

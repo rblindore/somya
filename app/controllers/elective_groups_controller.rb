@@ -67,7 +67,7 @@ class ElectiveGroupsController < ApplicationController
 
   private
   def pre_load_objects
-    @batch = Batch.find(params[:batch_id], :include => :course)
+    @batch = Batch.where(:id => params[:batch_id]).includes(:course).first
     @course = @batch.course
     @elective_group = ElectiveGroup.find(params[:id]) unless params[:id].nil?
   end

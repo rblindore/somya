@@ -21,4 +21,5 @@
     = t('select_mode')
     \:
   .text-input-bg
-    = select :mode, :id, [[t('monthly'),"Monthly"], [t('overall'),"Overall"]], { prompt: t('select_mode')}, { onchange: "onChangeRequest(this, '#{url_for(action: :show, mode: 'paramid', batch_id: @batch.id, subject_id: @subject)}')"}
+    = select :mode, :id, [[t('monthly'),"Monthly"], [t('overall'),"Overall"]], { :prompt => t('select_mode')}, 
+    { :onchange => "onChangeRequest(this, '#{url_for(action: :show_mode, mode: 'paramid', batch_id: @batch.id, subject_id: @subject)}')"}
