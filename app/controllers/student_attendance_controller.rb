@@ -36,6 +36,7 @@ class StudentAttendanceController < ApplicationController
 
     if request.post?
       @detail_report = []
+      @mode = params[:advance_search][:mode]
       if params[:advance_search][:mode]== 'Overall'
         @start_date = @batch.start_date.to_date
         @end_date = Date.today
@@ -96,32 +97,17 @@ class StudentAttendanceController < ApplicationController
           @percent = (@attendance.to_f/@academic_days)*100 unless @academic_days == 0
         end
       else
-        render :update do |page|
-          page.replace_html 'error-container', :text => "<div id='errorExplanation' class='errorExplanation'><p>#{t('please_select_mode')}.</p></div>"
-        end
         return
       end
 
-      render :update do |page|
-        page.replace_html 'report', :partial => 'report'
-        page.replace_html 'error-container', :text => ''
-      end
     end
 
   end
 
   def month
+    @month = params[:mode]
     if params[:mode] == 'Monthly'
-      @year = Date.today.year
-      render :update do |page|
-        page.replace_html 'month', :partial => 'month'
-        page.replace_html 'error-container', :text => ''
-      end
-    else
-      render :update do |page|
-        page.replace_html 'month', :text =>''
-        page.replace_html 'error-container', :text => ''
-      end
+      @year = Date.today.year      
     end
   end
 

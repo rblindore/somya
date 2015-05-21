@@ -56,5 +56,5 @@
             %td.col-2= exam_score.nil? ? '-' : exam_score.grading_level || "-"
     %br/
     %script{:src => "/javascripts/swfobject.js", :type => "text/javascript"}
-    = @graph
+    = @graph.html_safe
     .extender

@@ -289,7 +289,7 @@ class ExamController < ApplicationController
           page.replace_html   'exam_wise_report', :partial=>"exam_wise_report"
         end
       else
-        @students = Student.find_all_by_id(params[:student])
+        @students = Student.where(:id => params[:student])
       end
     end
   end
