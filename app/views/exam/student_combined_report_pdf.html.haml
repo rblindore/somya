@@ -34,14 +34,14 @@
               %h4= designation.name
               - designated_students = []
               - @students.each do|student|
-                - marks = GroupedExamReport.find_all_by_student_id_and_score_type(student.id,"c")
+                - marks = GroupedExamReport.where("student_id = ? and score_type = ?", student.id,"c")
                 - unless marks.empty?
                   - total = marks.map{|m| m.marks}
                   - avg = (total.sum.to_f)/(total.count.to_f)
                   - if @batch.gpa_enabled?
-                    - classes = ClassDesignation.find(:all,:conditions=>["cgpa <= ? AND course_id = ?",avg,student.batch.course_id],:order=>"cgpa DESC")
+                    - classes = ClassDesignation.where("cgpa <= ? AND course_id = ?",avg,student.batch.course_id).order("cgpa DESC")
                   - else
-                    - classes = ClassDesignation.find(:all,:conditions=>["marks <= ? AND course_id = ?",avg,student.batch.course_id],:order=>"marks DESC")
+                    - classes = ClassDesignation.where("marks <= ? AND course_id = ?",avg,student.batch.course_id).order("marks DESC")
                   - unless classes.empty?
                     - if classes.first.id == designation.id
                       - designated_students << [student,avg]
@@ -60,23 +60,12 @@
                       %td= t('percentage')
                   - designated_students.each_with_index do|s,i|
                     - if (i+1)%(page_val.to_i) == 0
-              %table#pdf-table.section{:cellspacing => "0", :width => "100%"}
-                %tr.table-header
-                  %td= t('sl_no')
-                  %td= t('adm_no')
-                  %td= t('name')
-                  - if @batch.cwa_enabled?
-                    %td= t('cwa')
-                  - elsif @batch.gpa_enabled?
-                    %td= t('cgpa')
-                  - else
-                    %td= t('percentage')
-                %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
-                  - st = s[0]
-                  %td.col-pdf= i+1
-                  %td.col-pdf= st.admission_no.present? ? st.admission_no : "-"
-                  %td.col-pdf= st.full_name
-                  %td.col-pdf= "%.2f" %(s[1].to_f)
+                      %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+                        - st = s[0]
+                        %td.col-pdf= i+1
+                        %td.col-pdf= st.admission_no.present? ? st.admission_no : "-"
+                        %td.col-pdf= st.full_name
+                        %td.col-pdf= "%.2f" %(s[1].to_f)
                 - else
                   %tr.table-header
                     %td= t('no_students_for_this_class_designation')
@@ -87,15 +76,15 @@
                   = level.name
                   = t('students')
                 - unless level.subject_count.nil?
-                  - scores = GroupedExamReport.find(:all,:conditions=>{:student_id=>@students.collect(&:id),:score_type=>"s"})
+                  - scores = GroupedExamReport.where(:student_id=>@students.collect(&:id),:score_type=>"s")
                 - else
-                  - scores = GroupedExamReport.find(:all,:conditions=>{:student_id=>@students.collect(&:id),:score_type=>"c"})
+                  - scores = GroupedExamReport.where(:student_id=>@students.collect(&:id),:score_type=>"c")
                 - if level.marks_limit_type=="upper"
-                  - scores.reject!{|s| !(((s.marks < level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks < level.marks unless level.marks.nil?))}
+                  - scores.to_a.reject!{|s| !(((s.marks < level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks < level.marks unless level.marks.nil?))}
                 - elsif level.marks_limit_type=="exact"
-                  - scores.reject!{|s| !(((s.marks == level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks == level.marks unless level.marks.nil?))}
+                  - scores.to_a.reject!{|s| !(((s.marks == level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks == level.marks unless level.marks.nil?))}
                 - else
-                  - scores.reject!{|s| !(((s.marks >= level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks >= level.marks unless level.marks.nil?))}
+                  - scores.to_a.reject!{|s| !(((s.marks >= level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks >= level.marks unless level.marks.nil?))}
                 - ranked_students =[]
                 - unless scores.empty?
                   - unless level.subject_count.nil?
@@ -166,33 +155,19 @@
                         = level.name
                     - ranked_students.each_with_index do|r,indx|
                       - if (indx+1)%(page_val.to_i) == 0
-                %table#pdf-table.section{:cellspacing => "0", :width => "100%"}
-                  %tr.table-header
-                    %td= t('sl_no')
-                    %td= t('adm_no')
-                    %td= t('name')
-                    - if @batch.cwa_enabled?
-                      %td= t('cwa')
-                    - elsif @batch.gpa_enabled?
-                      %td= t('cgpa')
-                    - else
-                      %td= t('percentage')
-                    %td
-                      = t('courses_text')
-                      = level.name
-                  %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
-                    - stu = Student.find(r[0])
-                    - marks = GroupedExamReport.find_all_by_student_id_and_score_type(stu.id,"c")
-                    - unless marks.empty?
-                      - total = marks.map{|m| m.marks}
-                      - avg = (total.sum.to_f)/(total.count.to_f)
-                    %td.col-pdf= indx+1
-                    %td.col-pdf= stu.admission_no.present? ? stu.admission_no : "-"
-                    %td.col-pdf= stu.full_name
-                    %td.col-pdf= avg.present? ? "%.2f" %(avg) : "-"
-                    %td.col-pdf
-                      - batches = r[1]
-                      = Batch.find_all_by_id(batches).collect(&:full_name).join(", ")
+                        %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+                          - stu = Student.find(r[0])
+                          - marks = GroupedExamReport.where("student_id = ? and score_type = ? ", stu.id,"c")
+                          - unless marks.empty?
+                            - total = marks.map{|m| m.marks}
+                            - avg = (total.sum.to_f)/(total.count.to_f)
+                          %td.col-pdf= indx+1
+                          %td.col-pdf= stu.admission_no.present? ? stu.admission_no : "-"
+                          %td.col-pdf= stu.full_name
+                          %td.col-pdf= avg.present? ? "%.2f" %(avg) : "-"
+                          %td.col-pdf
+                            - batches = r[1]
+                            = Batch.find_all_by_id(batches).collect(&:full_name).join(", ")
                   - else
                     %tr.table-header
                       %td= t('no_students_for_this_ranking_level')

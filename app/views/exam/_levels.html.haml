@@ -24,10 +24,10 @@
   .fee_category_scroll
     .sel-list
       = t('select')
-      = select_all('each_batch')
-      = select_none('each_batch')
+      = select_all('each_batch_class')
+      = select_none('each_batch_class')
     - @class_designations.each do |d|
-      .each_batch
+      .each_batch_class
         = check_box_tag "combined_report[designation_ids][]", d.id,false,:class=>'batches_box'
         = d.name
 .grades

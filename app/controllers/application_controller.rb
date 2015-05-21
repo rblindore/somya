@@ -17,6 +17,7 @@
 #limitations under the License.
 
 class ApplicationController < ActionController::Base
+  require 'will_paginate/array'
   helper :all
   helper_method :can_access_request?
   protect_from_forgery # :secret => '434571160a81b5595319c859d32060c1'

@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
 #content-header
   = image_tag("examination/show_exam.png")
   %h1= t('exams_text')
@@ -40,7 +41,8 @@
         .text-input-bg
           = select :ranking_level_report, :mode,                                                                                                  |
             [[t('course_wise'),"course"],[t('batch_wise'),"batch"]],                                                                              |
-            {prompt: "select a mode"}, { onChange: "#{remote_function( url: select_mode_exam_index_path(mode: "value"), with: "'mode='+value")}"} |
+            {:prompt => "select a mode"}, 
+            {:onChange => "onChangeRequest(this, '#{url_for(action: :select_mode, mode: 'paramid')}')"}
       #course-batch
       = submit_tag "", :value => "► #{t('view')}", :class => "submit_button"
     .extender

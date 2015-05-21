@@ -1,0 +1,7 @@
+- unless @mode.nil? or @mode.blank?
+  - if @mode == "batch"
+    $("#course-batch").html("#{escape_javascript render 'batch_select'}")
+  - else
+    $("#course-batch").html("#{escape_javascript render 'course_select'}")
+- else
+  $("#course-batch").html("#{escape_javascript ''}")

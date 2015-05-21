@@ -23,5 +23,6 @@
   .text-input-bg
     = select :ranking_level_report, :course_id,                                                                                                                     |
       @courses.map {|b| [b.full_name, b.id]},                                                                                                                       |
-      {prompt: t('select_a_course')},{ onChange: "#{remote_function( url: select_batch_group_exam_index_path(course_id: "value"), :with => "'course_id='+value")}"} |
+      {:prompt => t('select_a_course')},
+      {:onChange => "onChangeRequest(this, '#{url_for(action: :select_batch_group, course_id: 'paramid')}')"}
 #batch_groups

@@ -126,7 +126,7 @@ class Batch < ActiveRecord::Base
 
   def return_holidays(start_date,end_date)
     @common_holidays ||= Event.holidays.where(:is_common => true)
-    @batch_holidays=self.events(:all,:conditions=>{:is_holiday=>true})
+    @batch_holidays=self.events.where(:is_holiday=>true)
     all_holiday_events = @batch_holidays+@common_holidays
     all_holiday_events.reject!{|h| !(h.start_date>=start_date and h.end_date<=end_date)}
     event_holidays = []
@@ -191,8 +191,8 @@ class Batch < ActiveRecord::Base
   end
 
   def find_batch_rank
-    @students = Student.find_all_by_batch_id(self.id)
-    @grouped_exams = GroupedExam.find_all_by_batch_id(self.id)
+    @students = Student.where(:batch_id => self.id)
+    @grouped_exams = GroupedExam.where(:batch_id => self.id)
     ordered_scores = []
     student_scores = []
     ranked_students = []
@@ -219,9 +219,9 @@ class Batch < ActiveRecord::Base
   end
 
   def find_attendance_rank(start_date,end_date)
-    @students = Student.find_all_by_batch_id(self.id)
+    @students = Student.where(:batch_id => self.id)
     ranked_students=[]
-    unless @students.empty?
+    unless @students.blank?
       working_days = self.find_working_days(start_date,end_date).count
       unless working_days == 0
         ordered_percentages = []
@@ -229,7 +229,7 @@ class Batch < ActiveRecord::Base
         @students.each do|student|
           leaves = Attendance.where("student_id = ? and month_date >= ? and month_date <= ?",student.id, start_date, end_date)
           absents = 0
-          unless leaves.empty?
+          unless leaves.blank?
             leaves.each do|leave|
               if leave.forenoon == true and leave.afternoon == true
                 absents = absents + 1

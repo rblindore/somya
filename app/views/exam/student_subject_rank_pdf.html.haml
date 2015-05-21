@@ -32,9 +32,9 @@
         \- #{@batch.course.full_name}
   - ranks = []
   - @exam_groups.each do |exam_group|
-    - rank_exam = Exam.find_by_subject_id(@subject.id,:conditions=>{:exam_group_id=>exam_group.id})
+    - rank_exam = Exam.find_by_subject_id_and_exam_group_id(@subject.id, exam_group.id)
     - unless rank_exam.nil?
-      - exam_scores = ExamScore.find_all_by_exam_id(rank_exam.id)
+      - exam_scores = ExamScore.where(:exam_id => rank_exam.id)
       - ordered_marks = exam_scores.map{|m| m.marks}.compact.uniq.sort.reverse
       - ranks << [exam_group.id,ordered_marks]
   - c = 'even'
@@ -61,8 +61,8 @@
                 - if rank[0]==exam_group.id
                   - mark_list = rank[1]
               %td.exam-td
-                - exam = Exam.find_by_subject_id(@subject.id,:conditions=>{:exam_group_id=>exam_group.id})
-                - exam_score = ExamScore.find_by_student_id(student.id,:conditions=>{:exam_id=>exam.id}) unless exam.nil?
+                - exam = Exam.find_by_subject_id_and_exam_group_id(@subject.id, exam_group.id)
+                - exam_score = ExamScore.find_by_student_id_and_exam_id(student.id, exam.id) unless exam.nil?
                 - unless exam.nil?
                   = exam_score.nil? ? '-' : (exam_score.marks.nil? ? '-' : (mark_list.index(exam_score.marks) + 1))
                 - else
