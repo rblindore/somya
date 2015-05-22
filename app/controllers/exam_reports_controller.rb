@@ -91,7 +91,7 @@ class ExamReportsController < ApplicationController
       #@students=@batch.students.all(:order=>"first_name ASC")
       @student = @students.first  unless @students.empty?
       if @student.blank?
-        flash[:notice] = "#{t('flash1')}"
+        flash[:notice] = "#{t('exam_reports.flash1')}"
         redirect_to :action=>'archived_exam_wise_report' and return
       end
       if @type == 'grouped'

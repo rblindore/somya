@@ -51,7 +51,7 @@
           = f.select :mode,                                                 |
             [["#{t('monthly')}","Monthly"], ["#{t('overall')}","Overall"]], |
             {:prompt => "#{t('select_mode')}"},                             |
-            {:onchange => "onchangeRequest(this, '#{url_for(action: :month, mode: 'paramid', id: @student.id)}')"}
+            {:onChange => "onChangeRequest(this, '#{url_for(action: :month, mode: 'paramid', id: @student.id)}')"}
       #month
       = submit_tag "", :value => "► #{t('ok')}", :class => "submit_button"
     #report

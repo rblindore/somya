@@ -42,6 +42,7 @@ class ArchivedEmployee < ActiveRecord::Base
     styles: { thumb: "100x100#", small: "150x150>" },
     url: "/system/:class/:attachment/:id/:style/:basename.:extension",
     path: ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
+    validates_attachment_content_type :photo, :content_type => /\Aimage\/.*\Z/
 
   def full_name
     "#{first_name} #{middle_name} #{last_name}"

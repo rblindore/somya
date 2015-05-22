@@ -31,20 +31,20 @@
       = flash[:notice]
   .box
     %h3{:align => "center"}= @batch.full_name
-    - unless @students.empty?
+    - unless @students.blank?
       - unless @designations.blank?
         - @designations.each do|designation|
           %h4= designation.name
           - designated_students = []
           - @students.each do|student|
-            - marks = GroupedExamReport.find_all_by_student_id_and_score_type(student.id,"c")
-            - unless marks.empty?
+            - marks = GroupedExamReport.where("student_id = ? and score_type = ? " ,student.id,"c")
+            - unless marks.blank?
               - total = marks.map{|m| m.marks}
               - avg = (total.sum.to_f)/(total.count.to_f)
               - if @batch.gpa_enabled?
-                - classes = ClassDesignation.find(:all,:conditions=>["cgpa <= ? AND course_id = ?",avg,student.batch.course_id],:order=>"cgpa DESC")
+                - classes = ClassDesignation.where("cgpa <= ? AND course_id = ?",avg,student.batch.course_id).order("cgpa DESC")
               - else
-                - classes = ClassDesignation.find(:all,:conditions=>["marks <= ? AND course_id = ?",avg,student.batch.course_id],:order=>"marks DESC")
+                - classes = ClassDesignation.where("marks <= ? AND course_id = ?",avg,student.batch.course_id).order("marks DESC")
               - unless classes.empty?
                 - if classes.first.id == designation.id
                   - designated_students << [student,avg]
@@ -76,22 +76,22 @@
             = level.name
             = t('students')
           - unless level.subject_count.nil?
-            - scores = GroupedExamReport.find(:all,:conditions=>{:student_id=>@students.collect(&:id),:score_type=>"s"})
+            - scores = GroupedExamReport.where(:student_id=>@students.collect(&:id),:score_type=>"s")
           - else
-            - scores = GroupedExamReport.find(:all,:conditions=>{:student_id=>@students.collect(&:id),:score_type=>"c"})
+            - scores = GroupedExamReport.where(:student_id=>@students.collect(&:id),:score_type=>"c")
           - if level.marks_limit_type=="upper"
-            - scores.reject!{|s| !(((s.marks < level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks < level.marks unless level.marks.nil?))}
+            - scores.to_a.reject!{|s| !(((s.marks < level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks < level.marks unless level.marks.nil?))}
           - elsif level.marks_limit_type=="exact"
-            - scores.reject!{|s| !(((s.marks == level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks == level.marks unless level.marks.nil?))}
+            - scores.to_a.reject!{|s| !(((s.marks == level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks == level.marks unless level.marks.nil?))}
           - else
-            - scores.reject!{|s| !(((s.marks >= level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks >= level.marks unless level.marks.nil?))}
+            - scores.to_a.reject!{|s| !(((s.marks >= level.gpa unless level.gpa.nil?) if s.student.batch.gpa_enabled?) or (s.marks >= level.marks unless level.marks.nil?))}
           - ranked_students =[]
           - unless scores.empty?
             - unless level.subject_count.nil?
               - sub_count = level.subject_count
               - @students.each do|student|
                 - student_scores = scores.dup
-                - student_scores.reject!{|s| !(s.student_id==student.id)}
+                - student_scores.to_a.reject!{|s| !(s.student_id==student.id)}
                 - batch_ids = student_scores.collect(&:batch_id)
                 - batch_ids.each do|batch_id|
                   - unless batch_ids.empty?
@@ -155,7 +155,7 @@
               - ranked_students.each_with_index do|r,ind|
                 %tr{:class => "tr-#{cycle('odd', 'even')}"}
                   - stu = Student.find(r[0])
-                  - marks = GroupedExamReport.find_all_by_student_id_and_score_type(stu.id,"c")
+                  - marks = GroupedExamReport.where("student_id = ? and score_type = ? ", stu.id,"c")
                   - unless marks.empty?
                     - total = marks.map{|m| m.marks}
                     - avg = (total.sum.to_f)/(total.count.to_f)
@@ -165,7 +165,7 @@
                   %td.col-1= avg.present? ? "%.2f" %(avg) : "-"
                   %td.col-3
                     - batches = r[1]
-                    = Batch.find_all_by_id(batches).collect(&:full_name).join(", ")
+                    = Batch.where(:id => batches).collect(&:full_name).join(", ")
             - else
               %tr.tr-head
                 %td= t('no_students_for_this_ranking_level')

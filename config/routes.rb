@@ -410,6 +410,7 @@ Fedena::Application.routes.draw do
       get :edit_additional_details
       patch :edit_additional_details
       get :delete_additional_details
+      get :show_previous_details
     end
     member do
       get :profile
@@ -502,6 +503,20 @@ Fedena::Application.routes.draw do
       get :combined_grouped_exam_report_pdf
       get :generated_report4_pdf
       get :student_transcript_pdf
+      get :consolidated_exam_report
+      get :generated_report_pdf
+      get :consolidated_exam_report_pdf
+      get :generated_report2_pdf
+      get :student_subject_rank_pdf
+      get :student_batch_rank_pdf
+      get :student_course_rank_pdf
+      get :student_course_rank
+      get :student_school_rank_pdf
+      get :student_attendance_rank_pdf
+      get :select_report_type
+      get :select_type
+      post :student_transcript
+      get :student_combined_report_pdf
     end
   end
 

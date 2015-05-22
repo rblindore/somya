@@ -23,7 +23,6 @@ gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 
 
@@ -45,7 +44,7 @@ gem 'ruby_parser'
 gem "iconv", "~> 1.0.3"
 gem 'test-unit', '1.2.3'
 gem 'delayed_job'
-gem 'paperclip'
+gem "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
 gem 'thin'
 gem 'haml'
 gem 'will_paginate'
@@ -55,7 +54,6 @@ gem 'ckeditor'
 gem 'factory_girl_rails'
 # The controller-level `respond_to' feature has been extracted to the `responders` gem. Add it to your Gemfile to continue using this feature
 gem 'responders', '~> 2.0'
-
 group :development do
   gem 'pry'
   gem 'spring'

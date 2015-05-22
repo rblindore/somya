@@ -1,0 +1,4 @@
+- if @month == 'Monthly'
+  $("#month").html("#{escape_javascript render 'month'}")
+- else
+  $("#month").html("#{escape_javascript ''}")

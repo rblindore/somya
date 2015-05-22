@@ -1,0 +1,4 @@
+- if @course.has_batch_groups_with_active_batches
+  $("#batch_group_list").html("#{escape_javascript render 'batch_groups'}")
+- else
+  $("#course-batch").html("#{escape_javascript ''}")

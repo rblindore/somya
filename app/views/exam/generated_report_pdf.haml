@@ -21,8 +21,8 @@
   %h2= "#{t('student_wise_report_for')} "+@exam_group.name+", #{t('batch')}:"+@batch.full_name
   .hor_line
   - @students.each_with_index do |student,i|
-    - general_subjects = Subject.find_all_by_batch_id(@batch.id, :conditions=>"elective_group_id IS NULL")
-    - student_electives = StudentsSubject.find_all_by_student_id(student.id,:conditions=>"batch_id = #{@batch.id}")
+    - general_subjects = Subject.where("batch_id = ? and elective_group_id IS ? ", @batch.id , nil)
+    - student_electives = StudentsSubject.where("student_id = ? and batch_id = ? ", student.id,@batch.id)
     - elective_subjects = []
     - student_electives.each do |elect|
       - elective_subjects.push Subject.find(elect.subject_id)
@@ -34,19 +34,43 @@
     .extender
     - if i == 0
       .report
-        - else
-          .report1
-            #main_info
-              %h4
-                = student.full_name
-              %h4
-                = "#{t('exam_text')} : "+@exam_group.name
-            #pdf-info
-              %table#pdf-table{:cellspacing => "0", :width => "100%"}
-                - c = 'even'
-                - if @batch.cwa_enabled?
-                  - total_credits=0
-                  - total_weighted_marks=0
+    - else
+      .report1
+        #main_info
+          %h4
+            = student.full_name
+          %h4
+            = "#{t('exam_text')} : "+@exam_group.name
+        #pdf-info
+          %table#pdf-table{:cellspacing => "0", :width => "100%"}
+            - c = 'even'
+            - if @batch.cwa_enabled?
+              - total_credits=0
+              - total_weighted_marks=0
+              %tr.table-header
+                %td.col-pdf= t('subject_code')
+                %td.col-pdf= t('subject_title')
+                %td.col-pdf= t('marks')
+                %td.col-pdf= t('credit')
+                %td.col-pdf= t('grade')
+                %td.col-pdf= t('weighted_marks')
+              %tr.tr-blank
+              - @exams.each_with_index do |exam,i|
+                - exam_score = ExamScore.find_by_student_id_and_exam_id(student,exam)
+                - unless exam_score.nil?
+                  - mark = (exam_score.marks.to_f/exam.maximum_marks.to_f)*100 || "-"
+                  - total_credits += exam.subject.credit_hours.to_f || 0
+                  - weighted_mark=0
+                  - unless mark=="-"
+                    - weighted_mark = mark.to_f * exam.subject.credit_hours.to_f
+                  - total_weighted_marks += weighted_mark
+                - else
+                  - mark = "-"
+                  - weighted_mark=0
+                - if i== 50
+                  - i= 0
+                  %tr.page-break
+                    %td{:colspan => "3"}
                   %tr.table-header
                     %td.col-pdf= t('subject_code')
                     %td.col-pdf= t('subject_title')
@@ -55,38 +79,14 @@
                     %td.col-pdf= t('grade')
                     %td.col-pdf= t('weighted_marks')
                   %tr.tr-blank
-                  - @exams.each_with_index do |exam,i|
-                    - exam_score = ExamScore.find_by_student_id_and_exam_id(student,exam)
-                    - unless exam_score.nil?
-                      - mark = (exam_score.marks.to_f/exam.maximum_marks.to_f)*100 || "-"
-                      - total_credits += exam.subject.credit_hours.to_f || 0
-                      - weighted_mark=0
-                      - unless mark=="-"
-                        - weighted_mark = mark.to_f * exam.subject.credit_hours.to_f
-                      - total_weighted_marks += weighted_mark
-                    - else
-                      - mark = "-"
-                      - weighted_mark=0
-                    - if i== 50
-                      - i= 0
-                      %tr.page-break
-                        %td{:colspan => "3"}
-                      %tr.table-header
-                        %td.col-pdf= t('subject_code')
-                        %td.col-pdf= t('subject_title')
-                        %td.col-pdf= t('marks')
-                        %td.col-pdf= t('credit')
-                        %td.col-pdf= t('grade')
-                        %td.col-pdf= t('weighted_marks')
-                      %tr.tr-blank
-                    %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
-                      %td.col-pdf= exam.subject.code
-                      %td.col-pdf= exam.subject.name
-                      %td.col-pdf
-                        = mark
-                      %td.col-pdf= exam.subject.credit_hours
-                      %td.col-pdf= exam_score.present? ? (exam_score.grading_level.present? ? exam_score.grading_level : "-") : "-"
-                      %td.col-pdf= weighted_mark
+                  %tr{:class => "#{cycle(c,(["odd","even"]-[c]).first)}"}
+                    %td.col-pdf= exam.subject.code
+                    %td.col-pdf= exam.subject.name
+                    %td.col-pdf
+                      = mark
+                    %td.col-pdf= exam.subject.credit_hours
+                    %td.col-pdf= exam_score.present? ? (exam_score.grading_level.present? ? exam_score.grading_level : "-") : "-"
+                    %td.col-pdf= weighted_mark
                   %tr.tr-blank
                   %tr.table-header
                     %td.col-pdf{:align => "right", :colspan => "3"} Total

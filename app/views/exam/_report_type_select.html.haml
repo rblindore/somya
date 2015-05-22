@@ -31,5 +31,6 @@
   .text-input-bg
     = select :ranking_level_report, :report_type,                                                                                                                                 |
       [["#{t('overall')}","overall"],["#{t('subject_wise')}","subject"]],                                                                                                         |
-      {:prompt => "#{t('select_a_report_type')}"}, {:onChange => "#{remote_function(:url => {:action => "select_type", :batch_id=>@batch.id}, :with => "'report_type='+value")}"} |
+      {:prompt => "#{t('select_a_report_type')}"}, 
+      {:onChange => "onChangeRequest(this, '#{url_for(action: :select_type, batch_id: @batch.id, report_type: 'paramid')}')"}
 #subject-select

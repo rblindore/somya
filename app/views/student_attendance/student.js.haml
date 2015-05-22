@@ -1,0 +1,6 @@
+- if @mode.blank?
+  - text = "<div id='errorExplanation' class='errorExplanation'><p>#{t('please_select_mode')}.</p></div>".html_safe
+  $("#error-container").html("#{escape_javascript text }")
+- else
+  $("#report").html("#{escape_javascript render 'report' }")
+  $("#error-container").html("#{escape_javascript '' }")

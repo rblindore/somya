@@ -131,4 +131,9 @@
           %label.label_for_gender{:for => "master_student_gender_false"}= t('female')
           = a.radio_button  "gender", "f"
       %hr.label-underline/
+      .label-field-pair
+        %label{:for => "master_student_image_file"}
+          = t('upload_photo')
+          (#{t('max_size')})
+        .text-input-bg= a.file_field :photo, :size=>12
     = submit_tag "► #{ t('update')}", :class => "submit_button"

@@ -313,28 +313,28 @@ en: # locale
         one: "1 minute"
       x_years:
         one: "1 year"
-        other: "{{count}} years"
+        other: "%{count} years"
       x_months:
         one: "1 month"
-        other: "{{count}} months"
+        other: "%{count} months"
       x_minutes:
         one: "1 minute"
-        other: "{{count}} minutes"
+        other: "%{count} minutes"
       x_days:
         one: "1 day"
-        other: "{{count}} days"
+        other: "%{count} days"
       about_x_hours:
         one: "1 hour"
-        other: "{{count}} hours"
+        other: "%{count} hours"
       about_x_months:
         one: "1 month"
-        other: "{{count}} months"
+        other: "%{count} months"
       about_x_years:
         one: "1 year"
-        other: "{{count}} years"
+        other: "%{count} years"
       over_x_years:
         one: "over 1 year"
-        other: "over {{count}} years"
+        other: "over %{count} years"
 
 
   #Errors From Model
