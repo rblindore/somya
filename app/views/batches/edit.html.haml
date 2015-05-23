@@ -31,17 +31,17 @@
       = link_to "#{t('courses_text')}", courses_path
       »
       \#{link_to @course.full_name, @course} »
-      \#{link_to "#{t('batch')} #{@batch.name}"} »
+      \#{link_to "#{t('batch')} #{@batch.name}", {:controller => :batches, :action => :show, :course_id => @course.id, :id => @batch.id}} »
       \#{t('edit_text')}
-    = form_for [@course, @batch] do |f|
+    = form_for(@batch, :url => {:action => :update, :course_id => @course.id}) do |f|
       .label-field-pair
         .label-container= t('name')
         .input-container= f.text_field :name
       .label-field-pair
         .label-container= t('start_date')
-        .input-container= text_field_tag 'batch[start_date]',I18n.l(@batch.start_date.to_date, :format=>:default), :popup => "force", class: :datepicker
+        .input-container= date_select 'batch[start_date]', :selected => @batch.start_date.to_date, :popup => "force", class: :datepicker
       .label-field-pair
         .label-container= t('end_date')
-        .input-container= text_field_tag 'batch[end_date]',I18n.l(@batch.end_date.to_date, :format=>:default) ,:popup => "force", class: :datepicker
+        .input-container= date_select 'batch[end_date]',I18n.l(@batch.end_date.to_date, :format=>:default) ,:popup => "force", class: :datepicker
       = submit_tag "", :value => "► #{t('save')}", :class => "submit_button"
     .extender

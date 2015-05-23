@@ -16,6 +16,8 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= stylesheet_link_tag("courses/manage_batches.css")
 #content-header
   = image_tag("show_settings.png")
   %h1= t('course_text')
@@ -43,6 +45,7 @@
         \:
         \#{image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )}
       .text-input-bg
-        = select :course, :name, Course.active.map {|b| ["#{b.course_name} #{b.section_name}", b.id]},{ prompt: t('select_a_course')}, { onChange: "onChangeRequest(this, '#{url_for(action: :update_batch, course_name: 'paramid')}')"}
+        = select :course, :name, Course.active.map {|b| ["#{b.course_name} #{b.section_name}", b.id]},{ :prompt => t('select_a_course')},
+        { :onChange => "onChangeRequest(this, '#{url_for(action: :update_batch, course_name: 'paramid')}')"}
     #update_batch
     .extender

@@ -1416,7 +1416,8 @@ authorization do
       :delete_batch_group,
       :assign_subject_amount,
       :edit_subject_amount,
-      :destroy_subject_amount
+      :destroy_subject_amount,
+      :delete
     ]
     has_permission_on [:batches],
       :to => [
@@ -1432,7 +1433,8 @@ authorization do
       :update_employees,
       :assign_employee,
       :remove_employee,
-      :batches_ajax
+      :batches_ajax,
+      :delete
     ]
     has_permission_on [:batch_transfers],
       :to => [
@@ -1446,7 +1448,8 @@ authorization do
       :assign_previous_batch_subject,
       :assign_all_previous_batch_subjects,
       :new_subject,
-      :create_subject
+      :create_subject,
+      :show_batch
     ]
     has_permission_on [:employee_attendance],
       :to => [

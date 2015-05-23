@@ -52,7 +52,7 @@ class ExamGroupsController < ApplicationController
   end
 
   def create
-    @exam_group = ExamGroup.new(params[:exam_group])
+    @exam_group = ExamGroup.new(exam_group_params)
     @exam_group.batch_id = @batch.id
     @type = @exam_group.exam_type
     @error=false
@@ -137,5 +137,9 @@ class ExamGroupsController < ApplicationController
         redirect_to :controller => 'user', :action => 'dashboard'
       end
     end
+  end
+  
+  def exam_group_params
+    params.require(:exam_group).permit(:start_date, :end_date, :subject_id) if params[:exam_group]
   end
 end

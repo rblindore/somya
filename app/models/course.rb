@@ -21,7 +21,7 @@ class Course < ActiveRecord::Base
   GRADINGTYPES = {"1"=>"GPA","2"=>"CWA","3"=>"CCE"}
 
   validates_presence_of :course_name, :code
-  validate :presence_of_initial_batch, :on => :create
+#   validate :presence_of_initial_batch, :on => :create
 
   before_save :cce_weightage_valid
 
@@ -34,8 +34,6 @@ class Course < ActiveRecord::Base
   has_and_belongs_to_many :observation_groups
   # has_and_belongs_to_many_with_deferred_save :cce_weightages
   has_and_belongs_to_many :cce_weightages
-
-
 
   scope :active, -> { where(is_deleted: false ).order('course_name asc')}
   scope :deleted, -> { where(is_deleted: true ).order('course_name asc')}

@@ -17,7 +17,8 @@
       »
       \#{t('assign_subject_amount')}
     = form_for @subject_amount,:url => assign_subject_amount_courses_url(:id => @course.id) do |f|
-      = f.error_messages
+      - @subject_amount.errors.full_messages.each do |msg|
+        = msg
       .label-field-pair
         %label{:for => "subjects"}= t('subjects_text')
         .text-input-bg= f.select :code,@subjects.map{|subject| [subject.to_s,subject.to_s]}

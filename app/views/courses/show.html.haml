@@ -16,6 +16,7 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= stylesheet_link_tag("courses/show.css")
 #content-header
   = image_tag("show_settings.png")
   %h1= t('courses_text')
@@ -25,20 +26,20 @@
 #inner-tab-menu
   %ul
     %li
-      = link_to "#{t('new_text')}", new_course_batch_path(@course)
+      = link_to "#{t('new_text')}", {:controller => :batches, :action=> :new, :course_id => @course.id}
     %li
       = link_to "Group Batches", {:controller=>"courses", :action=>"grouped_batches", :id=>@course.id}
     - if permitted_to? :edit, :course
-      %li= link_to "#{t('edit_text')}", edit_course_path(@course) if permitted_to? :edit, :course
+      %li= link_to "#{t('edit_text')}", {:controller=> :batches, :action => :edit, :course_id => @course, :id => @batch} if permitted_to? :edit, :course
     - if permitted_to? :destroy, :course
-      %li= link_to(t('delete_text'), course_path(@course), :method => :DELETE, :confirm => t('delete_confirm_msg'))
+      %li= link_to(t('delete_text'), {:controller=> :batches, :action => :delete, :course_id => @course, :id => @batch})
     - if permitted_to? :assign_subject_amount, :courses
       %li= link_to "#{t('assign_subject_amount')}", assign_subject_amount_courses_path(:id => @course.id)
 #page-yield
   .bread_crumb
     = link_to t('configuration_text'), :controller => "configuration", :action=>"index"
     »
-    \#{link_to t('courses_text'), :controller => "courses", :action => "index"} »
+    \#{link_to t('courses_text'), :controller => "courses", :action => "show"} »
     \#{link_to t('manage_course'), :controller => "courses", :action => "manage_course"} »
     \#{@course.full_name}
   - unless flash[:notice].nil?
@@ -48,9 +49,9 @@
     %ul#category-list
       - @batches.each do |batch|
         %li{:class => "list#{cycle('odd', 'even')}"}
-          .category-name= link_to batch.full_name, [@course, batch]
+          .category-name= link_to batch.full_name, {:controller => :batches, :action => :show, :course_id => @course}
           .category-edit
-            = link_to "#{t('edit_text')}", edit_course_batch_path(@course, batch) if permitted_to? :edit, :batches
+            = link_to "#{t('edit_text')}", {:controller => :batches, :action => :edit, :course_id => @course} if permitted_to? :edit, :batches
           .category-delete
-            = link_to("#{t('delete_text')}", [@course, batch], :method => 'delete', :confirm => "#{t('delete_confirm_msg')}")  if permitted_to? :destroy, :batches
+            = link_to("#{t('delete_text')}",{:controller=> :batches, :action => :delete, :course_id => @course, :id => batch.id})  if permitted_to? :destroy, :batches
     .extender

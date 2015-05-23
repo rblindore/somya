@@ -1,0 +1,9 @@
+- if @status
+  - text = '<p class="flash-msg"> Batch Group created successfully. </p>'.html_safe
+  $("#category-list").html("#{escape_javascript render 'batch_groups'}") 
+  $("#flash").html("#{escape_javascript text}") 
+  $("#errors").html("#{escape_javascript render 'form_errors'}") 
+  $("#class_form").html("#{escape_javascript render 'batch_group_form'}") 
+- else
+  $("#flash").html("#{escape_javascript ''}") 
+  $("#errors").html("#{escape_javascript render 'form_errors'}") 

@@ -39,11 +39,10 @@ class ArchivedStudent < ActiveRecord::Base
   #has_and_belongs_to_many :graduated_batches, :class_name => 'Batch', :join_table => 'batch_students',:foreign_key => 'student_id' ,:finder_sql =>'SELECT * FROM `batches`,`archived_students`  INNER JOIN `batch_students` ON `batches`.id = `batch_students`.batch_id WHERE (`batch_students`.student_id = `archived_students`.former_id )'
 
   has_attached_file :photo,
-    :styles => {
-    :thumb=> "100x100#",
-    :small  => "150x150>"},
-    :url => "/system/:class/:attachment/:id/:style/:basename.:extension",
-    :path => ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
+    styles: { thumb: "100x100#", small: "150x150>" },:default_url => "/images/:style/missing.png", 
+    url: "/system/:class/:attachment/:id/:style/:basename.:extension",
+    path: ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
+    validates_attachment_content_type :photo, :content_type => /\Aimage\/.*\Z/
 
   def is_active_false
     unless self.is_active==0
