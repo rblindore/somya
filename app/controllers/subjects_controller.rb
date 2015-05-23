@@ -33,7 +33,7 @@ class SubjectsController < ApplicationController
     @subject = Subject.new(subjects_params)
     @batch = @subject.batch
     if @subject.save
-      if params[:subject][:elective_group_id] == ""
+      if params[:subject][:elective_group_id].blank?
         @subjects = @subject.batch.normal_batch_subject
         @normal_subjects = @subject
         @elective_groups = ElectiveGroup.where(:batch_id => @batch.id)

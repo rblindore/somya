@@ -21,7 +21,7 @@ class ElectiveGroupsController < ApplicationController
   before_filter :login_required
   filter_access_to :all
   def index
-    @elective_groups = ElectiveGroup.for_batch(@batch.id, :include => :subjects)
+    @elective_groups = ElectiveGroup.for_batch(@batch.id).includes(:subjects)
   end
 
   def new
@@ -29,11 +29,11 @@ class ElectiveGroupsController < ApplicationController
   end
 
   def create
-    @elective_group = ElectiveGroup.new(params[:elective_group])
+    @elective_group = ElectiveGroup.new(elective_group_params)
     @elective_group.batch_id = @batch.id
     if @elective_group.save
-      flash[:notice] = "#{t('flash1')}"
-      redirect_to batch_elective_groups_path(@batch)
+      flash[:notice] = "#{t('elective_groups.flash1')}"
+      redirect_to :action => :index, :batch_id => @batch.id 
     else
       render :action=>'new'
     end
@@ -41,28 +41,26 @@ class ElectiveGroupsController < ApplicationController
 
   def edit
     @elective_group = ElectiveGroup.find(params[:id])
-    render 'edit'
   end
 
   def update
     @elective_group = ElectiveGroup.find(params[:id])
-    if @elective_group.update_attributes(params[:elective_group])
-      flash[:notice] = "#{t('flash3')}"
-      #redirect_to [@batch, @elective_group]
-      redirect_to batch_elective_groups_path(@batch)
+    if @elective_group.update_attributes(elective_group_params)
+      flash[:notice] = "#{t('elective_groups.flash3')}"
+      redirect_to :action => :index, :batch_id => @batch.id 
     else
       render 'edit'
     end
   end
 
-  def destroy
-    @elective_group.inactivate
-    flash[:notice] =  "#{t('flash2')}"
-    redirect_to batch_elective_groups_path(@batch)
+  def delete
+    @elective_group = ElectiveGroup.find(params[:id]).inactivate
+    flash[:notice] =  "#{t('elective_groups.flash2')}"
+    redirect_to :action => :index, :batch_id => @batch.id 
   end
 
   def show
-    @electives = Subject.find_all_by_batch_id_and_elective_group_id(@batch.id,@elective_group.id, :conditions=>["is_deleted = false"])
+    @electives = Subject.where("batch_id = ? and elective_group_id = ? and is_deleted = ? ", @batch.id,@elective_group.id, false)
   end
 
   private
@@ -70,5 +68,9 @@ class ElectiveGroupsController < ApplicationController
     @batch = Batch.where(:id => params[:batch_id]).includes(:course).first
     @course = @batch.course
     @elective_group = ElectiveGroup.find(params[:id]) unless params[:id].nil?
+  end
+  
+  def elective_group_params
+    params.require(:elective_group).permit(:name, :batch_id, :is_deleted) if params[:elective_group]
   end
 end

@@ -1395,7 +1395,7 @@ authorization do
     has_permission_on [:student_attendance], :to => [:index, :student, :month]
     has_permission_on [:configuration], :to => [:index,:settings,:permissions, :add_weekly_holidays, :delete]
     has_permission_on [:subjects], :to => [:index, :new, :create,:destroy,:edit,:update, :show, :show_batch, :delete_subject]
-    has_permission_on [:elective_groups],  :to => [:index,:new,:create,:destroy,:edit, :update,:show]
+    has_permission_on [:elective_groups],  :to => [:index,:new,:create,:delete,:edit, :update,:show]
     has_permission_on [:courses],
       :to => [
       :index,

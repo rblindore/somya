@@ -277,12 +277,15 @@ Fedena::Application.routes.draw do
     end
     resources :exam_groups
     #batch.resources :additional_exam_groups
-    resources :elective_groups, :as => :electives
+    resources :elective_groups, :as => :electives do
+      post :new
+    end
   end
   
   resources :elective_groups do
     collection do
       get :new
+      get :delete
     end
   end
 
@@ -421,6 +424,7 @@ Fedena::Application.routes.draw do
       patch :edit_additional_details
       get :delete_additional_details
       get :show_previous_details
+      get :electives
     end
     member do
       get :profile

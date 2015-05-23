@@ -16,15 +16,16 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= stylesheet_link_tag("elective_groups/index.css")
 #content-header
-  = image_tag("  examination/show_exam.png")
+  = image_tag("examination/show_exam.png")
   %h1= t('batches_text')
   %h3= "#{t('new_elective')}"
   #app-back-button
     = back_button
 #inner-tab-menu
   %ul
-    %li= link_to t('new_text'), new_batch_elective_group_path(@batch)
+    %li= link_to t('new_text'), {:action => :new, :batch_id => @batch.id}
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg
@@ -34,19 +35,17 @@
       = link_to t('course_text'), courses_path
       »
       \#{link_to @course.full_name, @course} »
-      \#{link_to @batch.name, [@course, @batch]} »
+      \#{link_to @batch.name, {:controller => :batches, :action => :show , :course_id => @course.id, :id => @batch.id}} »
       \#{t('elective_group')}
     %ul#category-list
       - @elective_groups.each do |elective|
         %li{:class => "list#{cycle('odd', 'even')}"}
-          .category-name= link_to elective.name, [@batch, elective]
+          .category-name= link_to elective.name, {:controller => :elective_groups, :action => :show , :id => elective.id}
           .category-edit
             = link_to t('edit_text'),                                          |
-              :controller=>"elective_groups",:action => "edit", :id =>elective |
-          - @subjects= Subject.find_all_by_elective_group_id(elective, :conditions => "is_deleted = '0'")
+              :controller=>"elective_groups",:action => "edit", :id =>elective.id
+          - @subjects= Subject.where("elective_group_id = ? and is_deleted = ? ", elective, false)
           - if @subjects.empty?
             .category-delete
-              = link_to(t('delete_text'), [@batch, elective], |
-                :method => 'delete',                          |
-                :confirm => t('delete_confirm_msg'))          |
+              = link_to(t('delete_text'), { :action => :delete , :batch_id => @batch.id, :id => elective})
     .extender
