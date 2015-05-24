@@ -17,7 +17,8 @@
 - #specific language governing permissions and limitations
 - #under the License.
 = form_for [@batch, @exam_group] do |f|
-  = f.error_messages
+  - @exam_group.errors.full_messages.each do |msg|
+    = msg
   .exam-basic-details
     .label-field-pair
       = f.label t('name')
@@ -39,7 +40,7 @@
       %td= t('start_time')
       %td= t('end_time')
       %td= t('do_not_create')
-    - f.fields_for :exams do |exam_form|
+    = f.fields_for :exams do |exam_form|
       %tr{:class => "tr-#{cycle('odd', 'even')}"}
         %td.col-2
           .label-field-pair3
@@ -48,9 +49,9 @@
               = exam_form.hidden_field :subject_id
         %td.col-2
           .label-field-pair3
-            .text-input-bg3= exam_form.calendar_date_select :start_time ,:readonly=>true,:popup=>"force"
+            .text-input-bg3= exam_form.date_select :start_time ,:readonly=>true,:popup=>"force"
         %td.col-3
           .label-field-pair3
-            .text-input-bg3= exam_form.calendar_date_select :end_time,:readonly=>true,:popup=>"force"
-        %td.col-1= exam_form.check_box :_delete
+            .text-input-bg3= exam_form.date_select :end_time,:readonly=>true,:popup=>"force"
+        %td.col-1= check_box 'delete', nil
   = submit_tag "", :value => "► #{t('save_changes')}", :class => "submit_button2"

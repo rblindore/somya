@@ -16,8 +16,10 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+= javascript_include_tag :application
+= stylesheet_link_tag("exam_groups/index.css")
 #content-header
-  = image_tag("  examination/show_exam.png")
+  = image_tag("examination/show_exam.png")
   %h1= t('exams_text')
   %h3= t('exam_groups_text')
   #app-back-button
@@ -58,7 +60,7 @@
             - if @current_user.admin? or @user_privileges.map{|p| p.name}.include?('ExaminationControl') or @user_privileges.map{|p| p.name}.include?('EnterResults')
               %span
                 %small
-                  = link_to("#{t('delete_text')}", [@batch, exam_group], :method => 'delete', :confirm => "#{t('delete_confirm_msg')}") if exam_group.removable?
+                  = link_to("#{t('delete_text')}", {:action=> :delete, :id => exam_group.id, :batch_id=> @batch.id}) if exam_group.removable?
                   %s= "#{t('delete_text')}" unless exam_group.removable?
           - if @current_user.admin? or @user_privileges.map{|p| p.name}.include?('ExaminationControl') or @user_privileges.map{|p| p.name}.include?('EnterResults')
             %td.col-2

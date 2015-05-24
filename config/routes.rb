@@ -290,6 +290,12 @@ Fedena::Application.routes.draw do
   end
 
   resources :exam_groups do
+    collection do
+      get :delete
+    end
+  end
+  
+  resources :exam_groups do
     resources :exams do
       member do
         post :save_scores

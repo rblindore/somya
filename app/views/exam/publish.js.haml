@@ -1,0 +1,6 @@
+- if @no_exam_notice != ""
+  $("#publish-notice-#{@exam_group.id}").html("#{escape_javascript @no_exam_notice}")
+- elsif @sms_setting_notice != ""
+  $("#publish-notice-#{@exam_group.id}").html("#{escape_javascript @sms_setting_notice}")
+- else
+  $("#publish-notice-#{@exam_group.id}").html("#{escape_javascript @message}")

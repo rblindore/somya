@@ -17,7 +17,8 @@
 - #specific language governing permissions and limitations
 - #under the License.
 = form_for [@batch, @exam_group] do |f|
-  = f.error_messages
+  - @exam_group.errors.full_messages.each do |msg|
+    = msg
   .exam-basic-details
     .label-field-pair
       = f.label :name,t('name')
@@ -28,7 +29,7 @@
         = f.label :exam_type, t('exam_type')
         .text-input-bg
           = f.text_field :exam_type, :value=>@type=='Marks' ? t('marks') : t('marks_and_grades'),:disabled=>true
-        = link_to t('change_type'), new_batch_exam_group_path(@batch,:ename=>@name), class :type_link
+        = link_to t('change_type'), new_batch_exam_group_path(@batch, ename: @name), class: :type_link
     - else
       .label-field-pair
         %label{:for => "cce_exam_category_id"}= t('cce_exam_category')
@@ -52,7 +53,7 @@
       %td= t('start_time')
       %td= t('end_time')
       %td= t('do_not_create')
-    - f.fields_for :exams do |exam_form|
+    = f.fields_for :exams do |exam_form|
       %tr{:class => "tr-#{cycle('odd', 'even')}"}
         %td.col-2
           = exam_form.object.subject.name
@@ -68,15 +69,15 @@
         %td.col-1
           .label-field-pair3
             .text-input-bg3
-              = exam_form.calendar_date_select :start_time,:popup=>"force"
+              = exam_form.date_select :start_time,:popup=>"force"
         %td.col-1
           .label-field-pair3
             .text-input-bg3
-              = exam_form.calendar_date_select :end_time,:popup=>"force"
+              = exam_form.date_select :end_time,:popup=>"force"
         %td.col-1
           .label-field-pair2
             .text-input-bg2
-              = exam_form.check_box :_delete
+              = check_box :delete, nil
   = submit_tag "", :value => "► #{t('save_changes')}", :class => "submit_button2"
 :javascript
   $('exam_group_maximum_marks').observe('blur', function() { $('.max_marks')      .each(function(max_marks_obj){ max_marks_obj.value = $F('exam_group_maximum_marks'); }); });

@@ -1625,7 +1625,7 @@ authorization do
       :create,
       :edit,
       :update,
-      :destroy,
+      :delete,
       :show,
       :initial_queries,
       :set_exam_minimum_marks,

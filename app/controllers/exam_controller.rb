@@ -51,11 +51,6 @@ class ExamController < ApplicationController
       end
       @all_subjects = @normal_subjects + @elective_subjects
       @all_subjects.each { |subject| @exam_group.exams.build(subject_id: subject.id) }
-      if @type == 'Marks' or @type == 'MarksAndGrades'
-      else
-      end
-
-    else
     end
   end
 
@@ -131,8 +126,9 @@ class ExamController < ApplicationController
           weightages = params[:weightage]
           total = 0
           weightages.map{|w| total+=w.to_f}
+	  puts "..#{total}"
           unless total=="100".to_f
-            flash[:notice]="#{t('flash9')}"
+            flash[:notice]="#{t('exam.flash9')}"
             return
           else
             GroupedExam.where(:batch_id=>@batch.id).delete_all
@@ -301,9 +297,6 @@ class ExamController < ApplicationController
     @exam_group = ExamGroup.find(params[:exam_group])
     @batch = @exam_group.batch
     render :pdf => 'consolidated_exam_report_pdf'#, :page_size=> 'A3'
-    #        respond_to do |format|
-    #            format.pdf { render :layout => false }
-    #        end
   end
 
   def subject_rank
@@ -1103,8 +1096,6 @@ class ExamController < ApplicationController
     @all_batches = @student.all_batches
     render :pdf => 'previous_years_marks_overview_pdf',
       :orientation => 'Landscape'
-
-
   end
 
   def academic_report
@@ -1148,7 +1139,7 @@ class ExamController < ApplicationController
   end
 
   def previous_exam_marks
-    unless params[:exam_goup_id].blank?
+    unless params[:exam_group_id].blank?
       @exam_group = ExamGroup.where(:id => params[:exam_group_id]).includes(:exams).first
     end
   end
