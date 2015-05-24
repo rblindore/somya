@@ -20,9 +20,11 @@ var cellElem = new Element('td',{
 
 
 function getjson(val){
-  date_today = $('time_zone').value
-  Element.show('loader')
-  new Ajax.Request('/attendances/daily_register.json',{
+  $.ajax({ type: "GET",   
+           url: "/attendances/daily_register",
+           data: { batch_id: val} ,
+         });/*
+  new Ajax.Request('/attendances/daily_register',{
     parameters:'batch_id='+val,
     asynchronous:true,
     evalScripts:true,
@@ -32,7 +34,7 @@ function getjson(val){
       rebind();
       Element.hide('loader')
     }
-  });
+  });*/
 }
 
 function changeMonth(){

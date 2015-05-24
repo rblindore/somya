@@ -48,16 +48,8 @@ class AttendancesController < ApplicationController
         if @batch.employee_id.to_i==@current_user.employee_record.id
           @subjects= @batch.subjects
         else
-          @subjects= Subject.find(:all,:joins=>"INNER JOIN employees_subjects ON employees_subjects.subject_id = subjects.id AND employee_id = #{@current_user.employee_record.id} AND batch_id = #{@batch.id} ")
+          @subjects= Subject.joins("INNER JOIN employees_subjects ON employees_subjects.subject_id = subjects.id AND employee_id = #{@current_user.employee_record.id} AND batch_id = #{@batch.id} ")
         end
-      end
-      render(:update) do |page|
-        page.replace_html 'subjects', :partial=> 'subjects'
-      end
-    else
-      render(:update) do |page|
-        page.replace_html "register", :text => ""
-        page.replace_html "subjects", :text => ""
       end
     end
   end
@@ -80,17 +72,15 @@ class AttendancesController < ApplicationController
       @sub =Subject.find params[:subject_id]
       @batch=Batch.find(@sub.batch_id)
       unless @sub.elective_group_id.nil?
-        elective_student_ids = StudentsSubject.find_all_by_subject_id(@sub.id).map { |x| x.student_id }
-        @students = Student.find_all_by_batch_id(@batch, :conditions=>"FIND_IN_SET(id,\"#{elective_student_ids.split.join(',')}\")")
+        elective_student_ids = StudentsSubject.where(:subject_id => @sub.id).map { |x| x.student_id }
+        @students = Student.where(:batch_id =>  @batch, "FIND_IN_SET(id,\"#{elective_student_ids.split.join(',')}\")")
       else
-        @students = Student.find_all_by_batch_id(@batch)
+        @students = Student.where(:batch_id => @batch)
       end
       @dates=Timetable.tte_for_range(@batch,@today,@sub)
       @dates_key=@dates.keys - @batch.holiday_event_dates
     end
-    respond_to do |format|
-      format.js { render :action => 'show' }
-    end
+    
   end
 
   def subject_wise_register
@@ -154,6 +144,7 @@ class AttendancesController < ApplicationController
         end
       end
     end
+    
     #    @dates=((@batch.end_date.to_date > @today.end_of_month) ? (@today.beginning_of_month..@today.end_of_month) : (@today.beginning_of_month..@batch.end_date.to_date))
     @dates=@batch.working_days(@today)
     @holidays = []
@@ -165,6 +156,8 @@ class AttendancesController < ApplicationController
     (1..12).each do |i|
       @translated[Date::MONTHNAMES[i].to_s]=t(Date::MONTHNAMES[i].downcase)
     end
+    
+    puts "...#{@leaves}.......#{@dates}"
     respond_to do |fmt|
       fmt.json {render :json=>{'leaves'=>@leaves,'students'=>@students,'dates'=>@dates,'holidays'=>@holidays,'batch'=>@batch,'today'=>@today, 'translated'=>@translated}}
       #      format.js { render :action => 'show' }

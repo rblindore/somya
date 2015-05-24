@@ -74,6 +74,7 @@ Fedena::Application.routes.draw do
     collection do
       get :daily_register
       get :subject_wise_register
+      get :list_subject
     end
   end
 
