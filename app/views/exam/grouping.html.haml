@@ -102,14 +102,14 @@
     = link_to t('course_text'), :controller => "courses", :action=>"index"
     »
     \#{link_to "#{@batch.course.full_name}", :controller => "courses", :action => "show",:id=>@batch.course_id} »
-    \#{link_to "#{@batch.name}", [@batch.course, @batch]} »
+    \#{link_to "#{@batch.name}", {:controller => 'batches', :action => :show, :course_id => @batch.course, :id => @batch}} »
     \#{link_to t('exams_text'), :controller => "exam", :action=>"index"} »
     \#{link_to t('exam_groups_text'), batch_exam_groups_path(@batch)} »
     \#{t('connect_exams')}
   #application-list
     - unless @exam_groups.empty?
       %h4= t('connect_exams')
-      = form_for :exam_grouping do |f|
+      = form_for(:exam_grouping, :url => {:id =>@batch.id}) do |f|
         %table#listing{:align => "center", :cellpadding => "1", :cellspacing => "1", :width => "100%"}
           - count=@exam_groups.count.to_i - 1
           %tr.tr-head
@@ -132,7 +132,7 @@
                 %td.col-3= text_field_tag 'weightage[]',already_grouped.weightage,:class=>'total-box',:id=>"weightage#{i}",:onchange=>"check_weightage(this,#{count})"
                 - total += already_grouped.weightage  if already_grouped.weightage.present?
               - else
-                %td.col-3= text_field_tag 'weightage[]',"0",:class=>'total-box',:disabled=>true,:id=>"weightage#{i}",:onchange=>"check_weightage(this,#{count})"
+                %td.col-3= text_field_tag 'weightage[]',"0",:class=>'total-box',:disabled=>false,:id=>"weightage#{i}",:onchange=>"check_weightage(this,#{count})"
             - i=i+1
           %tr.tr-blank
           %tr.tr-head

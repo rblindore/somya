@@ -39,7 +39,7 @@
       \:
       \#{image_tag("loader.gif", align: :absmiddle, border: 0, id: :loader, style: "display: none;" )}
     .text-input-bg
-      = select :courses, :name, Course.active.map {|b| [b.full_name, b.id]}, {:prompt => t('select_a_course')},
-      {:onChange => "onChangeRequest(this, '#{url_for(action: 'update_batch', course_name: 'paramid')}'"}
+      = select :courses, :name, Course.active.map {|b| ["#{b.full_name} #{b.id}", b.id]},{ :prompt => t('select_a_course')},
+        { :onChange => "onChangeRequest(this, '#{url_for(action: :update_batch, course_name: 'paramid')}')"}
   #update_batch
   .extender

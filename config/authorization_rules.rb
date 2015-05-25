@@ -1395,7 +1395,7 @@ authorization do
     has_permission_on [:student_attendance], :to => [:index, :student, :month]
     has_permission_on [:configuration], :to => [:index,:settings,:permissions, :add_weekly_holidays, :delete]
     has_permission_on [:subjects], :to => [:index, :new, :create,:destroy,:edit,:update, :show, :show_batch, :delete_subject]
-    has_permission_on [:elective_groups],  :to => [:index,:new,:create,:destroy,:edit, :update,:show]
+    has_permission_on [:elective_groups],  :to => [:index,:new,:create,:delete,:edit, :update,:show]
     has_permission_on [:courses],
       :to => [
       :index,
@@ -1416,7 +1416,8 @@ authorization do
       :delete_batch_group,
       :assign_subject_amount,
       :edit_subject_amount,
-      :destroy_subject_amount
+      :destroy_subject_amount,
+      :delete
     ]
     has_permission_on [:batches],
       :to => [
@@ -1432,7 +1433,8 @@ authorization do
       :update_employees,
       :assign_employee,
       :remove_employee,
-      :batches_ajax
+      :batches_ajax,
+      :delete
     ]
     has_permission_on [:batch_transfers],
       :to => [
@@ -1446,7 +1448,8 @@ authorization do
       :assign_previous_batch_subject,
       :assign_all_previous_batch_subjects,
       :new_subject,
-      :create_subject
+      :create_subject,
+      :show_batch
     ]
     has_permission_on [:employee_attendance],
       :to => [
@@ -1622,7 +1625,7 @@ authorization do
       :create,
       :edit,
       :update,
-      :destroy,
+      :delete,
       :show,
       :initial_queries,
       :set_exam_minimum_marks,

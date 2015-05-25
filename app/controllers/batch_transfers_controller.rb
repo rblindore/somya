@@ -24,14 +24,14 @@ class BatchTransfersController < ApplicationController
     @batches = Batch.active
   end
 
-  def show
-    @batch = Batch.find params[:id], :include => [:students],:order => "students.first_name ASC"
+  def show_batch
+    @batch = Batch.where(:id => params[:id]).includes(:students).order("students.first_name ASC")
     @batches = Batch.active - @batch.to_a
+    @batch = @batch.first
   end
 
   def transfer
-    if request.post?
-      @batch = Batch.find params[:id], :include => [:students],:order => "students.first_name ASC"
+      @batch = Batch.where(:id => params[:id]).includes(:students).order("students.first_name ASC").first
       if params[:transfer][:to].present?
         unless params[:transfer][:students].nil?
           students = Student.find(params[:transfer][:students])
@@ -42,49 +42,48 @@ class BatchTransfersController < ApplicationController
           end
         end
         batch = @batch
-        @stu = Student.find_all_by_batch_id(batch.id)
+        @stu = Student.where(:batch_id => batch.id)
         if @stu.empty?
           batch.update_attribute :is_active, false
-          Subject.find_all_by_batch_id(batch.id).each do |sub|
+          Subject.where(:batch_id => batch.id).each do |sub|
             sub.employees_subjects.each do |emp_sub|
               emp_sub.delete
             end
           end
         end
-        flash[:notice] = "#{t('flash1')}"
+        flash[:notice] = "#{t('batch_transfers.flash1')}"
         redirect_to :controller => 'batch_transfers'
       else
         @batches = Batch.active - @batch.to_a
         @batch.errors.add(:base, t('select_a_batch_to_continue'))
-        render :template=> "batch_transfers/show"
+        render :template=> "batch_transfers/show_batch"
       end
-    else
-      redirect_to :action=>"show", :id=> params[:id]
-    end
   end
 
   def graduation
-    @batch = Batch.find params[:id], :include => [:students]
+    @batch = Batch.where(:id => params[:id]).includes(:students).first
     unless params[:ids].nil?
       @ids = params[:ids]
       @id_lists = @ids.map { |st_id| ArchivedStudent.find_by_admission_no(st_id) }
     end
     if request.post?
       student_id_list = params[:graduate][:students]
-      @student_list = student_id_list.map { |st_id| Student.find(st_id) }
+      @student_list = student_id_list.map { |st_id| Student.find(st_id) } unless student_id_list.nil?
       @admission_list = []
-      @student_list.each do |s|
-        @admission_list.push s.admission_no
+      unless @student_list.blank?
+        @student_list.each do |s|
+          @admission_list.push s.admission_no
+        end
+        @student_list.each { |s| s.archive_student(params[:graduate][:status_description]) }
       end
-      @student_list.each { |s| s.archive_student(params[:graduate][:status_description]) }
-      @stu = Student.find_all_by_batch_id(@batch.id)
+      @stu = Student.where(:batch_id => @batch.id)
       if @stu.empty?
         @batch.update_attribute :is_active, false
         @batch.employees_subjects.destroy_all
         #          flash[:notice]="Graduated selected students successfully."
         #          redirect_to :controller=>'batch_transfers' and return
       end
-      flash[:notice]= "#{t('flash2')}"
+      flash[:notice]= "#{t('batch_transfers.flash2')}"
       redirect_to :action=>"graduation", :id=>params[:id], :ids => @admission_list
     end
   end
@@ -115,12 +114,7 @@ class BatchTransfersController < ApplicationController
   end
 
   def update_batch
-    @batches = Batch.find_all_by_course_id(params[:course_name], :conditions => { :is_deleted => false, :is_active => true })
-
-    render(:update) do |page|
-      page.replace_html 'update_batch', :partial=>'list_courses'
-    end
-
+    @batches = Batch.where("course_id = ? and is_deleted = ? and is_active = ? ", params[:course_name], false,  true )
   end
 
   def assign_previous_batch_subject

@@ -16,4 +16,6 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
-= error_messages_for 'batch_group'
+- @batch_group.errors.full_messages.each do |msg|
+  = msg
+= @batch_group_errors if !@batch_group_errors.blank?

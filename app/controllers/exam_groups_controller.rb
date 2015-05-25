@@ -52,7 +52,7 @@ class ExamGroupsController < ApplicationController
   end
 
   def create
-    @exam_group = ExamGroup.new(params[:exam_group])
+    @exam_group = ExamGroup.new(exam_group_params)
     @exam_group.batch_id = @batch.id
     @type = @exam_group.exam_type
     @error=false
@@ -71,7 +71,7 @@ class ExamGroupsController < ApplicationController
       end
     end
     if @error==false and @exam_group.save
-      flash[:notice] =  "#{t('flash1')}"
+      flash[:notice] =  "#{t('exam_groups.flash1')}"
       redirect_to batch_exam_groups_path(@batch)
     else
       @cce_exam_categories = CceExamCategory.all if @batch.cce_enabled?
@@ -95,8 +95,8 @@ class ExamGroupsController < ApplicationController
     end
   end
 
-  def destroy
-    @exam_group = ExamGroup.find(params[:id], :include => :exams)
+  def delete
+    @exam_group = ExamGroup.where(:id => params[:id]).includes(:exams).first
     if @current_user.employee?
       @employee_subjects= @current_user.employee_record.subjects.map { |n| n.id}
       if @employee_subjects.empty? and !@current_user.privileges.map{|p| p.name}.include?("ExaminationControl") and !@current_user.privileges.map{|p| p.name}.include?("EnterResults")
@@ -104,8 +104,8 @@ class ExamGroupsController < ApplicationController
         redirect_to :controller => 'user', :action => 'dashboard'
       end
     end
-    flash[:notice] = "#{t('flash3')}" if @exam_group.destroy
-    redirect_to batch_exam_groups_path(@batch)
+    flash[:notice] = "#{t('exam_groups.flash3')}" if @exam_group.destroy
+        redirect_to :action => 'index', :batch_id => @batch.id
   end
 
   def show
@@ -137,5 +137,9 @@ class ExamGroupsController < ApplicationController
         redirect_to :controller => 'user', :action => 'dashboard'
       end
     end
+  end
+  
+  def exam_group_params
+    params.require(:exam_group).permit(:start_date, :end_date, :subject_id, :name, :exam_type, :exam_attributes) if params[:exam_group]
   end
 end

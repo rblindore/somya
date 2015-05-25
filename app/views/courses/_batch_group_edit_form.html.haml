@@ -27,8 +27,8 @@
       .fee_category_scroll
         .sel-list
           = t('select')
-          \: #{link_to t('all'), 'javascript:void(0)', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });"},
-          \#{link_to t('none'), 'javascript:void(0);', onclick: "$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });"}
+          = select_all('each_batch')
+          = select_none('each_batch')
         - @batches.each do |b|
           .each_batch
             = check_box_tag "batch_ids[]", b.id,(GroupedBatch.exists?(:batch_id=>b.id,:batch_group_id=>@batch_group.id)),:class=>'batches_box'

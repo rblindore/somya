@@ -1,0 +1,10 @@
+- if(!@name.blank?)
+  - if @type == 'Marks' or @type == 'MarksAndGrades'
+    $("#exam-form").html("#{escape_javascript render 'exam_marks_form'}")
+    $("#flash").html("#{escape_javascript ''}")
+  - else
+    $("#exam-form").html("#{escape_javascript render 'exam_grade_form'}")
+    $("#flash").html("#{escape_javascript ''}")
+-else
+  - text = "<div class='errorExplanation'><p>#{t('flash_msg9')}</p></div>".html_safe
+  $("#flash").html("#{escape_javascript text}")

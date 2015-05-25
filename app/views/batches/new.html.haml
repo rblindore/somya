@@ -32,17 +32,18 @@
       »
       \#{link_to @course.full_name, @course} »
       \#{t('new_batch')}
-    = form_for [@course, @batch] do |f|
-      = f.error_messages
+    = form_for(@batch, :url => {:action => :create, :course_id => @course.id}) do |f|
+      - @batch.errors.full_messages.each do |msg|
+        = msg
       .label-field-pair
         .label-container= t('name')
         .input-container= f.text_field :name
       .label-field-pair
         .label-container= t('start_date')
-        .input-container= calendar_date_select_tag 'batch[start_date]',  I18n.l(Date.today,:format=>:default), :popup=>"force"
+        .input-container= date_select 'batch[start_date]',  I18n.l(Date.today,:format=>:default), :popup=>"force"
       .label-field-pair
         .label-container= t('end_date')
-        .input-container= calendar_date_select_tag 'batch[end_date]',  I18n.l(Date.today + 1.year,:format=>:default), :popup=>"force"
+        .input-container= date_select 'batch[end_date]',  I18n.l(Date.today + 1.year,:format=>:default), :popup=>"force"
       .label-field-pair
         .label-container1
           %label= t('import_subject')

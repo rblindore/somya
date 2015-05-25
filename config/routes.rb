@@ -74,6 +74,7 @@ Fedena::Application.routes.draw do
     collection do
       get :daily_register
       get :subject_wise_register
+      get :list_subject
     end
   end
 
@@ -231,6 +232,12 @@ Fedena::Application.routes.draw do
   resources :batch_transfers, only: :index do
     collection do
       get :update_batch
+      get :subject_transfer
+      get :show_batch
+      get :graduation
+      post :graduation
+      get :transfer
+      patch :transfer
     end
   end
 
@@ -258,24 +265,37 @@ Fedena::Application.routes.draw do
       get :manage_course
       get :manage_batches
       get :update_batch
+      get :delete
     end
   end
 
   resources :batches do
     collection do
       get :batches_ajax
+      get :assign_tutor
+      get :delete
+      get :show
     end
     resources :exam_groups
     #batch.resources :additional_exam_groups
-    resources :elective_groups, :as => :electives
+    resources :elective_groups, :as => :electives do
+      post :new
+    end
   end
   
   resources :elective_groups do
     collection do
       get :new
+      get :delete
     end
   end
 
+  resources :exam_groups do
+    collection do
+      get :delete
+    end
+  end
+  
   resources :exam_groups do
     resources :exams do
       member do
@@ -411,6 +431,7 @@ Fedena::Application.routes.draw do
       patch :edit_additional_details
       get :delete_additional_details
       get :show_previous_details
+      get :electives
     end
     member do
       get :profile
@@ -493,6 +514,7 @@ Fedena::Application.routes.draw do
       get :load_levels
       post :student_combined_report
       get :grouping
+      post :grouping
       get :list_inactive_exam_groups
       get :previous_exam_marks
       get :publish
@@ -517,6 +539,8 @@ Fedena::Application.routes.draw do
       get :select_type
       post :student_transcript
       get :student_combined_report_pdf
+      get :update_exam_form
+      post :update_exam_form
     end
   end
 

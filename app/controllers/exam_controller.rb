@@ -38,11 +38,11 @@ class ExamController < ApplicationController
     @type = params[:exam_option][:exam_type]
     @cce_exam_category_id = params[:exam_option][:cce_exam_category_id]
     @cce_exam_categories = CceExamCategory.all if @batch.cce_enabled?
-    unless @name == ''
+    unless @name.blank?
       @exam_group = ExamGroup.new
       @normal_subjects = Subject.where(batch_id: @batch.id, no_exams: false, elective_group_id: nil, is_deleted: false)
       @elective_subjects = []
-      elective_subjects = Subject.where(batch_id: @batch.id, no_exams: false, is_deleted: false).not(elective_group_id: nil)
+      elective_subjects = Subject.where(batch_id: @batch.id, no_exams: false, is_deleted: false, elective_group_id: nil)
       elective_subjects.each do |e|
         is_assigned = StudentsSubject.where(subject_id: e.id)
         unless is_assigned.empty?
@@ -51,22 +51,6 @@ class ExamController < ApplicationController
       end
       @all_subjects = @normal_subjects + @elective_subjects
       @all_subjects.each { |subject| @exam_group.exams.build(subject_id: subject.id) }
-      if @type == 'Marks' or @type == 'MarksAndGrades'
-        render(:update) do |page|
-          page.replace_html 'exam-form', :partial=>'exam_marks_form'
-          page.replace_html 'flash', :text=>''
-        end
-      else
-        render(:update) do |page|
-          page.replace_html 'exam-form', :partial=>'exam_grade_form'
-          page.replace_html 'flash', :text=>''
-        end
-      end
-
-    else
-      render(:update) do |page|
-        page.replace_html 'flash', :text=>"<div class='errorExplanation'><p>#{t('flash_msg9')}</p></div>"
-      end
     end
   end
 
@@ -134,19 +118,20 @@ class ExamController < ApplicationController
 
   def grouping
     @batch = Batch.find(params[:id])
-    @exam_groups = ExamGroup.find_all_by_batch_id(@batch.id)
-    @exam_groups.reject!{|e| e.exam_type=="Grades"}
+    @exam_groups = ExamGroup.where(:batch_id => @batch.id)
+    @exam_groups.to_a.reject!{|e| e.exam_type=="Grades"}
     if request.post?
       unless params[:exam_grouping].nil?
         unless params[:exam_grouping][:exam_group_ids].nil?
           weightages = params[:weightage]
           total = 0
           weightages.map{|w| total+=w.to_f}
+	  puts "..#{total}"
           unless total=="100".to_f
-            flash[:notice]="#{t('flash9')}"
+            flash[:notice]="#{t('exam.flash9')}"
             return
           else
-            GroupedExam.delete_all(:batch_id=>@batch.id)
+            GroupedExam.where(:batch_id=>@batch.id).delete_all
             exam_group_ids = params[:exam_grouping][:exam_group_ids]
             exam_group_ids.each_with_index do |e,i|
               GroupedExam.create(:exam_group_id=>e,:batch_id=>@batch.id,:weightage=>weightages[i])
@@ -154,7 +139,7 @@ class ExamController < ApplicationController
           end
         end
       else
-        GroupedExam.delete_all(:batch_id=>@batch.id)
+        GroupedExam.where(:batch_id=>@batch.id).delete_all
       end
       flash[:notice] = t('exam.flash1')
     end
@@ -312,9 +297,6 @@ class ExamController < ApplicationController
     @exam_group = ExamGroup.find(params[:exam_group])
     @batch = @exam_group.batch
     render :pdf => 'consolidated_exam_report_pdf'#, :page_size=> 'A3'
-    #        respond_to do |format|
-    #            format.pdf { render :layout => false }
-    #        end
   end
 
   def subject_rank
@@ -1114,8 +1096,6 @@ class ExamController < ApplicationController
     @all_batches = @student.all_batches
     render :pdf => 'previous_years_marks_overview_pdf',
       :orientation => 'Landscape'
-
-
   end
 
   def academic_report
@@ -1152,14 +1132,14 @@ class ExamController < ApplicationController
   end
 
   def list_inactive_exam_groups
-    unless params[:batch_id]==""
+    unless params[:batch_id].blank?
       @exam_groups = ExamGroup.where(:batch_id=>params[:batch_id])
       @exam_groups.to_a.reject!{|e| !GroupedExam.exists?(:exam_group_id=>e.id,:batch_id=>params[:batch_id])}
     end
   end
 
   def previous_exam_marks
-    unless params[:exam_goup_id]==""
+    unless params[:exam_group_id].blank?
       @exam_group = ExamGroup.where(:id => params[:exam_group_id]).includes(:exams).first
     end
   end

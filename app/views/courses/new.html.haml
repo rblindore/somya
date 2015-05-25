@@ -37,7 +37,7 @@
       = link_to t('course_text'), courses_path
       »
       \#{t('new_text')}
-    = form_for setup_course(@course) do |f|
+    = form_for setup_course(@course) , :url=> {:controller => :courses, :action => :create} do |f|
       = error_messages_for :course
       .label-field-pair
         .label-container1= t('course_name')
@@ -54,16 +54,16 @@
             .label-container= f.label "Grading System type"
             .text-input-bg= f.select :grading_type,@grade_types
       %h4= t('initial_batch')
-      - f.fields_for :batches do |batch_form|
+      = f.fields_for :batches do |batch_form|
         .label-field-pair
           .label-container= batch_form.label "#{t('name')}"
           .input-container= batch_form.text_field :name
         .label-field-pair
           .label-container= batch_form.label "#{t('start_date')}"
-          .input-container= calendar_date_select_tag 'course[batches_attributes][0][start_date]', I18n.l(Date.today,:format=>:default),  :popup=>"force"
+          .input-container= date_select :start_date, I18n.l(Date.today,:format=>:default),  :popup=>"force"
         .label-field-pair
           .label-container= batch_form.label "#{t('end_date')}"
-          .input-container= calendar_date_select_tag 'course[batches_attributes][0][end_date]', I18n.l(Date.today + 1.year,:format=>:default), :popup=>"force"
+          .input-container= date_select :end_date, I18n.l(Date.today + 1.year,:format=>:default), :popup=>"force"
       = submit_tag "", :value => "► #{t('save')}", :class => "submit_button"
     .extender
 :javascript
