@@ -339,6 +339,10 @@ Fedena::Application.routes.draw do
     end
   end
 
+  get 'user/reset_password/:id', to: "users#reset_password"
+  get 'users/set_new_password/:id', to: "users#set_new_password"
+  post 'users/set_new_password/:id', to: "users#set_new_password"
+
   resources :news, only: [:index, :edit] do
     collection do
       get :all

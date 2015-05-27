@@ -263,15 +263,15 @@ class UsersController < ApplicationController
   end
 
   def reset_password
-    user = User.active.fwhere(reset_password_code: params[:id]).where.not(reset_password_code: nil).first
+    user = User.active.where(reset_password_code: params[:id]).where.not(reset_password_code: nil).first
     if user
       if user.reset_password_code_until > Time.now
-        redirect_to url_for(controller: :users, action: :set_new_password, id: user.reset_password_code)
+        redirect_to url_for(controller: :users, action: :set_new_password, id: user.reset_password_code) and return
       else
-        redirect_to users_path, notice: t('flash1')
+        redirect_to users_path, notice: t('flash1') and return
       end
     else
-      redirect_to users_path, notice: t('flash2')
+      redirect_to users_path, notice: t('flash2') and return
     end
   end
 
@@ -293,22 +293,23 @@ class UsersController < ApplicationController
       if user
         if params[:set_new_password][:new_password] === params[:set_new_password][:confirm_password]
           user.password = params[:set_new_password][:new_password]
-          user.update_attributes(:password => user.password, :reset_password_code => nil, :reset_password_code_until => nil, :role => user.role_name)
+          user.hashed_password = Digest::SHA1.hexdigest(user.salt + user.password)
+          user.update_attributes(:password => user.password, hashed_password: user.hashed_password, :reset_password_code => nil, :reset_password_code_until => nil, :role => user.role_name)
           user.clear_menu_cache
           #User.update(user.id, :password => params[:set_new_password][:new_password],
           # :reset_password_code => nil, :reset_password_code_until => nil)
           flash[:notice] = t('flash3')
-          redirect_to action: :index
+          redirect_to action: :index and return
         else
-          flash[:notice] = t('user.flash4')
+          flash[:notice] = t('flash4')
           redirect_to action: :set_new_password, id: user.reset_password_code
         end
       else
         flash[:notice] = t('flash5')
-        redirect_to action: :index
+        redirect_to action: :index and return
       end
     end
-    render layout: 'login'
+    render layout: 'login' and return
   end
 
   def edit_privilege
