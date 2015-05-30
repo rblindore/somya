@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: cce_exam_categories
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  desc       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

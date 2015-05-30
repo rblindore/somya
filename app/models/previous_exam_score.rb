@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: previous_exam_scores
+#
+#  id               :integer          not null, primary key
+#  student_id       :integer
+#  exam_id          :integer
+#  marks            :decimal(7, 2)
+#  grading_level_id :integer
+#  remarks          :string(255)
+#  is_failed        :boolean
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

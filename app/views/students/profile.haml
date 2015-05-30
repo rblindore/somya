@@ -17,33 +17,33 @@
 - #specific language governing permissions and limitations
 - #under the License.
 #content-header
-  %img{:src => "student_details/student_details_logo.jpg"}/
+  = image_tag 'student_details/student_details_logo.jpg'
   %h1= t('student_info')
   %h3= t('student_profile')
   #app-back-button
     = back_button
 #nav
   %ul
-    - if permitted_to? :reports,:student
+    - if permitted_to? :reports, :student
       %li= link_to t('reports_text'), reports_student_path(@student)
     - if permitted_to? :guardians,:student
       %li= link_to t('guardians_text'), guardians_student_path(@student.id)
     - if permitted_to? :email,:student
       - @config = Settings.find_by_config_key('NetworkState').config_value
       - if @config == 'Online'
-        %li= link_to "#{t('send_email')}", :controller => "students",:action => "email", :id => @student.id
+        %li= link_to t('send_email'), controller: :students, action: :email, id: @student.id
     - if permitted_to? :remove, :student or permitted_to? :admission1, :student
-      %li= link_to "#{t('delete_text')}", :controller => 'students', :action => 'remove', :id => @student.id
+      %li= link_to t('delete_text'), controller: :students, action: :remove, id: @student.id
     %li
       %a#link_one.drops{:href => "#"}
         = t('more')
         ▼
-      %ul#box_one.scriptaculously{:style => "display:none;"}
+      %ul#box_one.scriptaculously{style: "display:none;"}
         - if @sms_module.include?('Finance') and permitted_to? :fees, :student
           %li= link_to t('fees_text'), fees_student_path(@student)
         - FedenaPlugin::ADDITIONAL_LINKS[:student_profile_more_menu].each do |mod|
-          - if permitted_to? "#{mod[:destination][:action]}".to_sym,"#{mod[:destination][:controller]}".to_sym
-            %li= link_to t(mod[:title]), mod[:destination].merge(:id=>@student.id)
+          - if permitted_to? mod[:destination][:action].to_sym, mod[:destination][:controller].to_sym
+            %li= link_to t(mod[:title]), mod[:destination].merge(id: @student.id)
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg
@@ -74,16 +74,16 @@
     %table{:width => "700"}
       %tr.odd.left
         %td= t('admission_date')
-        %td.right= I18n.l(@student.admission_date,:format=>:normal) unless @student.admission_date.nil?
+        %td.right= I18n.l(@student.admission_date, format: :normal) unless @student.admission_date.nil?
       %tr.even.left
         %td= t('date_of_birth')
-        %td.right= I18n.l(@student.date_of_birth,:format=>:normal) unless @student.date_of_birth.nil?
+        %td.right= I18n.l(@student.date_of_birth, format: :normal) unless @student.date_of_birth.nil?
       %tr.odd.left
         %td= t('blood_group')
         %td.right= @student.blood_group
       %tr.even.left
         %td= t('gender')
-        %td.right= t("#{@student.gender_as_text.downcase}")
+        %td.right= t(@student.gender_as_text.downcase)
       %tr.odd.left
         %td= t('nationality')
         %td.right= @student.nationality.name unless @student.nationality_id.nil?
@@ -124,80 +124,88 @@
         %td= t('email')
         %td.right= @student.email
       - unless @student.batch.employee_id.nil?
-        - @assigned_employees = Employee.find(:all,:conditions=>"FIND_IN_SET(id,\"#{@student.batch.employee_id}\")")
+        - @assigned_employees = Employee.where("FIND_IN_SET(id,\"#{@student.batch.employee_id}\")")
         %tr.even.left
           %td
             = t('group_tutor')
             (s) :
           %td.right
-            - @tutors = @assigned_employees.map{|e| e.full_name}
+            - @tutors = @assigned_employees.map(&:full_name)
             - @tutor_ids = @assigned_employees.map{|e| e.user.id}
-            = link_to @tutors.join(", "),:controller=>'reminder',:action=>'create_reminder',:send_to=>@tutor_ids.join(",")
+            = link_to @tutors.join(", "), controller: :reminder, action: :create_reminder, send_to: @tutor_ids.join(",")
       - FedenaPlugin::REGISTERED_HOOKS[:student_profile].each do |mod|
-        = render :partial=>mod.camelize.constantize.send("student_profile_hook"),:locals=>{:student=>@student}
+        = render partial: mod.camelize.constantize.send("student_profile_hook"), locals: { student: @student}
       - if @sms_setting.application_sms_active
         %tr.odd.left
           %td= t('sms_alerts')
-          %td.right= @student.is_sms_enabled?? "Enabled":"Disabled"
+          %td.right
+            = @student.is_sms_enabled? ? "Enabled" : "Disabled"
       %tr.even.left
         %td= t('contact_message')
         %td.right
-          - unless @immediate_contact.nil?
-            = link_to @immediate_contact.full_name, :controller => "students", :action => "guardians", :id => @student.id
-          = "(" + @immediate_contact.mobile_phone + ")" if @immediate_contact and !@immediate_contact.mobile_phone.empty?
+          - unless @immediate_contact.blank?
+            = link_to @immediate_contact.full_name, controller: :students, action: :guardians, id: @student.id
+          = "(#{@immediate_contact.mobile_phone})" if @immediate_contact and !@immediate_contact.mobile_phone.blank?
           - if @current_user.admin?
-            - unless @immediate_contact.nil?
+            - unless @immediate_contact.blank?
               %span
-                (#{link_to "#{t('change_contact')}", :controller => 'students', :action => 'admission3_1', :id => @student.id})
+                = link_to t('change_contact'), controller: :students, action: :admission3_1, id: @student.id
             - else
               - if permitted_to? :add_guardian,:student
                 %span
                   = t('no_guardian')
-                  (#{link_to "#{t('add_guardian')}",:controller => 'students',:action => 'add_guardian', :id => @student.id} / #{link_to "#{t('choose_from_existing')}",:controller => 'students',:action => 'admission3_1', :id => @student.id})
+                  (
+                  = link_to t('add_guardian'), controller: :students, action: :add_guardian, id: @student.id
+                  = link_to t('choose_from_existing'), controller: :students, action: :admission3_1, id: @student.id
               - else
                 %span= t('no_guardian')
-      - unless  @additional_fields.empty?
+      - unless  @additional_fields.blank?
         - @additional_fields.each do |field|
-          - p =cycle('2',' ')
+          - p = cycle('2',' ')
           %tr.odd.left
-            %td= field.name
+            %td
+              = field.name
             %td.right
               - detail = StudentAdditionalDetail.find_by_additional_field_id_and_student_id(field.id,@student.id)
-              = detail.additional_info unless detail.nil?
+              = detail.additional_info unless detail.blank?
           %tr.odd.left
             %td
             %td.right
-              - detail = StudentAdditionalDetail.where(:student_id => @student.id)
-              - if permitted_to? :edit_admission4,:student
+              - detail = StudentAdditionalDetail.where(student_id: @student.id)
+              - if permitted_to? :edit_admission4, :student
                 - unless detail.blank?
                   %span
-                    (#{link_to "#{t('edit_additional_details')}", :controller => 'students', :action => 'admission4', :id => @student.id})
+                    = link_to t('edit_additional_details'), controller: :students, action: :admission4, id: @student.id
                 - else
                   %span
-                    (#{link_to "#{t('add_additional_details')}", :controller => 'students', :action => 'admission4', :id => @student.id})
-        - unless @previous_data.nil?
+                    = link_to t('add_additional_details'), controller: :students, action: :admission4, id: @student.id
+        - unless @previous_data.blank?
           %tr.even.left
             %td
-            %td.right= t('previous_details')
+            %td.right
+              = t('previous_details')
           %tr.odd.left
-            %td= t('previous_institution')
-            %td.right= link_to @previous_data.institution,:action=>'show_previous_details', :id => @student.id
+            %td
+              = t('previous_institution')
+            %td.right
+              = link_to @previous_data.institution, action: :show_previous_details, id: @student.id
         - else
-          - if permitted_to? :previous_data,:student
+          - if permitted_to? :previous_data, :student
             %tr.odd.left
               %td
               %td.right
                 = t('no_previous_data')
-                (#{link_to "#{t('add_previous_data')}", :controller => 'students', :action => 'previous_data', :id => @student.id})
+                (#{link_to t('add_previous_data'), controller: :students, action: :previous_data, id: @student.id})
           - else
             %tr.odd.left
               %td
-              %td.right= t('no_previous_data')
+              %td.right
+                = t('no_previous_data')
     - if @current_user.admin?
       .buttons
-        = link_to " ► #{t('edit_text')}", { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button"
-        = link_to " ► #{t('pdf_report')}", {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button'
+        = link_to " ► #{t('edit_text')}", { controller: :students, action: :edit, id: @student.id }, class: :user_button
+        = link_to " ► #{t('pdf_report')}", { controller: :students, action: :profile_pdf, id: @student.id }, target: :blank, class: :user_button
     - elsif permitted_to? :edit, :student
       .buttons
-        = link_to " ► #{t('edit_text')}", { :controller => "students", :action => "edit", :id => @student.id },:class => "user_button"
-        = link_to " ► #{t('pdf_report')}", {:controller => "students", :action => "profile_pdf", :id => @student.id},:target => '_blank', :class=> 'user_button'
+        = link_to " ► #{t('edit_text')}", { controller: :students, action: :edit, id: @student.id }, class: :user_button
+        = link_to " ► #{t('pdf_report')}", { controller: :students, action: :profile_pdf, id: @student.id }, target: :blank, class: :user_button

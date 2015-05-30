@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: student_previous_subject_marks
+#
+#  id         :integer          not null, primary key
+#  student_id :integer
+#  subject    :string(255)
+#  mark       :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

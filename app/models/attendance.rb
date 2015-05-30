@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: attendances
+#
+#  id                    :integer          not null, primary key
+#  student_id            :integer
+#  period_table_entry_id :integer
+#  forenoon              :boolean          default(FALSE)
+#  afternoon             :boolean          default(FALSE)
+#  reason                :string(255)
+#  month_date            :date
+#  batch_id              :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

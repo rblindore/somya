@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: fa_groups
+#
+#  id                   :integer          not null, primary key
+#  name                 :string(255)
+#  desc                 :text(65535)
+#  cce_exam_category_id :integer
+#  created_at           :datetime
+#  updated_at           :datetime
+#  cce_grade_set_id     :integer
+#  max_marks            :float(24)        default(100.0)
+#  is_deleted           :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

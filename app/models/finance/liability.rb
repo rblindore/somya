@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: liabilities
+#
+#  id          :integer          not null, primary key
+#  title       :string(255)
+#  description :text(65535)
+#  amount      :integer
+#  is_solved   :boolean          default(FALSE)
+#  is_deleted  :boolean          default(FALSE)
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

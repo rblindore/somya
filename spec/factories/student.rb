@@ -13,4 +13,7 @@ FactoryGirl.define do
     s.country_id      76
     s.nationality_id  76
   end
+
+  factory :ward, class: :student do |s|
+  end
 end

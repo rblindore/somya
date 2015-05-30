@@ -1,3 +1,11 @@
+# == Schema Information
+#
+# Table name: batch_students
+#
+#  student_id :integer
+#  batch_id   :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

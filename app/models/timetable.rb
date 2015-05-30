@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: timetables
+#
+#  id         :integer          not null, primary key
+#  start_date :date
+#  end_date   :date
+#  is_active  :boolean          default(FALSE)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

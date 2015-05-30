@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: privileges
+#
+#  id               :integer          not null, primary key
+#  name             :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  description      :text(65535)
+#  privilege_tag_id :integer
+#  priority         :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

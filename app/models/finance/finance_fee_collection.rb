@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: finance_fee_collections
+#
+#  id              :integer          not null, primary key
+#  name            :string(255)
+#  start_date      :date
+#  end_date        :date
+#  due_date        :date
+#  fee_category_id :integer
+#  batch_id        :integer
+#  is_deleted      :boolean          default(FALSE), not null
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

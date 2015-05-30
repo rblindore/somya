@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: finance_fee_structure_elements
+#
+#  id                  :integer          not null, primary key
+#  amount              :decimal(15, 2)
+#  label               :string(255)
+#  batch_id            :integer
+#  student_category_id :integer
+#  student_id          :integer
+#  parent_id           :integer
+#  fee_collection_id   :integer
+#  deleted             :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

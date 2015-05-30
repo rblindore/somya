@@ -26,7 +26,12 @@ class StudentsController < ApplicationController
     :delete, :edit, :add_guardian, :email, :remove, :reports, :profile,
     :guardians, :academic_pdf,:show_previous_details,:fees,:fee_details
   ]
-  
+
+  # GEt /students
+  def index
+    render layout: 'application'
+  end
+
   def academic_report_all
     @user = current_user
     @prev_student = @student.previous_student
@@ -548,13 +553,13 @@ class StudentsController < ApplicationController
 
   def profile
     @current_user = current_user
-    @address = @student.address_line1.to_s + ' ' + @student.address_line2.to_s
+    @address = "#{@student.address_line1} #{@student.address_line2}"
     @additional_fields = StudentAdditionalField.where(status: true)
     @sms_module = Settings.available_modules
     @sms_setting = SmsSetting.new
     @previous_data = StudentPreviousData.find_by_student_id(@student.id)
-    @immediate_contact = Guardian.find(@student.immediate_contact_id) \
-      unless @student.immediate_contact_id.nil? or @student.immediate_contact_id == ''
+    @immediate_contact = @student.immediate_guardian
+    render layout: 'application'
   end
 
   def profile_pdf
@@ -662,6 +667,7 @@ class StudentsController < ApplicationController
 
   def view_all
     @batches = Batch.active
+    render layout: 'application'
   end
 
   def advanced_search
@@ -1372,21 +1378,21 @@ class StudentsController < ApplicationController
     def student_additional_field_params
       params.require(:student_additional_field).permit(:name, :status, :is_mandatory, :input_type)
     end
-    
+
     def guardian_params
       params[:guardian] = params[:parent_detail] if params[:parent_detail]
       params.require(:guardian).permit(:ward_id, :first_name, :last_name, :relation, :email, :office_phone1, :office_phone2, :mobile_phone, :office_address_line1, :office_address_line2, :city, :state, :country_id, :dob, :occupation, :income, :education, :user_id) if params[:guardian]
 #       params.require(:parent_detail).permit(:ward_id, :first_name, :last_name, :relation, :email, :office_phone1, :office_phone2, :mobile_phone, :office_address_line1, :office_address_line2, :city, :state, :country_id, :dob, :occupation, :income, :education, :user_id) if params[:parent_detail]
     end
-    
+
     def student_previous_details_params
       params.require(:student_previous_details).permit(:student_id, :institution, :year, :course, :total_mark) if params[:student_previous_details]
     end
-    
+
     def student_previous_subject_details_params
       params.require(:student_previous_subject_details).permit(:student_id, :subject, :mark) if params[:student_previous_subject_details]
     end
-    
+
     def student_category_params
       params.require(:student_category).permit(:name, :is_deleted) if params[:student_category]
     end

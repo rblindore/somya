@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: employee_salary_structures
+#
+#  id                  :integer          not null, primary key
+#  employee_id         :integer
+#  payroll_category_id :integer
+#  amount              :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: class_timings
+#
+#  id         :integer          not null, primary key
+#  batch_id   :integer
+#  name       :string(255)
+#  start_time :time
+#  end_time   :time
+#  is_break   :boolean
+#  is_deleted :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

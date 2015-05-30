@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: student_categories
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  is_deleted :boolean          default(FALSE), not null
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

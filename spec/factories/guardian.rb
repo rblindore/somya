@@ -3,5 +3,8 @@ FactoryGirl.define do
     g.first_name 'Fname'
     g.last_name  'Lname'
     g.relation   'Parent'
+    ward
+    user
+    country
   end
 end

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: timetable_entries
+#
+#  id              :integer          not null, primary key
+#  batch_id        :integer
+#  weekday_id      :integer
+#  class_timing_id :integer
+#  subject_id      :integer
+#  employee_id     :integer
+#  timetable_id    :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

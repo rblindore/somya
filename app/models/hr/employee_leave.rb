@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: employee_leaves
+#
+#  id                     :integer          not null, primary key
+#  employee_id            :integer
+#  employee_leave_type_id :integer
+#  leave_count            :decimal(5, 1)    default(0.0)
+#  leave_taken            :decimal(5, 1)    default(0.0)
+#  reset_date             :date
+#  created_at             :datetime
+#  updated_at             :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

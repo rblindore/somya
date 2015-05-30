@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: fee_collection_particulars
+#
+#  id                        :integer          not null, primary key
+#  name                      :string(255)
+#  description               :text(65535)
+#  amount                    :decimal(12, 2)
+#  finance_fee_collection_id :integer
+#  student_category_id       :integer
+#  admission_no              :string(255)
+#  student_id                :integer
+#  is_deleted                :boolean          default(FALSE), not null
+#  created_at                :datetime
+#  updated_at                :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

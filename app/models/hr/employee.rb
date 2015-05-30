@@ -1,3 +1,62 @@
+# == Schema Information
+#
+# Table name: employees
+#
+#  id                     :integer          not null, primary key
+#  employee_category_id   :integer
+#  employee_number        :string(255)
+#  joining_date           :date
+#  first_name             :string(255)
+#  middle_name            :string(255)
+#  last_name              :string(255)
+#  gender                 :string(255)
+#  job_title              :string(255)
+#  employee_position_id   :integer
+#  employee_department_id :integer
+#  reporting_manager_id   :integer
+#  employee_grade_id      :integer
+#  qualification          :string(255)
+#  experience_detail      :text(65535)
+#  experience_year        :integer
+#  experience_month       :integer
+#  status                 :boolean
+#  status_description     :string(255)
+#  date_of_birth          :date
+#  marital_status         :string(255)
+#  children_count         :integer
+#  father_name            :string(255)
+#  mother_name            :string(255)
+#  husband_name           :string(255)
+#  blood_group            :string(255)
+#  nationality_id         :integer
+#  home_address_line1     :string(255)
+#  home_address_line2     :string(255)
+#  home_city              :string(255)
+#  home_state             :string(255)
+#  home_country_id        :integer
+#  home_pin_code          :string(255)
+#  office_address_line1   :string(255)
+#  office_address_line2   :string(255)
+#  office_city            :string(255)
+#  office_state           :string(255)
+#  office_country_id      :integer
+#  office_pin_code        :string(255)
+#  office_phone1          :string(255)
+#  office_phone2          :string(255)
+#  mobile_phone           :string(255)
+#  home_phone             :string(255)
+#  email                  :string(255)
+#  fax                    :string(255)
+#  photo_data             :binary(16777215)
+#  created_at             :datetime
+#  updated_at             :datetime
+#  user_id                :integer
+#  photo_file_name        :string(255)
+#  photo_content_type     :string(255)
+#  photo_file_size        :integer
+#  photo_updated_at       :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

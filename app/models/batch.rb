@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: batches
+#
+#  id          :integer          not null, primary key
+#  name        :string(255)
+#  course_id   :integer
+#  start_date  :datetime
+#  end_date    :datetime
+#  is_active   :boolean          default(TRUE)
+#  is_deleted  :boolean          default(FALSE)
+#  employee_id :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,28 @@
+# == Schema Information
+#
+# Table name: finance_transactions
+#
+#  id                    :integer          not null, primary key
+#  title                 :string(255)
+#  description           :string(255)
+#  amount                :decimal(15, 2)
+#  fine_included         :boolean          default(FALSE)
+#  category_id           :integer
+#  student_id            :integer
+#  finance_fees_id       :integer
+#  created_at            :datetime
+#  updated_at            :datetime
+#  transaction_date      :date
+#  fine_amount           :decimal(10, 2)   default(0.0)
+#  master_transaction_id :integer          default(0)
+#  finance_id            :integer
+#  finance_type          :string(255)
+#  payee_id              :integer
+#  payee_type            :string(255)
+#  receipt_no            :string(255)
+#  voucher_no            :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

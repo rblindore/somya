@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: fee_discounts
+#
+#  id                      :integer          not null, primary key
+#  type                    :string(255)
+#  name                    :string(255)
+#  receiver_id             :integer
+#  finance_fee_category_id :integer
+#  discount                :decimal(15, 2)
+#  is_amount               :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

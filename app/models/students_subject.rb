@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: students_subjects
+#
+#  id         :integer          not null, primary key
+#  student_id :integer
+#  subject_id :integer
+#  batch_id   :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

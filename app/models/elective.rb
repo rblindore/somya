@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: electives
+#
+#  id                :integer          not null, primary key
+#  elective_group_id :integer
+#  created_at        :datetime
+#  updated_at        :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

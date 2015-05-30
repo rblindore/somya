@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: employee_bank_details
+#
+#  id            :integer          not null, primary key
+#  employee_id   :integer
+#  bank_field_id :integer
+#  bank_info     :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

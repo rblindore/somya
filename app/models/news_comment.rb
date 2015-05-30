@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: news_comments
+#
+#  id          :integer          not null, primary key
+#  content     :text(65535)
+#  news_id     :integer
+#  author_id   :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  is_approved :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

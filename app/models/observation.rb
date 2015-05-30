@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: observations
+#
+#  id                   :integer          not null, primary key
+#  name                 :string(255)
+#  desc                 :string(255)
+#  is_active            :boolean
+#  observation_group_id :integer
+#  created_at           :datetime
+#  updated_at           :datetime
+#  sort_order           :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

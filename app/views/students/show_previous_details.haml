@@ -25,7 +25,7 @@
 #inner-tab-menu
   %ul
     %li
-      = link_to "#{t('profile_text')}", :action=>:profile, :id=>@student.id
+      = link_to t('profile_text'), action: :profile, id: @student.id
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

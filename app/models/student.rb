@@ -16,6 +16,51 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
+# == Schema Information
+#
+# Table name: students
+#
+#  id                   :integer          not null, primary key
+#  admission_no         :string(255)
+#  class_roll_no        :string(255)
+#  admission_date       :date
+#  first_name           :string(255)
+#  middle_name          :string(255)
+#  last_name            :string(255)
+#  batch_id             :integer
+#  date_of_birth        :date
+#  gender               :string(255)
+#  blood_group          :string(255)
+#  birth_place          :string(255)
+#  nationality_id       :integer
+#  language             :string(255)
+#  religion             :string(255)
+#  student_category_id  :integer
+#  address_line1        :string(255)
+#  address_line2        :string(255)
+#  city                 :string(255)
+#  state                :string(255)
+#  pin_code             :string(255)
+#  country_id           :integer
+#  phone1               :string(255)
+#  phone2               :string(255)
+#  email                :string(255)
+#  immediate_contact_id :integer
+#  is_sms_enabled       :boolean          default(TRUE)
+#  photo_data           :binary(16777215)
+#  status_description   :string(255)
+#  is_active            :boolean          default(TRUE)
+#  is_deleted           :boolean          default(FALSE)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  has_paid_fees        :boolean          default(FALSE)
+#  user_id              :integer
+#  photo_file_name      :string(255)
+#  photo_content_type   :string(255)
+#  photo_file_size      :integer
+#  photo_updated_at     :datetime
+#
+
 class Student < ActiveRecord::Base
 
   include CceReportMod
@@ -25,6 +70,7 @@ class Student < ActiveRecord::Base
   belongs_to :student_category
   belongs_to :nationality, class_name: :Country
   belongs_to :user
+  belongs_to :immediate_guardian, class_name: :Guardian, foreign_key: :immediate_contact_id
 
   has_one    :immediate_contact
   has_one    :student_previous_data
@@ -65,11 +111,11 @@ class Student < ActiveRecord::Base
 
   before_save :is_active_true
 
-  has_attached_file :photo, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png", 
-      :path => "#{Rails.root.to_s}/public/uploads/:class/:attachment/:id/:style/:basename.:extension", 
+  has_attached_file :photo, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png",
+      :path => "#{Rails.root.to_s}/public/uploads/:class/:attachment/:id/:style/:basename.:extension",
       :url => "/uploads/:class/:attachment/:id/:style/:basename.:extension"
   validates_attachment_content_type :photo, :content_type => /\Aimage\/.*\Z/
-  
+
   def validate
     errors.add(:date_of_birth, I18n.t('cant_be_a_future_date')) if self.date_of_birth >= Date.today \
       unless self.date_of_birth.nil?

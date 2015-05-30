@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: student_additional_details
+#
+#  id                  :integer          not null, primary key
+#  student_id          :integer
+#  additional_field_id :integer
+#  additional_info     :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

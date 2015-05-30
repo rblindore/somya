@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: reminders
+#
+#  id                      :integer          not null, primary key
+#  sender                  :integer
+#  recipient               :integer
+#  subject                 :string(255)
+#  body                    :text(65535)
+#  is_read                 :boolean          default(FALSE)
+#  is_deleted_by_sender    :boolean          default(FALSE)
+#  is_deleted_by_recipient :boolean          default(FALSE)
+#  created_at              :datetime
+#  updated_at              :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

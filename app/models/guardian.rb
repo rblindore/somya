@@ -16,10 +16,38 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
+# == Schema Information
+#
+# Table name: guardians
+#
+#  id                   :integer          not null, primary key
+#  ward_id              :integer
+#  first_name           :string(255)
+#  last_name            :string(255)
+#  relation             :string(255)
+#  email                :string(255)
+#  office_phone1        :string(255)
+#  office_phone2        :string(255)
+#  mobile_phone         :string(255)
+#  office_address_line1 :string(255)
+#  office_address_line2 :string(255)
+#  city                 :string(255)
+#  state                :string(255)
+#  country_id           :integer
+#  dob                  :date
+#  occupation           :string(255)
+#  income               :string(255)
+#  education            :string(255)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  user_id              :integer
+#
+
 class Guardian < ActiveRecord::Base
   belongs_to :country
-  belongs_to :ward, :class_name => 'Student'
+  belongs_to :ward, class_name: 'Student'
   belongs_to :user
+  has_many :immediate_guardian_of, class_name: 'Student', foreign_key: :immediate_contact_id
 
   validates_presence_of :first_name, :relation,:ward_id
   validates_format_of     :email, :with => /^[A-Z0-9._%-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,   allow_blank: true, multiline: true, message: I18n.t('must_be_a_valid_email_address')

@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: grouped_exams
+#
+#  id            :integer          not null, primary key
+#  exam_group_id :integer
+#  batch_id      :integer
+#  weightage     :decimal(15, 2)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

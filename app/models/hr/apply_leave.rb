@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: apply_leaves
+#
+#  id                      :integer          not null, primary key
+#  employee_id             :integer
+#  employee_leave_types_id :integer
+#  is_half_day             :boolean
+#  start_date              :date
+#  end_date                :date
+#  reason                  :string(255)
+#  approved                :boolean          default(FALSE)
+#  viewed_by_manager       :boolean          default(FALSE)
+#  manager_remark          :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

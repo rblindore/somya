@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: finance_transaction_triggers
+#
+#  id                  :integer          not null, primary key
+#  finance_category_id :integer
+#  percentage          :decimal(8, 2)
+#  title               :string(255)
+#  description         :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #
