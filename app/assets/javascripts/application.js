@@ -26,7 +26,7 @@
 //= require fedena_plugin
 
 $(document).on('ready dom:loaded', function(){
-  $('.datepicker').datepicker();
+  $('.datepicker').datepicker({dateFormat: "dd/mm/yy"});
 
   $('object').each(function(obj){
     a = document.createElement('param');

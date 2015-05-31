@@ -119,25 +119,31 @@ class StudentsController < ApplicationController
   def admission3_1
     @student = Student.find(params[:id])
     @parents = @student.guardians
-    if @parents.empty?
-      redirect_to :action => :admission4, :id => @student
+    if @parents.blank?
+      redirect_to action: :admission4, id: @student
     end
-    return if params[:immediate_contact].nil?
-    if request.post?
-      sms_setting = SmsSetting.new()
-      @student = Student.update(@student.id, :immediate_contact_id => params[:immediate_contact][:contact])
-      if sms_setting.application_sms_active and sms_setting.student_admission_sms_active and @student.is_sms_enabled
-        recipients = []
-        message = "#{t('student_admission_done')}   #{@student.admission_no} #{t('password_is')}#{@student.admission_no}123"
-        if sms_setting.parent_sms_active
-          guardian = Guardian.find(@student.immediate_contact_id)
-          recipients.push guardian.mobile_phone unless guardian.mobile_phone.nil?
+
+    if params[:immediate_contact].blank?
+      render layout: 'application'
+    else
+      if request.post?
+        sms_setting = SmsSetting.new()
+        @student = Student.update(@student.id, :immediate_contact_id => params[:immediate_contact][:contact])
+        if sms_setting.application_sms_active and sms_setting.student_admission_sms_active and @student.is_sms_enabled
+          recipients = []
+          message = "#{t('student_admission_done')}   #{@student.admission_no} #{t('password_is')}#{@student.admission_no}123"
+          if sms_setting.parent_sms_active
+            guardian = @student.immediate_guardian
+            recipients.push guardian.mobile_phone unless guardian.mobile_phone.blank?
+          end
+          unless recipients.blank?
+            Delayed::Job.enqueue(SmsManager.new(message,recipients))
+          end
         end
-        unless recipients.blank?
-          Delayed::Job.enqueue(SmsManager.new(message,recipients))
-        end
+        redirect_to action: :profile, id: @student.id
+      else
+        render layout: 'application'
       end
-      redirect_to :action => "profile", :id => @student.id
     end
   end
 
@@ -398,6 +404,8 @@ class StudentsController < ApplicationController
           redirect_to profile_student_path( @student), notice: t('flash3')
         end
       end
+    else
+      render layout: 'application'
     end
   end
 
@@ -488,17 +496,17 @@ class StudentsController < ApplicationController
 
   def reports
     @batch = @student.batch
-    @grouped_exams = GroupedExam.where(:batch_id => @batch.id)
-    @normal_subjects = Subject.where("batch_id = ? and no_exams = ? AND elective_group_id IS ? AND is_deleted = ?", @batch.id, false, nil, false)
+    @grouped_exams = @batch.grouped_exams
+    @normal_subjects = @batch.subjects.where(no_exams: false, elective_group_id: nil, is_deleted: false)
     @student_electives = StudentsSubject.where("student_id = ? and batch_id = ?", @student.id, @batch.id)
     @elective_subjects = []
     @student_electives.each do |e|
       @elective_subjects.push Subject.find(e.subject_id)
     end
-    @subjects = @normal_subjects+@elective_subjects
-    @exam_groups = @batch.exam_groups
-    @exam_groups.to_a.reject!{|e| e.result_published==false}
+    @subjects = @normal_subjects + @elective_subjects
+    @exam_groups = @batch.exam_groups.where.not(result_published: false)
     @old_batches = @student.graduated_batches
+    render layout: 'application'
   end
 
   def search_ajax
@@ -544,6 +552,8 @@ class StudentsController < ApplicationController
     if request.post? and @parent_info.save
       flash[:notice] = "#{t('student.flash5')} #{@parent_info.ward.full_name}"
       redirect_to :action => "admission3_1", :id => @parent_info.ward_id
+    else
+      render layout: 'application'
     end
   end
 

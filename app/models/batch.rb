@@ -39,6 +39,7 @@ class Batch < ActiveRecord::Base
   has_many :all_students, class_name: 'Student'
   has_many :grouped_exam_reports
   has_many :grouped_batches
+  has_many :grouped_exams
   has_many :archived_students
   has_many :grading_levels, -> { where( is_deleted: false) }
   has_many :subjects, -> { where( is_deleted: false) }

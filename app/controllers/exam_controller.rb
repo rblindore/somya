@@ -176,7 +176,7 @@ class ExamController < ApplicationController
   def select_inactive_batches
     unless params[:course_id]==""
       @batches = Batch.where(:course_id =>params[:course_id],:is_active=>false,:is_deleted=>:false)
-      
+
     end
   end
 
@@ -923,16 +923,14 @@ class ExamController < ApplicationController
   end
 
   def generated_report4
-    if params[:student].nil?
-      if params[:exam_report].nil? or params[:exam_report][:batch_id].empty?
-        flash[:notice] = "#{t('select_a_batch_to_continue')}"
-        redirect_to :action=>'grouped_exam_report' and return
+    if params[:student].blank?
+      if params[:exam_report].blank? or params[:exam_report][:batch_id].blank?
+        flash[:notice] = t('select_a_batch_to_continue')
+        redirect_to action: :grouped_exam_report and return
       end
-    else
-      if params[:type].nil?
-        flash[:notice] = "#{t('invalid_parameters')}"
-        redirect_to :action=>'grouped_exam_report' and return
-      end
+    elsif params[:type].blank?
+      flash[:notice] = t('invalid_parameters')
+      redirect_to action: :grouped_exam_report  and return
     end
     @previous_batch = 0
     #grouped-exam-report-for-batch
