@@ -16,6 +16,9 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+
+= javascript_include_tag 'remote_function'
+
 #content-header
   = image_tag("HR/show_hr.png")
   %h1= t('employee_text')
@@ -24,52 +27,52 @@
     = back_button
 #page-yield
   #search-form
-    = form_for @search do |f|
+    = search_form_for @search, url: advanced_search_employee_index_path do |f|
       .label-field-pair
         %label{:for => "name"}= t('name')
         .text-input-bg
-          = f.text_field :first_name_or_middle_name_or_last_name_like
+          = f.text_field :first_name_or_middle_name_or_last_name_cont
       .label-field-pair
         %label{:for => "student_admission_no"}= t('employee_number')
         .text-input-bg
-          = f.text_field :employee_number_equals
+          = f.text_field :employee_number_eq
       .label_field_pair
         %label.label_for_student= t('gender')
         .student_gender_value
           %label.label_for_gender= t('all')
-          = f.radio_button  :gender_equals, ""
+          = f.radio_button  :gender_eq, ""
           %label.label_for_gender= t('male')
-          = f.radio_button  :gender_equals, "m"
+          = f.radio_button  :gender_eq, "m"
           %label.label_for_gender= t('female')
-          = f.radio_button  :gender_equals, "f"
+          = f.radio_button  :gender_eq, "f"
       .label-field-pair
         %label{:for => "student_admission_no"}= t('blood_group')
         .text-input-bg
-          = select :search, :blood_group_like, ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{:prompt=>"#{t('select')}"}
+          = select :search, :blood_group_cont, ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_admission_no"}= t('marital_status')
         .text-input-bg
-          = select :search, :marital_status_like, [["#{t('single')}","single"], ["#{t('married')}","married"],["#{t('divorced')}","divorced"]],{:prompt=>"#{t('select')}"}
+          = select :search, :marital_status_cont, [["#{t('single')}","single"], ["#{t('married')}","married"],["#{t('divorced')}","divorced"]],{:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_admission_no"}= t('country')
         .text-input-bg
-          = f.collection_select :nationality_id_equals, Country.all,:id,:name,{:prompt=>"#{t('select')}"}
+          = f.collection_select :nationality_id_eq, Country.all,:id,:name,{:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_admission_no"}= t('category')
         .text-input-bg
-          = f.collection_select :employee_category_id_equals, EmployeeCategory.all, :id, :name, {:prompt=>"#{t('select')}"}
+          = f.collection_select :employee_category_id_eq, EmployeeCategory.all, :id, :name, {:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_admission_no"}= t('department')
         .text-input-bg
-          = f.collection_select :employee_department_id_equals, EmployeeDepartment.all, :id, :name, {:prompt=>"#{t('select')}"}
+          = f.collection_select :employee_department_id_eq, EmployeeDepartment.all, :id, :name, {:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_admission_no"}= t('position')
         .text-input-bg
-          = f.collection_select :employee_position_id_equals, EmployeePosition.all, :id, :name, {:prompt=>"#{t('select')}"}
+          = f.collection_select :employee_position_id_eq, EmployeePosition.all, :id, :name, {:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_admission_no"}= t('grade')
         .text-input-bg
-          = f.collection_select :employee_grade_id_equals, EmployeeGrade.all, :id, :name,{:prompt=>"#{t('select')}"}
+          = f.collection_select :employee_grade_id_eq, EmployeeGrade.all, :id, :name,{:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_admission_no"}
           = t('joining_date')
@@ -79,12 +82,12 @@
             :id => "loader",            |
             :style =>"display: none;" ) |
         .text-input-bg
-          = select :adv_search,:doj_option,[["#{t('equal_to')}","equal_to"],["#{t('less_than')}","less_than"],["#{t('greater_than')}","greater_than"]],{:prompt=>"#{t('choose_your_option')}"}, |
-            {:onChange => "#{remote_function(:url => {:action => "list_doj_year"},                                                                                                              |
-            :with=>"'doj_option='+value",                                                                                                                                                       |
-            :before => "Element.show('loader')",                                                                                                                                                |
-            :success => "Element.hide('loader')"                                                                                                                                                |
-            )}"}                                                                                                                                                                                |
+          = select :adv_search,:doj_option,[["#{t('equal_to')}","equal_to"],["#{t('less_than')}","less_than"],["#{t('greater_than')}","greater_than"]],{:prompt=>"#{t('choose_your_option')}"}#, |
+            / {:onChange => "#{remote_function(:url => {:action => "list_doj_year"},                                                                                                              |
+            / :with=>"'doj_option='+value",                                                                                                                                                       |
+            / :before => "Element.show('loader')",                                                                                                                                                |
+            / :success => "Element.hide('loader')"                                                                                                                                                |
+            / )}"}                                                                                                                                                                                |
           #doj_year
             = select :adv_search,:doj_year,[],{:prompt=>"#{t('select')}"}
           #doj_year_hidden
@@ -97,12 +100,12 @@
             :id => "loader",            |
             :style =>"display: none;" ) |
         .text-input-bg
-          = select :adv_search,:dob_option,[["#{t('equal_to')}","equal_to"],["#{t('less_than')}","less_than"],["#{t('greater_than')}","greater_than"]],{:prompt=>"#{t('choose_your_option')}"}, |
-            {:onChange => "#{remote_function(:url => {:action => "list_dob_year"},                                                                                                              |
-            :with=>"'dob_option='+value",                                                                                                                                                       |
-            :before => "Element.show('loader')",                                                                                                                                                |
-            :success => "Element.hide('loader')"                                                                                                                                                |
-            )}"}                                                                                                                                                                                |
+          = select :adv_search,:dob_option,[["#{t('equal_to')}","equal_to"],["#{t('less_than')}","less_than"],["#{t('greater_than')}","greater_than"]],{:prompt=>"#{t('choose_your_option')}"}#, |
+            / {:onChange => "#{remote_function(:url => {:action => "list_dob_year"},                                                                                                              |
+            / :with=>"'dob_option='+value",                                                                                                                                                       |
+            / :before => "Element.show('loader')",                                                                                                                                                |
+            / :success => "Element.hide('loader')"                                                                                                                                                |
+            / )}"}                                                                                                                                                                                |
           #dob_year
             = select :adv_search,:dob_year,[],{:prompt=>"#{t('select')}"}
           #dob_year_hidden
@@ -110,11 +113,11 @@
         %label.label_for_student{:for => "student_gender"}= t('status')
         .student_gender_value
           %label.label_for_gender{:for => "student_gender_true"}= t('present')
-          = f.radio_button  :status_equals, "true", {:checked => false }
+          = f.radio_button  :status_eq, "true", {:checked => false }
           %label.label_for_gender{:for => "student_gender_false"}= t('former')
-          = f.radio_button  :status_equals, "false"
+          = f.radio_button  :status_eq, "false"
           %label.label_for_gender{:for => "student_gender_false"} All
-          = f.radio_button  :status_equals, "", {:checked => 'checked'}
+          = f.radio_button  :status_eq, "", {:checked => 'checked'}
       = f.submit  "#{t('search_text')}", :class=>'submit'
   - unless @employees1.nil?
     - if @sort_order=="first_name-ascend"
@@ -129,77 +132,77 @@
         \:
       .search-again
         - searched_for = "#{t('listed_by')}"
-        - searched_for += "#{t('name')}: " + params[:search][:first_name_or_middle_name_or_last_name_like].to_s unless params[:search][:first_name_or_middle_name_or_last_name_like].empty?
-        - searched_for += "#{t('employee_number')}: " + params[:search][:employee_number_equals].to_s unless params[:search][:employee_number_equals].empty?
-        - searched_for += " #{t('employee_department')}: " + EmployeeDepartment.find(params[:search][:employee_department_id_equals]).name.to_s unless params[:search][:employee_department_id_equals].empty?
-        - searched_for += " #{t('employee_category')}: " + EmployeeCategory.find(params[:search][:employee_category_id_equals]).name.to_s unless params[:search][:employee_category_id_equals].empty?
-        - searched_for += " #{t('employee_position')}: " + EmployeePosition.find(params[:search][:employee_position_id_equals]).name.to_s unless params[:search][:employee_position_id_equals].empty?
-        - searched_for += " #{t('employee_grade')}: " + EmployeeGrade.find(params[:search][:employee_grade_id_equals]).name.to_s unless params[:search][:employee_grade_id_equals].empty?
-        - unless  params[:search][:gender_equals].empty?
-          - if  params[:search][:gender_equals] == 'm'
+        - searched_for += "#{t('name')}: " + params[:q][:first_name_or_middle_name_or_last_name_cont].to_s unless params[:q][:first_name_or_middle_name_or_last_name_cont].empty?
+        - searched_for += "#{t('employee_number')}: " + params[:q][:employee_number_eq].to_s unless params[:q][:employee_number_eq].empty?
+        - searched_for += " #{t('employee_department')}: " + EmployeeDepartment.find(params[:q][:employee_department_id_eq]).name.to_s unless params[:q][:employee_department_id_eq].empty?
+        - searched_for += " #{t('employee_category')}: " + EmployeeCategory.find(params[:q][:employee_category_id_eq]).name.to_s unless params[:q][:employee_category_id_eq].empty?
+        - searched_for += " #{t('employee_position')}: " + EmployeePosition.find(params[:q][:employee_position_id_eq]).name.to_s unless params[:q][:employee_position_id_eq].empty?
+        - searched_for += " #{t('employee_grade')}: " + EmployeeGrade.find(params[:q][:employee_grade_id_eq]).name.to_s unless params[:q][:employee_grade_id_eq].empty?
+        - unless  params[:q][:gender_eq].empty?
+          - if  params[:q][:gender_eq] == 'm'
             - searched_for += " #{t('gender')}: #{t('male')}"
-          - elsif  params[:search][:gender_equals] == 'f'
+          - elsif  params[:q][:gender_eq] == 'f'
             - searched_for += " #{t('gender')}: #{t('female')}"
           - else
             - searched_for += " #{t('gender')}: #{t('all')}"
-        - searched_for += " #{t('blood_group')}: " + params[:search][:blood_group_like].to_s unless params[:search][:blood_group_like].empty?
-        - searched_for += " #{t('marital_status')}: " + params[:search][:marital_status_like].to_s unless params[:search][:marital_status_like].empty?
-        - searched_for += " #{t('nationality')}: " + Country.find(params[:search][:nationality_id_equals]).name.to_s unless params[:search][:nationality_id_equals].empty?
+        - searched_for += " #{t('blood_group')}: " + params[:search][:blood_group_cont].to_s unless params[:search][:blood_group_cont].empty?
+        - searched_for += " #{t('marital_status')}: " + params[:search][:marital_status_cont].to_s unless params[:search][:marital_status_cont].empty?
+        - searched_for += " #{t('nationality')}: " + Country.find(params[:q][:nationality_id_eq]).name.to_s unless params[:q][:nationality_id_eq].empty?
         - searched_for += " #{t('year_of_join')}: " +  params[:adv_search][:doj_option].to_s + params[:adv_search][:joining_date_year].to_s unless  params[:adv_search][:doj_option].empty?
         - searched_for += " #{t('year_of_birth')}: " +  params[:adv_search][:dob_option].to_s + params[:adv_search][:birth_date_year].to_s unless  params[:adv_search][:dob_option].empty?
-        - if params[:search][:status_equals]=="true"
+        - if params[:q][:status_eq]=="true"
           - searched_for += " #{t('present_employee')}"
-        - elsif params[:search][:status_equals]=="false"
+        - elsif params[:q][:status_eq]=="false"
           - searched_for += " #{t('former_employee')}"
         - else
           - searched_for += " #{t('all_employee')}"
         = link_to "► #{t('search_again')}", {:action=>"advanced_search"}, :class => "user_button"
         - unless @employees1.empty?
-          = link_to "► #{t('pdf_report')}",   {:action => "advanced_search_pdf",:for =>searched_for, :result2=>@employees2 , :result =>@employees1,:status=>params[:search][:status_equals], :format => 'pdf', :page_height=>1200}, :target => '_blank', :class => "user_button"
+          = link_to "► #{t('pdf_report')}",   {:action => "advanced_search_pdf",:for =>searched_for, :result2=>@employees2 , :result =>@employees1,:status=>params[:q][:status_eq], :format => 'pdf', :page_height=>1200}, :target => '_blank', :class => "user_button"
       .extender
       .searched_for.themed_text
-        - unless params[:search][:first_name_or_middle_name_or_last_name_like].empty?
-          - searched_for = params[:search][:first_name_or_middle_name_or_last_name_like]
+        - unless params[:q][:first_name_or_middle_name_or_last_name_cont].empty?
+          - searched_for = params[:q][:first_name_or_middle_name_or_last_name_cont]
           %span
             = t('name')
             \:
-          = params[:search][:first_name_or_middle_name_or_last_name_like]
-        - unless  params[:search][:employee_number_equals].empty?
+          = params[:q][:first_name_or_middle_name_or_last_name_cont]
+        - unless  params[:q][:employee_number_eq].empty?
           %span
             = t('employee_number')
             \:
-          = params[:search][:employee_number_equals]
-        - unless params[:search][:employee_department_id_equals].empty?
-          - dept = EmployeeDepartment.find(params[:search][:employee_department_id_equals])
+          = params[:q][:employee_number_eq]
+        - unless params[:q][:employee_department_id_eq].empty?
+          - dept = EmployeeDepartment.find(params[:q][:employee_department_id_eq])
           %span
             = t('employee_department')
             \:
           = dept.name
-        - unless  params[:search][:employee_category_id_equals].empty?
-          - category = EmployeeCategory.find(params[:search][:employee_category_id_equals])
+        - unless  params[:q][:employee_category_id_eq].empty?
+          - category = EmployeeCategory.find(params[:q][:employee_category_id_eq])
           %span
             = t('employee_category')
             \:
           = category.name
-        - unless  params[:search][:employee_position_id_equals].empty?
-          - position = EmployeePosition.find(params[:search][:employee_position_id_equals])
+        - unless  params[:q][:employee_position_id_eq].empty?
+          - position = EmployeePosition.find(params[:q][:employee_position_id_eq])
           %span
             = t('employee_position')
             \:
           = position.name
-        - unless  params[:search][:employee_grade_id_equals].empty?
-          - grade = EmployeeGrade.find(params[:search][:employee_grade_id_equals])
+        - unless  params[:q][:employee_grade_id_eq].empty?
+          - grade = EmployeeGrade.find(params[:q][:employee_grade_id_eq])
           %span
             = t('employee_grade')
             \:
           = grade.name
-        - unless  params[:search][:gender_equals].empty?
-          - if  params[:search][:gender_equals] == 'm'
+        - unless  params[:q][:gender_eq].empty?
+          - if  params[:q][:gender_eq] == 'm'
             %span
               = t('gender')
               \:
             = t('male')
-          - elsif  params[:search][:gender_equals] == 'f'
+          - elsif  params[:q][:gender_eq] == 'f'
             %span
               = t('gender')
               \:
@@ -209,18 +212,18 @@
               = t('gender')
               \:
             = t('all')
-        - unless  params[:search][:blood_group_like].empty?
+        - unless  params[:search][:blood_group_cont].empty?
           %span
             = t('blood_group')
             \:
-          = params[:search][:blood_group_like]
-        - unless  params[:search][:marital_status_like].empty?
+          = params[:search][:blood_group_cont]
+        - unless  params[:search][:marital_status_cont].empty?
           %span
             = t('marital_status')
             \:
-          = params[:search][:marital_status_like]
-        - unless  params[:search][:nationality_id_equals].empty?
-          - nationality = Country.find(params[:search][:nationality_id_equals])
+          = params[:search][:marital_status_cont]
+        - unless  params[:q][:nationality_id_eq].empty?
+          - nationality = Country.find(params[:q][:nationality_id_eq])
           %span
             = t('nationality')
             \:
@@ -237,10 +240,10 @@
             \:
           = params[:adv_search][:dob_option]
           = params[:adv_search][:birth_date_year]
-        - if params[:search][:status_equals]=="true"
+        - if params[:q][:status_eq]=="true"
           %span
             = t('present_employee')
-        - elsif params[:search][:status_equals]=="false"
+        - elsif params[:q][:status_eq]=="false"
           %span
             = t('former_employee')
         - else
@@ -252,11 +255,11 @@
               = t('sl_no')
             %td
               - if @sort_order=="first_name-ascend"
-                = link_to  "#{t('first_name')}&nbsp;▲", {:action=>"advanced_search", :search=>params[:search], :adv_search=>params[:adv_search],:sort_order=>"first_name-descend"}
+                = link_to  "#{t('first_name')}&nbsp;▲", {:action=>"advanced_search", :search=>params[:q], :adv_search=>params[:adv_search],:sort_order=>"first_name-descend"}
               - elsif @sort_order=="first_name-descend"
-                = link_to  "#{t('first_name')}&nbsp;▼", {:action=>"advanced_search", :search=>params[:search], :adv_search=>params[:adv_search],:sort_order=>"first_name-ascend"}
+                = link_to  "#{t('first_name')}&nbsp;▼", {:action=>"advanced_search", :search=>params[:q], :adv_search=>params[:adv_search],:sort_order=>"first_name-ascend"}
               - else
-                = link_to  "#{t('first_name')}", {:action=>"advanced_search", :search=>params[:search], :adv_search=>params[:adv_search],:sort_order=>"first_name-ascend"}
+                = link_to  "#{t('first_name')}", {:action=>"advanced_search", :search=>params[:q], :adv_search=>params[:adv_search],:sort_order=>"first_name-ascend"}
             %td
               = t('employee_id')
             %td
@@ -265,7 +268,7 @@
           - @employees1.each_with_index do |emp1, i|
             %tr{:class => "tr-#{cycle('odd', 'even')}"}
               %td.col-1= i+1
-              - if params[:search][:status_equals]=="false"
+              - if params[:q][:status_eq]=="false"
                 %td.col-4= link_to emp1.first_name + ' ' + emp1.last_name, :controller => 'archived_employee', :action => 'profile', :id => emp1.id
               - else
                 %td.col-4= link_to emp1.first_name + ' ' + emp1.last_name, :controller => 'employee', :action => 'profile', :id => emp1.id
