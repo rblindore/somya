@@ -1541,6 +1541,7 @@ class EmployeeController < ApplicationController
     @sort_order=""
     @sort_order=params[:sort_order] if  params[:sort_order]
     if params[:q]
+      params[:q].merge!(formatted_date_fields)
       if params[:q][:status_eq]=="true"
         @search = Employee.search(params[:q])
         @employees1 = @search.result
@@ -1555,6 +1556,15 @@ class EmployeeController < ApplicationController
         @employees1 = @search1
         @employees2 = @search2
       end
+    end
+  end
+
+  def formatted_date_fields
+    if params[:adv_search]
+      {params[:adv_search][:doj_option] => params[:adv_search][:doj_year],
+       params[:adv_search][:dob_option] => params[:adv_search][:dob_year]}
+    else
+      {}
     end
   end
 

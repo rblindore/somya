@@ -82,14 +82,15 @@
             :id => "loader",            |
             :style =>"display: none;" ) |
         .text-input-bg
-          = select :adv_search,:doj_option,[["#{t('equal_to')}","equal_to"],["#{t('less_than')}","less_than"],["#{t('greater_than')}","greater_than"]],{:prompt=>"#{t('choose_your_option')}"}#, |
+          = select :adv_search,:doj_option,[["#{t('equal_to')}","joining_date_eq"],["#{t('less_than')}","joining_date_lt"],["#{t('greater_than')}","joining_date_gt"]],{:prompt=>"#{t('choose_your_option')}"}#, |
             / {:onChange => "#{remote_function(:url => {:action => "list_doj_year"},                                                                                                              |
             / :with=>"'doj_option='+value",                                                                                                                                                       |
             / :before => "Element.show('loader')",                                                                                                                                                |
             / :success => "Element.hide('loader')"                                                                                                                                                |
             / )}"}                                                                                                                                                                                |
           #doj_year
-            = select :adv_search,:doj_year,[],{:prompt=>"#{t('select')}"}
+            = text_field_tag 'adv_search[doj_year]', ''
+            =# select :adv_search,:doj_year,[],{:prompt=>"#{t('select')}"}
           #doj_year_hidden
       .label-field-pair
         %label{:for => "student_admission_no"}
@@ -100,14 +101,15 @@
             :id => "loader",            |
             :style =>"display: none;" ) |
         .text-input-bg
-          = select :adv_search,:dob_option,[["#{t('equal_to')}","equal_to"],["#{t('less_than')}","less_than"],["#{t('greater_than')}","greater_than"]],{:prompt=>"#{t('choose_your_option')}"}#, |
+          = select :adv_search,:dob_option,[["#{t('equal_to')}","date_of_birth_eq"],["#{t('less_than')}","date_of_birth_lt"],["#{t('greater_than')}","date_of_birth_gt"]],{:prompt=>"#{t('choose_your_option')}"}#, |
             / {:onChange => "#{remote_function(:url => {:action => "list_dob_year"},                                                                                                              |
             / :with=>"'dob_option='+value",                                                                                                                                                       |
             / :before => "Element.show('loader')",                                                                                                                                                |
             / :success => "Element.hide('loader')"                                                                                                                                                |
             / )}"}                                                                                                                                                                                |
           #dob_year
-            = select :adv_search,:dob_year,[],{:prompt=>"#{t('select')}"}
+            = text_field_tag 'adv_search[dob_year]', ''
+            =# select :adv_search,:dob_year,[],{:prompt=>"#{t('select')}"}
           #dob_year_hidden
       .label_field_pair
         %label.label_for_student{:for => "student_gender"}= t('status')
@@ -158,7 +160,7 @@
           - searched_for += " #{t('all_employee')}"
         = link_to "► #{t('search_again')}", {:action=>"advanced_search"}, :class => "user_button"
         - unless @employees1.empty?
-          = link_to "► #{t('pdf_report')}",   {:action => "advanced_search_pdf",:for =>searched_for, :result2=>@employees2 , :result =>@employees1,:status=>params[:q][:status_eq], :format => 'pdf', :page_height=>1200}, :target => '_blank', :class => "user_button"
+          = link_to "► #{t('pdf_report')}",   {:action => "advanced_search_pdf",:for =>searched_for, :result2=>@employees2.map(&:id) , :result =>@employees1.map(&:id),:status=>params[:q][:status_eq], :format => 'pdf', :page_height=>1200}, :target => '_blank', :class => "user_button"
       .extender
       .searched_for.themed_text
         - unless params[:q][:first_name_or_middle_name_or_last_name_cont].empty?
