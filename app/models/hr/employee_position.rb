@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: employee_positions
+#
+#  id                   :integer          not null, primary key
+#  name                 :string(255)
+#  employee_category_id :integer
+#  status               :boolean
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: time_zones
+#
+#  id              :integer          not null, primary key
+#  name            :string(255)
+#  code            :string(255)
+#  difference_type :string(255)
+#  time_difference :integer
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

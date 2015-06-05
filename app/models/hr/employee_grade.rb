@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: employee_grades
+#
+#  id             :integer          not null, primary key
+#  name           :string(255)
+#  priority       :integer
+#  status         :boolean
+#  max_hours_day  :integer
+#  max_hours_week :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: payroll_categories
+#
+#  id                  :integer          not null, primary key
+#  name                :string(255)
+#  percentage          :float(24)
+#  payroll_category_id :integer
+#  is_deduction        :boolean
+#  status              :boolean
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

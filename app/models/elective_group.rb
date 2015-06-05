@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: elective_groups
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  batch_id   :integer
+#  is_deleted :boolean          default(FALSE)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

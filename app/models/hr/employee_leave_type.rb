@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: employee_leave_types
+#
+#  id              :integer          not null, primary key
+#  name            :string(255)
+#  code            :string(255)
+#  status          :boolean
+#  max_leave_count :string(255)
+#  carry_forward   :boolean          default(FALSE), not null
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

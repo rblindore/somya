@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: sms_logs
+#
+#  id               :integer          not null, primary key
+#  mobile           :string(255)
+#  gateway_response :string(255)
+#  sms_message_id   :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

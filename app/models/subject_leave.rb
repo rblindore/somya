@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: subject_leaves
+#
+#  id              :integer          not null, primary key
+#  student_id      :integer
+#  month_date      :date
+#  subject_id      :integer
+#  employee_id     :integer
+#  class_timing_id :integer
+#  reason          :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  batch_id        :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

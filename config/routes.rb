@@ -57,14 +57,12 @@ Fedena::Application.routes.draw do
 
   resources :class_timings, except: :show do
     collection do
-      get :index
       get :show_class_timing
     end
   end
 
   resources :subjects do
     collection do
-      get :index
       get :show_batch
       get :delete_subject
     end
@@ -113,10 +111,9 @@ Fedena::Application.routes.draw do
 
   resources :employee_attendances do
     collection do
-      get :index
       get :show_dept
       get :delete_attendance
-      
+
     end
   end
 
@@ -282,7 +279,7 @@ Fedena::Application.routes.draw do
       post :new
     end
   end
-  
+
   resources :elective_groups do
     collection do
       get :new
@@ -295,7 +292,7 @@ Fedena::Application.routes.draw do
       get :delete
     end
   end
-  
+
   resources :exam_groups do
     resources :exams do
       member do
@@ -383,9 +380,8 @@ Fedena::Application.routes.draw do
     end
   end
 
-  resources :students, only: :index do
+  resources :students, only: [:index, :edit] do
     collection do
-      get :index
       get :admission1
       post :admission1
       get :view_all
@@ -398,7 +394,7 @@ Fedena::Application.routes.draw do
       post :add_additional_details
       get :admission2
       post :admission2
-      get :admission3 
+      get :admission3
       post :admission3
       get :previous_data
       post :previous_data
@@ -413,10 +409,6 @@ Fedena::Application.routes.draw do
       get :remove
       get :add_guardian
       post :add_guardian
-      get :admission3_1
-      post :admission3_1
-      get :edit
-      post :edit
       get :profile_pdf
       get :edit_guardian
       get :del_guardian
@@ -442,6 +434,9 @@ Fedena::Application.routes.draw do
       get :reports
       get :guardians
       get :fees
+      get :admission3_1
+      post :admission3_1
+      patch :edit
     end
   end
 
@@ -471,7 +466,7 @@ Fedena::Application.routes.draw do
       get :edit_event
       post :edit_event
     end
-  end 
+  end
 
   resources :exam, only: :index do
     collection do

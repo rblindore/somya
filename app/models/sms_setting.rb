@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: sms_settings
+#
+#  id           :integer          not null, primary key
+#  settings_key :string(255)
+#  is_enabled   :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

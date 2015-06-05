@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: bank_fields
+#
+#  id     :integer          not null, primary key
+#  name   :string(255)
+#  status :boolean
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

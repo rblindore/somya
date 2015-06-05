@@ -24,73 +24,106 @@
     = back_button
 #page-yield
   - unless flash[:notice].nil?
-    %p.flash-msg= flash[:notice]
+    %p.flash-msg
+      = flash[:notice]
   = error_messages_for 'parent_info'
-  = form_for(:parent_detail, :url => {:id => @student.id}) do |s|
+  = form_for :parent_detail, url: { id: @student.id} do |s|
     #admission1_form
       .label-field-pair
-        %label{:for => "parent_detail_student_id"}= t('student_admission_no')
-        .text_display= @student.admission_no
-        = s.hidden_field :ward_id, :value => @student.id
+        %label{ for: :parent_detail_student_id }
+          = t('student_admission_no')
+        .text_display
+          = @student.admission_no
+        = s.hidden_field :ward_id, value: @student.id
       %br/
-      %span.span-sub-heading= t('parent_personal_details')
+      %span.span-sub-heading
+        = t('parent_personal_details')
       %hr.sub-heading/
       .label-field-pair
-        %label{:for => "parent_detail_name"}
+        %label{ for: :parent_detail_name }
           = t('first_name')
           %span.necessary-field *
-        .text-input-bg= s.text_field :first_name
+        .text-input-bg
+          = s.text_field :first_name
       .label-field-pair
-        %label{:for => "parent_detail_name"}= t('last_name')
-        .text-input-bg= s.text_field :last_name
+        %label{ for: :parent_detail_name}
+          = t('last_name')
+        .text-input-bg
+          = s.text_field :last_name
       .label-field-pair
-        %label{:for => "parent_detail_relation"}
+        %label{for: :parent_detail_relation}
           = t('relation')
           %span.necessary-field *
-        .text-input-bg= s.text_field :relation
-      .label-field-pair
-        %label{:for => "parent_detail_dob"}= t('date_of_birth')
         .text-input-bg
-          = date_select 'parent_detail[dob]', nil,:start_year => Date.today.year - 60 ,:popup=>"force"
+          = s.text_field :relation
       .label-field-pair
-        %label{:for => "parent_detail_education"}= t('education')
-        .text-input-bg= s.text_field :education
+        %label{ for: :parent_detail_dob}
+          = t('date_of_birth')
+        .text-input-bg
+          = date_select 'parent_detail[dob]', nil, start_year: Date.today.year - 60 , popup: "force"
       .label-field-pair
-        %label{:for => "parent_detail_occupation"}= t('occupation')
-        .text-input-bg= s.text_field :occupation
+        %label{ for: :parent_detail_education }
+          = t('education')
+        .text-input-bg
+          = s.text_field :education
       .label-field-pair
-        %label{:for => "parent_detail_income"}= t('income')
-        .text-input-bg= s.text_field :income
+        %label{ for: :parent_detail_occupation}
+          = t('occupation')
+        .text-input-bg
+          = s.text_field :occupation
       .label-field-pair
-        %label{:for => "parent_detail_email"}= t('email')
-        .text-input-bg= s.text_field :email
+        %label{ for: :parent_detail_income}
+          = t('income')
+        .text-input-bg
+          = s.text_field :income
+      .label-field-pair
+        %label{ for: :parent_detail_email}
+          = t('email')
+        .text-input-bg
+          = s.text_field :email
       %br/
-      %span.span-sub-heading= t('parent_contact_details')
+      %span.span-sub-heading
+        = t('parent_contact_details')
       %hr.sub-heading/
       .label-field-pair
-        %label{:for => "master_student_city"}= t('office_address_line1')
-        .text-input-bg= s.text_field :office_address_line1,:value=>@student.address_line1.to_s
-      .label-field-pair
-        %label{:for => "master_student_city"}= t('office_address_line2')
-        .text-input-bg= s.text_field :office_address_line2,:value=>@student.address_line2.to_s
-      .label-field-pair
-        %label{:for => "parent_detail_city"}= t('city')
-        .text-input-bg= s.text_field :city,:value=>@student.city.to_s
-      .label-field-pair
-        %label{:for => "parent_detail_state"}= t('state')
-        .text-input-bg= s.text_field :state,:value=>@student.state.to_s
-      .label-field-pair
-        %label{:for => "parent_detail_country"}= t('country')
+        %label{ for: :master_student_city}
+          = t('office_address_line1')
         .text-input-bg
-          = select :parent_detail, :country_id, @countries.map {|c| [c.name, c.id]}, :selected =>@student.country.id
+          = s.text_field :office_address_line1, value: @student.address_line1
       .label-field-pair
-        %label{:for => "parent_detail_office_phone1"}= t('office_phone1')
-        .text-input-bg= s.text_field :office_phone1
+        %label{ for: :master_student_city}
+          = t('office_address_line2')
+        .text-input-bg
+          = s.text_field :office_address_line2, value: @student.address_line2
       .label-field-pair
-        %label{:for => "parent_detail_office_phone2"}= t('office_phone2')
-        .text-input-bg= s.text_field :office_phone2
+        %label{ for: :parent_detail_city }
+          = t('city')
+        .text-input-bg
+          = s.text_field :city, value: @student.city
       .label-field-pair
-        %label{:for => "parent_detail_mob_phone"}= t('mobile_phone_no')
-        .text-input-bg= s.text_field :mobile_phone
+        %label{ for: :parent_detail_state }
+          = t('state')
+        .text-input-bg
+          = s.text_field :state, value: @student.state
+      .label-field-pair
+        %label{ for: :parent_detail_country}
+          = t('country')
+        .text-input-bg
+          = select :parent_detail, :country_id, @countries.map {|c| [c.name, c.id]}, selected: @student.country.id
+      .label-field-pair
+        %label{for: :parent_detail_office_phone1}
+          = t('office_phone1')
+        .text-input-bg
+          = s.text_field :office_phone1
+      .label-field-pair
+        %label{ for: :parent_detail_office_phone2}
+          = t('office_phone2')
+        .text-input-bg
+          = s.text_field :office_phone2
+      .label-field-pair
+        %label{ for: :parent_detail_mob_phone}
+          = t('mobile_phone_no')
+        .text-input-bg
+          = s.text_field :mobile_phone
     .extender
-    = submit_tag "",  :name => "commit", :class => "submit_button3", :value => "► #{t('finish')}"
+    = submit_tag "", name: :commit, class: :submit_button3, value: "► #{t('finish')}"

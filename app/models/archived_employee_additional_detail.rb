@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: archived_employee_additional_details
+#
+#  id                  :integer          not null, primary key
+#  employee_id         :integer
+#  additional_field_id :integer
+#  additional_info     :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

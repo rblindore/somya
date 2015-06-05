@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: batch_groups
+#
+#  id         :integer          not null, primary key
+#  course_id  :integer
+#  name       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

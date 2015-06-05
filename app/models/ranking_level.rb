@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: ranking_levels
+#
+#  id                 :integer          not null, primary key
+#  name               :string(255)      not null
+#  gpa                :decimal(15, 2)
+#  marks              :decimal(15, 2)
+#  subject_count      :integer
+#  priority           :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  full_course        :boolean          default(FALSE)
+#  course_id          :integer
+#  subject_limit_type :string(255)
+#  marks_limit_type   :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

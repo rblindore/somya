@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: additional_fields
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)
+#  status       :boolean
+#  is_mandatory :boolean          default(FALSE)
+#  input_type   :string(255)
+#  priority     :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

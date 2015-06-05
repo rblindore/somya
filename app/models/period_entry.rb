@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: period_entries
+#
+#  id              :integer          not null, primary key
+#  month_date      :date
+#  batch_id        :integer
+#  subject_id      :integer
+#  class_timing_id :integer
+#  employee_id     :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

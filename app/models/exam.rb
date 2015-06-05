@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: exams
+#
+#  id               :integer          not null, primary key
+#  exam_group_id    :integer
+#  subject_id       :integer
+#  start_time       :datetime
+#  end_time         :datetime
+#  maximum_marks    :decimal(10, 2)
+#  minimum_marks    :decimal(10, 2)
+#  grading_level_id :integer
+#  weightage        :integer          default(0)
+#  event_id         :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

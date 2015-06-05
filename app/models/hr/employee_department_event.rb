@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: employee_department_events
+#
+#  id                     :integer          not null, primary key
+#  event_id               :integer
+#  employee_department_id :integer
+#  created_at             :datetime
+#  updated_at             :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

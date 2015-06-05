@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: cce_weightages
+#
+#  id                   :integer          not null, primary key
+#  weightage            :integer
+#  criteria_type        :string(255)
+#  cce_exam_category_id :integer
+#  created_at           :datetime
+#  updated_at           :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

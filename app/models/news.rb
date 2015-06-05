@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: news
+#
+#  id         :integer          not null, primary key
+#  title      :string(255)
+#  content    :text(65535)
+#  author_id  :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

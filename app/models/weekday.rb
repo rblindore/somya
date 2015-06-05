@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: weekdays
+#
+#  id          :integer          not null, primary key
+#  batch_id    :integer
+#  weekday     :string(255)
+#  name        :string(255)
+#  sort_order  :integer
+#  day_of_week :integer
+#  is_deleted  :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

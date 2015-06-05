@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: subjects
+#
+#  id                 :integer          not null, primary key
+#  name               :string(255)
+#  code               :string(255)
+#  batch_id           :integer
+#  no_exams           :boolean          default(FALSE)
+#  max_weekly_classes :integer
+#  elective_group_id  :integer
+#  is_deleted         :boolean          default(FALSE)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  credit_hours       :decimal(15, 2)
+#  prefer_consecutive :boolean          default(FALSE)
+#  amount             :decimal(15, 2)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

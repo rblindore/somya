@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: cce_grade_sets
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

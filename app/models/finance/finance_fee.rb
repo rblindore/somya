@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: finance_fees
+#
+#  id                :integer          not null, primary key
+#  fee_collection_id :integer
+#  transaction_id    :string(255)
+#  student_id        :integer
+#  is_paid           :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

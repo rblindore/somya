@@ -23,10 +23,10 @@
   #app-back-button
     = back_button
 #page-yield
-  - unless flash[:notice].nil?
+  - unless flash[:notice].blank?
     %p.flash-msg
       = flash[:notice]
-  = form_for(:student, :url => {:action => 'edit', :id => @student.id}, :html => {:multipart => true}) do |s|
+  = form_for @student, url: { action: :edit, id: @student.id }, html: { multipart: true} do |s|
     = error_messages_for 'student'
     #admission1-form
       #necessary-field-notification
@@ -35,96 +35,122 @@
         = t('legend2')
       #autofill_area
         .label-field-pair-edit
-          %label{:for => "master_student_admission_no"}
+          %label{ for: :master_student_admission_no }
             = t('admission_no')
             %span.necessary-field *
-          .text-input-bg= s.text_field :admission_no
+          .text-input-bg
+            = s.text_field :admission_no
         .label-field-pair-edit
-          %label{:for => "master_student_admission_date"}
+          %label{ for: :master_student_admission_date }
             = t('admission_date')
             %span.necessary-field *
           .text-input-bg
-            = date_select 'student[admission_date]', I18n.l(@student.admission_date,:format=>:default), |
-              :start_year => Date.today.year - 15,:popup => "force"                                        |
+            = s.text_field :admission_date, class: :datepicker
         .extender
-      %span.span-sub-heading= t('personal_details')
+      %span.span-sub-heading
+        = t('personal_details')
       %hr.sub-heading/
       .label-field-pair
         %label{:for => "master_student_first_name"}
           = t('first_name')
           %span.necessary-field *
-        .text-input-bg= s.text_field :first_name
+        .text-input-bg
+          = s.text_field :first_name
       %hr.label-underline/
       .label-field-pair
-        %label{:for => "master_student_first_name"}= t('middle_name')
-        .text-input-bg= s.text_field :middle_name
+        %label{:for => "master_student_first_name"}
+          = t('middle_name')
+        .text-input-bg
+          = s.text_field :middle_name
       %hr.label-underline/
       .label-field-pair
-        %label{:for => "master_student_first_name"}= t('last_name')
-        .text-input-bg= s.text_field :last_name
+        %label{ for: :master_student_first_name }
+          = t('last_name')
+        .text-input-bg
+          = s.text_field :last_name
       %hr.label-underline/
       #admission1_form_vertical_block_left
         .label-field-pair
-          %label{:for => "master_student_grade"}
+          %label{ for: :master_student_grade }
             = t('course_and_batch')
             %span.necessary-field *
-          .text-input-bg= s.select :batch_id, @batches.map {|b| [b.full_name, b.id]}
+          .text-input-bg
+            = s.select :batch_id, @batches.map {|b| [b.full_name, b.id]}
         %hr.label-underline/
         .label-field-pair
-          %label{:for => "master_student_date_of_birth"}
+          %label{ for: :master_student_date_of_birth }
             = t('date_of_birth')
             %span.necessary-field *
           .text-input-bg
-            = date_select 'student[date_of_birth]',                                                                            |
-              I18n.l(@student.date_of_birth,:format=>:default), :start_year => Date.today.year- 40 ,:readonly=>true,:popup => "force" |
+            = s.text_field :date_of_birth, class: :datepicker
         %hr.label-underline/
         .label-field-pair-gender
-          %label.label-gender-edit{:for => "master_student_gender"}= t('gender')
+          %label.label-gender-edit{ for: :master_student_gender}
+            = t('gender')
           .edit_student_gender
-            %label.label_for_gender{:for => "master_student_gender_true"}= t('male')
-            = s.radio_button  "gender", "m"
-            %label.label_for_gender{:for => "master_student_gender_false"}= t('female')
-            = s.radio_button  "gender", "f"
+            %label.label_for_gender{for: :master_student_gender_true}
+              = t('male')
+            = s.radio_button "gender", "m"
+            %label.label_for_gender{ for: :master_student_gender_false }
+              = t('female')
+            = s.radio_button "gender", "f"
           .extender
         %hr.label-underline/
         .label-field-pair
-          %label{:for => "master_student_blood_group"}= t('blood_group')
-          .text-input-bg= select :student, :blood_group, ["#{t('unknown')}","A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{ :prompt => "#{t('select_blood_group')}" }, |
-              :selected => @student.blood_group                                                                                                                |
+          %label{ for: :master_student_blood_group}
+            = t('blood_group')
+          .text-input-bg
+            = select :student, :blood_group, [ t('unknown'), "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"], { prompt: t('select_blood_group') }, selected: @student.blood_group
+        %hr.label-underline
+        .label-field-pair
+          %label{ for: :master_student_birth_place }
+            = t('birth_place')
+          .text-input-bg
+            = s.text_field :birth_place
+        %hr.label-underline
+        .label-field-pair
+          %label{ for: :master_student_nationality }
+            = t('nationality')
+          .text-input-bg
+            = select :student, :nationality_id, Country.all.map {|c| [c.name, c.id]}, selected: @student.nationality.id
         %hr.label-underline/
         .label-field-pair
-          %label{:for => "master_student_birth_place"}= t('birth_place')
-          .text-input-bg= s.text_field :birth_place, :value =>@student.birth_place
+          %label{ for: :master_student_birth_place}
+            = t('mother_tongue')
+          .text-input-bg
+            = s.text_field :language, value: @student.language
         %hr.label-underline/
         .label-field-pair
-          %label{:for => "master_student_nationality"}= t('nationality')
-          .text-input-bg= select :student, :nationality_id, Country.all.map {|c| [c.name, c.id]}, :selected => @student.nationality.id
+          %label{ for: :master_student_religion}
+            = t('religion')
+          .text-input-bg
+            = s.text_field :religion, value: @student.religion
         %hr.label-underline/
         .label-field-pair
-          %label{:for => "master_student_birth_place"}= t('mother_tongue')
-          .text-input-bg= s.text_field :language, :value => @student.language
-        %hr.label-underline/
-        .label-field-pair
-          %label{:for => "master_student_religion"}= t('religion')
-          .text-input-bg= s.text_field :religion, :value =>@student.religion
-        %hr.label-underline/
-        .label-field-pair
-          %label{:for => "master_student_category"}= t('category')
-          .text-input-bg= select :student, :student_category_id, @student_categories.map {|c| [c.name, c.id]}, { :prompt => 'Select category' }
+          %label{ for: :master_student_category}
+            = t('category')
+          .text-input-bg
+            = select :student, :student_category_id, @student_categories.map {|c| [c.name, c.id]}, { prompt: 'Select category' }
       %br/
-      %span.span-sub-heading= t('contact_details')
+      %span.span-sub-heading
+        = t('contact_details')
       %hr.sub-heading/
       #admission1_form_vertical_block_right
         .label-field-pair
-          %label{:for => "master_student_city"}= t('address_line1')
-          .text-input-bg= s.text_field :address_line1, :value => @student.address_line1
+          %label{ for: :master_student_city}
+            = t('address_line1')
+          .text-input-bg
+            = s.text_field :address_line1
+        %hr.label-underline
+        .label-field-pair
+          %label{ for: :master_student_city}
+            = t('address_line2')
+          .text-input-bg
+            = s.text_field :address_line2, :value => @student.address_line2
         %hr.label-underline/
         .label-field-pair
-          %label{:for => "master_student_city"}= t('address_line2')
-          .text-input-bg= s.text_field :address_line2, :value => @student.address_line2
-        %hr.label-underline/
-        .label-field-pair
-          %label{:for => "master_student_city"}= t('city')
+          %label{ for: :master_student_city}
+            = t('city')
           .text-input-bg= s.text_field :city, :value => @student.city
         %hr.label-underline/
         .label-field-pair

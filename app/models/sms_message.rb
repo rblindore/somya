@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: sms_messages
+#
+#  id         :integer          not null, primary key
+#  body       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: school_details
+#
+#  id                :integer          not null, primary key
+#  school_id         :integer
+#  logo_file_name    :string(255)
+#  logo_content_type :string(255)
+#  logo_file_size    :string(255)
+#  created_at        :datetime
+#  updated_at        :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

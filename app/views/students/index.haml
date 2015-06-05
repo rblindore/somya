@@ -23,10 +23,10 @@
   function search_ajax() {
      var query = document.getElementById('query').value;
                                         var opt = document.getElementById('option').value;
-                                        $.ajax({ type: "GET",   
+                                        $.ajax({ type: "GET",
                                                 url: "students/search_ajax",
                                                 data: { query: query, option: opt } ,
-                                               
+
                                        });
       }
 #content-header

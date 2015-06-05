@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: descriptive_indicators
+#
+#  id               :integer          not null, primary key
+#  name             :string(255)
+#  desc             :string(255)
+#  describable_id   :integer
+#  describable_type :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  sort_order       :integer
+#
+
 
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited

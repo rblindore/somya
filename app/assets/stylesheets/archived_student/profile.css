@@ -48,13 +48,13 @@
 #new_profile_info_top {
     margin:30px auto;
     width:697px;
-   
+
 }
 /*
 .new_profile_info_area1 {
     height:87px;
     width:682px;
-   
+
 }*/
 .profile_info_label_top {
     padding-top:15px;
@@ -149,7 +149,7 @@
     float:right;
     padding-left:528px;
     margin-top:-10px;
-    
+
 }
 #student_profile_heading{
     width:800px;
@@ -239,5 +239,5 @@
 .profile-topbanner{
     width: 185px;
     height: 135px;
-    background: url(/images/master_student/profile/topbanner.png);
+    background: url(/assets/master_student/profile/topbanner.png);
 }

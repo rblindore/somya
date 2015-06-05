@@ -1,3 +1,11 @@
+# == Schema Information
+#
+# Table name: countries
+#
+#  id   :integer          not null, primary key
+#  name :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

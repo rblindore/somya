@@ -53,7 +53,7 @@
 .new_profile_info_area1 {
     height:87px;
     width:682px;
-   
+
 }*/
 .profile_info_label_top {
     padding-top:15px;
@@ -148,7 +148,7 @@
     float:right;
     padding-left:528px;
     margin-top:-10px;
-    
+
 }
 #student_profile_heading{
     width:800px;
@@ -205,11 +205,11 @@ a.user_button:hover{
 .odd{
     height:auto;
     background: #eff3fe;
-    
+
     margin-right:5px;
 }
 .odd td{
-    
+
     font-weight:bold;
     padding:10px 10px 10px 10px;
    border-top:1px solid #bdcfff;
@@ -226,14 +226,14 @@ a.user_button:hover{
     text-align: right;
 }
 .even{
-    
+
     height:auto;
-    
+
     background: #dae6ff;
     margin-right:5px;
 }
 .even td{
-    
+
     font-weight:bold;
     border-top:1px solid #bdcfff;
     border-bottom:1px solid #bdcfff;
@@ -370,5 +370,5 @@ html>body #nav ul.scriptaculously{/*ie shit*/
 .profile-topbanner{
     width: 185px;
     height: 135px;
-    background: url(/images/master_student/profile/topbanner.png);
+    background: url(/assets/master_student/profile/topbanner.png);
 }

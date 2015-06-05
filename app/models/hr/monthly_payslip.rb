@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: monthly_payslips
+#
+#  id                  :integer          not null, primary key
+#  salary_date         :date
+#  employee_id         :integer
+#  payroll_category_id :integer
+#  amount              :string(255)
+#  is_approved         :boolean          default(FALSE), not null
+#  approver_id         :integer
+#  is_rejected         :boolean          default(FALSE), not null
+#  rejector_id         :integer
+#  reason              :string(255)
+#  remark              :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: observation_groups
+#
+#  id               :integer          not null, primary key
+#  name             :string(255)
+#  header_name      :string(255)
+#  desc             :string(255)
+#  cce_grade_set_id :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  observation_kind :string(255)
+#  max_marks        :float(24)
+#  is_deleted       :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

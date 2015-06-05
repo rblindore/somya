@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: assessment_scores
+#
+#  id                       :integer          not null, primary key
+#  student_id               :integer
+#  grade_points             :integer
+#  created_at               :datetime
+#  updated_at               :datetime
+#  exam_id                  :integer
+#  batch_id                 :integer
+#  descriptive_indicator_id :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

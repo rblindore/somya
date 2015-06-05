@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id          :integer          not null, primary key
+#  title       :string(255)
+#  description :string(255)
+#  start_date  :datetime
+#  end_date    :datetime
+#  is_common   :boolean          default(FALSE)
+#  is_holiday  :boolean          default(FALSE)
+#  is_exam     :boolean          default(FALSE)
+#  is_due      :boolean          default(FALSE)
+#  created_at  :datetime
+#  updated_at  :datetime
+#  origin_id   :integer
+#  origin_type :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

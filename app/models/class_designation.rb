@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: class_designations
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  cgpa       :decimal(15, 2)
+#  created_at :datetime
+#  updated_at :datetime
+#  marks      :decimal(15, 2)
+#  course_id  :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: grouped_exam_reports
+#
+#  id            :integer          not null, primary key
+#  batch_id      :integer
+#  student_id    :integer
+#  exam_group_id :integer
+#  marks         :decimal(15, 2)
+#  score_type    :string(255)
+#  subject_id    :integer
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: cce_reports
+#
+#  id              :integer          not null, primary key
+#  observable_id   :integer
+#  observable_type :string(255)
+#  student_id      :integer
+#  batch_id        :integer
+#  grade_string    :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  exam_id         :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

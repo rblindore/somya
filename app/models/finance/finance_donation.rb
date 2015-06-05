@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: finance_donations
+#
+#  id               :integer          not null, primary key
+#  donor            :string(255)
+#  description      :string(255)
+#  amount           :decimal(15, 2)
+#  transaction_id   :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#  transaction_date :date
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

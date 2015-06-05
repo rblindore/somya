@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: employee_attendances
+#
+#  id                     :integer          not null, primary key
+#  attendance_date        :date
+#  employee_id            :integer
+#  employee_leave_type_id :integer
+#  reason                 :string(255)
+#  is_half_day            :boolean
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

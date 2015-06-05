@@ -17,5 +17,15 @@ FactoryGirl.define do
     u.email { |u1| "#{u1.username}@fedena.com" }
     u.role 'Admin'
   end
+
+  factory :user do |u|
+    u.sequence(:username) { |n| "emp#{n}" }
+    u.password            { |u1| "#{u1.username}123" }
+    u.email               { |u1| "#{u1.username}@fedena.com" }
+    u.first_name          'John'
+    u.last_name           'Doe'
+    u.role                'Employee'
+  end
+
 end
 

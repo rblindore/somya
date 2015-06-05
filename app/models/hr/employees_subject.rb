@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: employees_subjects
+#
+#  id          :integer          not null, primary key
+#  employee_id :integer
+#  subject_id  :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

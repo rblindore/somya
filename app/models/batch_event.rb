@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: batch_events
+#
+#  id         :integer          not null, primary key
+#  event_id   :integer
+#  batch_id   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

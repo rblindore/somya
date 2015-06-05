@@ -1,3 +1,26 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                        :integer          not null, primary key
+#  username                  :string(255)
+#  first_name                :string(255)
+#  last_name                 :string(255)
+#  email                     :string(255)
+#  admin                     :boolean
+#  student                   :boolean
+#  employee                  :boolean
+#  hashed_password           :string(255)
+#  salt                      :string(255)
+#  reset_password_code       :string(255)
+#  reset_password_code_until :datetime
+#  created_at                :datetime
+#  updated_at                :datetime
+#  parent                    :boolean
+#  is_first_login            :boolean
+#  is_deleted                :boolean          default(FALSE)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

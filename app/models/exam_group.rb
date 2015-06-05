@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: exam_groups
+#
+#  id                   :integer          not null, primary key
+#  name                 :string(255)
+#  batch_id             :integer
+#  exam_type            :string(255)
+#  is_published         :boolean          default(FALSE)
+#  result_published     :boolean          default(FALSE)
+#  exam_date            :date
+#  is_final_exam        :boolean          default(FALSE), not null
+#  cce_exam_category_id :integer
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: configurations
+#
+#  id           :integer          not null, primary key
+#  config_key   :string(255)
+#  config_value :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

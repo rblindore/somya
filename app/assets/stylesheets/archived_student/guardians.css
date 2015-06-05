@@ -74,7 +74,7 @@
 
 }
 .new_profile_info_area1 {
-   
+
 }
 .profile_info_label_top {
     padding-top:25px;
@@ -184,5 +184,5 @@
 .profile-topbanner{
     width: 185px;
     height: 135px;
-    background: url(/images/master_student/profile/topbanner.png);
+    background: url(/assets/master_student/profile/topbanner.png);
 }

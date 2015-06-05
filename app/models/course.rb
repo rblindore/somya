@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: courses
+#
+#  id           :integer          not null, primary key
+#  course_name  :string(255)
+#  code         :string(255)
+#  section_name :string(255)
+#  is_deleted   :boolean          default(FALSE)
+#  created_at   :datetime
+#  updated_at   :datetime
+#  grading_type :string(255)
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #

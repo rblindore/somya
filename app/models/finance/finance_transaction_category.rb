@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: finance_transaction_categories
+#
+#  id          :integer          not null, primary key
+#  name        :string(255)
+#  description :string(255)
+#  is_income   :boolean
+#  deleted     :boolean          default(FALSE), not null
+#
+
 #Fedena
 #Copyright 2011 Foradian Technologies Private Limited
 #
