@@ -606,6 +606,7 @@ Fedena::Application.routes.draw do
       get :admission1
       post :admission1
       get :advanced_search
+      get :advanced_search_pdf
       get :view_all
       get :payslip_approve
       get :add_category

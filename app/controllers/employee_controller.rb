@@ -1537,24 +1537,34 @@ class EmployeeController < ApplicationController
     #    end
   end
   def advanced_search
-    @search = Employee.search(params[:search])
+    @search = Employee.search(params[:q])
     @sort_order=""
     @sort_order=params[:sort_order] if  params[:sort_order]
-    if params[:search]
-      if params[:search][:status_equals]=="true"
-        @search = Employee.search(params[:search])
-        @employees1 = @search.all
+    if params[:q]
+      params[:q].merge!(formatted_date_fields)
+      if params[:q][:status_eq]=="true"
+        @search = Employee.search(params[:q])
+        @employees1 = @search.result
         @employees2 = []
-      elsif params[:search][:status_equals]=="false"
-        @search = ArchivedEmployee.search(params[:search])
-        @employees1 = @search.all
+      elsif params[:q][:status_eq]=="false"
+        @search = ArchivedEmployee.search(params[:q])
+        @employees1 = @search.result
         @employees2 = []
       else
-        @search1 = Employee.search(params[:search]).all
-        @search2 = ArchivedEmployee.search(params[:search]).all
+        @search1 = Employee.search(params[:q]).result
+        @search2 = ArchivedEmployee.search(params[:q]).result
         @employees1 = @search1
         @employees2 = @search2
       end
+    end
+  end
+
+  def formatted_date_fields
+    if params[:adv_search]
+      {params[:adv_search][:doj_option] => params[:adv_search][:doj_year],
+       params[:adv_search][:dob_option] => params[:adv_search][:dob_year]}
+    else
+      {}
     end
   end
 
