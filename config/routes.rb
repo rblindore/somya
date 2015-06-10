@@ -386,6 +386,7 @@ Fedena::Application.routes.draw do
       post :admission1
       get :view_all
       get :advanced_search
+      get :advanced_search_pdf
       get :search_ajax
       get :list_students_by_course
       get :categories
@@ -415,7 +416,7 @@ Fedena::Application.routes.draw do
       get :change_to_former
       post :change_to_former
       get :delete
-      get :destroy
+      # get :destroy
       get :category_edit
       post :category_edit
       get :category_delete
@@ -428,6 +429,9 @@ Fedena::Application.routes.draw do
       get :delete_additional_details
       get :show_previous_details
       get :electives
+      get :list_batches
+      get :list_doa_year
+      get :list_dob_year
     end
     member do
       get :profile

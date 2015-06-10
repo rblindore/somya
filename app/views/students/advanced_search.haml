@@ -27,15 +27,15 @@
     .show-msg
       .flash-msg= flash[:notice]
   #search-form
-    = form_for @search do |f|
+    = search_form_for @search, url: advanced_search_students_path do |f|
       .label-field-pair
         %label{:for => "name"}= t('name')
         .text-input-bg
-          = f.text_field :first_name_or_middle_name_or_last_name_like
+          = f.text_field :first_name_or_middle_name_or_last_name_cont
       .label-field-pair
         %label{:for => "student_admission_no"}= t('admission_number')
         .text-input-bg
-          = f.text_field :admission_no_equals
+          = f.text_field :admission_no_eq
       .label-field-pair
         %label{:for => "student_course"}
           = t('course_text')
@@ -45,35 +45,35 @@
             :id => "loader",            |
             :style =>"display: none;" ) |
         .text-input-bg
-          = select :advv_search, :course_id, Course.active.map{|c| [c.course_name+" "+c.section_name, c.id]}, |
+          = select :advv_search, :course_id, Course.active.map{|c| ["#{c.course_name} #{c.section_name}", c.id]}, |
             {:prompt=>"#{t('select_a_course')}"},                                                             |
             {:onChange => "onChangeRequest(this, '#{url_for(action: :list_batches, course_id: 'paramid')}')"}
       #course_batches.label-field-pair
         %label{:for => "student_batch"}= t('batch')
         .text-input-bg
-          = select :search,:batch_id_equals, @batches.map{|c| [c.name, c.id]},{:prompt=>"#{t('select_batch')}"}
+          = select :q,:batch_id_eq, @batches.map{|c| [c.name, c.id]},{:prompt=>"#{t('select_batch')}"}
       .label-field-pair
         %label{:for => "student_category"}= t('category')
         .text-input-bg
-          = f.collection_select :student_category_id_equals,StudentCategory.active,:id,:name,{:prompt=>"#{t('select_category')}"}
+          = f.collection_select :student_category_id_eq,StudentCategory.active,:id,:name,{:prompt=>"#{t('select_category')}"}
       .label_field_pair
         %label.label_for_student{:for => "student_gender"}= t('gender')
         .student_gender_value
-          = f.radio_button  :gender_equals, ""
+          = f.radio_button  :gender_eq, ""
           %label.label_for_gender{:for => "student_gender_true"}= t('all')
-          = f.radio_button  :gender_equals, "m"
+          = f.radio_button  :gender_eq, "m"
           %label.label_for_gender{:for => "student_gender_false"}= t('male')
-          = f.radio_button  :gender_equals, "f"
+          = f.radio_button  :gender_eq, "f"
           %label.label_for_gender{:for => "student_gender_false"}= t('female')
       .label-field-pair
         %label{:for => "student_blood_group"}= t('blood_group')
         .text-input-bg
-          = select :search, :blood_group_like, ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{:prompt=>"#{t('select')}"}
+          = select :q, :blood_group_cont, ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_country"}
           = t('country')
         .text-input-bg
-          = f.collection_select :nationality_id_equals, Country.all,:id,:name,{:prompt=>"#{t('select')}"}
+          = f.collection_select :nationality_id_eq, Country.all,:id,:name,{:prompt=>"#{t('select')}"}
       .label-field-pair
         %label{:for => "student_grade"}= t('admission_date')
         .text-input-bg
@@ -104,11 +104,11 @@
       .label_field_pair
         %label.label_for_student{:for => "student_gender"}= t('status')
         .student_gender_value
-          = f.radio_button  :is_active_equals, "true", {:checked => 'checked'}
+          = f.radio_button  :is_active_eq, "true", {:checked => 'checked'}
           %label.label_for_gender{:for => "student_gender_true"}= t('present')
-          = f.radio_button  :is_active_equals, "false"
+          = f.radio_button  :is_active_eq, "false"
           %label.label_for_gender{:for => "student_gender_false"}= t('former')
-          = f.radio_button  :is_active_equals, "", {:checked => false}
+          = f.radio_button  :is_active_eq, "", {:checked => false}
           %label.label_for_gender{:for => "student_gender_false"}= t('all')
       = f.submit "#{t('search_text')}", :class=>'submit'
   - unless @students.nil?
@@ -138,7 +138,7 @@
             %tr{:class => "tr-#{cycle('odd', 'even')}"}
               %td.col-1= i+1
               - if  student.is_active
-                %td.col-2= link_to student.full_name, :controller => 'student', :action => 'profile', :id => student.id
+                %td.col-2= link_to student.full_name, :controller => 'students', :action => 'profile', :id => student.id
               - else
                 %td.col-2= link_to student.full_name, :controller => 'archived_student', :action => 'profile', :id => student.id
               %td.col-2= student.batch.full_name
