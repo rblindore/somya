@@ -741,8 +741,8 @@ class StudentsController < ApplicationController
       end
       @searched_for += "<span>#{t('blood_group')}: </span>" + params[:q][:blood_group_cont].to_s unless params[:q][:blood_group_cont].empty?
       @searched_for += "<span>#{t('nationality')}: </span>" + Country.find(params[:q][:nationality_id_eq]).name.to_s unless params[:q][:nationality_id_eq].empty?
-      @searched_for += "<span>#{t('year_of_admission')}: </span>" +  params[:advv_search][:doa_option].to_s + ' '+ params[:adv_search][:admission_date_year].to_s unless  params[:advv_search][:doa_option].empty?
-      @searched_for += "<span>#{t('year_of_birth')}: </span>" +  params[:advv_search][:dob_option].to_s + ' ' + params[:adv_search][:birth_date_year].to_s unless  params[:advv_search][:dob_option].empty?
+      @searched_for += "<span>#{t('year_of_admission')}: </span>" +  params[:advv_search][:doa_option].to_s + ' '+ params[:adv_search][:doa_year].to_s unless  params[:advv_search][:doa_option].empty?
+      @searched_for += "<span>#{t('year_of_birth')}: </span>" +  params[:advv_search][:dob_option].to_s + ' ' + params[:advv_search][:dob_year].to_s unless  params[:advv_search][:dob_option].empty?
       if params[:q][:is_active_eq]=="true"
         @searched_for += "<span>#{t('present_student')}</span>"
       elsif params[:q][:is_active_eq]=="false"

@@ -16,6 +16,10 @@
 - #KIND, either express or implied.  See the License for the
 - #specific language governing permissions and limitations
 - #under the License.
+
+= javascript_include_tag 'application'
+= stylesheet_link_tag 'application'
+
 #content-header
   = image_tag("student_details/student_details_logo.jpg")
   %h1= t('student_text')
@@ -77,8 +81,7 @@
       .label-field-pair
         %label{:for => "student_grade"}= t('admission_date')
         .text-input-bg
-          = select :advv_search,:doa_option,[["#{t('equal_to')}","Equal to"],["#{t('less_than')}","Less than"],["#{t('greater_than')}","Greater than"]],{:prompt=>"#{t('option')}"}, |
-            {:onChange => "onChangeRequest(this, '#{url_for(action: :list_doa_year, doa_option: 'paramid')}')"}
+          = select :advv_search,:doa_option,[["#{t('equal_to')}","admission_date_eq"],["#{t('less_than')}","admission_date_lt"],["#{t('greater_than')}","admission_date_gt"]],{:prompt=>"#{t('option')}"}
 
           = image_tag("loader.gif",     |
             :align => "absmiddle",      |
@@ -86,20 +89,21 @@
             :id => "loader",            |
             :style =>"display: none;" ) |
           #doa_year
-            = select :advv_search,:doa_year,[],{:prompt=>"#{t('select')}"}
+            = text_field_tag 'advv_search[doa_year]', '', class: 'datepicker'
+            =# select :advv_search,:doa_year,[],{:prompt=>"#{t('select')}"}
           #doa_year_hidden
       .label-field-pair
         %label{:for => "student_birth_date"}= t('birth_date')
         .text-input-bg
-          = select :advv_search,:dob_option,[["#{t('equal_to')}","Equal to"],["#{t('less_than')}","Less than"],["#{t('greater_than')}","Greater than"]],{:prompt=>"#{t('option')}"}, |
-            {:onChange => "onChangeRequest(this, '#{url_for(action: :list_dob_year, dob_option: 'paramid')}')"}
+          = select :advv_search,:dob_option,[["#{t('equal_to')}","date_of_birth_eq"],["#{t('less_than')}","date_of_birth_lt"],["#{t('greater_than')}","date_of_birth_gt"]],{:prompt=>"#{t('choose_your_option')}"}
           = image_tag("loader.gif",     |
             :align => "absmiddle",      |
             :border => 0,               |
             :id => "loader",            |
             :style =>"display: none;" ) |
           #dob_year
-            = select :advv_search,:dob_year,[],{:prompt=>"#{t('select')}"}
+            = text_field_tag 'advv_search[dob_year]', '', class: 'datepicker'
+            =# select :advv_search,:dob_year,[],{:prompt=>"#{t('select')}"}
           #dob_year_hidden
       .label_field_pair
         %label.label_for_student{:for => "student_gender"}= t('status')
