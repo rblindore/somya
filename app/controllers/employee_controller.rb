@@ -1557,6 +1557,7 @@ class EmployeeController < ApplicationController
         @employees2 = @search2
       end
     end
+    render layout: 'application'
   end
 
   def formatted_date_fields

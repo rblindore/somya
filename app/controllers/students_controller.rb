@@ -684,6 +684,7 @@ class StudentsController < ApplicationController
     @batches = Batch.all
     @search = Student.ransack(params[:q])
     if params[:q]
+      params[:q].merge!(formatted_date_fields)
       unless params[:advv_search][:course_id].empty?
         if params[:q][:batch_id_eq].empty?
           batches = Batch.find_all_by_course_id(params[:advv_search][:course_id]).collect{|b|b.id}
@@ -741,7 +742,7 @@ class StudentsController < ApplicationController
       end
       @searched_for += "<span>#{t('blood_group')}: </span>" + params[:q][:blood_group_cont].to_s unless params[:q][:blood_group_cont].empty?
       @searched_for += "<span>#{t('nationality')}: </span>" + Country.find(params[:q][:nationality_id_eq]).name.to_s unless params[:q][:nationality_id_eq].empty?
-      @searched_for += "<span>#{t('year_of_admission')}: </span>" +  params[:advv_search][:doa_option].to_s + ' '+ params[:adv_search][:doa_year].to_s unless  params[:advv_search][:doa_option].empty?
+      @searched_for += "<span>#{t('year_of_admission')}: </span>" +  params[:advv_search][:doa_option].to_s + ' '+ params[:advv_search][:doa_year].to_s unless  params[:advv_search][:doa_option].empty?
       @searched_for += "<span>#{t('year_of_birth')}: </span>" +  params[:advv_search][:dob_option].to_s + ' ' + params[:advv_search][:dob_year].to_s unless  params[:advv_search][:dob_option].empty?
       if params[:q][:is_active_eq]=="true"
         @searched_for += "<span>#{t('present_student')}</span>"
@@ -750,6 +751,16 @@ class StudentsController < ApplicationController
       else
         @searched_for += "<span>#{t('all_students')}</span>"
       end
+    end
+    render layout: 'application'
+  end
+
+  def formatted_date_fields
+    if params[:advv_search]
+      {params[:advv_search][:doa_option] => params[:advv_search][:doa_year],
+       params[:advv_search][:dob_option] => params[:advv_search][:dob_year]}
+    else
+      {}
     end
   end
 
