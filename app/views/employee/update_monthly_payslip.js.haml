@@ -1,0 +1,4 @@
+- if params[:salary_date].blank?
+  $("#payslip_view").html("")
+- else
+  $("#payslip_view").html("#{escape_javascript render 'view_payslip'}")

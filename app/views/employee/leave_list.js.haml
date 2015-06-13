@@ -1,0 +1,4 @@
+- if params[:employee_id].blank?
+  $("#leave-list").html("none")
+- else
+  $("#leave-list").html("#{escape_javascript render 'leave_list'}")

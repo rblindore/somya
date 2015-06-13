@@ -27,4 +27,6 @@
 
 class BankField < ActiveRecord::Base
   validates_presence_of :name
+  scope :active, -> { where(status: true) }
+  scope :inactive, -> { where(status: false) }
 end

@@ -31,8 +31,9 @@ class EmployeeDepartment < ActiveRecord::Base
   validates_uniqueness_of :name, :code
   has_many :employees
   has_many  :employee_department_events
-  has_many  :events,  :through=>:employee_department_events
+  has_many  :events,  through: :employee_department_events
   scope :active, -> { where(status: true) }
+  scope :inactive, -> { where(status: false) }
 
 
   def department_total_salary(start_date,end_date)

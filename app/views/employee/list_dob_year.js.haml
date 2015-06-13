@@ -1,0 +1,6 @@
+- if params[:dob_option] == "equal_to"
+  $("#dob_year").html("#{escape_javascript render 'equal_to_select_dob'}")
+- elsif params[:dob_option] == "less_than"
+  $("#dob_year").html("#{escape_javascript render 'less_than_select_dob'}")
+- else
+  $("#dob_year").html("#{escape_javascript render 'greater_than_select_dob'}")
