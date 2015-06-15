@@ -30,4 +30,4 @@
       \.
     %p.warning
       (#{t('description2')}.)
-    = link_to "►#{t('delete_text')}", { :action => 'destroy', :id =>params[:id]}, :confirm => "#{t('delete_confirm_msg')}", :class=> 'user_button'
+    = link_to "►#{t('delete_text')}", { action: :destroy, id: params[:id] }, method: :DELETE, confirm: t('delete_confirm_msg'), class: :user_button

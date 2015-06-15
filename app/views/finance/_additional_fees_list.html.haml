@@ -33,7 +33,7 @@
           = link_to_remote fees.name,:url => {:action => 'additional_particulars',:id => fees.id }
           - unless fees.check_fee_collection_for_additional_fees == false
             %span.small
-              = link_to_remote t('delete_text'),:confirm=>"#{t('delete_confirm_msg')}", :url => { :action => 'additional_fees_delete',:id => fees.id}
+              = link_to t('delete_text'), { :action => 'additional_fees_delete',:id => fees.id}, method: :DELETE, :confirm=>"#{t('delete_confirm_msg')}", remote: true
           - else
             %span.small-strike= t('delete_text')
           %span.small

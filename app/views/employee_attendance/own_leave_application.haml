@@ -79,5 +79,4 @@
           = t('manager_remark')
           \:
         = @applied_leave.manager_remark
-    = link_to "► #{t('cancel_leave')}",                                                                                                                                                                            |
-      {:action => "cancel_application", :id=>@applied_leave.id}, :class=>'user_button' ,:confirm=>"#{t('delete_confirm_msg')}" if (@applied_leave.viewed_by_manager == false and @applied_leave.approved == false) |
+    = link_to "► #{t('cancel_leave')}", { action: :cancel_application, id: @applied_leave.id}, method: :DELETE, class: :user_button, confirm: t('delete_confirm_msg') if (@applied_leave.viewed_by_manager == false and @applied_leave.approved == false) |

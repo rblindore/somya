@@ -29,5 +29,5 @@
       - if permitted_to? :edit_event, :event
         = link_to "#{t('edit_text')}",{:controller=>'event',:action=>'edit_event',:id=>h.id},:class=>"delete"
       - if permitted_to? :event_delete, :calendar
-        = link_to "#{t('delete_text')}",{:action=>'event_delete',:id=>h.id},:confirm=>"#{t('delete_confirm_msg')}",:class=>"delete"
+        = link_to "#{t('delete_text')}",{:action=>'event_delete',:id=>h.id}, method: :DELETE, confirm: t('delete_confirm_msg'),:class=>"delete"
       .extender

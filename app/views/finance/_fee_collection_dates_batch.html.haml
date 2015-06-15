@@ -34,6 +34,6 @@
           %td.col-1
             .edit= link_to_remote t('edit_text'), :url => {:action => 'fee_collection_edit', :id => f.id}
             - unless f.check_fee_category == false
-              .delete= link_to_remote t('delete_text'), :url => {:action => 'fee_collection_delete', :id => f.id },:confirm=>"#{t('delete_confirm_msg')}"
+              .delete= link_to t('delete_text'), {:action => 'fee_collection_delete', :id => f.id },:confirm=>"#{t('delete_confirm_msg')}", remote: true, method: :DELETE
 - else
   %p.flash-msg= t('no_fee_collection_exist')

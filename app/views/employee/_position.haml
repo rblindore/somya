@@ -26,7 +26,7 @@
           = p.name
           (#{p.employee_category.prefix unless p.employee_category_id.nil?})
         .position-edit= link_to "#{t('edit_text')}", :action => "edit_position", :id=>p.id
-        .position-edit= link_to "#{t('delete_text')}", {:action => "delete_position", :id=>p.id}, :confirm =>"#{t('delete_confirm_msg')}"
+        .position-edit= link_to "#{t('delete_text')}", {:action => "delete_position", :id=>p.id}, :confirm =>"#{t('delete_confirm_msg')}", method: :DELETE
     - unless @inactive_positions.empty?
       %li.listheading
         .position-name= "#{t('inactive_position')}"
@@ -36,6 +36,6 @@
             = c.name
             (#{c.employee_category.prefix unless c.employee_category_id.nil?})
           .position-edit= link_to "#{t('edit_text')}", {:action => "edit_position", :id=>c.id}
-          .position-edit= link_to "#{t('delete_text')}", {:action => "delete_position", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}"
+          .position-edit= link_to "#{t('delete_text')}", {:action => "delete_position", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}", method: :DELETE
   - else
     %p.flash-msg= "#{t('no_position_record_found')}"

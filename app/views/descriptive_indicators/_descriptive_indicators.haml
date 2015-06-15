@@ -35,8 +35,7 @@
         %td.col-3
           .category-edit
             = link_to_remote "#{t("edit_text")}", :url => { :controller=>:descriptive_indicators,:action => 'edit', :id => g.id },:method=>:get
-            |
-            \#{link_to_remote "#{t("delete_text")}", :url => { :action => 'destroy_indicator', :id => g.id},:confirm=>"Delete descriptive indicator #{g.name}?"}
+            = link_to_remote "#{t("delete_text")}", :url => { :action => 'destroy_indicator', :id => g.id},:confirm=>"Delete descriptive indicator #{g.name}?", method: :DELETE
             - unless i==0
               = link_to_remote "▲", :url=>{:action=>'reorder',:direction=>'up',:id=>g.id,:count=>i},:method=>"post"
             - else

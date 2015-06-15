@@ -28,6 +28,6 @@
         - if @emp_sub_assoc.nil?
           .remove= link_to "#{t('assign')}", {:action => "assign_employee", :id => e.id, :id1=>@subject.id}, :update => "department-select", :remote => true
         - else
-          .remove= link_to "#{t('delete_text')}", {:action => "remove_employee", :id => e.id, :id1=>@subject.id}, :update => "department-select", :remote => true
+          .remove= link_to "#{t('delete_text')}", {:action => "remove_employee", :id => e.id, :id1=>@subject.id}, method: :DELETE, :update => "department-select", :remote => true
   - else
     %p.flash-msg= t('no_employee_found')

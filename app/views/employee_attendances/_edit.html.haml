@@ -37,5 +37,5 @@
         = t('half_day')
     .extender
     = f.submit "#{t('submit')}", :class => 'submit-button'
-  #delete-button= link_to("#{t('delete_text')}", {:controller =>'employee_attendances', :action => 'delete_attendance', :id=> @attendance, :method => 'delete', :remote => true}, :confirm=> "#{t('delete_confirm_msg')}")
-  
+  #delete-button= link_to t('delete_text'), { controller: :employee_attendances, action: :delete_attendance, id: @attendance }, method: :delete, remote: true, confirm: t('delete_confirm_msg')
+

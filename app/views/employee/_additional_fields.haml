@@ -28,7 +28,7 @@
             %span{:class => "category-up-down #{"inactive" if i==0}"}= link_to "▲",:url=>{:action=>"change_field_priority",:order=>"up",:id=>c.id}, :remote => true
             %span{:class => "category-up-down #{"inactive" if i+1==@additional_details.count}"}= link_to "▼",:url=>{:action=>"change_field_priority",:order=>"down",:id=>c.id}, :remote => true
           .category-edit= link_to "#{t('edit_text')}", {:action => "edit_additional_details", :id=>c.id}
-          .category-edit= link_to  "#{t('delete_text')}", {:action => "delete_additional_details", :id=>c.id}, :confirm => "#{t('delete_confirm_msg')}"
+          .category-edit= link_to  "#{t('delete_text')}", {:action => "delete_additional_details", :id=>c.id}, method: :DELETE, :confirm => "#{t('delete_confirm_msg')}"
     - unless @inactive_additional_details.empty?
       %li.listheading
         .category-name

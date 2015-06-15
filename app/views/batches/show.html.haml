@@ -27,16 +27,18 @@
     - if permitted_to? :index,:exam_groups and @batch.allow_exam_acess(@current_user)
       %li
         = link_to "#{t('exams_text')}", batch_exam_groups_path(@batch)
-    %li= link_to "#{t('edit_text')}", {:controller=> :batches, :action => :edit, :course_id => @course}
-    %li= link_to("#{t('delete_text')}",{:controller=> :batches, :action => :delete, :course_id => @course, :id => @batch})
+    %li
+      = link_to t('edit_text'), { controller: :batches, action: :edit, course_id: @course }
+    %li
+      = link_to t('delete_text'), { controller: :batches, action: :delete, course_id: @course, id: @batch}, method: :DELETE, confirm: t('delete_confirm_msg')
     %li
       %a#link_one.drops{:href => "#"}
         = t('manage')
         ▼
       %ul#box_one.scriptaculously{:style => "display:none;"}
-        %li= link_to "#{t('subject')}", :controller=>"batch_transfers", :action=>'subject_transfer', :id=>@batch
-        %li= link_to "#{t('electives')}", elective_groups_path(@batch)
-        %li= link_to "#{t('assign_tutor')}",:action=>'assign_tutor', :id=>@batch
+        %li= link_to t('subject'), controller: :batch_transfers, action: :subject_transfer, id: @batch
+        %li= link_to t('electives'), elective_groups_path(@batch)
+        %li= link_to t('assign_tutor'), action: :assign_tutor, id: @batch
 #page-yield
   - unless flash[:notice].nil?
     %p.flash-msg

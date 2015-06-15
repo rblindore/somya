@@ -22,7 +22,7 @@
 #ajax-edit
   %br/
   - if @config.config_value == 'Daily'
-    - form_remote_for @absentee do |f|
+    = form_remote_for @absentee do |f|
       #form-errors
       = f.hidden_field :student_id, :value => @student.id
       = f.hidden_field :month_date, :value => @month_date
@@ -40,9 +40,9 @@
             = f.check_box :afternoon, :checked => true
             = t('afternoon')
       .extender
-      = f.submit "► #{t('add')}", :class => 'submit-button', :confirm => "#{t('delete_confirm_msg')}"
+      = f.submit "► #{t('add')}", class: 'submit-button', confirm: t('delete_confirm_msg')
   - else
-    - form_remote_for @subject_leave,:url=>{:controller=>"attendances",:action=>'create'} do |f|
+    = form_remote_for @subject_leave,:url=>{:controller=>"attendances",:action=>'create'} do |f|
       #form-errors
       = f.hidden_field :student_id, :value => @student.id
       = f.hidden_field :month_date, :value => params[:date]

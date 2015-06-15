@@ -30,7 +30,7 @@
       .edit
         - transaction = FinanceTransaction.where(category_id: cat.id)
         - if transaction.blank?
-          = link_to t('delete_text'), url_for(action: :category_delete, id: cat.id), remote: true, confirm: t('are_you_sure_to_delete')
+          = link_to t('delete_text'), {action: :category_delete, id: cat.id}, remote: true, confirm: t('are_you_sure_to_delete'), method: :DELETE
         - else
-          = link_to "<s>#{t('delete_text')}</s>", url_for(action: '', id: "" ), remote: true
+          = link_to "<s>#{t('delete_text')}</s>", {action: '', id: "" }, remote: true
 #modal-box{style: "display:none;"}

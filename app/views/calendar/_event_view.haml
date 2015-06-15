@@ -33,5 +33,5 @@
         %br/
         = t('end_time')
         \:#{I18n.l(h.end_date,:format=>"%I:%M %p")}
-      = link_to "X",{:action=>'event_delete',:id=>h.id},:confirm=>"#{t('delete_confirm_msg')}",:class=>"delete"
+      = link_to "X",{ action: :event_delete, id: h.id}, method: :DELETE, confirm: t('delete_confirm_msg'), class: :delete
       .extender

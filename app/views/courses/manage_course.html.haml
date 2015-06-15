@@ -47,5 +47,5 @@
           .category-name= link_to course.full_name, course_path(course)
           .category-edit= link_to "#{t('edit_text')}", edit_course_path(course) if permitted_to? :edit, :courses
           .category-delete
-            = link_to t('delete_text'), {action: :delete, :id => course}, data: {confirm: "#{t('delete_confirm_msg')}", method: :delete} if permitted_to? :destroy, :courses
+            = link_to t('delete_text'), {action: :delete, :id => course}, data: {confirm: "#{t('delete_confirm_msg')}"}, method: :DELETE if permitted_to? :destroy, :courses
     .extender

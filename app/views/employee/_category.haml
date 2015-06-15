@@ -27,7 +27,7 @@
           = c.name
           (#{c.prefix})
         .category-edit= link_to "#{t('edit_text')}", {:action => "edit_category", :id=>c.id}
-        .category-edit= link_to "#{t('delete_text')}", {:action => "delete_category", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}"
+        .category-edit= link_to "#{t('delete_text')}", {:action => "delete_category", :id=>c.id}, method: :DELETE, :confirm=>"#{t('delete_confirm_msg')}"
     - unless @inactive_categories.empty?
       %li.listheading
         .category-name= "#{t('inactive_category')}"
@@ -37,6 +37,6 @@
             = c.name
             (#{c.prefix})
           .category-edit= link_to "#{t('edit_text')}", {:action => "edit_category", :id=>c.id}
-          .category-edit= link_to "#{t('delete_text')}", {:action => "delete_category", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}"
+          .category-edit= link_to "#{t('delete_text')}", {:action => "delete_category", :id=>c.id}, method: :DELETE, :confirm=>"#{t('delete_confirm_msg')}"
   - else
     %p.flash-msg= "#{t('no_category_record_found')}"

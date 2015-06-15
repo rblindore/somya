@@ -31,7 +31,6 @@ class UsersController < ApplicationController
   end
 
   def list_user
-
   end
 
   def list_employee_user
@@ -159,7 +158,7 @@ class UsersController < ApplicationController
        redirect_to :controller => 'user', :action => 'profile', :id => @user.username
      end
   end
-  
+
   def forgot_password
     #    flash[:notice]="You do not have permission to access forgot password!"
     #    redirect_to :action=>"login"

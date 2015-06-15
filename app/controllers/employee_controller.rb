@@ -1299,7 +1299,7 @@ class EmployeeController < ApplicationController
       end
     else
       employees.each do|e|
-        payslip_exists = MonthlyPayslip.where("employee_id = #{e.id} AND salary_date >= ? and salary_date < ?", start_date, end_date])
+        payslip_exists = MonthlyPayslip.where("employee_id = ? AND salary_date >= ? and salary_date < ?", e.id, start_date, end_date)
         if payslip_exists == []
           salary_structure = EmployeeSalaryStructure.where(employee_id: e.id)
           unless salary_structure == []

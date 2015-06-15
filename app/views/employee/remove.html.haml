@@ -38,7 +38,7 @@
       .link-descr= t('employee_leaving_institution_msg')
     .link-box
       .link-heading
-        = link_to"#{t('remove_record')}",{ :controller => "employee", :action => "delete", :id => @employee.id },:confirm=>"#{t('confirm')}"
+        = link_to"#{t('remove_record')}",{ :controller => "employee", :action => "delete", :id => @employee.id },:confirm=>"#{t('confirm')}", method: :DELETE
       .link-descr= t('remove_record_msg')
   /
     <div id="remove-student">

@@ -32,7 +32,7 @@
     - if permitted_to? :edit, :course
       %li= link_to "#{t('edit_text')}", {:controller=> :batches, :action => :edit, :course_id => @course, :id => @batch} if permitted_to? :edit, :course
     - if permitted_to? :destroy, :course
-      %li= link_to(t('delete_text'), {:controller=> :batches, :action => :delete, :course_id => @course, :id => @batch})
+      %li= link_to(t('delete_text'), {:controller=> :batches, :action => :delete, :course_id => @course, :id => @batch}, method: :DELETE)
     - if permitted_to? :assign_subject_amount, :courses
       %li= link_to "#{t('assign_subject_amount')}", assign_subject_amount_courses_path(:id => @course.id)
 #page-yield
@@ -53,5 +53,5 @@
           .category-edit
             = link_to "#{t('edit_text')}", {:controller => :batches, :action => :edit, :course_id => @course} if permitted_to? :edit, :batches
           .category-delete
-            = link_to("#{t('delete_text')}",{:controller=> :batches, :action => :delete, :course_id => @course, :id => batch.id})  if permitted_to? :destroy, :batches
+            = link_to("#{t('delete_text')}",{:controller=> :batches, :action => :delete, :course_id => @course, :id => batch.id}, method: :DELETE)  if permitted_to? :destroy, :batches
     .extender
