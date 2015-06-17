@@ -1,15 +1,15 @@
-#Fedena : Open source school management system
+#Somya : Open source school management system
 
-Project Fedena is the open source school management system based on Ruby on Rails. It is developed by a team of developers at Foradian Technologies. The project was made open source by Foradian, and is now maintained by the open source community. Fedena is the ideal solution for schools and campuses that want an easy means to manage all campus records.
+Project Somya is the open source school management system based on Ruby on Rails. It is developed by a team of developers at Affimintus Technologies on Ruby On Rails By making Fork of open source project Fedena. The project was made open source, and is now maintained by the open source community. Somya is the ideal solution for schools and campuses that want an easy means to manage all campus records.
 
-The Project Fedena website http://www.projectfedena.org/ is the home to the developer community behind Fedena project. There you can find forums and bug tracker for Fedena.
+The Project Somya website is under development http://project-fedena.herokuapp.com is the home to the developer community behind Somya project. There you can find forums and bug tracker for Somya.
 
 #Demo
-A demo website for Fedena has been set up at demo.projectfedena.org. You can log in with following usernames and passwords:
+A demo website for Somya has been set up at http://project-fedena.herokuapp.com. You can log in with following usernames and passwords:
 
-    * As admin -- username - admin, password - admin123
-    * As student -- username - 1, password - 1123
-    * As employee -- username - E1, password - E1123
+    * As admin -- username - fedena_admin, password - 123456789
+    * As student 1 -- username - fedena_stud_1, password - 123456789
+    * As student 2 -- username - fedena_stud_2, password - 123456789
 
 #License
 
@@ -17,8 +17,8 @@ Fedena is released under the Apache License 2.0.
 
 #Installation
 
-Visit  http://projectfedena.org/install for detailed installation instruction.
+Visit is under development for detailed installation instruction.
 
 #Community Support:
 
-Visit www.projectfedena.org for community support.
+Visit page is under construction for community support.
