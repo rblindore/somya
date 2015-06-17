@@ -31,9 +31,8 @@
           = @currency_type + " "
           = l.amount
         %td.col-1
-          = link_to_remote "#{t('edit_text')}", :url => { :action => 'edit_liability', :id => l.id }
-          |
-          \#{link_to_remote "#{t('delete_text')}", :url => { :action => 'delete_liability', :id => l.id } ,:confirm=>t('delete_confirm_msg')}
+          = link_to t('edit_text'), { :action => 'edit_liability', :id => l.id }, remote: true
+          = link_to t('delete_text'), { :action => 'delete_liability', :id => l.id }, :confirm=>t('delete_confirm_msg')}, remote: true
     - else
       %tr{:class => "tr-#{cycle('odd', 'even')}"}
         %td.col-3= link_to l.title ,:action=>"each_liability_view",:id => l.id
@@ -42,6 +41,5 @@
           = @currency_type + " "
           = l.amount
         %td.col-1
-          = link_to_remote t('edit_text'), :url => { :action => 'edit_liability', :id => l.id }
-          |
-          \#{link_to_remote t('delete_text'), :url => { :action => 'delete_liability', :id => l.id } ,:confirm=>t('delete_confirm_msg')}
+          = link_to t('edit_text'), { :action => 'edit_liability', :id => l.id }, remote: true
+          = link_to t('delete_text'), { :action => 'delete_liability', :id => l.id } ,:confirm=>t('delete_confirm_msg')}, method: :DELETE, remote: true

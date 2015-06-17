@@ -33,6 +33,6 @@
       %td.col-3= f.end_date
       %td.col-3= f.due_date
       %td.col-1
-        .edit= link_to_remote t('edit_text'), :url => {:action => 'fee_collection_edit', :id => f.id}
+        .edit= link_to t('edit_text'), {:action => 'fee_collection_edit', :id => f.id}, remote: true
         - unless f.check_fee_category == false
-          .delete= link_to_remote t('delete_text'), :url => {:action => 'fee_collection_delete', :id => f.id}
+          .delete= link_to t('delete_text'), {:action => 'fee_collection_delete', :id => f.id}, method: :DELETE, remote: true

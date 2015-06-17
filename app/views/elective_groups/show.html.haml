@@ -51,11 +51,7 @@
                 :url => { :controller=>"subjects",:action => 'edit', :id =>subject,:id2=>@elective_group}, |
                 :method => 'get' )                                                                         |
             .category-delete
-              = link_to_remote("#{t('delete_text')}", |
-                :url => subject_path(subject),        |
-                :method => 'delete',                  |
-                :confirm => t('delete_confirm_msg'),  |
-                :update => "subject-#{subject.id}")   |
+              = link_to t('delete_text'), subject_path(subject), method: :DELETE, confirm: t('delete_confirm_msg')
             .category-assign
               = link_to " #{t('assign_student')}", :controller=>"students", :action=>"electives",:id=>@batch,:id2=>subject.id
     #modal-box{:style => "display:none;"}

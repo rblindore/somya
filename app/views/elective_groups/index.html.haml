@@ -47,5 +47,5 @@
           - @subjects= Subject.where("elective_group_id = ? and is_deleted = ? ", elective, false)
           - if @subjects.empty?
             .category-delete
-              = link_to(t('delete_text'), { :action => :delete , :batch_id => @batch.id, :id => elective})
+              = link_tot('delete_text'), { :action => :delete , :batch_id => @batch.id, :id => elective}, method: :DELETE
     .extender

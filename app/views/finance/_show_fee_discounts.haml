@@ -48,7 +48,7 @@
             .edit
             = link_to t('edit_text'), { action: :edit_fee_discount, id: f.id}, remote: true
             .delete
-              = link_to t('delete_text'), { action: :delete_fee_discount, id: f.id}, data: {confirm: t('delete_confirm_msg')}
+              = link_to t('delete_text'), { action: :delete_fee_discount, id: f.id}, data: {confirm: t('delete_confirm_msg')}, method: :DELETE
 - else
   %p.flash-msg
     = t('no_discount_found')

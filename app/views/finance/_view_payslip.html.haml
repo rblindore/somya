@@ -94,7 +94,7 @@
   #submit-button.approve
     = link_to t('approve'), {:controller=>"finance", :action=>"employee_payslip_approve",:id =>@employee.id,:id2 => @salary_date }
   #submit-button.approve
-    = link_to_remote "#{t('reject')}",:url=>{:controller => "finance", :action => "employee_payslip_reject_form", :id=> @emp.id, :id2=>@salary_date}, :confirm=>"#{t('delete_confirm_msg')}"
+    = link_to t('reject'), {:controller => "finance", :action => "employee_payslip_reject_form", :id=> @emp.id, :id2=>@salary_date}, method: :DELETE, remote: true, confirm: {t('delete_confirm_msg')
 - else
   #submit-button.approved
     = "#{t('payslip_approved')}" if @approve == true

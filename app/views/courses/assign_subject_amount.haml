@@ -43,7 +43,7 @@
               = sa.amount
             %td
               = link_to 'Edit',edit_subject_amount_courses_path(:subject_amount_id => sa.id)
-              | #{link_to 'Delete',destroy_subject_amount_courses_path(:subject_amount_id => sa.id),:confirm => "Are you sure?"}
+              = link_to 'Delete',destroy_subject_amount_courses_path(:subject_amount_id => sa.id),:confirm => "Are you sure?", method: :DELETE
     - else
       %p.flash-msg No subject amount created yet.
   .extender

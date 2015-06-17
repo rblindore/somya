@@ -33,7 +33,7 @@
   - unless flash[:notice].nil?
     %p.flash-msg
       = flash[:notice]
-  = form_for(@student, :url => {:action=> 'admission1'}, :html=> {:multipart=>true}) do |s|
+  = form_for @student, url: { action: :admission1}, html: { multipart: true} do |s|
     = error_messages_for 'student', :header_message => nil
     #admission1_form
       #necessary-field-notification
@@ -55,8 +55,7 @@
             = t('admission_date')
             %span.necessary-field *
           .text-input-bg-admission
-            = date_select 'student[admission_date]', I18n.l(Date.today,:format=>:default),    |
-              :year_range => 15.years.ago..5.years.from_now, :readonly=>true, :popup=>"force" |
+            = s.text_field :admission_date, class: 'datepicker', readonly: true
       %span.span-sub-heading= t('personal_details')
       %hr.sub-heading/
       .label-field-pair
@@ -83,8 +82,7 @@
             = t('date_of_birth')
             %span.necessary-field *
           .text-input-bg
-            = date_select 'student[date_of_birth]',                                                                   |
-              I18n.l(Date.today-5.years,:format=>:default) , :start_year => Date.today.year - 50,:popup=>"force" |
+            = s.text_field :date_of_birth, class: 'datepicker'
         %hr.label-underline/
         .label_field_pair
           %label.label_for_student_gender{:for => "student_gender"}= t('gender')

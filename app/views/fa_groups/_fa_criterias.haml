@@ -37,7 +37,7 @@
             .category-edit
               = link_to_remote t("edit_text"),:url=>{:controller=>'fa_groups',:action=>'edit_fa_criteria',:id=>g.id},:method=>:get
               |
-              \#{link_to_remote "#{t("delete_text")}", :url => { :action => 'destroy_fa_criteria', :id => g.id},:confirm=>"Delete criteria #{g.fa_name}?"}
+              \#{link_to_remote "#{t("delete_text")}", :url => { :action => 'destroy_fa_criteria', :id => g.id}, method: :DELETE, :confirm=>"Delete criteria #{g.fa_name}?"}
               - unless i==0
                 = link_to_remote "▲", :url=>{:action=>'reorder',:direction=>'up',:id=>g.id,:count=>i},:method=>"post"
               - else

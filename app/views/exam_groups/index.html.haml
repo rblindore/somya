@@ -47,11 +47,7 @@
         - if @current_user.admin? or @user_privileges.map{|p| p.name}.include?('ExaminationControl') or @user_privileges.map{|p| p.name}.include?('EnterResults')
           %td
             = t('actions')
-            = image_tag("loader.gif",     |
-              :align => "absmiddle",      |
-              :border => 0,               |
-              :id => "loader",            |
-              :style =>"display: none;" ) |
+            = image_tag("loader.gif", :align => "absmiddle", :border => 0, :id => "loader", :style =>"display: none;" )
       - @config = Settings.available_modules
       - @exam_groups.each do |exam_group|
         %tr{:class => "tr-#{cycle('odd', 'even')}"}
@@ -60,7 +56,7 @@
             - if @current_user.admin? or @user_privileges.map{|p| p.name}.include?('ExaminationControl') or @user_privileges.map{|p| p.name}.include?('EnterResults')
               %span
                 %small
-                  = link_to("#{t('delete_text')}", {:action=> :delete, :id => exam_group.id, :batch_id=> @batch.id}) if exam_group.removable?
+                  = link_to("#{t('delete_text')}", {:action=> :delete, :id => exam_group.id, :batch_id=> @batch.id}, method: :DELETE) if exam_group.removable?
                   %s= "#{t('delete_text')}" unless exam_group.removable?
           - if @current_user.admin? or @user_privileges.map{|p| p.name}.include?('ExaminationControl') or @user_privileges.map{|p| p.name}.include?('EnterResults')
             %td.col-2
@@ -75,7 +71,7 @@
                       = t('sms_notification')
                       \.
                       %br/
-                    = link_to("#{t('publish_exam_result')}",{:controller=>'exam',:action=>'publish',:id=>exam_group.id,:status=>"result"}, :remote => true, :confirm=>"#{t('delete_confirm_msg')}")
+                    = link_to t('publish_exam_result'), { controller: :exam, action: :publish, id: exam_group.id, status: :result}, method: :DELETE, :remote => true, :confirm=>"#{t('delete_confirm_msg')}"
                   - else
                     = t('result_published')
                     \.

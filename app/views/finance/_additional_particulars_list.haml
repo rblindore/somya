@@ -46,7 +46,7 @@
         %td.col-3
           - unless @additional_category.check_fee_collection_for_additional_fees == false
             %span.small
-              = link_to_remote t('delete_text'), :confirm=>t('delete_this_particular'),:url => { :action => 'add_particulars_delete',:id => fees.id}
+              = link_to t('delete_text'), { :action => 'add_particulars_delete',:id => fees.id}, method: :DELETE, :confirm=>t('delete_this_particular'), remote: true
             %span.small
               = link_to_remote t('edit_text'), :url => { :action => 'add_particulars_edit',:id => fees.id}
           - else

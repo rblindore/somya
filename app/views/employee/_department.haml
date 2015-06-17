@@ -26,7 +26,7 @@
           = d.name
           (#{d.code})
         .department-edit= link_to "#{t('edit_text')}", :action => "edit_department", :id=>d.id
-        .department-edit= link_to "#{t('delete_text')}", {:action => "delete_department", :id=>d.id}, :confirm => "#{t('delete_confirm_msg')}"
+        .department-edit= link_to "#{t('delete_text')}", {:action => "delete_department", :id=>d.id}, method: :DELETE, :confirm => "#{t('delete_confirm_msg')}"
     - unless @inactive_departments.empty?
       %li.listheading
         .department-name= "#{t('inactive_department')}"
@@ -36,6 +36,6 @@
             = c.name
             (#{c.code})
           .department-edit= link_to "#{t('edit_text')}", {:action => "edit_department", :id=>c.id}
-          .department-edit= link_to "#{t('delete_text')}", {:action => "delete_department", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}"
+          .department-edit= link_to "#{t('delete_text')}", {:action => "delete_department", :id=>c.id}, method: :DELETE, :confirm=>"#{t('delete_confirm_msg')}"
   - else
     %p.flash-msg= "#{t('no_department_found')}"

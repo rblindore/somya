@@ -25,7 +25,7 @@
         %li{:class => "list#{cycle('odd', 'even')}"}
           .category-name= c.name
           .category-edit= link_to "#{t('edit_text')}", {:action => "edit_bank_details", :id=>c.id}
-          .category-edit= link_to "#{t('delete_text')}", {:action => "delete_bank_details", :id=>c.id}, :confirm => "#{t('delete_confirm_msg')}"
+          .category-edit= link_to "#{t('delete_text')}", {:action => "delete_bank_details", :id=>c.id}, method: :DELETE, :confirm => "#{t('delete_confirm_msg')}"
     - unless @inactive_bank_details.empty?
       %li.listheading
         .category-name= t('inactive_bank_field')
@@ -33,6 +33,6 @@
         %li{:class => "list#{cycle('odd', 'even')}"}
           .category-name= c.name
           .category-edit= link_to "#{t('edit_text')}", {:action => "edit_bank_details", :id=>c.id}
-          .category-edit= link_to "#{t('delete_text')}", {:action => "delete_bank_details", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}"
+          .category-edit= link_to "#{t('delete_text')}", {:action => "delete_bank_details", :id=>c.id}, method: :DELETE, :confirm=>"#{t('delete_confirm_msg')}"
   - else
     %p.flash-msg= t('no_bank_detail')

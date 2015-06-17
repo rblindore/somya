@@ -31,4 +31,4 @@
         %td.col-3
           .category-edit
             = link_to_remote "#{t("edit_text")}", :url => { :action => 'edit', :id => g.id },:method=>:get
-            | #{link_to t("delete_text"),g,:method=>:delete,:confirm=>"Delete grade set #{g.name}?"}
+            = link_to t("delete_text"),g,:method=>:delete,:confirm=>"Delete grade set #{g.name}?"

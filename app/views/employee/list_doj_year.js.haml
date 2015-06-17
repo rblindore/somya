@@ -1,0 +1,7 @@
+- doj_option = params[:doj_option]
+- if doj_option == "equal_to"
+  $("#doj_year").html("#{escape_javascript render 'equal_to_select'}")
+- elsif doj_option == "less_than"
+  $("#doj_year").html("#{escape_javascript render 'less_than_select'}")
+- else
+  $("#doj_year").html("#{escape_javascript render 'greater_than_select'}")

@@ -27,7 +27,7 @@
           = c.name
           \-#{c.code}
         .leave-type-edit= link_to "#{t('edit_text')}", {:action => "edit_leave_types", :id=>c.id}
-        .leave-type-edit= link_to "#{t('delete_text')}", {:action => "delete_leave_types", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}"
+        .leave-type-edit= link_to "#{t('delete_text')}", {:action => "delete_leave_types", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}", method: :DELETE
         .leave-type-edit= "#{t('Inactive')}" unless c.status == true
     - unless @inactive_leave_types.empty?
       %li.listheading
@@ -39,6 +39,6 @@
             = c.name
             \-#{c.code}
           .leave-type-edit= link_to "#{t('edit_text')}", {:action => "edit_leave_types", :id=>c.id}
-          .leave-type-edit= link_to "#{t('delete_text')}", {:action => "delete_leave_types", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}"
+          .leave-type-edit= link_to "#{t('delete_text')}", {:action => "delete_leave_types", :id=>c.id},:confirm=>"#{t('delete_confirm_msg')}", method: :DELETE
   - else
     %p.flash-msg= t('employee_leave_types_records')

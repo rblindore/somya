@@ -34,7 +34,7 @@
         %td.col-3
           .category-edit
             = link_to_remote "#{t("edit_text")}", :url => { :action => 'edit_grade', :id => g.id }
-            | #{link_to_remote "#{t("delete_text")}", :url => { :action => 'destroy_grade', :id => g.id},:confirm=>"Delete Grade #{g.name}?"}
+            = link_to_remote t("delete_text"), :url => { :action => 'destroy_grade', :id => g.id},:confirm=>"Delete Grade #{g.name}?", method: :DELETE
 - else
   #flash-box
     %p.flash-msg No grades  present

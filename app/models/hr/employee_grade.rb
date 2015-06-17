@@ -33,8 +33,9 @@ class EmployeeGrade < ActiveRecord::Base
   validates_uniqueness_of :name, :priority
   validates_numericality_of :priority
 
-  has_many :employee
-  scope :active, -> { where(:status => true) }
+  has_many :employees
+  scope :active, -> { where(status: true) }
+  scope :inactive, -> { where(status: false) }
 
   def validate
     self.errors.add(:max_hours_week, I18n.t('should_be_greater_than_max_period')) \

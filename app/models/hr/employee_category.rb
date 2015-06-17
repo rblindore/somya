@@ -30,6 +30,7 @@ class EmployeeCategory < ActiveRecord::Base
   validates_presence_of :name, :prefix
   validates_uniqueness_of :name, :prefix
   scope :active, -> { where(status: true) }
+  scope :inactive, -> { where(status: false) }
   has_many :employee_positions
   has_many :employees
 end

@@ -44,8 +44,8 @@ class StudentsController < ApplicationController
   end
 
   def admission1
-    params[:student][:admission_date] = Date.civil(*params[:student][:admission_date].sort.map(&:last).map(&:to_i)) if params[:student]
-    params[:student][:date_of_birth] = Date.civil(*params[:student][:date_of_birth].sort.map(&:last).map(&:to_i)) if params[:student]
+    params[:student][:admission_date] = Date.parse(params[:student][:admission_date]) if params[:student]
+    params[:student][:date_of_birth] = Date.parse(params[:student][:date_of_birth]) if params[:student]
     @student = Student.new(student_params) rescue Student.new
     @selected_value = Settings.default_country
     @application_sms_enabled = SmsSetting.find_by_settings_key("ApplicationEnabled")
@@ -80,39 +80,49 @@ class StudentsController < ApplicationController
 	     flash[:notice] = "#{t('student.flash8')}"
         redirect_to:action => "admission2", :id => @student
       end
+    else
+      render layout: 'application_sms_active'
     end
   end
 
   def admission2
-    @student = Student.where(:id => params[:id]).includes(:guardians).first
+    @student = Student.where(id: params[:id]).includes(:guardians).first
     @guardian = Guardian.new(guardian_params)
     if request.post? and @guardian.save
-      redirect_to:action => "admission2", :id => @student
+      redirect_to action: :admission2, id: @student
+    else
+      render layout: 'application'
     end
+
   end
 
   def admission3
     @student = Student.find(params[:id])
     @parents = @student.guardians
     if @parents.empty?
-      redirect_to :action => "previous_data", :id => @student.id
+      redirect_to action: :previous_data, id: @student.id
     end
-    return if params[:immediate_contact].nil?
-    if request.post?
-      sms_setting = SmsSetting.new()
-      @student = Student.update(@student.id, :immediate_contact_id => params[:immediate_contact][:contact])
-      if sms_setting.application_sms_active and sms_setting.student_admission_sms_active and @student.is_sms_enabled
-        recipients = []
-        message = "#{t('student_admission_done')}  #{@student.admission_no} #{t('password_is')} #{@student.admission_no}123"
-        if sms_setting.parent_sms_active
-          guardian = Guardian.find(@student.immediate_contact_id)
-          recipients.push guardian.mobile_phone unless guardian.mobile_phone.nil?
+    if params[:immediate_contact].nil?
+      render layout: 'application'
+    else
+      if request.post?
+        sms_setting = SmsSetting.new()
+        @student = Student.update(@student.id, :immediate_contact_id => params[:immediate_contact][:contact])
+        if sms_setting.application_sms_active and sms_setting.student_admission_sms_active and @student.is_sms_enabled
+          recipients = []
+          message = "#{t('student_admission_done')}  #{@student.admission_no} #{t('password_is')} #{@student.admission_no}123"
+          if sms_setting.parent_sms_active
+            guardian = Guardian.find(@student.immediate_contact_id)
+            recipients.push guardian.mobile_phone unless guardian.mobile_phone.nil?
+          end
+          unless recipients.empty?
+            Delayed::Job.enqueue(SmsManager.new(message,recipients))
+          end
         end
-        unless recipients.empty?
-          Delayed::Job.enqueue(SmsManager.new(message,recipients))
-        end
+        redirect_to :action => "previous_data", :id => @student.id
+      else
+        render layout: 'application'
       end
-      redirect_to :action => "previous_data", :id => @student.id
     end
   end
 
@@ -153,9 +163,9 @@ class StudentsController < ApplicationController
     @previous_subject = StudentPreviousSubjectMark.where(:student_id => @student)
     if request.post?
       @previous_data.save
-      redirect_to :action => "admission4", :id => @student.id
+      redirect_to action: :admission4, id: @student.id
     else
-      return
+      render layout: 'application'
     end
   end
 
