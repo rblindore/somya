@@ -17,8 +17,8 @@ Fedena is released under the Apache License 2.0.
 
 #Installation
 
-Visit is under development for detailed installation instruction.
+Page is under development for detailed installation instruction.
 
 #Community Support:
 
-Visit page is under construction for community support.
+Page is under construction for community support.
