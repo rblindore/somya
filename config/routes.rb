@@ -826,7 +826,8 @@ Fedena::Application.routes.draw do
         get :show_previous_details
         get :fee_details
         delete :del_guardian
-        delete :get :category_delete
+        delete :category_delete
+        get :category_delete
         get :category_edit
         post :category_edit
         get :category_update
