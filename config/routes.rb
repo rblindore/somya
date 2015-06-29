@@ -816,7 +816,7 @@ Fedena::Application.routes.draw do
         get :academic_report_all
         get :change_to_former
         post :change_to_former
-        delete :delete,
+        delete :delete
         get :add_guardian
         post :add_guardian
         get :email
@@ -826,7 +826,7 @@ Fedena::Application.routes.draw do
         get :show_previous_details
         get :fee_details
         delete :del_guardian
-        delete :get :category_delete
+        delete :category_delete
         get :category_edit
         post :category_edit
         get :category_update
